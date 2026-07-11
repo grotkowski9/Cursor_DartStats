@@ -3,8 +3,8 @@
 Nowa wersja **Dart Profile Tracker** — prywatny panel statystyk darta dla jednego zawodnika,
 budowany od zera w Cursorze. Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v0.2 — planowanie. Brak kodu. Czekam na pełne repo z Lovable + prompty.
-> Następny krok: test-fetch endpointu N01 (po otrzymaniu repo).
+> **Status:** v0.3 — planowanie ukończone. Stare repo przeczytane i zrozumiane.
+> Brak kodu w nowym projekcie. Następny krok: **test-fetch endpointu N01**.
 
 ---
 
@@ -281,13 +281,55 @@ Podgląd: `http://localhost:3000/`
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
+| v0.3 | 2026-07-11 | Przeczytanie i analiza pełnego repo Lovable (`dart-stats-hub`). Sekcja „co zachowujemy / co zmieniamy". Historia faz Lovable. |
 | v0.2 | 2026-07-11 | Pełny zamysł projektu: zrzuty + README Lovable → nowy README. Stack, roadmapa, design, bugi, ADR. |
 | v0.1 | 2026-07-11 | Nowe repo na GitHub |
 
 ---
 
+## Stary projekt Lovable — co zachowujemy, co zmieniamy
+
+**Repo:** https://github.com/grotkowski9/dart-stats-hub
+
+### Zachowujemy (logika biznesowa — sprawdzona, działa):
+- **Parser N01** (`n01.functions.ts`) — endpoint, negative-score encoding, typy `N01Match/N01Leg/N01Visit`
+- **Silnik statystyk** (`stats.ts`) — `computeMatchStats`, `computePlayerStats`, `computeTopThrows`, `computeTopCheckouts`, `computeFormSeries`, `computeLast5`, `filterByRange`
+- **Schemat DB** — tabele `customers`, `matches`, `legs`, `visits`, `share_links`, `ingest_snapshots`, `snapshot_access_log` + RLS deny-by-default
+- **Kontrakt KPI** — zweryfikowany 1:1 z arkuszem `testdane.xlsx`
+- **Design tokens** — Sylveon Lift (oklch, glass-tile utility, siatka, gradient text)
+
+### Zmieniamy:
+- **Framework:** TanStack Start → **Next.js 15** (stabilniejszy, łatwiejszy deploy)
+- **Bundler/config:** `@lovable.dev/vite-tanstack-config` → standardowy Next.js + Tailwind
+- **Server functions:** `createServerFn` (TanStack) → **Next.js API Routes / Server Actions**
+- **Lovable Cloud** → **Supabase (self-managed projekt)** + Vercel hosting
+- **Routing:** TanStack Router → **Next.js App Router**
+- **Stan:** `useSyncExternalStore` in-memory → od razu **DB + TanStack Query** (pomijamy fazę in-memory)
+- **BUG-1:** Detekcja gracza po nicku → **user wybiera siebie przy pierwszym imporcie**
+- **Usunięte:** `lovable-error-reporting.ts`, `error-capture.ts`, `@lovable.dev/*` deps
+
+### Seed URLs (do testów, z kodu Lovable):
+- `https://n01darts.com/n01/league/n01_view.html?tmid=t_84WD_6808_rr_1_ODeb_WvbB`
+- `https://n01darts.com/n01/tournament/n01_view.html?tmid=t_AWMW_0234_t_2_ASmj_P4P5`
+- `https://n01darts.com/n01/league/n01_view.html?tmid=t_84WD_6808_rr_1_6zyK_WvbB`
+
+---
+
+## Lovable — historia faz (co tam zostało zrobione)
+
+Dla referencji — fazy ukończone w starym projekcie:
+
+- **Faza 0 ✅** — Bucket, RLS, shell UI, wybór palety.
+- **Faza 1 ✅** — Ingest N01, parser, in-memory store, profil, throw-by-throw, 3 seed mecze.
+- **Faza 2 ✅** — Top 10 podejść, wykres formy, bucket pills, ostatnie 5, schemat DB (migracje), persystencja, refactor na TanStack Query.
+- **Faza 3 ✅** — Formularz ingest, walidacja tmid, duplikaty (Nadpisz/Pomiń/Anuluj).
+- **Faza 4 ✅** — Signed URL (5 min TTL), audit-log, fix-pack (forma avg, 140+ violet, filtry zakresu).
+- **Faza 5 (częściowo)** — 5.1 Top 10 zamknięć ✅, 5.2 Bulk import ✅. Reszta (rolling avg, heatmapa, h2h, export) — niezrobiona.
+
+---
+
 ## Źródła
 
-- **Stary projekt (Lovable):** _link do uzupełnienia po otrzymaniu_
+- **Stary projekt (Lovable):** https://github.com/grotkowski9/dart-stats-hub
 - **Inspiracja designu:** [sylveoncompany.pl](https://sylveoncompany.pl)
 - **System meczów:** [n01darts.com](https://n01darts.com)
