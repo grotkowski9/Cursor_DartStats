@@ -9,9 +9,11 @@ import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
 type Props = {
   match: N01Match;
   defaultExpanded?: boolean;
+  /** Override display name for "me" player (use customer lastName + firstName) */
+  myDisplayName?: string;
 };
 
-export function ProfileMatchCard({ match, defaultExpanded = false }: Props) {
+export function ProfileMatchCard({ match, defaultExpanded = false, myDisplayName }: Props) {
   const stats = useMemo(() => computeMatchStats(match), [match]);
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -20,7 +22,7 @@ export function ProfileMatchCard({ match, defaultExpanded = false }: Props) {
     dateStyle: "short",
     timeStyle: "short",
   });
-  const myName = normalizeName(stats.me.name);
+  const myName = myDisplayName ?? normalizeName(stats.me.name);
   const oppName = normalizeName(stats.opp.name);
   const shareUrl =
     typeof window !== "undefined"

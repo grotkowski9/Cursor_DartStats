@@ -48,7 +48,13 @@ export default async function ProfilePage() {
           </header>
         )}
 
-        <ProfileClient />
+        <ProfileClient
+          myDisplayName={
+            customer
+              ? `${customer.lastName} ${customer.firstName}`.trim()
+              : undefined
+          }
+        />
       </div>
     </main>
   );

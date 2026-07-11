@@ -3,8 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v0.9 — **Faza 1 fixy batch 1** (daty naprawione, unifikacja nazw, paginacja, Win rate legów, UX meczów).
-> Następny czat: **Faza 1 fixy batch 2** (wykres formy Recharts, weryfikacja Top 10 zamknięć, deeplinki).
+> **Status:** v0.10 — **Faza 1 done + Faza 2.1/2.3** (wykres formy Recharts, head-to-head, normalizacja nazw z miastami, propagacja imienia z DB).
+> Następny czat: **Faza 2 dokończenie** (heatmapa dni/godz, histogram finishingów) lub **Faza 3** (Auth Google).
 
 ---
 
@@ -344,18 +344,19 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - [x] **1.12** Checkout ratio `42% (3/7)` inline wszędzie (kafel, karta meczu, szczegóły)
 - [x] **1.13** Osobny kafel Win rate legów z win% pod `59–93`; "Throw-by-throw" → "Rzut po rzucie"
 - [x] **1.14** Backup DB do repo (`.dev/backup-2026-07-11.json`, 51 meczów)
-- [ ] **1.15** Fix 5.11: Weryfikacja Top 10 zamknięć (czy `isCheckout` poprawnie ustawiany przez parser)
-- [ ] **1.16** Wykres formy (Recharts: 3-dart avg + First 9 per mecz, czas na osi X)
+- [x] **1.15** Fix 5.11: Weryfikacja Top 10 zamknięć — logika poprawna (`isCheckout = score < 0 && left === 0`; liczymy tylko wygrane legi)
+- [x] **1.16** Wykres formy — `ProfileFormChart` (Recharts): 3-dart avg + First 9, kolorowe kropki W/L, linia referencyjna avg
 
 ---
 
-### Faza 2 — Zaawansowana analityka (5.3-5.6, Lovable niezrobione)
+### Faza 2 — Zaawansowana analityka
 
-- [ ] **2.1** Średnia krocząca (rolling 5-mecz) + trend (linear regression)
-- [ ] **2.2** Heatmapa dni tygodnia / godzin (kiedy grasz najlepiej)
-- [ ] **2.3** Head-to-head — split statystyk vs konkretny przeciwnik
-- [ ] **2.4** Rozkład finishingów (histogram: na jakich `left` najczęściej zamykasz)
-- [ ] **2.5** ~~Export CSV/XLSX~~ → **CANCELLED** (5.7 — dane już w bazie, niepotrzebne)
+- [x] **2.1** Wykres formy z avg kroczącą — zrealizowany przez `ProfileFormChart` + `computeFormSeries`
+- [ ] **2.2** Heatmapa dni tygodnia / godzin (kiedy grasz najlepiej) — TODO
+- [x] **2.3** Head-to-head — `ProfileHeadToHead`: dropdown przeciwnika, W/L, avg, legi, checkout, 100+/140+/180
+- [ ] **2.4** Rozkład finishingów (histogram: na jakich `left` najczęściej zamykasz) — TODO
+- [x] **2.5** ~~Export CSV/XLSX~~ → **CANCELLED**
+- [x] **Normalizacja nazw + miasta**: `normalizeName()` z blacklistą polskich miast; `myDisplayName` z customer DB propagowane do kart meczów
 
 ---
 
@@ -472,27 +473,23 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v0.9 — Faza 1 batch 1 ✅
+### v0.10 — Faza 1 ✅ + Faza 2.1/2.3 ✅
 
 | Element | Status |
 |---|---|
-| Mecze w DB | **51** — re-ingestowane bezpośrednio z N01 (overwrite, 2026-07-11) |
-| Daty/czasy | ✅ Naprawione — błąd ms vs s w `rowsToN01Match` |
-| `/profile` | Kafle (win rate meczów + legów), paginacja 3+10/str, kompaktowe karty |
-| Karty meczów | Moje nazwisko zielone/czerwone, wynik `3:1` w centrum, rozwijane KPI |
-| Nazwy graczy | `normalizeName()` — Title Case, ALL_CAPS → normalnie |
-| Checkout | `42% (3/7)` inline wszędzie |
-| `/m/[shareToken]` | "Rzut po rzucie", odmiana `dartWord()`, bez `(lotka)` w labelach |
-| Backup | `.dev/backup-2026-07-11.json` (51 meczów) |
-| Bulk import | „Nadpisz wszystkie" nie pyta o każdy duplikat (useRef fix) |
+| Wykres formy | `ProfileFormChart` — Recharts, avg + First 9, kropki Win/Loss, linia avg |
+| Head-to-head | `ProfileHeadToHead` — dropdown, W/L/%, avg, legi, checkout, 100+/140+/180 |
+| Nazwy graczy | `normalizeName()` — blacklista miast PL (50+), Title Case |
+| Customer name | `myDisplayName` z DB propagowane do kart (Grotkowski Piotr zamiast "P. Grotkowski") |
+| Checkout 1.15 | ✅ Zweryfikowany — parser poprawny, `isCheckout = score<0 && left=0` |
 
 ### 5 kolejnych zadań
 
-1. **[1.15] Weryfikacja Top 10 zamknięć** — sprawdzić w surowych danych N01 czy `isCheckout` jest poprawnie ustawiany przez parser dla checkoutów 1- i 2-lotowych
-2. **[1.16] Wykres formy** — Recharts: 3-dart avg + First 9 per mecz, czas na osi X (komponent `ProfileFormChart`)
-3. **[2.1] Head-to-head** — statystyki vs konkretny przeciwnik (filtr po nazwisku z listy rozgrywaczy)
-4. **[3.1] Auth (Google)** — Supabase Auth, sync `auth.uid()` → `customer_id`, usunięcie stałej `OWNER_ID`
-5. **[5.1] Testy Vitest** — golden samples parsera N01 i silnika statystyk
+1. **[2.2] Heatmapa aktywności** — dni tygodnia × godziny, gdzie grasz najlepiej (recharts HeatMap lub grid CSS)
+2. **[2.4] Histogram finishingów** — na jakich wartościach `left` próbujesz najczęściej zamykać
+3. **[3.1] Auth (Google)** — Supabase Auth, sync `auth.uid()` → `customer_id`, usunięcie stałej `OWNER_ID`
+4. **[3.2] Onboarding** — „Który zawodnik to Ty?" przy pierwszym imporcie + wieloużytkownikowy profil
+5. **[5.1] Testy Vitest** — golden samples parsera N01 i silnika statystyk (`computeMatchStats`, `normalizeName`)
 
 **NIE w scope:** auth, premium, analityka Fazy 2+.
 
@@ -528,6 +525,7 @@ Nie rób auth/premium/Fazy 2+.
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
+| v0.10 | 2026-07-12 | Faza 1 done + Faza 2.1/2.3: wykres formy (Recharts), head-to-head stats, normalizeName z miastami, customer name propagation, 1.15 checkout verified. |
 | v0.9 | 2026-07-11 | Faza 1 batch 1: fix dat (ms/s), re-import 51 meczów z N01, normalizeName, paginacja 3+10/str, Win rate legów, moje imię zielone/czerwone, checkout inline, Rzut po rzucie, backup DB, bulk overwrite-all fix. |
 | v0.8 | 2026-07-11 | MVP UI: profil (statystyki, top 10, karty, bulk), mecz throw-by-throw. Import 51 meczów z CSV Lovable. |
 | v0.6 | 2026-07-11 | Supabase + backend (parser, stats, API, import). Profil/mecz UI = placeholder. |

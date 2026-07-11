@@ -12,6 +12,8 @@ import {
   type TimeRange,
 } from "@/lib/stats";
 import { ProfileAddMatch } from "./profile-add-match";
+import { ProfileFormChart } from "./profile-form-chart";
+import { ProfileHeadToHead } from "./profile-head-to-head";
 import { ProfileMatchCard } from "./profile-match-card";
 import { ProfileRecentMatches } from "./profile-recent-matches";
 import { ProfileStatsBlock } from "./profile-stats-block";
@@ -20,7 +22,11 @@ import { ProfileTopLists } from "./profile-top-lists";
 const INITIAL_SHOW = 3;
 const PAGE_SIZE = 10;
 
-export function ProfileClient() {
+type Props = {
+  myDisplayName?: string;
+};
+
+export function ProfileClient({ myDisplayName }: Props) {
   const [matches, setMatches] = useState<N01Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<TimeRange>("all");
@@ -77,9 +83,15 @@ export function ProfileClient() {
         loading={loading}
       />
 
+      {/* Form chart */}
+      {!loading && filtered.length >= 2 && <ProfileFormChart matches={filtered} />}
+
       <ProfileRecentMatches items={recent} />
 
       <ProfileTopLists throws={topThrows} checkouts={topCheckouts} />
+
+      {/* Head-to-head */}
+      {!loading && filtered.length > 0 && <ProfileHeadToHead matches={filtered} />}
 
       {/* Match list */}
       <section className="flex flex-col gap-3">
@@ -105,7 +117,7 @@ export function ProfileClient() {
             {/* Initial 3 matches */}
             <div className="flex flex-col gap-2">
               {initialMatches.map((m) => (
-                <ProfileMatchCard key={m.tmid} match={m} />
+                <ProfileMatchCard key={m.tmid} match={m} myDisplayName={myDisplayName} />
               ))}
             </div>
 
@@ -125,7 +137,7 @@ export function ProfileClient() {
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   {pageMatches.map((m) => (
-                    <ProfileMatchCard key={m.tmid} match={m} />
+                    <ProfileMatchCard key={m.tmid} match={m} myDisplayName={myDisplayName} />
                   ))}
                 </div>
 

@@ -297,16 +297,50 @@ export function computePlayerStats(matches: N01Match[]): PlayerStats {
   };
 }
 
+/** Polish city names (normalized: no diacritics, lowercase) to strip from player names. */
+const CITY_BLACKLIST = new Set([
+  // Silesia — most common darts region
+  "katowice", "gliwice", "zabrze", "bytom", "sosnowiec", "chorzow",
+  "siemianowice", "tychy", "myslowice", "jaworzno", "dabrowa", "bedzin",
+  "czeladz", "zabkowice", "slawkow", "wojkowice", "piekary", "radzionkow",
+  "knurow", "pyskowice", "tarnowskie", "jastrzebie", "zory", "mikolow",
+  "laziska", "ornontowice", "imielin", "ruda",
+  // Other major Polish cities
+  "krakow", "warszawa", "wroclaw", "poznan", "lodz", "gdansk", "gdynia",
+  "szczecin", "bydgoszcz", "lublin", "bialystok", "rzeszow", "opole",
+  "czestochowa", "radom", "kielce", "olsztyn", "torun", "tarnow",
+  "koszalin", "legnica", "rybnik",
+  // Adjective forms
+  "slaskie", "slaski", "slaska", "gorne", "gorny", "gorna",
+]);
+
+function stripDiacritics(s: string): string {
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
 /**
- * Normalize player display name: strip "/" variant suffix, then title-case
- * if ALL_CAPS or all_lowercase. Mixed-case names (pseudonyms etc.) are left as-is.
+ * Normalize player display name:
+ * 1. Strip "/" variant suffix (N01 sometimes uses "Name/Alt")
+ * 2. Remove parenthesized content "(Katowice)"
+ * 3. Remove standalone Polish city name words
+ * 4. Title-case if ALL_CAPS or all_lowercase (pseudonyms left as-is)
  */
 export function normalizeName(raw: string): string {
-  const clean = raw.split("/")[0].trim();
-  const hasUpper = /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(clean);
-  const hasLower = /[a-ząćęłńóśźż]/.test(clean);
-  if (hasUpper && hasLower) return clean; // already mixed / pseudonym
-  return clean
+  let s = raw.split("/")[0].trim();
+  // Remove parenthesized segments: "Jan Kowalski (Katowice)" → "Jan Kowalski"
+  s = s.replace(/\s*\([^)]*\)/g, "").trim();
+  // Strip city words
+  const words = s.split(/\s+/).filter((w) => {
+    const norm = stripDiacritics(w.replace(/[.,;:]/g, ""));
+    return norm.length > 0 && !CITY_BLACKLIST.has(norm);
+  });
+  s = words.join(" ").trim();
+  if (!s) return raw.split("/")[0].trim(); // fallback if everything was stripped
+
+  const hasUpper = /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(s);
+  const hasLower = /[a-ząćęłńóśźż]/.test(s);
+  if (hasUpper && hasLower) return s; // already mixed / pseudonym
+  return s
     .split(/\s+/)
     .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
     .join(" ");
