@@ -70,7 +70,7 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
                 {b.attempts > 0 ? (
                   <span className={`text-xs font-bold ${rateText}`}>
                     {Math.round(b.rate * 100)}%{" "}
-                    <span className="text-zinc-500 font-normal">
+                    <span className="text-[11px] text-zinc-500 font-normal">
                       ({b.hits}/{b.attempts})
                     </span>
                   </span>
