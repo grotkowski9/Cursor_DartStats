@@ -12,6 +12,8 @@ import {
   type TimeRange,
 } from "@/lib/stats";
 import { ProfileAddMatch } from "./profile-add-match";
+import ProfileActivity from "./profile-activity";
+import ProfileCheckoutDistribution from "./profile-checkout-distribution";
 import { ProfileFormChart } from "./profile-form-chart";
 import { ProfileHeadToHead } from "./profile-head-to-head";
 import { ProfileMatchCard } from "./profile-match-card";
@@ -92,6 +94,12 @@ export function ProfileClient({ myDisplayName }: Props) {
 
       {/* Head-to-head */}
       {!loading && filtered.length > 0 && <ProfileHeadToHead matches={filtered} />}
+
+      {/* Aktywność per dzień tygodnia */}
+      {!loading && filtered.length > 0 && <ProfileActivity matches={filtered} />}
+
+      {/* Histogram zamknięć */}
+      {!loading && filtered.length > 0 && <ProfileCheckoutDistribution matches={filtered} />}
 
       {/* Match list */}
       <section className="flex flex-col gap-3">

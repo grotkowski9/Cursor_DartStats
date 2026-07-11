@@ -472,4 +472,89 @@ export function computeTopCheckouts(matches: N01Match[], n = 10): TopThrow[] {
     .slice(0, n);
 }
 
+// ---------- 2.2 Aktywność: statystyki per dzień tygodnia ----------
+const DAY_LABELS_PL = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
+
+export type DayStats = {
+  day: number;     // 0 = poniedziałek, 6 = niedziela
+  label: string;
+  count: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  avg: number;
+};
+
+export function computeDayStats(matches: N01Match[]): DayStats[] {
+  const days: DayStats[] = DAY_LABELS_PL.map((label, day) => ({
+    day, label, count: 0, wins: 0, losses: 0, winRate: 0, avg: 0,
+  }));
+  const scored = Array<number>(7).fill(0);
+  const darts = Array<number>(7).fill(0);
+
+  for (const m of matches) {
+    const d = new Date(m.startTime * 1000);
+    const day = (d.getDay() + 6) % 7; // 0 = Monday
+    const s = computeMatchStats(m);
+    days[day].count++;
+    if (s.won === true) days[day].wins++;
+    else if (s.won === false) days[day].losses++;
+    if (m.playerIndex !== null) {
+      scored[day] += m.players[m.playerIndex].allScore;
+      darts[day] += m.players[m.playerIndex].allDarts;
+    }
+  }
+
+  return days.map((d, i) => ({
+    ...d,
+    winRate: d.count > 0 ? d.wins / d.count : 0,
+    avg: darts[i] > 0 ? Math.round((scored[i] / darts[i]) * 3 * 100) / 100 : 0,
+  }));
+}
+
+// ---------- 2.4 Rozkład prób zamknięć (checkout distribution) ----------
+const CHECKOUT_RANGES = [
+  { range: "2–20",    min: 2,   max: 20  },
+  { range: "21–40",   min: 21,  max: 40  },
+  { range: "41–60",   min: 41,  max: 60  },
+  { range: "61–80",   min: 61,  max: 80  },
+  { range: "81–100",  min: 81,  max: 100 },
+  { range: "101–120", min: 101, max: 120 },
+  { range: "121–140", min: 121, max: 140 },
+  { range: "141–170", min: 141, max: 170 },
+];
+
+export type CheckoutBucket = {
+  range: string;
+  min: number;
+  max: number;
+  attempts: number;
+  hits: number;
+  rate: number;
+};
+
+export function computeCheckoutDistribution(matches: N01Match[]): CheckoutBucket[] {
+  const buckets: CheckoutBucket[] = CHECKOUT_RANGES.map((r) => ({ ...r, attempts: 0, hits: 0, rate: 0 }));
+
+  for (const m of matches) {
+    const meIdx = m.playerIndex;
+    if (meIdx === null) continue;
+    for (const leg of m.legs) {
+      const vs = (leg.visits[meIdx] ?? []).filter((v) => !v.isSetup);
+      for (const v of vs) {
+        // leftBefore = score the player was on before this visit
+        const leftBefore = v.left + v.actualScore;
+        if (leftBefore < 2 || leftBefore > 170) continue;
+        const bucket = buckets.find((b) => leftBefore >= b.min && leftBefore <= b.max);
+        if (!bucket) continue;
+        bucket.attempts++;
+        if (v.isCheckout) bucket.hits++;
+      }
+    }
+  }
+
+  return buckets
+    .map((b) => ({ ...b, rate: b.attempts > 0 ? b.hits / b.attempts : 0 }));
+}
+
 
