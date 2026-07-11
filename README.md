@@ -1,179 +1,279 @@
 # Cursor_DartStats
 
 Nowa wersja **Dart Profile Tracker** — prywatny panel statystyk darta dla jednego zawodnika,
-budowany od zera w Cursorze. Inspiracja: projekt `Lovable_DartStats` (osobne repo).
+budowany od zera w Cursorze. Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v0.1 — repozytorium, README. Jeszcze bez kodu.
+> **Status:** v0.2 — planowanie. Brak kodu. Czekam na pełne repo z Lovable + prompty.
+> Następny krok: test-fetch endpointu N01 (po otrzymaniu repo).
 
 ---
 
 ## Spis treści
 
-1. [Czym jest ta aplikacja](#czym-jest-ta-aplikacja)
-2. [Co widać na ekranie — przegląd widoków](#co-widać-na-ekranie--przegląd-widoków)
-3. [Design — Sylveon Lift](#design--sylveon-lift)
-4. [Stack technologiczny](#stack-technologiczny)
-5. [Kluczowe funkcje do odwzorowania](#kluczowe-funkcje-do-odwzorowania)
-6. [Roadmapa — co budujemy krok po kroku](#roadmapa--co-budujemy-krok-po-kroku)
-7. [Jak pracujemy](#jak-pracujemy)
-8. [Dziennik zmian](#dziennik-zmian)
+1. [Cel projektu](#cel-projektu)
+2. [Założenia biznesowe](#założenia-biznesowe)
+3. [Stack technologiczny](#stack-technologiczny)
+4. [Architektura plików (planowana)](#architektura-plików-planowana)
+5. [Parser N01 — kontrakt](#parser-n01--kontrakt)
+6. [KPI — kontrakt](#kpi--kontrakt)
+7. [Identity, Storage, Sharing](#identity-storage-sharing)
+8. [Design System — Sylveon Lift (W2)](#design-system--sylveon-lift-w2)
+9. [Konwencje pracy](#konwencje-pracy)
+10. [Status / Roadmapa](#status--roadmapa)
+11. [ADR — kluczowe decyzje](#adr--kluczowe-decyzje)
+12. [Znane problemy i bugi do naprawienia](#znane-problemy-i-bugi-do-naprawienia)
+13. [Uruchomienie lokalne](#uruchomienie-lokalne)
+14. [Dziennik zmian](#dziennik-zmian)
 
 ---
 
-## Czym jest ta aplikacja
+## Cel projektu
 
-**Dart Profile Tracker** to prywatny panel statystyk gracza w darta.
+Kompletna historia zawodnika z lokalnych turniejów darta w jednym miejscu:
+każdy mecz pobrany z N01 na stałe (raw JSON + backup), własny widok throw-by-throw
+niezależny od dostępności n01darts.com, komplet statystyk, wykresy formy i analityka.
 
-- Zawodnik wkleja link do meczu z systemu **n01darts.com** (N01 Darts)
-- Aplikacja pobiera dane z N01 i **archiwizuje je trwale** (linki N01 wygasają!)
-- Wylicza pełne statystyki: 3-dart average, First 9, checkout%, rozkłady 60+…180, itd.
-- Wyświetla historię meczów, wykresy formy, analizę podejść i zamknięć
-- Mecz można **udostępnić linkiem** (`/m/{shareId}`) — bez logowania przez drugą osobę
-
-Docelowy użytkownik: **Piotr „Groteł" Grotkowski** (single-user, bez rejestracji).
+Aplikacja jest prywatna, mobile-first, z ciemnym motywem i glassmorphism.
 
 ---
 
-## Co widać na ekranie — przegląd widoków
+## Założenia biznesowe
 
-### 1. Landing (`/`)
-- Ciemne tło z subtelną siatką i rozbłyskiem
-- Logo — ikona tarczy
-- Tytuł: „Dart **Profile** Tracker" (słowo „Profile" w niebieskim gradiencie)
-- Podtytuł po polsku
-- Przycisk CTA „Przejdź do swojego profilu →"
-
-### 2. Profil gracza (`/profile`)
-- Nagłówek: „WITAJ, Piotr „Groteł" Grotkowski"
-- **Kafel STATYSTYKI ZAWODNIKA** — filtr zakresu (30 / 90 / 180 / 365 dni / Wszystko):
-  - Duże kafle: Średnia 3-DART, FIRST 9, WIN RATE (z bilansem W/L), LEGI (wygranych–zagranych)
-  - Rząd pigułek bucketów: 60+ / 80+ / 100+ / 120+ / 140+ / 170+ / 180
-  - Kafle dolne: HIGH FINISH, 100+ FIN., BEST LEG (dart), CHECKOUT %
-- **Kafel FORMA** — wykres liniowy (Recharts): średnia 3-dart per mecz + seria First 9
-- **Kafel OSTATNIE 5 MECZÓW** — lista: W/L pill + wynik legs + avg + link do meczu
-- **Kafel TOP 10 NAJCZĘSTSZYCH PODEJŚĆ** — poziomy bar chart (niebieski gradient)
-- **Kafel TOP 10 NAJCZĘSTSZYCH ZAMKNIĘĆ** — poziomy bar chart (fioletowy gradient)
-
-### 3. Dodaj mecz / Import (`/profile` — sekcja formularza)
-- Pojedynczy input URL (`https://n01darts.com/n01/...`) + przycisk „Pobierz dane"
-- Sekcja **IMPORT HURTOWY** — textarea (jeden URL / linia) + przycisk „Importuj wszystkie"
-- Pod formularzem: lista **OSTATNIE MECZE** (z liczbą)
-- Każda karta meczu: data, „vs NAZWISKO", badge WIN/LOSS, statystyki obu graczy (legs, 3-dart, first9, 60+…180, high fin., best/worst leg, checkout %), przyciski (throw-by-throw, tekst, link, komentarz)
-
-### 4. Szczegół meczu (`/m/{shareId}`)
-- Link „Wróć do profilu"
-- Data i godzina
-- Nazwa turnieju (np. „TURNIEJ INDYWIDUALNY OPEN - PUB DARTOWNIA 10.07 Group 4")
-- Kafel lewego gracza (aktywny, z nazwą, wynik legs, AVG) + prawy gracz
-- Sekcja **DETAILS** — tabela: First 9, 60+, 80+, 100+, 120+, 140+, 170+, 180, High Finish, 100+ Fin., Best Leg, Worst Leg, Checkout %
-- Sekcja **THROW-BY-THROW** — po legach:
-  - Nagłówek lega: nr lega, nazwa zawodnika, liczba rzutów, avg Ja / avg Opp
-  - Tabela: # | Ja (podświetlone 100+/140+/180) | left | Opp | left
-  - Ostatni wiersz = checkout (z checkmarkiem i liczbą lotek)
-- Przycisk „Udostępnij ten mecz"
-
----
-
-## Design — Sylveon Lift
-
-Ciemny motyw, paleta W2 „Sylveon Lift":
-
-| Token | Kolor | Zastosowanie |
-|---|---|---|
-| `--background` | `#0a0f1e` (bardzo ciemny granat) | tło strony |
-| `--card` | `#141a2e` (ciemny granat) | kafle (glass tile) |
-| `--accent-from` | `#5ea0ff` (niebieski) | primary, gradient start |
-| `--accent-to` | `#8b6bff` (fioletowy) | gradient end, akcent |
-| `--signal` | `#6be1ff` (cyjan) | podświetlenie 180, high finish |
-| `--border` | biały 14% opacity | granice kafli |
-| Font | **Inter** | całość |
-
-Kafle mają efekt `glass-tile` (blur + saturate, wewnętrzny highlight od góry).
+- **MVP = single user.** Bez logowania. Stały `OWNER_ID = "c_00001"`.
+- **Multi-user-ready od dnia 0.** Schemat DB z `customer_id` wszędzie, RLS — dodanie
+  auth nie wymaga przebudowy.
+- **Zero halucynacji.** Jeśli pole nie ma w danych N01 → kafel ukrywam, nie zmyślam.
+- **Profile i share-linki: `noindex, nofollow`.** Landing `/` — indeksowalny.
+- **Docelowo freemium SaaS:**
+  - Free: max 3 mecze, podstawowe statystyki
+  - Premium: pełne statystyki, import hurtowy, wykresy, eksport
+  - Bramka płatności: **polska** (PayNow/mBank lub PayU — nie Stripe)
+  - Role: user → premium → admin → superadmin
+- **Hosting:** jeden serwer/usługa, minimalne koszty, custom domain `dart.sylveoncompany.pl`.
 
 ---
 
 ## Stack technologiczny
 
-| Warstwa | Wybór |
+| Warstwa | Wybór | Powód |
+|---|---|---|
+| Framework | Next.js 15 (App Router) | API routes (server-side fetch N01, brak CORS), SSR, łatwy deploy |
+| Język | TypeScript (strict) | Bezpieczeństwo typów |
+| Styling | Tailwind v4 (CSS-first) + shadcn/ui | Szybki development, tokeny, glass effect |
+| Ikony | lucide-react | Lekkie, ładne |
+| Wykresy | Recharts | Responsywne, sprawdzone |
+| DB + Storage + Auth | Supabase (free → Pro $25/mies. przy wzroście) | Postgres + Storage + Auth + RLS |
+| Hosting | Vercel (free tier) | Deploy z GitHub, custom domain, zero konfiguracji |
+| Płatności (przyszłość) | PayNow (mBank) lub PayU | Polska bramka, PLN |
+| Package manager | pnpm | Szybki, oszczędny na dysku |
+
+---
+
+## Architektura plików (planowana)
+
+```
+src/
+├── app/
+│   ├── layout.tsx          # HTML shell, fonty, providers
+│   ├── page.tsx            # / — landing
+│   ├── profile/
+│   │   └── page.tsx        # /profile — panel zawodnika
+│   ├── m/[shareId]/
+│   │   └── page.tsx        # /m/{shareId} — publiczny widok meczu
+│   └── api/
+│       ├── ingest/route.ts # POST — fetch z N01 + zapis
+│       └── matches/route.ts# GET — lista meczów
+├── components/             # UI components
+├── lib/
+│   ├── n01-parser.ts       # Parser danych N01
+│   ├── stats.ts            # Silnik statystyk
+│   ├── supabase.ts         # Klient Supabase
+│   └── constants.ts        # OWNER_ID, config
+├── types/                  # TypeScript types
+└── styles/
+    └── globals.css         # Design tokens Sylveon Lift + @utility glass-tile
+```
+
+---
+
+## Parser N01 — kontrakt
+
+Endpoint (z Lovable, DO ZWERYFIKOWANIA):
+`POST https://tk2-228-23746.vs.sakura.ne.jp/n01/tournament/n01_user_t.php?cmd=match_view`
+z ciałem `{ tmid }`.
+
+Zwraca JSON z `statsData`, `legData`, `title`, `startTime`, `startScore`.
+
+### Kodowanie `playerData[legIdx][visitIdx]`
+
+| `score` | `left` | Znaczenie | `actualScore` | `darts` |
+|---|---|---|---|---|
+| 0 | 501 | Setup (index 0, pomijany) | 0 | 0 |
+| ≥ 0 | > 0 | Normalna wizyta (3 lotki) | = `score` | 3 |
+| = 0 | > 0, bez zmiany | Miss/bust bez punktów | 0 | 3 |
+| < 0 | = 0 | **CHECKOUT.** `|score|` = lotki użyte | = poprzedni `left` | `|score|` |
+| < 0 | > 0 | Bust wysokim wynikiem | 0 | `|score|` |
+
+**Status:** Do zweryfikowania test-fetchem. Nie zakładam, że endpoint działa bez sprawdzenia.
+
+---
+
+## KPI — kontrakt
+
+Statystyki per-mecz i w agregacie zawodnika:
+
+| Nazwa | Definicja |
 |---|---|
-| Frontend | React 19, TypeScript (strict) |
-| Routing | TanStack Start v1 (lub TanStack Router — do ustalenia po analizie repo) |
-| Bundler | Vite 7 |
-| Styling | Tailwind v4 (CSS-first) + shadcn/ui |
-| Ikony | lucide-react |
-| Wykresy | Recharts |
-| Backend / DB | Supabase (Postgres + Storage) |
-| Package manager | bun |
-
-> **Uwaga:** Stack do potwierdzenia po otrzymaniu linku do starego repo. Nie zakładamy.
-
----
-
-## Kluczowe funkcje do odwzorowania
-
-### Parser N01
-- POST do endpointu n01darts.com (`n01_user_t.php?cmd=match_view`) z `{ tmid }`
-- Zwraca `statsData`, `legData`, `title`, `startTime`, `startScore`
-- Ważne: ujemny `score` w `legData` = checkout lub bust — wymaga specjalnego dekodowania
-
-### KPI gracza (na mecz i w agregacie)
-- 3-Dart Average, First 9, Win Rate, Legs
-- Buckety exclusive: 60+=[60,79], 80+=[80,99], 100+=[100,119], 120+=[120,139], 140+=[140,169], 170+=[170,179], 180
-- High Finish, 100+ Finishes, Best Leg (darts), Worst Leg (darts), Checkout %
-- Checkout % = wygrane legi / próby na double (approx: wizyty z `left ≤ 170`)
-
-### Archiwizacja
-- Backup JSON + HTML shell do Supabase Storage (`dart-snapshots`)
-- Ścieżka: `c_00001/{ttype}/{yyyy}/{mm}/{dd}/{tmid}_{hash16}.{json|html}`
-
-### Share-link
-- `shareId = base36(sha256(owner+tmid)).slice(0,8)` — deterministyczny 8 znaków
-- Trasa `/m/{shareId}` z `noindex, nofollow`
-
-### Import hurtowy
-- Textarea z wieloma URL-ami (jeden na linię)
-- Sekwencyjny import, obsługa duplikatów (Nadpisz / Pomiń per-URL i „wszystkie")
+| Legs | `player.winLegs` |
+| 3-Darts Average | `allScore / allDarts * 3` |
+| First 9 | Średnia 3-dartowa z 3 pierwszych wizyt każdego lega |
+| 60+ / 80+ / 100+ / 120+ / 140+ / 170+ / 180 | Tiered exclusive: 60+=[60,79], 80+=[80,99]… |
+| High Finish | Największy `actualScore` w wizycie kończącej wygrany leg |
+| 100+ Finishes | Checkouty z `actualScore ≥ 100` |
+| Best Leg (darts) | Najkrótszy wygrany leg |
+| Worst Leg (darts) | Najdłuższy wygrany leg |
+| Checkout % | `wygrane_legi / próby_na_double` (approx: `leftBefore ≤ 170`) |
 
 ---
 
-## Roadmapa — co budujemy krok po kroku
+## Identity, Storage, Sharing
 
-### Faza 0 — Bootstrap (następna)
-- [ ] Konfiguracja projektu (Vite + React 19 + TypeScript + Tailwind v4 + shadcn/ui)
-- [ ] Design tokens (Sylveon Lift), `.glass-tile`, fonty
-- [ ] Routing bazowy (TanStack Start lub Router)
-- [ ] Supabase: bucket `dart-snapshots` + tabele + RLS
-- [ ] Strona landing (`/`)
+- `OWNER_ID = "c_00001"` — stała. Przyszłość: `auth.uid()` → `customer_id`.
+- **Storage:** bucket `dart-snapshots`, ścieżka `{c_XXXXX}/{ttype}/{yyyy}/{mm}/{dd}/{tmid}_{hash}.json`.
+- **Share-link:** `shareId = base36(sha256(owner+tmid)).slice(0,8)` — deterministyczny.
+- **Route:** `/m/{shareId}` — `noindex, nofollow`.
 
-### Faza 1 — Ingest + Parser + Profil
-- [ ] Parser N01 (`ingestN01`, negative-score encoding)
-- [ ] Silnik statystyk (`computeMatchStats`, `computePlayerStats`)
-- [ ] Widok `/profile` z kaflami KPI i listą meczów
-- [ ] Widok szczegółu meczu (`/m/{shareId}`) z throw-by-throw
+---
 
-### Faza 2 — Wykresy + Analityka
-- [ ] Wykres formy (Recharts — linia 3-dart avg + First 9)
-- [ ] Top 10 najczęstszych podejść (bar chart niebieski)
-- [ ] Top 10 najczęstszych zamknięć (bar chart fioletowy)
-- [ ] Ostatnie 5 meczów (kafel z W/L)
+## Design System — Sylveon Lift (W2)
+
+Inspiracja: [sylveoncompany.pl](https://sylveoncompany.pl)
+
+| Token | Kolor | Zastosowanie |
+|---|---|---|
+| `--background` | `#0a0f1e` | tło strony |
+| `--card` | `#141a2e` | kafle (glass tile) |
+| `--accent-from` | `#5ea0ff` | primary, gradient start |
+| `--accent-to` | `#8b6bff` | gradient end, fioletowy akcent |
+| `--signal` | `#6be1ff` | highlight 180, high finish |
+| `--border` | biały 14% opacity | granice kafli |
+| Font | **Inter** | całość |
+
+Efekty: glass-tile (blur + saturate), subtelne animacje, gradient CTA.
+
+---
+
+## Konwencje pracy
+
+- **Kod EN, UI PL.** Funkcje/typy po angielsku, teksty użytkownika po polsku.
+- **README = źródło prawdy.** Aktualizacja po każdej zmianie.
+- **Nie zakładamy — pytamy.** Zero halucynacji.
+- **Iteracyjnie.** Po każdym etapie raport: Co zrobiłem / Co proponuję / Ryzyka / Pytania / Update README.
+- **Nie przechodzimy dalej bez akceptacji.**
+- **`OWNER_ID` jako stała** — nigdy inline w wielu miejscach.
+
+---
+
+## Status / Roadmapa
+
+Numeracja i struktura faz zachowana z projektu Lovable (źródło historii).
+
+### Faza 0 — Bootstrap
+- [ ] 0.1 Scaffold projektu (Next.js 15 + TypeScript + Tailwind v4 + shadcn/ui + pnpm)
+- [ ] 0.2 Design tokens (Sylveon Lift), `.glass-tile`, fonty Inter
+- [ ] 0.3 Routing bazowy (landing `/`, profil `/profile`, mecz `/m/[shareId]`)
+- [ ] 0.4 Supabase: projekt + bucket `dart-snapshots` + schemat DB + RLS
+- [ ] 0.5 Landing page (`/`)
+- [ ] 0.6 **Test-fetch endpointu N01** ← NASTĘPNY KROK
+
+### Faza 1 — Ingest N01 + Parser + Profil
+- [ ] 1.1 `ingestN01(url)` — server-side fetch + backup do Storage
+- [ ] 1.2 Parser `statsData` + `legData` → typy TS
+- [ ] 1.3 Detekcja „ja" — **DO PRZEPROJEKTOWANIA** (stary sposób po nicku jest buggy)
+- [ ] 1.4 Silnik statystyk `computeMatchStats` + `computePlayerStats`
+- [ ] 1.5 Widok `/profile` — kafle stats + lista meczów + filtr zakresu
+- [ ] 1.6 Widok szczegółu meczu `/m/[shareId]` (throw-by-throw)
+- [ ] 1.7 Seed testowy (kilka meczów)
+
+### Faza 2 — Rozbudowa profilu + persystencja DB
+- [ ] 2.1 Formularz „Dodaj mecz" (input URL + „Pobierz dane")
+- [ ] 2.2 Schemat bazy (migracja Postgres, RLS deny-by-default)
+- [ ] 2.3 Server functions: `saveMatch`, `getMyMatches`, `getMatchByShareId`
+- [ ] 2.4 Wykres formy (Recharts: 3-dart avg + First 9 per mecz)
+- [ ] 2.5 Ostatnie 5 meczów (kafel W/L)
+- [ ] 2.6 Top 10 najczęstszych podejść
+- [ ] 2.7 Top 10 najczęstszych zamknięć
 
 ### Faza 3 — Import hurtowy + Duplikaty
-- [ ] Formularz pojedynczego importu
-- [ ] Import hurtowy (textarea + sekwencyjny)
-- [ ] Obsługa duplikatów (Nadpisz / Pomiń)
+- [ ] 3.1 Formularz z textarea (wiele URL naraz)
+- [ ] 3.2 Sekwencyjny import + obsługa duplikatów (Nadpisz / Pomiń)
+- [ ] 3.3 Walidacja tmid + komunikaty błędów PL
 
-### Faza 4+ — do ustalenia
-- Auth, multi-user, testy, export CSV, head-to-head, heatmapa
+### Faza 4 — Signed URL + Audit-log + Share
+- [ ] 4.1 Signed URL do snapshotów (TTL 5 min)
+- [ ] 4.2 Przycisk „Udostępnij mecz"
+- [ ] 4.3 Audit-log dostępu
+
+### Faza 5 — Zaawansowana analityka
+- [ ] 5.1 Średnia krocząca (5-mecz rolling) + trend
+- [ ] 5.2 Heatmapa dni/godzin
+- [ ] 5.3 Head-to-head vs konkretny przeciwnik
+- [ ] 5.4 Rozkład finishingów
+- [ ] 5.5 Export CSV/XLSX
+
+### Faza 6 — Auth + Multi-user
+- [ ] 6.1 Supabase Auth (Google login)
+- [ ] 6.2 Tabela `customers` — sync `auth.uid()` → `customer_id`
+- [ ] 6.3 Onboarding: „który zawodnik to Ty?" przy pierwszym ingest
+- [ ] 6.4 Usunięcie stałej `OWNER_ID`
+- [ ] 6.5 Landing z CTA „Zaloguj się"
+
+### Faza 7 — Premium + Płatności
+- [ ] 7.1 Model freemium (free: 3 mecze, basic stats; premium: pełne)
+- [ ] 7.2 Bramka płatności (PayNow/PayU)
+- [ ] 7.3 Role: user / premium / admin / superadmin
+- [ ] 7.4 Panel admina
+
+### Faza 8 — Testy + Hardening
+- [ ] 8.1 Vitest (parser + stats golden samples)
+- [ ] 8.2 Playwright (happy-path: ingest → profil → share)
+- [ ] 8.3 CI na PR (`typecheck && test`)
 
 ---
 
-## Jak pracujemy
+## ADR — kluczowe decyzje
 
-1. **README = źródło prawdy.** Aktualizacja po każdej wersji.
-2. **Nie zakładamy — pytamy.** Jeśli czegoś nie wiemy, pytamy zamiast zgadywać.
-3. **Kod EN, UI PL.** Nazwy funkcji/typów po angielsku, teksty dla użytkownika po polsku.
-4. **GitHub + dysk lokalny.** GitHub = archiwum, praca w Cursorze.
-5. **Zero halucynacji w UI.** Jeśli parser nie ma pola → kafel ukrywam, nie zmyślam.
+1. **Next.js zamiast TanStack Start.** Stabilniejszy, łatwiejszy deploy, lepszy ekosystem.
+2. **Supabase zamiast self-hosted.** Mniej pracy ops, free tier na MVP, Pro na wzrost.
+3. **Polska bramka (PayNow/PayU) zamiast Stripe.** Lokalny rynek, PLN.
+4. **Parser: negative-score encoding.** N01 koduje ujemny `score` jako liczbę lotek
+   na checkout/bust. Bez dekodowania statystyki są błędne.
+5. **Share-link zamiast surowego path.** `/m/{shareId}` (8 znaków) — krótszy, bezpieczniejszy.
+6. **`c_XXXXX` jako customer_id.** Multi-tenant-ready od dnia 0.
+7. **Noindex na profilach/share.** Prywatne dane — bez Google.
+8. **Vercel jako hosting.** Zero config, free tier, custom domain, auto-deploy z GitHub.
+
+---
+
+## Znane problemy i bugi do naprawienia
+
+| # | Problem | Status |
+|---|---|---|
+| BUG-1 | Detekcja „ja" po nicku (Piotr/Grotkowski/Grotel) jest błędna — nie każdy Piotr to Piotr Grotkowski. Trzeba przeprojektować: np. user wybiera siebie przy pierwszym imporcie. | Do naprawienia w Fazie 1.3 |
+| RISK-1 | Endpoint N01 niezweryfikowany — może nie działać lub zwracać inaczej. | Test-fetch zaplanowany (Faza 0.6) |
+
+---
+
+## Uruchomienie lokalne
+
+_Jeszcze brak kodu. Po scaffoldingu:_
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Podgląd: `http://localhost:3000/`
 
 ---
 
@@ -181,8 +281,13 @@ Kafle mają efekt `glass-tile` (blur + saturate, wewnętrzny highlight od góry)
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
-| v0.1 | 2026-07-11 | Nowe repo, README z pełnym zamysłem projektu na podstawie zrzutów i README z Lovable |
+| v0.2 | 2026-07-11 | Pełny zamysł projektu: zrzuty + README Lovable → nowy README. Stack, roadmapa, design, bugi, ADR. |
+| v0.1 | 2026-07-11 | Nowe repo na GitHub |
 
 ---
 
-_Stary projekt (Lovable): link do uzupełnienia po otrzymaniu od właściciela._
+## Źródła
+
+- **Stary projekt (Lovable):** _link do uzupełnienia po otrzymaniu_
+- **Inspiracja designu:** [sylveoncompany.pl](https://sylveoncompany.pl)
+- **System meczów:** [n01darts.com](https://n01darts.com)
