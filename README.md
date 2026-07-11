@@ -1,9 +1,10 @@
 # Cursor_DartStats
 
-**Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 15.
+**Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v0.4 — README reorganizowane. Fazy 0-5 zdefiniowane. Czekam na start scaffoldingu.
+> **Status:** v0.9 — **Faza 1 fixy batch 1** (daty naprawione, unifikacja nazw, paginacja, Win rate legów, UX meczów).
+> Następny czat: **Faza 1 fixy batch 2** (wykres formy Recharts, weryfikacja Top 10 zamknięć, deeplinki).
 
 ---
 
@@ -21,7 +22,8 @@ Docelowo pod `dart.sylveoncompany.pl`.
 10. [Status / Roadmapa](#status--roadmapa)
 11. [ADR — kluczowe decyzje](#adr--kluczowe-decyzje)
 12. [Uruchomienie lokalne](#uruchomienie-lokalne)
-13. [Dziennik zmian](#dziennik-zmian)
+13. [Stan na koniec czatu + handoff](#stan-na-koniec-czatu--handoff)
+14. [Dziennik zmian](#dziennik-zmian)
 
 ---
 
@@ -55,7 +57,7 @@ Mobile-first, ciemny motyw, glassmorphism.
 
 | Warstwa | Wybór |
 |---|---|
-| Framework | Next.js 15 (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Język | TypeScript (strict) |
 | Styling | Tailwind v4 + shadcn/ui |
 | Ikony | lucide-react |
@@ -63,7 +65,7 @@ Mobile-first, ciemny motyw, glassmorphism.
 | DB + Storage + Auth | Supabase |
 | Hosting | Vercel |
 | Płatności (przyszłość) | PayNow (mBank) lub PayU |
-| Package manager | pnpm |
+| Package manager | npm |
 
 ---
 
@@ -76,13 +78,28 @@ Mobile-first, ciemny motyw, glassmorphism.
 customers (
   customer_id     uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   auth_user_id    uuid REFERENCES auth.users,    -- NULL w MVP
-  display_name    text NOT NULL,                 -- "Piotr „Groteł" Grotkowski"
-  known_nicknames text[],                        -- ["Grotkowski", "Groteł"]
+  first_name      text NOT NULL,                 -- imię: "Piotr"
+  last_name       text NOT NULL,                 -- nazwisko: "Grotkowski"
+  nickname        text,                          -- pseudonim: "Groteł" (opcjonalny)
+  display_name    text GENERATED ALWAYS AS (      -- tylko do wyświetlania
+    CASE WHEN nickname IS NOT NULL AND btrim(nickname) <> ''
+      THEN first_name || ' „' || nickname || '" ' || last_name
+      ELSE first_name || ' ' || last_name
+    END
+  ) STORED,
+  known_nicknames text[],                        -- ["Grotkowski", "Groteł"] — auto-detect N01
   role            text DEFAULT 'user',           -- 'user' | 'premium' | 'admin' | 'superadmin'
   created_at      timestamptz DEFAULT now(),
   updated_at      timestamptz DEFAULT now()
 )
+```
 
+**Wyświetlanie:** UI bierze `first_name`, `last_name`, `nickname` z DB. Kolumna `display_name` jest GENERATED (nie edytować ręcznie).
+Helper TS: `formatCustomerDisplayName()` w `lib/customer.ts`.
+
+**Detekcja N01:** wzorce z `known_nicknames` rekordu customer (nie hardcoded).
+
+```sql
 -- Mecze
 matches (
   match_id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -293,33 +310,42 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 **Nowe (do zrobienia w Next.js):**
 
-- [ ] **0.23** Scaffold Next.js 15 + TypeScript + Tailwind v4 + shadcn/ui + pnpm
-- [ ] **0.24** Design tokens Sylveon Lift + `.glass-tile` + fonty Inter
-- [ ] **0.25** Supabase: projekt (user zakłada) + bucket + migracje (nowy schemat)
-- [ ] **0.26** **Test-fetch endpointu N01** (zweryfikować czy działa)
-- [ ] **0.27** Landing `/` (Target icon, gradient CTA)
-- [ ] **0.28** Przepisanie logiki z Lovable → Next.js (parser, stats, routes)
-- [ ] **0.29** Seed 3 mecze (URL z Lovable)
-- [ ] **0.30** Deployment na Vercel (GitHub auto-deploy)
+- [x] **0.23** Scaffold Next.js 16 + TypeScript + Tailwind v4 + npm
+- [x] **0.24** Design tokens Sylveon Lift + `.glass-tile` + font Inter
+- [x] **0.25** Supabase: projekt (user zakłada) + bucket + migracje (nowy schemat)
+- [x] **0.26** **Test-fetch endpointu N01** — ✅ działa, JSON OK
+- [x] **0.27** Landing `/` (Target icon, gradient CTA)
+- [x] **0.28** Przepisanie logiki z Lovable → Next.js (parser, stats, API ingest/matches) — **backend OK, UI minimalne**
+- [x] **0.29** Seed 3 mecze — skrypt `npm run seed` (SEED_URLS z README)
+- [x] **0.30** Vercel-ready — `vercel.json` + instrukcja deploy w README (ręczne podłączenie repo)
+
+**UI do odtworzenia w Next.js (było w Lovable, tu jeszcze brak):**
+
+- [x] **0.31** `/profile` — pełny MVP: kafle statystyk, filtr zakresu, ostatnie 5, top 10
+- [x] **0.32** `/profile` — karty meczów z KPI (jak na zrzutach)
+- [x] **0.33** `/m/[shareToken]` — throw-by-throw + details + score card
+- [x] **0.34** Import hurtowy + formularz „Dodaj mecz" (rozwijany, na górze)
 
 ---
 
 ### Faza 1 — Fixy UI + UX (5.8-5.14)
 
-- [ ] **1.1** Fix: Detekcja gracza STRICT (Grotkowski/Groteł + pytaj) _(5.x implicit)_
-- [ ] **1.2** Fix 5.2.1: Bulk import — przy „Nadpisz wszystkie" nie pytaj ponownie o każdy duplikat
-- [ ] **1.3** Fix 5.8: Paginacja meczów (profil: 3 najnowsze + button „Więcej" → lista 10/strona, rozwijalne)
-- [ ] **1.4** Fix 5.9: Wynik meczu — nazwisko gracza (ja) podświetlone zielono/czerwono (W/L), wynik meczu na środku
-- [ ] **1.5** Fix 5.10.1: „Best leg (r)" → „Best leg (lotka)" (bez skrótu `(r)`)
-- [ ] **1.6** Fix 5.10.2: Throw-by-throw zwycięzca — „Grotkowski · 44 r" → „Grotkowski · 44 lotki"
-- [ ] **1.7** Fix 5.10.3: Statystyki zawodnika — „40 m." → „40 meczów" (bez skrótu)
-- [ ] **1.8** Fix 5.10.4: Top 10 sekcje — usunąć „10" po prawej na wysokości nagłówka
-- [ ] **1.9** Fix 5.10.5: „Dodaj nowy mecz" — usunąć „01" po prawej na wysokości nagłówka
-- [ ] **1.10** Fix 5.10.6: „Ostatnie mecze" — usunąć liczbę po prawej na wysokości nagłówka
-- [ ] **1.11** Fix 5.11: Weryfikacja Top 10 zamknięć — sprawdzić czy dobrze liczone (31 wygranych legów, tylko 14 w top10?)
-- [ ] **1.12** Fix 5.12: Import hurtowy → przenieść do sekcji „Dodaj nowy mecz"
-- [ ] **1.13** Fix 5.13: „Dodaj nowy mecz" → rozwijane (jak import hurtowy był), przenieść na górę profilu (nad statystyki, zwinięte)
-- [ ] **1.14** Fix 5.14: Unifikacja nazwisk — normalizacja do `"Nazwisko Imię"` (pierwsze litery wielkie), pseudonimy OK as-is
+- [x] **1.1** Fix: Detekcja gracza STRICT (Grotkowski/Groteł + pytaj / odrzuć) — **backend OK**
+- [x] **1.2** Fix 5.2.1: Bulk import — `useRef` dla dupPolicy, „Nadpisz wszystkie" działa bez ponownych pytań
+- [x] **1.3** Fix 5.8: Paginacja meczów (profil: 3 najnowsze + button „Więcej" → lista 10/strona, rozwijalne karty)
+- [x] **1.4** Fix 5.9: Wynik meczu — moje nazwisko zielone/czerwone (W/L), wynik `3:1` na środku między nazwiskami
+- [x] **1.5** Fix 5.10.1: `(lotka)` usunięte z etykiet Best/Worst leg
+- [x] **1.6** Fix 5.10.2: Throw-by-throw — „44 lotek" (pełna odmiana polska przez `dartWord()`)
+- [x] **1.7** Fix 5.10.3: Odmiana liczebnikowa mecz/meczów w kaflu statystyk
+- [x] **1.8** Fix 5.10.4 / 5.10.5: Top 10 bez licznika, formularz bez „01"
+- [x] **1.9** Fix dat/godzin: błąd `getTime()` w `rowsToN01Match` → milisekundy zamiast sekund → **naprawione**, re-import 51 meczów z N01
+- [x] **1.10** Fix 5.12 / 5.13: Import hurtowy w sekcji „Dodaj nowy mecz", rozwijany
+- [x] **1.11** Fix 5.14: Normalizacja nazwisk przez `normalizeName()` — ALL_CAPS/lowercase → Title Case; pseudonimy bez zmian
+- [x] **1.12** Checkout ratio `42% (3/7)` inline wszędzie (kafel, karta meczu, szczegóły)
+- [x] **1.13** Osobny kafel Win rate legów z win% pod `59–93`; "Throw-by-throw" → "Rzut po rzucie"
+- [x] **1.14** Backup DB do repo (`.dev/backup-2026-07-11.json`, 51 meczów)
+- [ ] **1.15** Fix 5.11: Weryfikacja Top 10 zamknięć (czy `isCheckout` poprawnie ustawiany przez parser)
+- [ ] **1.16** Wykres formy (Recharts: 3-dart avg + First 9 per mecz, czas na osi X)
 
 ---
 
@@ -370,20 +396,131 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 6. **Schemat DB bez skrótów** — `customer_id`, `match_id`, `n01_tmid` (czytelność).
 7. **Noindex na profilach/share** — prywatne dane, bez Google.
 8. **Vercel jako hosting** — zero config, free tier, custom domain.
-9. **Detekcja gracza STRICT** — tylko Grotkowski/Groteł auto, reszta → pytaj lub odrzuć.
+9. **Detekcja gracza STRICT** — wzorce z `known_nicknames` customer, reszta → pytaj lub odrzuć.
+10. **Customer name split** — `first_name`, `last_name`, `nickname` w DB; `display_name` GENERATED.
 
 ---
 
 ## Uruchomienie lokalne
 
-_Po scaffoldingu (Faza 0.23):_
-
 ```bash
-pnpm install
-pnpm dev
+cd ~/Cursor_DartStats
+cp .env.example .env.local   # uzupełnij klucze Supabase
+npm install
+npm run dev
 ```
 
-Podgląd: `http://localhost:3000/`
+W `.env.local` potrzebne:
+
+- `NEXT_PUBLIC_SUPABASE_URL` — URL projektu Supabase
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — klucz publishable (`sb_publishable_…`)
+- `SUPABASE_SERVICE_ROLE_KEY` — klucz secret (`sb_secret_…`, tylko serwer)
+- `DEFAULT_CUSTOMER_ID` — UUID seed customer (MVP: `a0000000-0000-4000-8000-000000000001`)
+
+**Nigdy nie commituj `.env.local`.**
+
+Podgląd w przeglądarce:
+
+- **Strona główna:** http://localhost:3000/
+- **Profil (import + lista meczów):** http://localhost:3000/profile
+- **Mecz (placeholder):** http://localhost:3000/m/{shareToken}
+
+Zatrzymanie serwera: `Ctrl + C` w terminalu.
+
+### Migracja customer name fields (jednorazowo)
+
+Jeśli baza ma jeszcze starą kolumnę `display_name` (tekstowa), zastosuj:
+
+```bash
+# Supabase Dashboard → SQL Editor → wklej zawartość:
+# supabase/migrations/20260711190000_customer_name_fields.sql
+```
+
+### Seed 3 meczów testowych
+
+Po migracji i `.env.local`:
+
+```bash
+npm run seed
+```
+
+Skrypt importuje SEED_URLS z README (pomija duplikaty).
+
+### Import meczów z Lovable (CSV export)
+
+Eksport z Supabase Lovable (`matches` table) → CSV z kolumnami `tmid`, `ttype`, `me_index`.
+Skrypt pobiera pełne dane z N01 (legi + wizyty), pomija duplikaty po `n01_tmid`:
+
+```bash
+npx tsx scripts/import-csv-matches.ts ~/Downloads/matches-export-*.csv
+```
+
+Stan: **51 meczów** zaimportowanych (2026-07-11).
+
+### Deploy na Vercel
+
+1. https://vercel.com → **Add New Project** → import `grotkowski9/Cursor_DartStats`
+2. Framework: Next.js (auto-detect)
+3. **Environment Variables** (Production + Preview):
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `DEFAULT_CUSTOMER_ID`
+4. Deploy. Opcjonalnie: custom domain `dart.sylveoncompany.pl`
+
+---
+
+## Stan na koniec czatu + handoff
+
+### v0.9 — Faza 1 batch 1 ✅
+
+| Element | Status |
+|---|---|
+| Mecze w DB | **51** — re-ingestowane bezpośrednio z N01 (overwrite, 2026-07-11) |
+| Daty/czasy | ✅ Naprawione — błąd ms vs s w `rowsToN01Match` |
+| `/profile` | Kafle (win rate meczów + legów), paginacja 3+10/str, kompaktowe karty |
+| Karty meczów | Moje nazwisko zielone/czerwone, wynik `3:1` w centrum, rozwijane KPI |
+| Nazwy graczy | `normalizeName()` — Title Case, ALL_CAPS → normalnie |
+| Checkout | `42% (3/7)` inline wszędzie |
+| `/m/[shareToken]` | "Rzut po rzucie", odmiana `dartWord()`, bez `(lotka)` w labelach |
+| Backup | `.dev/backup-2026-07-11.json` (51 meczów) |
+| Bulk import | „Nadpisz wszystkie" nie pyta o każdy duplikat (useRef fix) |
+
+### 5 kolejnych zadań
+
+1. **[1.15] Weryfikacja Top 10 zamknięć** — sprawdzić w surowych danych N01 czy `isCheckout` jest poprawnie ustawiany przez parser dla checkoutów 1- i 2-lotowych
+2. **[1.16] Wykres formy** — Recharts: 3-dart avg + First 9 per mecz, czas na osi X (komponent `ProfileFormChart`)
+3. **[2.1] Head-to-head** — statystyki vs konkretny przeciwnik (filtr po nazwisku z listy rozgrywaczy)
+4. **[3.1] Auth (Google)** — Supabase Auth, sync `auth.uid()` → `customer_id`, usunięcie stałej `OWNER_ID`
+5. **[5.1] Testy Vitest** — golden samples parsera N01 i silnika statystyk
+
+**NIE w scope:** auth, premium, analityka Fazy 2+.
+
+### Pliki kluczowe
+
+```
+app/profile/profile-client.tsx      ← orchestrator UI
+app/profile/profile-stats-block.tsx ← kafel statystyk + filtr
+app/profile/profile-recent-matches.tsx
+app/profile/profile-match-card.tsx
+app/profile/profile-top-lists.tsx
+app/profile/profile-add-match.tsx   ← dodaj + bulk (zwijane)
+app/m/[shareToken]/match-view.tsx   ← throw-by-throw
+app/api/matches/full/route.ts
+scripts/import-csv-matches.ts       ← import z CSV Lovable
+lib/stats.ts                        ← silnik KPI (bez zmian)
+```
+
+### Prompt na nowy czat
+
+```
+Projekt: Dart Profile Tracker (Cursor_DartStats)
+README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
+
+Stan v0.8 — MVP UI DONE, 51 meczów w DB.
+ZADANIE: Faza 1 fixy (paginacja, forma Recharts, bulk overwrite-all, nazwiska).
+Nie rób auth/premium/Fazy 2+.
+```
 
 ---
 
@@ -391,7 +528,11 @@ Podgląd: `http://localhost:3000/`
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
-| v0.4 | 2026-07-11 | README reorganizowane: Fazy 0-5, nowy schemat DB (bez `c_id`), fixy 5.8-5.14, strict player detection, fix 5.2.1, 5.7 cancelled. |
+| v0.9 | 2026-07-11 | Faza 1 batch 1: fix dat (ms/s), re-import 51 meczów z N01, normalizeName, paginacja 3+10/str, Win rate legów, moje imię zielone/czerwone, checkout inline, Rzut po rzucie, backup DB, bulk overwrite-all fix. |
+| v0.8 | 2026-07-11 | MVP UI: profil (statystyki, top 10, karty, bulk), mecz throw-by-throw. Import 51 meczów z CSV Lovable. |
+| v0.6 | 2026-07-11 | Supabase + backend (parser, stats, API, import). Profil/mecz UI = placeholder. |
+| v0.5 | 2026-07-11 | Scaffold Next.js 16: landing, profil placeholder, design Sylveon Lift, build OK. |
+| v0.4 | 2026-07-11 | README reorganizowane: Fazy 0-5, nowy schemat DB, fixy 5.8-5.14. |
 | v0.3 | 2026-07-11 | Analiza repo Lovable (`dart-stats-hub`): parser, stats, routes, migracje SQL. |
 | v0.2 | 2026-07-11 | Zrzuty + README Lovable → nowy README. Stack, roadmapa, design, ADR. |
 | v0.1 | 2026-07-11 | Nowe repo na GitHub. |
