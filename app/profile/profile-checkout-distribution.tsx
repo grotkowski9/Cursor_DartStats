@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { BarChart3 } from "lucide-react";
 import { N01Match } from "@/lib/n01-parser";
 import { computeCheckoutDistribution } from "@/lib/stats";
 
@@ -18,27 +19,31 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
 
   return (
     <section>
-      <h2 className="text-base font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-        Histogram zamknięć
-      </h2>
-      <div className="bg-zinc-900 rounded-xl p-4 space-y-2">
+      <div className="glass-tile p-5">
+        <div className="mb-4">
+          <h2 className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest">
+            <BarChart3 className="h-3.5 w-3.5 text-accent-to" />
+            Histogram zamknięć
+          </h2>
+        </div>
+        <div className="space-y-2">
         {buckets.map((b) => {
           const barWidth = (b.attempts / maxAttempts) * 100;
           const rateColor =
             b.rate >= 0.5
-              ? "bg-emerald-500"
+              ? "bg-signal"
               : b.rate >= 0.25
-              ? "bg-yellow-500"
+              ? "bg-gradient-to-r from-accent-from to-accent-to"
               : b.attempts > 0
-              ? "bg-red-500"
-              : "bg-zinc-700";
+              ? "bg-accent-from/70"
+              : "bg-white/[0.08]";
           const rateText =
             b.rate >= 0.5
-              ? "text-emerald-400"
+              ? "text-signal"
               : b.rate >= 0.25
-              ? "text-yellow-400"
+              ? "text-foreground"
               : b.attempts > 0
-              ? "text-red-400"
+              ? "text-muted-foreground"
               : "text-zinc-600";
 
           return (
@@ -47,7 +52,7 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
               <span className="text-xs text-zinc-400 text-right font-mono">{b.range}</span>
 
               {/* bar */}
-              <div className="relative h-5 bg-zinc-800 rounded overflow-hidden">
+              <div className="relative h-5 bg-white/[0.04] rounded overflow-hidden">
                 {b.attempts > 0 && (
                   <div
                     className={`absolute left-0 top-0 h-full rounded transition-all ${rateColor} opacity-80`}
@@ -81,19 +86,6 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
             </div>
           );
         })}
-
-        {/* legend */}
-        <div className="flex items-center gap-4 pt-3 mt-1 border-t border-zinc-800">
-          <span className="text-[11px] text-zinc-500">Skuteczność zamknięcia:</span>
-          <span className="flex items-center gap-1 text-[11px] text-emerald-400">
-            <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block" /> ≥50%
-          </span>
-          <span className="flex items-center gap-1 text-[11px] text-yellow-400">
-            <span className="w-2.5 h-2.5 rounded-sm bg-yellow-500 inline-block" /> 25–49%
-          </span>
-          <span className="flex items-center gap-1 text-[11px] text-red-400">
-            <span className="w-2.5 h-2.5 rounded-sm bg-red-500 inline-block" /> &lt;25%
-          </span>
         </div>
       </div>
     </section>

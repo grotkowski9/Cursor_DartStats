@@ -18,21 +18,6 @@ type Props = {
   matches: N01Match[];
 };
 
-function WinDot({
-  cx,
-  cy,
-  payload,
-}: {
-  cx?: number;
-  cy?: number;
-  payload?: FormPoint;
-}) {
-  if (cx === undefined || cy === undefined || !payload) return null;
-  const color =
-    payload.won === true ? "#10b981" : payload.won === false ? "#ef4444" : "#6b7280";
-  return <circle cx={cx} cy={cy} r={5} fill={color} stroke="none" />;
-}
-
 function CustomTooltip({
   active,
   payload,
@@ -42,9 +27,6 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
-  const resultColor =
-    d.won === true ? "text-emerald-400" : d.won === false ? "text-red-400" : "text-muted-foreground";
-  const resultText = d.won === true ? "Win" : d.won === false ? "Loss" : "—";
   return (
     <div className="rounded-xl border border-white/10 bg-card/90 px-3 py-2 text-xs backdrop-blur-xl">
       <p className="mb-1 font-semibold text-muted-foreground">{d.dateLabel}</p>
@@ -56,7 +38,6 @@ function CustomTooltip({
           First 9 <span className="font-semibold">{d.first9.toFixed(2)}</span>
         </p>
       )}
-      <p className={`font-semibold ${resultColor}`}>{resultText}</p>
     </div>
   );
 }
@@ -120,23 +101,12 @@ export function ProfileFormChart({ matches }: Props) {
               dataKey="average"
               stroke="#5ea0ff"
               strokeWidth={2}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              dot={(props: any) => (
-                <WinDot key={`dot-${props.payload?.shareToken}`} cx={props.cx} cy={props.cy} payload={props.payload} />
-              )}
+              dot={false}
               activeDot={false}
             />
           </LineChart>
         </ResponsiveContainer>
         <div className="mt-2 flex items-center gap-4 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-            Win
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-2 w-2 rounded-full bg-red-400" />
-            Loss
-          </span>
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-5 border-t-2 border-[#5ea0ff]" />
             3-dart avg
