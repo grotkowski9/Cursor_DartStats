@@ -25,15 +25,6 @@ export function LandingJsonLd() {
     },
   };
 
-  const org = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Sylveon Company",
-    url: SYLVEON_URL,
-    sameAs: [SYLVEON_URL],
-    description: "Doradztwo iGaming, CRM, e-commerce oraz dart & event management.",
-  };
-
   const demoPage = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -47,10 +38,6 @@ export function LandingJsonLd() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webApp) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
       />
       <script
         type="application/ld+json"

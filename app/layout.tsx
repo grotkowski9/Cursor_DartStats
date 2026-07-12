@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Panel statystyk darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją. Produkt Sylveon Company.",
+    "Panel statystyk darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją.",
   openGraph: {
     title: SITE_NAME,
     description:

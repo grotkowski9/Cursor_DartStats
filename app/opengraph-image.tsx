@@ -39,7 +39,7 @@ export default function OgImage() {
               color: "#93b4ff",
             }}
           >
-            Sylveon Company · Dart &amp; Event
+            Statystyki darta · import N01
           </div>
 
           <div

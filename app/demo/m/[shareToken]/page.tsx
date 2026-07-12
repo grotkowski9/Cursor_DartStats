@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { DemoBanner } from "@/components/demo-banner";
-import { SylveonFooter } from "@/components/sylveon-footer";
+import { SiteFooter } from "@/components/site-footer";
 import { getDemoMatchByShareToken } from "@/lib/demo";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { MatchView } from "@/app/m/[shareToken]/match-view";
@@ -60,7 +60,7 @@ export default async function DemoMatchPage({ params }: Props) {
           </p>
         </div>
       </main>
-      <SylveonFooter />
+      <SiteFooter />
     </>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { DemoBanner } from "@/components/demo-banner";
-import { SylveonFooter } from "@/components/sylveon-footer";
+import { SiteFooter } from "@/components/site-footer";
 import { getDemoMatches, personaToCustomer } from "@/lib/demo";
 import { DEMO_PERSONA } from "@/demo/demo-persona";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
@@ -65,7 +65,7 @@ export default function DemoProfilePage() {
           />
         </div>
       </main>
-      <SylveonFooter />
+      <SiteFooter />
     </>
   );
 }

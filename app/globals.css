@@ -75,13 +75,6 @@
   color: transparent;
 }
 
-@utility sylveon-section-num {
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: color-mix(in oklab, var(--accent-from) 75%, transparent);
-}
-
 @utility dartboard-ring {
   position: relative;
   &::before {

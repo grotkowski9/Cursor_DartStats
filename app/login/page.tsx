@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, LogIn, Target, UserPlus } from "lucide-react";
-import { SylveonFooter } from "@/components/sylveon-footer";
-import { getSiteUrl, SITE_NAME, SYLVEON_URL } from "@/lib/site-config";
+import { SiteFooter } from "@/components/site-footer";
+import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: `Logowanie — ${SITE_NAME}`,
@@ -72,28 +72,15 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="mt-8 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-8 text-xs text-muted-foreground">
             Masz już dostęp developerski?{" "}
             <Link href="/profile" className="text-primary hover:underline">
               Przejdź do /profile
-            </Link>{" "}
-            (prywatny panel, noindex).
-          </p>
-
-          <p className="mt-4 text-xs text-muted-foreground">
-            Produkt od{" "}
-            <Link
-              href={SYLVEON_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Sylveon Company
             </Link>
           </p>
         </div>
       </main>
-      <SylveonFooter />
+      <SiteFooter />
     </>
   );
 }
