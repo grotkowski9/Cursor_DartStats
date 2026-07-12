@@ -3,8 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v1.0.0 — **Milestone: Fazy 0–3 DONE** (51 meczów, profil kompletny). Backup: `.dev/backup-2026-07-12-v1.0.json`.
-> Następna praca: **Faza 4 — Auth + Multi-user** lub **Faza 6 — Deploy produkcyjny**.
+> **Status:** v1.0.0 — **Fazy 0–3 ZAMKNIĘTE** (51 meczów). Następna praca: **Faza 4 → 5 → 6** (po kolei, patrz roadmapa).
 
 ---
 
@@ -360,13 +359,15 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ---
 
-### Faza 3 — Fix & Small features pack ✅ (częściowo)
+### Faza 3 — Fix & Small features pack ✅ ZAMKNIĘTA
+
+> **Stan:** wszystkie zadania obowiązkowe done. **3.14–3.17** zawieszone (opcjonalne). **3.18** odłożone → **6.8** (perf).
 
 **Fix-pack UI + statystyki** ✅
 
 - [x] **3.1** Gradient pasków w Top 10 i Histogram zamknięć — taki sam jak w Aktywność-dni
 - [x] **3.2** Ostatnie mecze: średnia przeciwnika pod nazwiskiem (przed rozwinięciem)
-- [x] **3.3** Ostatnie mecze: jednolity biały font KPI po rozwinięciu (bez kolorów highlight/violet/signal)
+- [x] **3.3** Ostatnie mecze: biały font KPI (avg, checkout…); kolory tylko na bucketach score
 - [x] **3.4** Nazwy: usuwanie miast — rozszerzona blacklista PL (60+ miast), lepsze czyszczenie
 - [x] **3.5** Nazwy: unifikacja wielkości liter (`Małkowski Adrian` zamiast `MAŁKOWSKI Adrian`), title-case per słowo
 - [x] **3.6** Wykres formy: widoczna etykieta avg w legendzie pod wykresem („Śr. ogólna")
@@ -380,22 +381,53 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - [x] **3.11** Head-to-head: **statystyki przeciwnika** obok moich — widok „Ja vs On" (avg, First 9, checkout, 100+/140+/180), grid porównawczy
 - [x] **3.12** Widok meczu Details: kolory **100+/140+/180** (jak w rozwiniętej karcie profilu)
 - [x] **3.13** `ProfileStatsBlock` labels & layout: `3-DART AVG`, `FIRST 9 AVG`, `LEGS WIN RATE` (procent main, W/L sub), `Matches` pill (mobile), `100+ Finish`, checkout ratio format, compact bottom row
-- [ ] **3.18** ~~Batch loading~~ — **COFNIĘTE** (bug: Supabase limit 1000 wierszy przy jednym zapytaniu visits → rozjechane statystyki). Do poprawy z paginacją `.range()`.
 - [x] **3.19** Wykres formy: tooltip po indeksie meczu (fix duplikatów dat), pełna data+godzina, przeciwnik, W/L
 - [x] **3.20** Aktywność dni/godziny — układ poziomy (jak histogram zamknięć), fix mobile
 - [x] **3.21** Kolory bucketów w kartach meczów + Details: 100+/120+ (accent), 140+/170+ (violet), 180 (signal)
 - [x] **3.22** `BEST LEG AVG` — kafel w statystykach głównych (max avg z wygranych legów, liczone live)
 
-**Małe feature'y analityczne** ⏸️ ZAWIESZONE
+**Odłożone / zawieszone**
 
-- [ ] **3.14** Porównanie sesji / turniejów — filtr po nazwie rozgrywek
-- [ ] **3.15** Grupowanie meczów po `title` / turnieju z N01
-- [ ] **3.16** Widok trendów per turniej: avg, win rate, liczba meczów
-- [ ] **3.17** Opcjonalny filtr „sezon" (rok / półrocze)
+- [ ] **3.18** → przeniesione do **6.8** (batch loading z paginacją — fix limit 1000 Supabase)
+- [ ] **3.14** ⏸️ Porównanie sesji / turniejów — filtr po nazwie rozgrywek
+- [ ] **3.15** ⏸️ Grupowanie meczów po `title` / turnieju z N01
+- [ ] **3.16** ⏸️ Widok trendów per turniej: avg, win rate, liczba meczów
+- [ ] **3.17** ⏸️ Opcjonalny filtr „sezon" (rok / półrocze)
 
 ---
 
-### Faza 4 — Auth + Multi-user
+### Kolejność prac po v1.0.0
+
+Realizuj **po kolei**: najpierw cała **Faza 4**, potem **5**, potem **6**. Nie skacz do 6.5 przed 4.7.
+
+| # | Faza | Zadanie | Opis |
+|---|---|---|---|
+| 1 | 4 | **4.1** | Supabase Auth (Google login) |
+| 2 | 4 | **4.2** | Sync `auth.uid()` → `customer_id` |
+| 3 | 4 | **4.3** | Onboarding: „Który zawodnik to Ty?" przy pierwszym ingest |
+| 4 | 4 | **4.4** | Usunięcie stałej `DEFAULT_CUSTOMER_ID` |
+| 5 | 4 | **4.5** | Landing z CTA „Zaloguj się / Zarejestruj" |
+| 6 | 4 | **4.6** | Middleware — ochrona `/profile`, API tylko dla zalogowanego |
+| 7 | 4 | **4.7** | RLS per user (zamiast deny-all + service_role) |
+| 8 | 5 | **5.1** | Model freemium (free: 3 mecze; premium: pełne) |
+| 9 | 5 | **5.2** | Bramka płatności (PayNow lub PayU) |
+| 10 | 5 | **5.3** | Role: user / premium / admin / superadmin |
+| 11 | 5 | **5.4** | Panel admina (userzy, subskrypcje) |
+| 12 | 5 | **5.5** | Limity w UI (blokada importu / wykresów dla free) |
+| 13 | 6 | **6.1** | Vitest — golden samples parsera N01 |
+| 14 | 6 | **6.2** | Vitest — golden samples stats |
+| 15 | 6 | **6.3** | Playwright (ingest → profil → share → mecz) |
+| 16 | 6 | **6.4** | CI na PR (`typecheck && test`) |
+| 17 | 6 | **6.5** | Deploy produkcyjny Vercel + env |
+| 18 | 6 | **6.6** | Custom domain `dart.sylveoncompany.pl` |
+| 19 | 6 | **6.7** | Backup DB — procedura + harmonogram |
+| 20 | 6 | **6.8** | Perf: batch loading z paginacją (fix 1000-row limit) |
+
+*Opcjonalnie później (poza główną kolejnością):* 3.14–3.17 analityka turniejowa.
+
+---
+
+### Faza 4 — Auth + Multi-user ⏳ NASTĘPNA
 
 - [ ] **4.1** Supabase Auth (Google login)
 - [ ] **4.2** Sync `auth.uid()` → `customer_id` (tabela `customers`)
@@ -407,7 +439,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ---
 
-### Faza 5 — Premium + Płatności
+### Faza 5 — Premium + Płatności ⏳
 
 - [ ] **5.1** Model freemium (free: 3 mecze, basic stats; premium: pełne)
 - [ ] **5.2** Bramka płatności (PayNow lub PayU)
@@ -417,7 +449,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ---
 
-### Faza 6 — Testy + Hardening + Deploy
+### Faza 6 — Testy + Hardening + Deploy ⏳
 
 - [ ] **6.1** Vitest — golden samples parsera N01
 - [ ] **6.2** Vitest — golden samples stats (`computeMatchStats`, `normalizeName`, avg ważona)
@@ -426,6 +458,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - [ ] **6.5** Deploy produkcyjny Vercel + env
 - [ ] **6.6** Custom domain `dart.sylveoncompany.pl`
 - [ ] **6.7** Backup DB — procedura + harmonogram
+- [ ] **6.8** Perf: batch loading z paginacją Supabase (fix limit 1000 wierszy; zastępuje cofnięte 3.18)
 
 ---
 
@@ -452,6 +485,19 @@ cp .env.example .env.local   # uzupełnij klucze Supabase
 npm install
 npm run dev
 ```
+
+### Podgląd na telefonie (ta sama Wi-Fi)
+
+```bash
+npm run dev -- --hostname 0.0.0.0
+ipconfig getifaddr en0   # np. 192.168.100.11
+```
+
+Na telefonie: `http://192.168.100.11:3000/profile` (nie `localhost` — to na telefonie wskazuje na sam telefon).
+
+`next.config.ts` ma `allowedDevOrigins` pod IP Maca — po zmianie sieci zaktualizuj IP i zrestartuj serwer.
+
+**Uwaga:** pierwsze ładowanie meczów trwa ~12 s (51 meczów). Poczekaj — spinner „Ładuję mecze…" zniknie dopiero po pobraniu danych.
 
 W `.env.local` potrzebne:
 
@@ -515,14 +561,15 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.0.0 — Milestone: Fazy 0–3 ✅ DONE | Faza 3.14–3.17 ⏸️ ZAWIESZONE
+### v1.0.0 — Fazy 0–3 ✅ ZAMKNIĘTE | Faza 4 ⏳ NASTĘPNA
 
 | Element | Status |
 |---|---|
 | **v1.0.0** | ✅ Pierwszy stabilny release — profil, mecze, analityka, 51 meczów |
-| Fazy 0–3 | ✅ Kompletne |
-| Faza 3.14–3.17 | ⏸️ Zawieszone (analityka turniejowa) |
-| Faza 4+ | ⏳ Auth, Premium, Testy, Deploy |
+| Fazy 0–3 | ✅ **ZAMKNIĘTE** (3.14–3.17 zawieszone, 3.18 → 6.8) |
+| **Faza 4** | ⏳ **NASTĘPNA** — Auth + Multi-user (4.1 → 4.7) |
+| Faza 5 | ⏳ Premium + Płatności (po Fazie 4) |
+| Faza 6 | ⏳ Testy + Deploy (po Fazie 5) |
 | Backup | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + snapshot KPI) |
 
 ### Najważniejsze zmiany v1.0.0
@@ -536,28 +583,28 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **Kolory bucketów** | 100+/120+/140+/170+/180 spójne w kartach i Details |
 | **Batch loading** | ⚠️ Cofnięty (bug limit 1000 Supabase) — N+1 przywrócony, statystyki OK |
 
-### Co dalej — najbliższe 5 zadań
+### Co dalej — pełna lista (po kolei)
 
-1. **4.1** Supabase Auth (Google login)
-2. **4.2** Sync `auth.uid()` → `customer_id`
-3. **6.5** Deploy produkcyjny na Vercel + env
-4. **6.6** Custom domain `dart.sylveoncompany.pl`
-5. **6.1–6.2** Vitest — golden samples parsera + stats (regresja przed skalowaniem)
+Patrz tabelę **„Kolejność prac po v1.0.0"** w sekcji Roadmapa. Skrót:
 
-*Opcjonalnie później:* lazy loading wizyt (profil bez throw-by-throw do rozwinięcia), `player_stats JSONB` cache per mecz (przy 400+ meczach).
+**Faza 4 (teraz):** 4.1 → 4.2 → 4.3 → 4.4 → 4.5 → 4.6 → 4.7  
+**Faza 5 (potem):** 5.1 → 5.2 → 5.3 → 5.4 → 5.5  
+**Faza 6 (na końcu):** 6.1 → 6.2 → 6.3 → 6.4 → 6.5 → 6.6 → 6.7 → 6.8
 
-### Pełna mapa faz (co zostało)
+### Pełna mapa faz
 
-| Faza | Nazwa | Zadań zrobionych / razem | Status |
+| Faza | Nazwa | Zrobione / razem | Status |
 |---|---|---|---|
-| 0 | Bootstrap + MVP | 34 / 34 | ✅ DONE |
-| 1 | Fixy UI/UX | 16 / 16 | ✅ DONE |
-| 2 | Analityka rdzeniowa | 5 / 5 | ✅ DONE |
-| **3** | **Fix & Small features** | **18 / 22** | ✅ **DONE** (3.14–3.17 zawieszone) |
-| 4 | Auth + Multi-user | 0 / 7 | ⏳ |
+| 0 | Bootstrap + MVP | 34 / 34 | ✅ ZAMKNIĘTA |
+| 1 | Fixy UI/UX | 16 / 16 | ✅ ZAMKNIĘTA |
+| 2 | Analityka rdzeniowa | 5 / 5 | ✅ ZAMKNIĘTA |
+| 3 | Fix & Small features | 19 / 19* | ✅ ZAMKNIĘTA |
+| **4** | **Auth + Multi-user** | **0 / 7** | ⏳ **NASTĘPNA** |
 | 5 | Premium + Płatności | 0 / 5 | ⏳ |
-| 6 | Testy + Deploy | 0 / 7 | ⏳ |
-| | **Razem do zrobienia** | **23** | (4 zawieszone) |
+| 6 | Testy + Deploy + Perf | 0 / 8 | ⏳ |
+| | **Razem do zrobienia** | **20** | (+ 4 zawieszone: 3.14–3.17) |
+
+\*Obowiązkowe zadania Fazy 3 done; 3.14–3.17 zawieszone; 3.18 przeniesione do 6.8.
 
 ### Pliki kluczowe (v1.0.0)
 
@@ -579,18 +626,17 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
-Stan v1.0.0 — Fazy 0–3 DONE, 51 meczów w DB, backup .dev/backup-2026-07-12-v1.0.json.
-Zawieszone: 3.14–3.17 (analityka turniejowa).
-ZADANIE: Faza 4 — Auth + Multi-user LUB Faza 6 — Deploy Vercel.
-Nie rób Premium/Faz 5+ bez prośby.
+Stan v1.0.0 — Fazy 0–3 ZAMKNIĘTE, 51 meczów w DB.
+NASTĘPNA: Faza 4 (4.1 → 4.7), potem 5, potem 6 — po kolei!
+Nie rób Premium/Deploy przed Auth bez prośby.
 ```
 
 ### Podgląd na telefonie (dev)
 
 ```bash
 npm run dev -- --hostname 0.0.0.0
-ipconfig getifaddr en0   # np. 192.168.100.11
-# Na telefonie (ta sama Wi-Fi): http://192.168.100.11:3000/profile
+# Telefon: http://192.168.100.11:3000/profile
+# allowedDevOrigins w next.config.ts — zaktualizuj IP jeśli sieć się zmieni
 ```
 
 ---
