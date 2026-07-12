@@ -304,14 +304,18 @@ const CITY_BLACKLIST = new Set([
   "siemianowice", "tychy", "myslowice", "jaworzno", "dabrowa", "bedzin",
   "czeladz", "zabkowice", "slawkow", "wojkowice", "piekary", "radzionkow",
   "knurow", "pyskowice", "tarnowskie", "jastrzebie", "zory", "mikolow",
-  "laziska", "ornontowice", "imielin", "ruda",
+  "laziska", "ornontowice", "imielin", "ruda", "swietochlowice",
   // Other major Polish cities
   "krakow", "warszawa", "wroclaw", "poznan", "lodz", "gdansk", "gdynia",
   "szczecin", "bydgoszcz", "lublin", "bialystok", "rzeszow", "opole",
   "czestochowa", "radom", "kielce", "olsztyn", "torun", "tarnow",
-  "koszalin", "legnica", "rybnik",
+  "koszalin", "legnica", "rybnik", "pruszkow", "lubin", "zawiercie",
+  // More cities that appear in names
+  "gorzow", "pila", "wlkp", "elblag", "walbrzych", "plock", "tczew",
+  "slupsk", "grudziadz", "przemysl", "jelenia", "gora", "konin",
   // Adjective forms
   "slaskie", "slaski", "slaska", "gorne", "gorny", "gorna",
+  "dolny", "dolna", "dolnoslaskie", "wielkopolskie", "mazowieckie",
 ]);
 
 function stripDiacritics(s: string): string {
@@ -323,7 +327,8 @@ function stripDiacritics(s: string): string {
  * 1. Strip "/" variant suffix (N01 sometimes uses "Name/Alt")
  * 2. Remove parenthesized content "(Katowice)"
  * 3. Remove standalone Polish city name words
- * 4. Title-case if ALL_CAPS or all_lowercase (pseudonyms left as-is)
+ * 4. Title-case each word (unless short pseudonym with mixed case)
+ * 5. Format: keep original order (Nazwisko Imię or Imię Nazwisko as given)
  */
 export function normalizeName(raw: string): string {
   let s = raw.split("/")[0].trim();
@@ -334,16 +339,19 @@ export function normalizeName(raw: string): string {
     const norm = stripDiacritics(w.replace(/[.,;:]/g, ""));
     return norm.length > 0 && !CITY_BLACKLIST.has(norm);
   });
-  s = words.join(" ").trim();
-  if (!s) return raw.split("/")[0].trim(); // fallback if everything was stripped
+  if (words.length === 0) return raw.split("/")[0].trim(); // fallback
 
-  const hasUpper = /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(s);
-  const hasLower = /[a-ząćęłńóśźż]/.test(s);
-  if (hasUpper && hasLower) return s; // already mixed / pseudonym
-  return s
-    .split(/\s+/)
-    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
-    .join(" ");
+  // Title-case each word individually, unless it's a short pseudonym with mixed case
+  const normalized = words.map((w) => {
+    const hasUpper = /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
+    const hasLower = /[a-ząćęłńóśźż]/.test(w);
+    // If word is short (≤7 chars) and has mixed case, assume pseudonym
+    if (w.length <= 7 && hasUpper && hasLower) return w;
+    // Otherwise title-case it
+    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  });
+
+  return normalized.join(" ");
 }
 
 /** Polish declension: 1 → lotka, 2/3/4 → lotki (not 12-14), rest → lotek */
@@ -510,6 +518,59 @@ export function computeDayStats(matches: N01Match[]): DayStats[] {
     winRate: d.count > 0 ? d.wins / d.count : 0,
     avg: darts[i] > 0 ? Math.round((scored[i] / darts[i]) * 3 * 100) / 100 : 0,
   }));
+}
+
+// ---------- 3.8 Aktywność: statystyki per godzina ----------
+export type HourStats = {
+  hour: number;    // 0-23
+  label: string;   // "16-17", "17-18"
+  count: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  avg: number;
+};
+
+export function computeHourStats(matches: N01Match[]): HourStats[] {
+  const hours: HourStats[] = [];
+  for (let h = 0; h < 24; h++) {
+    hours.push({
+      hour: h,
+      label: `${h.toString().padStart(2, "0")}-${(h + 1).toString().padStart(2, "0")}`,
+      count: 0,
+      wins: 0,
+      losses: 0,
+      winRate: 0,
+      avg: 0,
+    });
+  }
+  const scored = Array<number>(24).fill(0);
+  const darts = Array<number>(24).fill(0);
+
+  for (const m of matches) {
+    const d = new Date(m.startTime * 1000);
+    const hour = d.getHours();
+    const s = computeMatchStats(m);
+    hours[hour].count++;
+    if (s.won === true) hours[hour].wins++;
+    else if (s.won === false) hours[hour].losses++;
+    if (m.playerIndex !== null) {
+      scored[hour] += m.players[m.playerIndex].allScore;
+      darts[hour] += m.players[m.playerIndex].allDarts;
+    }
+  }
+
+  // Filter out empty hours and compute stats
+  return hours
+    .filter((h) => h.count > 0)
+    .map((h, _, arr) => {
+      const i = h.hour;
+      return {
+        ...h,
+        winRate: h.count > 0 ? h.wins / h.count : 0,
+        avg: darts[i] > 0 ? Math.round((scored[i] / darts[i]) * 3 * 100) / 100 : 0,
+      };
+    });
 }
 
 // ---------- 2.4 Rozkład prób zamknięć (checkout distribution) ----------

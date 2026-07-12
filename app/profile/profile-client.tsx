@@ -13,6 +13,7 @@ import {
 } from "@/lib/stats";
 import { ProfileAddMatch } from "./profile-add-match";
 import ProfileActivity from "./profile-activity";
+import ProfileActivityHours from "./profile-activity-hours";
 import ProfileCheckoutDistribution from "./profile-checkout-distribution";
 import { ProfileFormChart } from "./profile-form-chart";
 import { ProfileHeadToHead } from "./profile-head-to-head";
@@ -97,6 +98,9 @@ export function ProfileClient({ myDisplayName }: Props) {
 
       {/* Aktywność per dzień tygodnia */}
       {!loading && filtered.length > 0 && <ProfileActivity matches={filtered} />}
+
+      {/* Aktywność per godzina */}
+      {!loading && filtered.length > 0 && <ProfileActivityHours matches={filtered} />}
 
       {/* Histogram zamknięć */}
       {!loading && filtered.length > 0 && <ProfileCheckoutDistribution matches={filtered} />}

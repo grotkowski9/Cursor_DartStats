@@ -99,47 +99,56 @@ function ScoreCard({ stats }: { stats: MatchStats }) {
 }
 
 function MatchKpi({ stats }: { stats: MatchStats }) {
-  const rows: Array<[string, string | number, string | number]> = [
-    ["First 9", stats.me.first9?.toFixed(2) ?? "—", stats.opp.first9?.toFixed(2) ?? "—"],
-    ["60+", stats.me.buckets.s60, stats.opp.buckets.s60],
-    ["80+", stats.me.buckets.s80, stats.opp.buckets.s80],
-    ["100+", stats.me.buckets.s100, stats.opp.buckets.s100],
-    ["120+", stats.me.buckets.s120, stats.opp.buckets.s120],
-    ["140+", stats.me.buckets.s140, stats.opp.buckets.s140],
-    ["170+", stats.me.buckets.s170, stats.opp.buckets.s170],
-    ["180", stats.me.buckets.s180, stats.opp.buckets.s180],
-    ["High finish", stats.me.highFinish ?? "—", stats.opp.highFinish ?? "—"],
-    ["100+ fin.", stats.me.finishes100, stats.opp.finishes100],
-    ["Best leg", stats.me.bestLegDarts ?? "—", stats.opp.bestLegDarts ?? "—"],
-    ["Worst leg", stats.me.worstLegDarts ?? "—", stats.opp.worstLegDarts ?? "—"],
-    [
-      "Checkout",
-      stats.me.checkoutRate !== null
+  const rows: Array<{label: string; me: string | number; opp: string | number; highlight?: boolean; violet?: boolean; signal?: boolean}> = [
+    {label: "First 9", me: stats.me.first9?.toFixed(2) ?? "—", opp: stats.opp.first9?.toFixed(2) ?? "—"},
+    {label: "60+", me: stats.me.buckets.s60, opp: stats.opp.buckets.s60},
+    {label: "80+", me: stats.me.buckets.s80, opp: stats.opp.buckets.s80},
+    {label: "100+", me: stats.me.buckets.s100, opp: stats.opp.buckets.s100, highlight: true},
+    {label: "120+", me: stats.me.buckets.s120, opp: stats.opp.buckets.s120},
+    {label: "140+", me: stats.me.buckets.s140, opp: stats.opp.buckets.s140, violet: true},
+    {label: "170+", me: stats.me.buckets.s170, opp: stats.opp.buckets.s170},
+    {label: "180", me: stats.me.buckets.s180, opp: stats.opp.buckets.s180, signal: true},
+    {label: "High finish", me: stats.me.highFinish ?? "—", opp: stats.opp.highFinish ?? "—"},
+    {label: "100+ fin.", me: stats.me.finishes100, opp: stats.opp.finishes100},
+    {label: "Best leg", me: stats.me.bestLegDarts ?? "—", opp: stats.opp.bestLegDarts ?? "—"},
+    {label: "Worst leg", me: stats.me.worstLegDarts ?? "—", opp: stats.opp.worstLegDarts ?? "—"},
+    {
+      label: "Checkout",
+      me: stats.me.checkoutRate !== null
         ? `${Math.round(stats.me.checkoutRate * 100)}% (${stats.me.checkoutHits}/${stats.me.checkoutAttempts})`
         : "—",
-      stats.opp.checkoutRate !== null
+      opp: stats.opp.checkoutRate !== null
         ? `${Math.round(stats.opp.checkoutRate * 100)}% (${stats.opp.checkoutHits}/${stats.opp.checkoutAttempts})`
         : "—",
-    ],
+    },
   ];
 
   return (
     <div className="glass-tile p-4">
       <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest">Details</h2>
       <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 text-xs">
-        {rows.map(([label, me, opp]) => (
-          <div key={label} className="contents">
-            <span className="border-b border-white/5 py-1.5 text-right font-semibold tabular-nums">
-              {me}
-            </span>
-            <span className="border-b border-white/5 py-1.5 text-center text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              {label}
-            </span>
-            <span className="border-b border-white/5 py-1.5 text-left font-semibold tabular-nums opacity-80">
-              {opp}
-            </span>
-          </div>
-        ))}
+        {rows.map((row) => {
+          const numCls = row.signal
+            ? "text-signal font-bold"
+            : row.violet
+              ? "text-accent-to font-bold"
+              : row.highlight
+                ? "text-accent-from font-bold"
+                : "font-semibold";
+          return (
+            <div key={row.label} className="contents">
+              <span className={`border-b border-white/5 py-1.5 text-right tabular-nums ${numCls}`}>
+                {row.me}
+              </span>
+              <span className="border-b border-white/5 py-1.5 text-center text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                {row.label}
+              </span>
+              <span className={`border-b border-white/5 py-1.5 text-left tabular-nums opacity-80 ${numCls}`}>
+                {row.opp}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

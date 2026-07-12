@@ -67,13 +67,7 @@ function TopList({
                 </span>
                 <div className="relative h-2 overflow-hidden rounded-full bg-white/[0.05]">
                   <div
-                    className={`h-full rounded-full ${
-                      signal || bigCheckout
-                        ? "bg-signal"
-                        : hi
-                          ? "bg-gradient-to-r from-accent-from to-accent-to"
-                          : "bg-accent-from/60"
-                    }`}
+                    className="h-full rounded-full bg-gradient-to-r from-accent-from/70 to-accent-to/70"
                     style={{ width: `${pct}%` }}
                   />
                 </div>

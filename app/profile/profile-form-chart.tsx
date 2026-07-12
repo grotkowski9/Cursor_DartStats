@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 import type { N01Match } from "@/lib/n01-parser";
-import { computeFormSeries, type FormPoint } from "@/lib/stats";
+import { computeFormSeries, computePlayerStats, type FormPoint } from "@/lib/stats";
 
 type Props = {
   matches: N01Match[];
@@ -44,11 +44,13 @@ function CustomTooltip({
 
 export function ProfileFormChart({ matches }: Props) {
   const data = useMemo(() => computeFormSeries(matches), [matches]);
+  const playerStats = useMemo(() => computePlayerStats(matches), [matches]);
 
   if (data.length < 2) return null;
 
   const avgValues = data.map((d) => d.average);
-  const overallAvg = avgValues.reduce((s, v) => s + v, 0) / avgValues.length;
+  // Use weighted average (same method as stats block) for consistency
+  const overallAvg = playerStats.average;
   const yMin = Math.max(0, Math.floor(Math.min(...avgValues) / 5) * 5 - 5);
   const yMax = Math.min(180, Math.ceil(Math.max(...avgValues) / 5) * 5 + 10);
 
@@ -80,12 +82,6 @@ export function ProfileFormChart({ matches }: Props) {
               y={overallAvg}
               stroke="rgba(255,255,255,0.2)"
               strokeDasharray="4 4"
-              label={{
-                value: `avg ${overallAvg.toFixed(1)}`,
-                fill: "rgba(255,255,255,0.3)",
-                fontSize: 9,
-                position: "insideTopLeft",
-              }}
             />
             {/* First 9 — faint secondary line */}
             <Line
@@ -114,6 +110,10 @@ export function ProfileFormChart({ matches }: Props) {
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-5 border-t-2 border-dashed border-[#8b6bff]/60" />
             First 9
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-5 border-t-2 border-dashed border-white/20" />
+            Śr. ogólna: {overallAvg.toFixed(1)}
           </span>
         </div>
       </div>

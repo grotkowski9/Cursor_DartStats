@@ -75,9 +75,11 @@ export function ProfileMatchCard({ match, defaultExpanded = false, myDisplayName
             </span>
           </div>
           {/* Meta: date + avg */}
-          <div className="mt-0.5 flex items-center gap-3 text-[10px] text-muted-foreground">
-            <span>{date}</span>
+          <div className="mt-0.5 flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
+            <span className="flex-1">{date}</span>
             <span className="font-semibold text-accent-from">{stats.me.average.toFixed(2)}</span>
+            <span>–</span>
+            <span className="font-semibold text-muted-foreground">{stats.opp.average.toFixed(2)}</span>
           </div>
         </div>
 
@@ -103,9 +105,9 @@ export function ProfileMatchCard({ match, defaultExpanded = false, myDisplayName
             />
             <KpiRow label="60+" me={stats.me.buckets.s60} opp={stats.opp.buckets.s60} />
             <KpiRow label="80+" me={stats.me.buckets.s80} opp={stats.opp.buckets.s80} />
-            <KpiRow label="100+" me={stats.me.buckets.s100} opp={stats.opp.buckets.s100} highlight />
-            <KpiRow label="140+" me={stats.me.buckets.s140} opp={stats.opp.buckets.s140} violet />
-            <KpiRow label="180" me={stats.me.buckets.s180} opp={stats.opp.buckets.s180} signal />
+            <KpiRow label="100+" me={stats.me.buckets.s100} opp={stats.opp.buckets.s100} />
+            <KpiRow label="140+" me={stats.me.buckets.s140} opp={stats.opp.buckets.s140} />
+            <KpiRow label="180" me={stats.me.buckets.s180} opp={stats.opp.buckets.s180} />
             <KpiRow label="High fin." me={stats.me.highFinish ?? "—"} opp={stats.opp.highFinish ?? "—"} />
             <KpiRow label="100+ fin." me={stats.me.finishes100} opp={stats.opp.finishes100} />
             <KpiRow label="Best leg" me={stats.me.bestLegDarts ?? "—"} opp={stats.opp.bestLegDarts ?? "—"} />
@@ -164,31 +166,18 @@ function KpiRow({
   label,
   me,
   opp,
-  highlight,
-  violet,
-  signal,
 }: {
   label: string;
   me: string | number;
   opp: string | number;
-  highlight?: boolean;
-  violet?: boolean;
-  signal?: boolean;
 }) {
-  const numCls = signal
-    ? "text-signal font-bold"
-    : violet
-      ? "text-accent-to font-bold"
-      : highlight
-        ? "text-accent-from font-bold"
-        : "text-foreground font-semibold";
   return (
     <div className="col-span-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-white/5 py-1 last:border-0">
-      <span className={`text-right tabular-nums ${numCls}`}>{me}</span>
+      <span className="text-right tabular-nums text-foreground font-semibold">{me}</span>
       <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
         {label}
       </span>
-      <span className={`text-left tabular-nums ${numCls} opacity-80`}>{opp}</span>
+      <span className="text-left tabular-nums text-foreground font-semibold">{opp}</span>
     </div>
   );
 }

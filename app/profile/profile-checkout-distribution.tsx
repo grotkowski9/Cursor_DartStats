@@ -29,22 +29,6 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
         <div className="space-y-2">
         {buckets.map((b) => {
           const barWidth = (b.attempts / maxAttempts) * 100;
-          const rateColor =
-            b.rate >= 0.5
-              ? "bg-signal"
-              : b.rate >= 0.25
-              ? "bg-gradient-to-r from-accent-from to-accent-to"
-              : b.attempts > 0
-              ? "bg-accent-from/70"
-              : "bg-white/[0.08]";
-          const rateText =
-            b.rate >= 0.5
-              ? "text-signal"
-              : b.rate >= 0.25
-              ? "text-foreground"
-              : b.attempts > 0
-              ? "text-muted-foreground"
-              : "text-zinc-600";
 
           return (
             <div key={b.range} className="grid grid-cols-[56px_1fr_80px] items-center gap-3">
@@ -55,7 +39,7 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
               <div className="relative h-5 bg-white/[0.04] rounded overflow-hidden">
                 {b.attempts > 0 && (
                   <div
-                    className={`absolute left-0 top-0 h-full rounded transition-all ${rateColor} opacity-80`}
+                    className="absolute left-0 top-0 h-full rounded transition-all bg-gradient-to-r from-accent-from/70 to-accent-to/70"
                     style={{ width: `${barWidth}%` }}
                   />
                 )}
@@ -73,7 +57,7 @@ export default function ProfileCheckoutDistribution({ matches }: Props) {
               {/* rate */}
               <div className="text-right">
                 {b.attempts > 0 ? (
-                  <span className={`text-xs font-bold ${rateText}`}>
+                  <span className="text-xs font-bold text-foreground">
                     {Math.round(b.rate * 100)}%{" "}
                     <span className="text-[11px] text-zinc-500 font-normal">
                       ({b.hits}/{b.attempts})

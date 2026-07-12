@@ -226,7 +226,7 @@ export function ProfileAddMatch({ onMatchesChanged }: Props) {
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-widest">Dodaj nowy mecz</h2>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              Wklej link z n01darts.com — pobiorę dane i zrobię backup.
+              Wklej link do swojego meczu z n01 — pobiorę dane, zrobię wyliczenia i uaktualnię Twój profil gracza.
             </p>
           </div>
           <span className="rounded bg-white/5 px-2 py-1 font-mono text-[10px] text-muted-foreground">

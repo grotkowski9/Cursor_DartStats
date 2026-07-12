@@ -3,8 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v0.11 — **Faza 2 DONE** (wykres formy, head-to-head, heatmapa aktywności, histogram zamknięć).
-> Następny czat: **Faza 3** (Auth Google) lub **[5.1] Testy Vitest**.
+> **Status:** v0.12 — **Fazy 0–3 DONE** (3.1–3.12 ukończone: fixy UI, średnie, nazwy, H2H, godziny). Zadania 3.13–3.16 (analityka turniejowa) zawieszone.
+> Następna praca: **Faza 4 — Auth + Multi-user** (7 zadań) lub **Faza 6 — Testy Vitest** (2 zadania).
 
 ---
 
@@ -352,38 +352,74 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 ### Faza 2 — Zaawansowana analityka ✅
 
 - [x] **2.1** Wykres formy z avg kroczącą — `ProfileFormChart` + `computeFormSeries` (Recharts, 3-dart avg + First 9)
-- [x] **2.2** Heatmapa aktywności — `ProfileActivity` + `computeDayStats`: słupki per dzień tygodnia, win rate (zielony/żółty/czerwony), avg
+- [x] **2.2** Heatmapa aktywności — `ProfileActivity` + `computeDayStats`: słupki per dzień tygodnia, avg
 - [x] **2.3** Head-to-head — `ProfileHeadToHead`: dropdown przeciwnika, W/L, avg, legi, checkout, 100+/140+/180
-- [x] **2.4** Histogram zamknięć — `ProfileCheckoutDistribution` + `computeCheckoutDistribution`: rozkład skuteczności per zakres (`2–20` … `141–170`), kolor intensywności
+- [x] **2.4** Histogram zamknięć — `ProfileCheckoutDistribution` + `computeCheckoutDistribution`: rozkład skuteczności per zakres (`2–20` … `141–170`)
 - [x] **2.5** ~~Export CSV/XLSX~~ → **CANCELLED**
 - [x] **Normalizacja nazw + miasta**: `normalizeName()` z blacklistą polskich miast; `myDisplayName` z customer DB propagowane do kart meczów
 
 ---
 
-### Faza 3 — Auth + Multi-user
+### Faza 3 — Fix & Small features pack ✅ (częściowo)
 
-- [ ] **3.1** Supabase Auth (Google login)
-- [ ] **3.2** Sync `auth.uid()` → `customer_id` (tabela `customers`)
-- [ ] **3.3** Onboarding: „Który zawodnik to Ty?" przy pierwszym ingest
-- [ ] **3.4** Usunięcie stałej `OWNER_ID`
-- [ ] **3.5** Landing z CTA „Zaloguj się / Zarejestruj"
+**Fix-pack UI + statystyki** ✅
+
+- [x] **3.1** Gradient pasków w Top 10 i Histogram zamknięć — taki sam jak w Aktywność-dni
+- [x] **3.2** Ostatnie mecze: średnia przeciwnika pod nazwiskiem (przed rozwinięciem)
+- [x] **3.3** Ostatnie mecze: jednolity biały font KPI po rozwinięciu (bez kolorów highlight/violet/signal)
+- [x] **3.4** Nazwy: usuwanie miast — rozszerzona blacklista PL (60+ miast), lepsze czyszczenie
+- [x] **3.5** Nazwy: unifikacja wielkości liter (`Małkowski Adrian` zamiast `MAŁKOWSKI Adrian`), title-case per słowo
+- [x] **3.6** Wykres formy: widoczna etykieta avg w legendzie pod wykresem („Śr. ogólna")
+- [x] **3.7** **Audyt średnich** — wykres = kafel (średnia ważona lotkami, nie średnia arytmetyczna z meczów) — **KRYTYCZNE**
+- [x] **3.8** Aktywność — godziny (`computeHourStats`, `ProfileActivityHours`, grid dynamiczny, pomija puste zakresy)
+- [x] **3.9** Tekst formularza importu: „Wklej link do swojego meczu z n01 — pobiorę dane, zrobię wyliczenia i uaktualnię Twój profil gracza."
+
+**Spójność statystyk w UI** ✅
+
+- [x] **3.10** Head-to-head: kolor **100+** (spójnie z 140+ violet i 180 signal)
+- [x] **3.11** Head-to-head: **statystyki przeciwnika** obok moich — widok „Ja vs On" (avg, First 9, checkout, 100+/140+/180), grid porównawczy
+- [x] **3.12** Widok meczu Details: kolory **100+/140+/180** (jak w rozwiniętej karcie profilu)
+
+**Małe feature'y analityczne** ⏸️ ZAWIESZONE
+
+- [ ] **3.13** Porównanie sesji / turniejów — filtr po nazwie rozgrywek
+- [ ] **3.14** Grupowanie meczów po `title` / turnieju z N01
+- [ ] **3.15** Widok trendów per turniej: avg, win rate, liczba meczów
+- [ ] **3.16** Opcjonalny filtr „sezon" (rok / półrocze)
 
 ---
 
-### Faza 4 — Premium + Płatności
+### Faza 4 — Auth + Multi-user
 
-- [ ] **4.1** Model freemium (free: 3 mecze, basic stats; premium: pełne)
-- [ ] **4.2** Bramka płatności (PayNow lub PayU)
-- [ ] **4.3** Role: user / premium / admin / superadmin
-- [ ] **4.4** Panel admina
+- [ ] **4.1** Supabase Auth (Google login)
+- [ ] **4.2** Sync `auth.uid()` → `customer_id` (tabela `customers`)
+- [ ] **4.3** Onboarding: „Który zawodnik to Ty?" przy pierwszym ingest
+- [ ] **4.4** Usunięcie stałej `DEFAULT_CUSTOMER_ID` / `OWNER_ID`
+- [ ] **4.5** Landing z CTA „Zaloguj się / Zarejestruj"
+- [ ] **4.6** Middleware — ochrona `/profile`, API tylko dla zalogowanego usera
+- [ ] **4.7** RLS per user (zamiast deny-all + service_role everywhere)
 
 ---
 
-### Faza 5 — Testy + Hardening
+### Faza 5 — Premium + Płatności
 
-- [ ] **5.1** Vitest (parser + stats golden samples)
-- [ ] **5.2** Playwright (happy-path: ingest → profil → share)
-- [ ] **5.3** CI na PR (`typecheck && test`)
+- [ ] **5.1** Model freemium (free: 3 mecze, basic stats; premium: pełne)
+- [ ] **5.2** Bramka płatności (PayNow lub PayU)
+- [ ] **5.3** Role: user / premium / admin / superadmin
+- [ ] **5.4** Panel admina (zarządzanie userami, subskrypcjami)
+- [ ] **5.5** Limity w UI (blokada importu / wykresów dla free tier)
+
+---
+
+### Faza 6 — Testy + Hardening + Deploy
+
+- [ ] **6.1** Vitest — golden samples parsera N01
+- [ ] **6.2** Vitest — golden samples stats (`computeMatchStats`, `normalizeName`, avg ważona)
+- [ ] **6.3** Playwright (happy-path: ingest → profil → share → mecz)
+- [ ] **6.4** CI na PR (`typecheck && test`)
+- [ ] **6.5** Deploy produkcyjny Vercel + env
+- [ ] **6.6** Custom domain `dart.sylveoncompany.pl`
+- [ ] **6.7** Backup DB — procedura + harmonogram
 
 ---
 
@@ -473,43 +509,50 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v0.11 — Faza 2 ✅ COMPLETE
+### v0.12 — Fazy 0–3 ✅ DONE (3.1–3.12) | Faza 3.13–3.16 ⏸️ ZAWIESZONE
 
 | Element | Status |
 |---|---|
-| Wykres formy | `ProfileFormChart` — Recharts, avg + First 9, kropki Win/Loss, linia avg |
-| Head-to-head | `ProfileHeadToHead` — dropdown, W/L/%, avg, legi, checkout, 100+/140+/180 |
-| Heatmapa aktywności | `ProfileActivity` + `computeDayStats` — słupki per dzień tygodnia (Pon–Nd), win rate kolorami, avg per dzień |
-| Histogram zamknięć | `ProfileCheckoutDistribution` + `computeCheckoutDistribution` — 8 zakresów 2–170, bar + skuteczność%, zielony/żółty/czerwony |
-| Nazwy graczy | `normalizeName()` — blacklista miast PL (50+), Title Case |
-| Customer name | `myDisplayName` z DB propagowane do kart (Grotkowski Piotr zamiast "P. Grotkowski") |
-| Checkout 1.15 | ✅ Zweryfikowany — parser poprawny, `isCheckout = score<0 && left=0` |
+| Fazy 0–2 | ✅ Kompletne (MVP + fixy + analityka rdzeniowa) |
+| Faza 3.1–3.12 | ✅ **DONE** — Fix-pack UI, średnie, nazwy, H2H, godziny |
+| Faza 3.13–3.16 | ⏸️ Zawieszone (analityka turniejowa — do późniejszej realizacji) |
+| Faza 4+ | ⏳ Auth, Premium, Testy |
 
-### 5 kolejnych zadań
+### Najważniejsze zmiany v0.12
 
-1. **[3.1] Auth Google** — Supabase Auth, sync `auth.uid()` → `customer_id`, usunięcie stałej `OWNER_ID`
-2. **[3.2] Onboarding** — „Który zawodnik to Ty?" przy pierwszym ingest, wieloużytkownikowy profil
-3. **[5.1] Testy Vitest** — golden samples parsera N01 + silnika statystyk (`computeMatchStats`, `normalizeName`, `computeCheckoutDistribution`)
-4. **[3.3] Multi-user landing** — strona główna z CTA, publiczne/prywatne profile, noindex
-5. **[2.6] Porównanie sesji** — wykresy trendów per turniej/sezon (filtr po nazwie rozgrywek, nie tylko zakresie dat)
+| Zmiana | Impact |
+|---|---|
+| **Audyt średnich (3.7)** | Wykres formy = kafel (średnia ważona lotkami), koniec różnic! |
+| **Nazwy (3.4–3.5)** | Title-case per słowo, blacklista 60+ miast PL, `Małkowski Adrian` |
+| **H2H Ja vs On (3.11)** | Porównawcze statystyki przeciwnika obok moich (avg, checkout, 100+/140+/180) |
+| **Aktywność — godziny (3.8)** | Nowa sekcja z breakdownem per godzina (16–17, 17–18…) |
+| **Spójność UI (3.1, 3.10, 3.12)** | Jednolite gradienty, kolory 100+/140+/180 wszędzie |
 
-### Pliki kluczowe
+### Pełna mapa faz (co zostało)
+
+| Faza | Nazwa | Zadań zrobionych / razem | Status |
+|---|---|---|---|
+| 0 | Bootstrap + MVP | 34 / 34 | ✅ DONE |
+| 1 | Fixy UI/UX | 16 / 16 | ✅ DONE |
+| 2 | Analityka rdzeniowa | 5 / 5 | ✅ DONE |
+| **3** | **Fix & Small features** | **12 / 16** | ✅ **PARTIAL** (3.13–3.16 zawieszone) |
+| 4 | Auth + Multi-user | 0 / 7 | ⏳ |
+| 5 | Premium + Płatności | 0 / 5 | ⏳ |
+| 6 | Testy + Deploy | 0 / 7 | ⏳ |
+| | **Razem do zrobienia** | **23** | (4 zawieszone) |
+
+### Pliki kluczowe (v0.12)
 
 ```
-app/profile/profile-client.tsx              ← orchestrator UI
-app/profile/profile-stats-block.tsx         ← kafel statystyk + filtr
-app/profile/profile-recent-matches.tsx
-app/profile/profile-match-card.tsx
-app/profile/profile-top-lists.tsx
-app/profile/profile-add-match.tsx           ← dodaj + bulk (zwijane)
-app/profile/profile-form-chart.tsx          ← wykres formy (Recharts)
-app/profile/profile-head-to-head.tsx        ← head-to-head vs przeciwnik
-app/profile/profile-activity.tsx            ← aktywność per dzień tygodnia
-app/profile/profile-checkout-distribution.tsx ← histogram zamknięć
-app/m/[shareToken]/match-view.tsx           ← throw-by-throw
-app/api/matches/full/route.ts
-scripts/import-csv-matches.ts               ← import z CSV Lovable
-lib/stats.ts                                ← silnik KPI + computeDayStats + computeCheckoutDistribution
+lib/stats.ts                                ← computeHourStats, normalizeName (blacklista 60+ miast, title-case), średnia ważona
+app/profile/profile-form-chart.tsx          ← overallAvg = computePlayerStats (ważona lotkami)
+app/profile/profile-head-to-head.tsx        ← H2HRow (Ja vs On), oppStats z flip playerIndex
+app/profile/profile-activity-hours.tsx      ← nowy komponent (godziny 00-23, dynamiczny grid)
+app/profile/profile-match-card.tsx          ← opp avg przed rozwinięciem, biały font KPI
+app/profile/profile-top-lists.tsx           ← gradient pasków
+app/profile/profile-checkout-distribution.tsx ← gradient pasków
+app/m/[shareToken]/match-view.tsx           ← kolory 100+/140+/180 w Details
+app/profile/profile-add-match.tsx           ← nowy tekst formularza
 ```
 
 ### Prompt na nowy czat
@@ -519,8 +562,8 @@ Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
 Stan v0.11 — Fazy 0–2 DONE, 51 meczów w DB.
-ZADANIE: Faza 3 (Auth Google + onboarding) lub Faza 5.1 (Vitest).
-Nie rób premium/Faz 4+.
+ZADANIE: Faza 3 — Fix & Small features pack (3.1–3.16).
+Nie rób Auth/Premium/Faz 4+ bez prośby.
 ```
 
 ---
@@ -529,6 +572,8 @@ Nie rób premium/Faz 4+.
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
+| v0.12 | 2026-07-12 | Faza 3.1–3.12 done: gradient pasków, średnie ważone (wykres=kafel), nazwy (blacklista 60 miast, title-case), H2H Ja vs On, aktywność-godziny, spójność UI (100+/140+/180 kolory). Zadania 3.13–3.16 zawieszone. README v0.12, package 0.12.0. |
+| v0.11-plan | 2026-07-12 | Reorganizacja roadmapy: Faza 3 = Fix & Small features pack (3.1–3.16). Auth→Faza 4, Premium→Faza 5, Testy→Faza 6. |
 | v0.11 | 2026-07-12 | Faza 2 done: heatmapa aktywności per dzień tygodnia (ProfileActivity + computeDayStats), histogram zamknięć (ProfileCheckoutDistribution + computeCheckoutDistribution, 8 zakresów). README v0.11. |
 | v0.10 | 2026-07-12 | Faza 1 done + Faza 2.1/2.3: wykres formy (Recharts), head-to-head stats, normalizeName z miastami, customer name propagation, 1.15 checkout verified. |
 | v0.9 | 2026-07-11 | Faza 1 batch 1: fix dat (ms/s), re-import 51 meczów z N01, normalizeName, paginacja 3+10/str, Win rate legów, moje imię zielone/czerwone, checkout inline, Rzut po rzucie, backup DB, bulk overwrite-all fix. |
