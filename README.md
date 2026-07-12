@@ -379,13 +379,14 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - [x] **3.10** Head-to-head: kolor **100+** (spójnie z 140+ violet i 180 signal)
 - [x] **3.11** Head-to-head: **statystyki przeciwnika** obok moich — widok „Ja vs On" (avg, First 9, checkout, 100+/140+/180), grid porównawczy
 - [x] **3.12** Widok meczu Details: kolory **100+/140+/180** (jak w rozwiniętej karcie profilu)
+- [x] **3.13** `ProfileStatsBlock` labels & layout: `3-DART AVG`, `FIRST 9 AVG`, `LEGS WIN RATE` (procent main, W/L sub), `Matches` pill (mobile), `100+ Finish`, checkout ratio format, compact bottom row
 
 **Małe feature'y analityczne** ⏸️ ZAWIESZONE
 
-- [ ] **3.13** Porównanie sesji / turniejów — filtr po nazwie rozgrywek
-- [ ] **3.14** Grupowanie meczów po `title` / turnieju z N01
-- [ ] **3.15** Widok trendów per turniej: avg, win rate, liczba meczów
-- [ ] **3.16** Opcjonalny filtr „sezon" (rok / półrocze)
+- [ ] **3.14** Porównanie sesji / turniejów — filtr po nazwie rozgrywek
+- [ ] **3.15** Grupowanie meczów po `title` / turnieju z N01
+- [ ] **3.16** Widok trendów per turniej: avg, win rate, liczba meczów
+- [ ] **3.17** Opcjonalny filtr „sezon" (rok / półrocze)
 
 ---
 
@@ -509,13 +510,13 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v0.12 — Fazy 0–3 ✅ DONE (3.1–3.12) | Faza 3.13–3.16 ⏸️ ZAWIESZONE
+### v0.12 — Fazy 0–3 ✅ DONE (3.1–3.13) | Faza 3.14–3.17 ⏸️ ZAWIESZONE
 
 | Element | Status |
 |---|---|
 | Fazy 0–2 | ✅ Kompletne (MVP + fixy + analityka rdzeniowa) |
-| Faza 3.1–3.12 | ✅ **DONE** — Fix-pack UI, średnie, nazwy, H2H, godziny |
-| Faza 3.13–3.16 | ⏸️ Zawieszone (analityka turniejowa — do późniejszej realizacji) |
+| Faza 3.1–3.13 | ✅ **DONE** — Fix-pack UI, średnie, nazwy, H2H, godziny, ProfileStatsBlock labels |
+| Faza 3.14–3.17 | ⏸️ Zawieszone (analityka turniejowa — do późniejszej realizacji) |
 | Faza 4+ | ⏳ Auth, Premium, Testy |
 
 ### Najważniejsze zmiany v0.12
@@ -526,6 +527,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **Nazwy (3.4–3.5)** | Title-case per słowo, blacklista 60+ miast PL, `Małkowski Adrian` |
 | **H2H Ja vs On (3.11)** | Porównawcze statystyki przeciwnika obok moich (avg, checkout, 100+/140+/180) |
 | **Aktywność — godziny (3.8)** | Nowa sekcja z breakdownem per godzina (16–17, 17–18…) |
+| **ProfileStatsBlock (3.13)** | `3-DART AVG`, `LEGS WIN RATE`, compact layout, checkout jako % + ratio |
 | **Spójność UI (3.1, 3.10, 3.12)** | Jednolite gradienty, kolory 100+/140+/180 wszędzie |
 
 ### Pełna mapa faz (co zostało)
@@ -535,7 +537,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | 0 | Bootstrap + MVP | 34 / 34 | ✅ DONE |
 | 1 | Fixy UI/UX | 16 / 16 | ✅ DONE |
 | 2 | Analityka rdzeniowa | 5 / 5 | ✅ DONE |
-| **3** | **Fix & Small features** | **12 / 16** | ✅ **PARTIAL** (3.13–3.16 zawieszone) |
+| **3** | **Fix & Small features** | **13 / 17** | ✅ **PARTIAL** (3.14–3.17 zawieszone) |
 | 4 | Auth + Multi-user | 0 / 7 | ⏳ |
 | 5 | Premium + Płatności | 0 / 5 | ⏳ |
 | 6 | Testy + Deploy | 0 / 7 | ⏳ |
@@ -549,6 +551,7 @@ app/profile/profile-form-chart.tsx          ← overallAvg = computePlayerStats 
 app/profile/profile-head-to-head.tsx        ← H2HRow (Ja vs On), oppStats z flip playerIndex
 app/profile/profile-activity-hours.tsx      ← nowy komponent (godziny 00-23, dynamiczny grid)
 app/profile/profile-match-card.tsx          ← opp avg przed rozwinięciem, biały font KPI
+app/profile/profile-stats-block.tsx         ← 3-DART AVG, LEGS WIN RATE, compact layout, Matches pill
 app/profile/profile-top-lists.tsx           ← gradient pasków
 app/profile/profile-checkout-distribution.tsx ← gradient pasków
 app/m/[shareToken]/match-view.tsx           ← kolory 100+/140+/180 w Details
@@ -561,9 +564,10 @@ app/profile/profile-add-match.tsx           ← nowy tekst formularza
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
-Stan v0.11 — Fazy 0–2 DONE, 51 meczów w DB.
-ZADANIE: Faza 3 — Fix & Small features pack (3.1–3.16).
-Nie rób Auth/Premium/Faz 4+ bez prośby.
+Stan v0.12 — Fazy 0–3 DONE (3.1–3.13), 51 meczów w DB.
+Zawieszone: 3.14–3.17 (analityka turniejowa).
+ZADANIE: Faza 4 — Auth + Multi-user.
+Nie rób Premium/Testów/Faz 5+ bez prośby.
 ```
 
 ---
@@ -572,7 +576,7 @@ Nie rób Auth/Premium/Faz 4+ bez prośby.
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
-| v0.12 | 2026-07-12 | Faza 3.1–3.12 done: gradient pasków, średnie ważone (wykres=kafel), nazwy (blacklista 60 miast, title-case), H2H Ja vs On, aktywność-godziny, spójność UI (100+/140+/180 kolory). Zadania 3.13–3.16 zawieszone. README v0.12, package 0.12.0. |
+| v0.12 | 2026-07-12 | Faza 3.1–3.13 done: gradient pasków, średnie ważone (wykres=kafel), nazwy (blacklista 60 miast, title-case), H2H Ja vs On, aktywność-godziny, spójność UI (100+/140+/180 kolory), ProfileStatsBlock labels (3-DART AVG, LEGS WIN RATE, compact layout). Zadania 3.14–3.17 zawieszone. README v0.12, package 0.12.0. |
 | v0.11-plan | 2026-07-12 | Reorganizacja roadmapy: Faza 3 = Fix & Small features pack (3.1–3.16). Auth→Faza 4, Premium→Faza 5, Testy→Faza 6. |
 | v0.11 | 2026-07-12 | Faza 2 done: heatmapa aktywności per dzień tygodnia (ProfileActivity + computeDayStats), histogram zamknięć (ProfileCheckoutDistribution + computeCheckoutDistribution, 8 zakresów). README v0.11. |
 | v0.10 | 2026-07-12 | Faza 1 done + Faza 2.1/2.3: wykres formy (Recharts), head-to-head stats, normalizeName z miastami, customer name propagation, 1.15 checkout verified. |
