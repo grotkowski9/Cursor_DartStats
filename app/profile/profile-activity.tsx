@@ -28,41 +28,48 @@ export default function ProfileActivity({ matches }: Props) {
             Aktywność — dni tygodnia
           </h2>
         </div>
-        <div className="grid grid-cols-7 gap-1.5">
+        <div className="space-y-2">
           {days.map((d) => {
-            const intensity = d.count / maxCount;
+            const barWidth = (d.count / maxCount) * 100;
             const isEmpty = d.count === 0;
 
             return (
-              <div key={d.day} className="flex flex-col items-center gap-1">
-                <span className="text-[11px] text-zinc-500 font-medium">{d.label}</span>
+              <div key={d.day} className="grid grid-cols-[36px_1fr_88px] items-center gap-2 sm:gap-3">
+                <span className="text-xs font-medium text-zinc-400">{d.label}</span>
 
-                {/* bar */}
-                <div className="relative w-full h-20 bg-white/[0.04] rounded-md overflow-hidden flex items-end">
+                <div className="relative h-5 overflow-hidden rounded bg-white/[0.04]">
                   {!isEmpty && (
                     <div
-                      className="w-full rounded bg-gradient-to-t from-accent-from/70 to-accent-to/70 transition-all"
-                      style={{ height: `${Math.max(intensity * 100, 10)}%` }}
+                      className="absolute left-0 top-0 h-full rounded bg-gradient-to-r from-accent-from/70 to-accent-to/70 transition-all"
+                      style={{ width: `${barWidth}%` }}
                     />
+                  )}
+                  {!isEmpty && (
+                    <span className="absolute inset-0 flex items-center pl-2 text-[11px] font-semibold text-white">
+                      {d.count} {d.count === 1 ? "mecz" : "meczów"}
+                    </span>
+                  )}
+                  {isEmpty && (
+                    <span className="absolute inset-0 flex items-center pl-2 text-[11px] text-zinc-600">
+                      –
+                    </span>
                   )}
                 </div>
 
-                {/* count */}
-                <span className={`text-xs font-semibold ${isEmpty ? "text-zinc-700" : "text-zinc-200"}`}>
-                  {d.count > 0 ? d.count : "–"}
-                </span>
-
-                {/* win rate */}
-                {d.count > 0 && (
-                  <span className="text-[11px] font-medium text-muted-foreground">
-                    {Math.round(d.winRate * 100)}%
-                  </span>
-                )}
-
-                {/* avg */}
-                {d.avg > 0 && (
-                  <span className="text-[10px] text-zinc-500">{d.avg.toFixed(1)}</span>
-                )}
+                <div className="text-right text-xs">
+                  {!isEmpty ? (
+                    <>
+                      <span className="font-bold text-foreground">
+                        {Math.round(d.winRate * 100)}%
+                      </span>
+                      {d.avg > 0 && (
+                        <span className="block text-[11px] text-zinc-500">{d.avg.toFixed(1)} avg</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-zinc-700">–</span>
+                  )}
+                </div>
               </div>
             );
           })}

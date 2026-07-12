@@ -75,8 +75,8 @@ export function ProfileStatsBlock({ stats, range, onRange, loading }: Props) {
                 big
               />
             </div>
-            <div className="mt-3 grid grid-cols-4 gap-1.5 sm:grid-cols-8">
-              <BucketPill label="Matches" value={stats.matches} accent="neutral" hideOnDesktop />
+            <div className="mt-3 grid grid-cols-4 gap-1.5 sm:grid-cols-7">
+              <BucketPill label="Mecze" value={stats.matches} accent="neutral" hideOnDesktop />
               <BucketPill label="60+" value={stats.buckets.s60} />
               <BucketPill label="80+" value={stats.buckets.s80} />
               <BucketPill label="100+" value={stats.buckets.s100} accent="primary" />
@@ -85,10 +85,11 @@ export function ProfileStatsBlock({ stats, range, onRange, loading }: Props) {
               <BucketPill label="170+" value={stats.buckets.s170} accent="violet" />
               <BucketPill label="180" value={stats.buckets.s180} accent="signal" />
             </div>
-            <div className="mt-3 grid grid-cols-4 gap-1.5">
+            <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-5">
               <Stat label="High finish" value={stats.highFinish?.toString() ?? "—"} compact />
               <Stat label="100+ Finish" value={stats.finishes100.toString()} compact />
               <Stat label="Best leg" value={stats.bestLegDarts?.toString() ?? "—"} compact />
+              <Stat label="Best leg avg" value={stats.bestLegAvg?.toFixed(2) ?? "—"} compact />
               <Stat
                 label="Checkout"
                 value={

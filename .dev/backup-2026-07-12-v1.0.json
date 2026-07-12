@@ -1,0 +1,535 @@
+{
+  "version": "1.0.0",
+  "exported_at": "2026-07-12T12:37:25.911Z",
+  "project": "Cursor_DartStats",
+  "supabase_project": "nwrhnmnaiqclpxcjfgcq",
+  "git_milestone": "v1.0 — Fazy 0-3 DONE, 51 meczów, batch loading cofnięty",
+  "stats": {
+    "matches": 51,
+    "playerStats": {
+      "average": 37.29,
+      "first9": 45.19,
+      "winRate": 0.37254901960784315,
+      "wins": 19,
+      "losses": 32,
+      "checkoutRate": 0.09262166405023547,
+      "checkoutHits": 59,
+      "checkoutAttempts": 637,
+      "highFinish": 71,
+      "bestLegDarts": 22,
+      "bestLegAvg": 68.32
+    }
+  },
+  "matches": [
+    {
+      "match_id": "18ed7fa0-0257-4304-8d67-c526ca6ee2da",
+      "title": "TURNIEJ DRUGIEJ SZANSY PUB DARTOWNIA 10.07 Top 16",
+      "opponent_name": "WIŚNIEWSKI SŁAWOMIR",
+      "start_time": "2026-07-10T18:21:18+00:00",
+      "share_token": "19flj9z1",
+      "player_average": 36.81,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "2dc5f872-e4bc-4ac9-90ad-aa51aa1a4c05",
+      "title": "TURNIEJ INDYWIDUALNY OPEN - PUB DARTOWNIA 10.07 Top 16",
+      "opponent_name": "Paweł Szwarc Tychy",
+      "start_time": "2026-07-10T17:39:46+00:00",
+      "share_token": "183vrhz7",
+      "player_average": 36.31,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "888de935-ebe7-43c2-b90c-9229771a82d0",
+      "title": "TURNIEJ INDYWIDUALNY OPEN - PUB DARTOWNIA 10.07 Group 4",
+      "opponent_name": "Sławomir Wiśniewski Kobiór",
+      "start_time": "2026-07-10T16:54:52+00:00",
+      "share_token": "115my8yz",
+      "player_average": 49.28,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "977a7622-99b8-4e6c-86c6-d1ded9566a96",
+      "title": "TURNIEJ INDYWIDUALNY OPEN - PUB DARTOWNIA 10.07 Group 4",
+      "opponent_name": "Karol Kurpan Czerwionka-Leszczyny",
+      "start_time": "2026-07-10T16:19:12+00:00",
+      "share_token": "3agkn8ul",
+      "player_average": 40.09,
+      "player_legs_won": 1,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "c093bf6a-dfc4-4823-a45c-c126447809af",
+      "title": "TURNIEJ INDYWIDUALNY OPEN - PUB DARTOWNIA 10.07 Group 4",
+      "opponent_name": "Piotrek Francuz Kobiór",
+      "start_time": "2026-07-10T15:46:45+00:00",
+      "share_token": "1t333ysv",
+      "player_average": 52.44,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "da0a282a-085b-40f9-a1f7-338c4bb8f0b0",
+      "title": "TURNIEJ INDYWIDUALNY OPEN - PUB DARTOWNIA 10.07 Group 4",
+      "opponent_name": "Dariusz Kainyr Tychy",
+      "start_time": "2026-07-10T15:11:15+00:00",
+      "share_token": "1174pgk9",
+      "player_average": 36.66,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "d7311165-bca3-4771-94ea-623d6b2d9951",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "T. Kosela",
+      "start_time": "2026-07-08T13:43:43+00:00",
+      "share_token": "kcczjg3d",
+      "player_average": 44.3,
+      "player_legs_won": 1,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "ce0f0b22-6c96-45b2-9a73-8fd8a4733c2a",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "W. Lipina",
+      "start_time": "2026-07-08T09:49:44+00:00",
+      "share_token": "hwql86gw",
+      "player_average": 44.21,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "7d89562e-fab4-48e5-b193-59f5befcfb6f",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "P. Jończyk",
+      "start_time": "2026-07-07T12:59:39+00:00",
+      "share_token": "czno6xn0",
+      "player_average": 34.37,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "1c6f1a67-ca9b-4160-8eab-e930543b2438",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "K. Powązka",
+      "start_time": "2026-07-06T13:49:55+00:00",
+      "share_token": "1ekizgpe",
+      "player_average": 44.39,
+      "player_legs_won": 2,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "bebdaa24-2330-4c7e-b244-3d6a03423c54",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "W. Kraszyna",
+      "start_time": "2026-07-06T09:39:21+00:00",
+      "share_token": "1pfu2ssw",
+      "player_average": 34.85,
+      "player_legs_won": 2,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "f9673f2f-a430-4200-8349-d68c35271bc6",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "A. Rajczyk",
+      "start_time": "2026-07-02T11:29:55+00:00",
+      "share_token": "29vyjje2",
+      "player_average": 35.31,
+      "player_legs_won": 2,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "b1a172e9-ede2-45ca-86f1-6f687dea0418",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "M. Muras",
+      "start_time": "2026-07-01T13:48:19+00:00",
+      "share_token": "1sdnxp4b",
+      "player_average": 35.74,
+      "player_legs_won": 2,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "45312f59-425c-482a-ba2c-f13e9f67a2f0",
+      "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+      "opponent_name": "K. Nowak",
+      "start_time": "2026-07-01T09:32:55+00:00",
+      "share_token": "14lcjr1w",
+      "player_average": 35.78,
+      "player_legs_won": 1,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "8286c24d-561a-48c3-9ec5-e4680289f5d0",
+      "title": "CRM_P8_Dart League - Sezon 1 - Turniej 4 3rd place match",
+      "opponent_name": "M. Maziarz",
+      "start_time": "2026-05-22T10:07:15+00:00",
+      "share_token": "15nfh9m8",
+      "player_average": 32.18,
+      "player_legs_won": 3,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "bfd940fb-3a29-4465-b908-e34d3d57fc05",
+      "title": "CRM_P8_Dart League - Sezon 1 - Turniej 4 Semi-final",
+      "opponent_name": "W. Witek",
+      "start_time": "2026-05-22T07:24:43+00:00",
+      "share_token": "fhfo0ncr",
+      "player_average": 39.85,
+      "player_legs_won": 1,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "861325af-3784-4d08-be53-52fb28a062ba",
+      "title": "CRM_P8_Dart League - Sezon 1 - Turniej 3 Final",
+      "opponent_name": "K. Nowak",
+      "start_time": "2026-04-13T09:09:56+00:00",
+      "share_token": "894lni0h",
+      "player_average": 35.82,
+      "player_legs_won": 3,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "fa6da2af-c1e1-47f8-af45-99ff22117e42",
+      "title": "CRM_P8_Dart League - Sezon 1 - Turniej 3 Semi-final",
+      "opponent_name": "M. Muras",
+      "start_time": "2026-04-09T12:28:53+00:00",
+      "share_token": "23j9vhmf",
+      "player_average": 33.96,
+      "player_legs_won": 2,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "58242d60-ee12-49cc-8d09-2fb098b97635",
+      "title": "CRM_P8_Dart League - Sezon 1 - Turniej 3 Top 8",
+      "opponent_name": "W. Lipina",
+      "start_time": "2026-04-09T09:37:51+00:00",
+      "share_token": "ba7bs8w4",
+      "player_average": 32.61,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "924125f2-4b75-4d29-9f48-9a53263f4d60",
+      "title": "(8) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 2",
+      "opponent_name": "URBAN Krzysztof/ Tychy",
+      "start_time": "2026-02-27T18:57:03+00:00",
+      "share_token": "18sr66k1",
+      "player_average": 35.29,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "0e49a2d4-1f4e-41d1-9d68-d0d6f65cd272",
+      "title": "(8) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 2",
+      "opponent_name": "BRYCHLIK Mateusz/ Piasek",
+      "start_time": "2026-02-27T18:31:19+00:00",
+      "share_token": "1jy0ta76",
+      "player_average": 39.61,
+      "player_legs_won": 1,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "0dcdab69-b478-49ba-b19d-f09a3b3cfb18",
+      "title": "(8) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 2",
+      "opponent_name": "PATKOWSKI Rafał/ Tychy",
+      "start_time": "2026-02-27T18:16:08+00:00",
+      "share_token": "18fgsqav",
+      "player_average": 39.4,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "e7d2d97d-9849-4af6-b2b8-ba5c10e41b3e",
+      "title": "(8) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 2",
+      "opponent_name": "MAŁKOWSKI Adrian/ Orzesze",
+      "start_time": "2026-02-27T17:26:58+00:00",
+      "share_token": "ittcvbjk",
+      "player_average": 37.85,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "84811178-547b-4e98-98a9-10172eeb48f3",
+      "title": "(8) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 2",
+      "opponent_name": "OSEMLAK Łukasz/ Kobiór",
+      "start_time": "2026-02-27T16:43:33+00:00",
+      "share_token": "2d37mc18",
+      "player_average": 41.91,
+      "player_legs_won": 2,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "b7288fc6-ec08-490b-9286-ed0e73d57758",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE LUCKY LOSER Semi-final",
+      "opponent_name": "Krzysiek Jasiński",
+      "start_time": "2026-02-09T22:10:14+00:00",
+      "share_token": "2bfqvb24",
+      "player_average": 37.38,
+      "player_legs_won": 1,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "94bac432-0acd-4778-85e0-f0faa93eaf98",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE LUCKY LOSER Top 8",
+      "opponent_name": "Patryk Bundzyło",
+      "start_time": "2026-02-09T21:34:32+00:00",
+      "share_token": "fmzeekfd",
+      "player_average": 33.22,
+      "player_legs_won": 3,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "5d43cc20-9a5f-4e43-bb61-6e74bc50d79f",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE Group 2",
+      "opponent_name": "Jakub Szymanowski",
+      "start_time": "2026-02-09T19:49:04+00:00",
+      "share_token": "1fgl5ho0",
+      "player_average": 36.37,
+      "player_legs_won": 0,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "4bc5b3f2-4d3f-45a8-ace1-75ed02c52042",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE Group 2",
+      "opponent_name": "Igor Wiliński",
+      "start_time": "2026-02-09T19:27:02+00:00",
+      "share_token": "1wo5fni7",
+      "player_average": 34.3,
+      "player_legs_won": 0,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "9b239372-d306-4b8d-b425-b4afefc3c7c5",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE Group 2",
+      "opponent_name": "Adrian Borkowski",
+      "start_time": "2026-02-09T18:54:08+00:00",
+      "share_token": "16suwfws",
+      "player_average": 35.46,
+      "player_legs_won": 2,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "0e45c887-c71b-4cd9-bbbf-482476b9d8f6",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE Group 2",
+      "opponent_name": "Norbert Domachowski",
+      "start_time": "2026-02-09T18:23:05+00:00",
+      "share_token": "1ijig7en",
+      "player_average": 43,
+      "player_legs_won": 0,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "871c97c6-3cd1-4167-bea8-9c08f6d588f0",
+      "title": "STEEL DART NA PIOSQ PONIEDZIAŁKOWE GRANIE Group 2",
+      "opponent_name": "Piotr Grotkowski",
+      "start_time": "2026-02-09T17:11:06+00:00",
+      "share_token": "2ocv4zvj",
+      "player_average": 35.33,
+      "player_legs_won": 3,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "ec73cd83-aa12-45b1-876e-7f6fe1dc7ff7",
+      "title": "(4) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "MAŁKOWSKI Adrian/ Orzesze",
+      "start_time": "2026-01-30T20:17:20+00:00",
+      "share_token": "v0sthsb8",
+      "player_average": 35.38,
+      "player_legs_won": 1,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "191563ad-ac33-4938-a91a-20d3525b8e0f",
+      "title": "(4) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "BIEL WOJCIECH",
+      "start_time": "2026-01-30T19:24:01+00:00",
+      "share_token": "npb3xkl1",
+      "player_average": 34.87,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "9c1ce841-e3a7-42eb-b80d-47299d358d33",
+      "title": "(4) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "KURPANIK MICHAŁ",
+      "start_time": "2026-01-30T18:48:51+00:00",
+      "share_token": "8i2dsx31",
+      "player_average": 35.25,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "1dda82e0-fbab-4342-ad26-24c4775bf565",
+      "title": "(4) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "MNICH Patyk/ Kobiór",
+      "start_time": "2026-01-30T17:38:17+00:00",
+      "share_token": "2l0yrxdv",
+      "player_average": 35.95,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "6a9c96b1-2999-4472-851b-603551c0f4cb",
+      "title": "(4) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "KŁAKUS WOJCIECH",
+      "start_time": "2026-01-30T16:45:45+00:00",
+      "share_token": "1ir7b08v",
+      "player_average": 39.24,
+      "player_legs_won": 2,
+      "opponent_legs_won": 0
+    },
+    {
+      "match_id": "2c89c0ad-5d3e-4c5b-a3a4-22c227425080",
+      "title": "34. FINAŁ WOŚP Q-POINT PANOWIE Group 7",
+      "opponent_name": "GALOCZ RAFAŁ",
+      "start_time": "2026-01-25T14:01:28+00:00",
+      "share_token": "1dcwwwy2",
+      "player_average": 42.24,
+      "player_legs_won": 1,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "49f27eed-f68c-4531-916c-68543a8090ec",
+      "title": "34. FINAŁ WOŚP Q-POINT PANOWIE Group 7",
+      "opponent_name": "SWOBODA ARTUR",
+      "start_time": "2026-01-25T13:16:15+00:00",
+      "share_token": "77636dau",
+      "player_average": 43.11,
+      "player_legs_won": 1,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "6db6beff-3039-4889-8380-b4320f9cd56d",
+      "title": "34. FINAŁ WOŚP Q-POINT PANOWIE Group 7",
+      "opponent_name": "BRODALKA SZYMON",
+      "start_time": "2026-01-25T12:27:11+00:00",
+      "share_token": "8957s4i4",
+      "player_average": 36.67,
+      "player_legs_won": 3,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "94f6964f-fcf4-4d2c-9b26-27eaf9b83173",
+      "title": "(3) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "JAROMIN Krystian/ Mysłowice",
+      "start_time": "2026-01-23T19:05:24+00:00",
+      "share_token": "8pcxlsad",
+      "player_average": 46.86,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "dafa6211-7a54-453d-8066-bc47d100bf49",
+      "title": "(3) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "MAŁKOWSKI Adrian/ Orzesze",
+      "start_time": "2026-01-23T18:15:46+00:00",
+      "share_token": "16awmqtw",
+      "player_average": 37.86,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "95262e47-a3fb-43cd-89a5-5e001333d1b2",
+      "title": "(3) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "BŁASZKIEWICZ Marcin/ Jaworzno",
+      "start_time": "2026-01-23T17:33:35+00:00",
+      "share_token": "1k61985y",
+      "player_average": 42.94,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "e110d368-bb63-45bb-91e7-757b83bb5165",
+      "title": "(3) PIĄTKOWY OTWARTY TURNIEJ W PUB DARTOWNIA Group 1",
+      "opponent_name": "CHOROBA Daniel/ Zwonowice",
+      "start_time": "2026-01-23T16:51:55+00:00",
+      "share_token": "l05h1hnv",
+      "player_average": 31.5,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "7ec0136e-b8ac-4616-9c1d-8ce4539f5b95",
+      "title": "7/13 Gliwickich Turniejów Losers Round 4",
+      "opponent_name": "DEJW",
+      "start_time": "2026-01-16T20:44:52+00:00",
+      "share_token": "qt082ln3",
+      "player_average": 33.92,
+      "player_legs_won": 0,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "424d071d-435b-4f40-b81b-4edf952165f6",
+      "title": "7/13 Gliwickich Turniejów Winners Round 3",
+      "opponent_name": "SOLER",
+      "start_time": "2026-01-16T18:40:01+00:00",
+      "share_token": "1j6xiks2",
+      "player_average": 43.72,
+      "player_legs_won": 0,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "dbd69cdf-b68d-4ae7-8dbe-d1e4ca581350",
+      "title": "7/13 Gliwickich Turniejów Winners Round 2",
+      "opponent_name": "JJ",
+      "start_time": "2026-01-16T17:35:49+00:00",
+      "share_token": "1n9msy8p",
+      "player_average": 40.61,
+      "player_legs_won": 3,
+      "opponent_legs_won": 1
+    },
+    {
+      "match_id": "8caca6a2-c636-4649-885b-b4892d3c2e78",
+      "title": "6/13 Gliwickich Turniejów Losers Round 3",
+      "opponent_name": "PATRYK",
+      "start_time": "2026-01-09T19:04:14+00:00",
+      "share_token": "qdgo802b",
+      "player_average": 32.78,
+      "player_legs_won": 1,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "930e07f7-77d2-4f73-8194-fa3b8f60193f",
+      "title": "6/13 Gliwickich Turniejów Winners Round 2",
+      "opponent_name": "MACHOŁ",
+      "start_time": "2026-01-09T17:20:01+00:00",
+      "share_token": "1t7kxz4p",
+      "player_average": 39.48,
+      "player_legs_won": 0,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "d5456967-cd45-4605-a653-35d49d3e35b9",
+      "title": "5/13 Gliwickich Turniejów Knockout Stage 2 Top 16",
+      "opponent_name": "POPO",
+      "start_time": "2026-01-02T20:30:01+00:00",
+      "share_token": "176jqtmk",
+      "player_average": 35.15,
+      "player_legs_won": 0,
+      "opponent_legs_won": 2
+    },
+    {
+      "match_id": "24042926-a049-49ed-9201-9e540462b1ce",
+      "title": "5/13 Gliwickich Turniejów Group 6",
+      "opponent_name": "TWÓJ STARY",
+      "start_time": "2026-01-02T17:45:58+00:00",
+      "share_token": "7sahtm7v",
+      "player_average": 36,
+      "player_legs_won": 1,
+      "opponent_legs_won": 3
+    },
+    {
+      "match_id": "efb69d06-9a1a-4bc4-be53-18d450dfd2c8",
+      "title": "5/13 Gliwickich Turniejów Group 6",
+      "opponent_name": "POPO",
+      "start_time": "2026-01-02T17:15:58+00:00",
+      "share_token": "d97f8ydu",
+      "player_average": 34.07,
+      "player_legs_won": 2,
+      "opponent_legs_won": 3
+    }
+  ]
+}

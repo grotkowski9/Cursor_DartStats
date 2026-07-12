@@ -219,6 +219,7 @@ export type PlayerStats = {
   finishes100: number;
   bestLegDarts: number | null;
   worstLegDarts: number | null;
+  bestLegAvg: number | null;
   checkoutRate: number | null;
   checkoutHits: number;
   checkoutAttempts: number;
@@ -229,7 +230,7 @@ const EMPTY_STATS: PlayerStats = {
   legsWon: 0, legsLost: 0, average: 0, first9: null,
   buckets: { ...EMPTY_BUCKETS },
   highFinish: null, finishes100: 0,
-  bestLegDarts: null, worstLegDarts: null,
+  bestLegDarts: null, worstLegDarts: null, bestLegAvg: null,
   checkoutRate: null, checkoutHits: 0, checkoutAttempts: 0,
 };
 
@@ -248,6 +249,7 @@ export function computePlayerStats(matches: N01Match[]): PlayerStats {
   let finishes100 = 0;
   const bestLegs: number[] = [];
   const worstLegs: number[] = [];
+  const wonLegAvgs: number[] = [];
   let checkoutHits = 0;
   let checkoutAttempts = 0;
   let wins = 0;
@@ -271,6 +273,9 @@ export function computePlayerStats(matches: N01Match[]): PlayerStats {
     finishes100 += me.finishes100;
     if (me.bestLegDarts !== null) bestLegs.push(me.bestLegDarts);
     if (me.worstLegDarts !== null) worstLegs.push(me.worstLegDarts);
+    for (const leg of s.legs) {
+      if (leg.won) wonLegAvgs.push(leg.average);
+    }
     checkoutHits += me.checkoutHits;
     checkoutAttempts += me.checkoutAttempts;
     if (s.won === true) wins++;
@@ -291,6 +296,7 @@ export function computePlayerStats(matches: N01Match[]): PlayerStats {
     finishes100,
     bestLegDarts: bestLegs.length ? Math.min(...bestLegs) : null,
     worstLegDarts: worstLegs.length ? Math.max(...worstLegs) : null,
+    bestLegAvg: wonLegAvgs.length ? Math.max(...wonLegAvgs) : null,
     checkoutRate: checkoutAttempts ? checkoutHits / checkoutAttempts : null,
     checkoutHits,
     checkoutAttempts,
@@ -407,6 +413,7 @@ export type FormPoint = {
   first9: number | null;
   won: boolean | null;
   shareToken: string;
+  oppName: string;
 };
 
 export function computeFormSeries(matches: N01Match[]): FormPoint[] {
@@ -416,6 +423,7 @@ export function computeFormSeries(matches: N01Match[]): FormPoint[] {
     .map((m) => {
       const s = computeMatchStats(m);
       const d = new Date(m.startTime * 1000);
+      const oppIdx = m.playerIndex === 0 ? 1 : 0;
       return {
         startTime: m.startTime,
         dateLabel: `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}`,
@@ -423,6 +431,7 @@ export function computeFormSeries(matches: N01Match[]): FormPoint[] {
         first9: s.me.first9,
         won: s.won,
         shareToken: m.shareToken,
+        oppName: normalizeName(m.players[oppIdx]?.name ?? "—"),
       };
     });
 }

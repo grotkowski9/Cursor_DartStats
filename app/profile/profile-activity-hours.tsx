@@ -27,38 +27,32 @@ export default function ProfileActivityHours({ matches }: Props) {
             Aktywność — godziny
           </h2>
         </div>
-        <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${Math.min(hours.length, 12)}, 1fr)` }}>
+        <div className="space-y-2">
           {hours.map((h) => {
-            const intensity = h.count / maxCount;
+            const barWidth = (h.count / maxCount) * 100;
 
             return (
-              <div key={h.hour} className="flex flex-col items-center gap-1">
-                <span className="text-[11px] text-zinc-500 font-medium">{h.label}</span>
+              <div key={h.hour} className="grid grid-cols-[52px_1fr_88px] items-center gap-2 sm:gap-3">
+                <span className="text-right text-xs font-mono text-zinc-400">{h.label}</span>
 
-                {/* bar */}
-                <div className="relative w-full h-20 bg-white/[0.04] rounded-md overflow-hidden flex items-end">
+                <div className="relative h-5 overflow-hidden rounded bg-white/[0.04]">
                   <div
-                    className="w-full rounded bg-gradient-to-t from-accent-from/70 to-accent-to/70 transition-all"
-                    style={{ height: `${Math.max(intensity * 100, 10)}%` }}
+                    className="absolute left-0 top-0 h-full rounded bg-gradient-to-r from-accent-from/70 to-accent-to/70 transition-all"
+                    style={{ width: `${barWidth}%` }}
                   />
+                  <span className="absolute inset-0 flex items-center pl-2 text-[11px] font-semibold text-white">
+                    {h.count} {h.count === 1 ? "mecz" : "meczów"}
+                  </span>
                 </div>
 
-                {/* count */}
-                <span className="text-xs font-semibold text-zinc-200">
-                  {h.count}
-                </span>
-
-                {/* win rate */}
-                {h.count > 0 && (
-                  <span className="text-[11px] font-medium text-muted-foreground">
+                <div className="text-right text-xs">
+                  <span className="font-bold text-foreground">
                     {Math.round(h.winRate * 100)}%
                   </span>
-                )}
-
-                {/* avg */}
-                {h.avg > 0 && (
-                  <span className="text-[10px] text-zinc-500">{h.avg.toFixed(1)}</span>
-                )}
+                  {h.avg > 0 && (
+                    <span className="block text-[11px] text-zinc-500">{h.avg.toFixed(1)} avg</span>
+                  )}
+                </div>
               </div>
             );
           })}

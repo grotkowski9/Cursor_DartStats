@@ -3,8 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v0.12 — **Fazy 0–3 DONE** (3.1–3.12 ukończone: fixy UI, średnie, nazwy, H2H, godziny). Zadania 3.13–3.16 (analityka turniejowa) zawieszone.
-> Następna praca: **Faza 4 — Auth + Multi-user** (7 zadań) lub **Faza 6 — Testy Vitest** (2 zadania).
+> **Status:** v1.0.0 — **Milestone: Fazy 0–3 DONE** (51 meczów, profil kompletny). Backup: `.dev/backup-2026-07-12-v1.0.json`.
+> Następna praca: **Faza 4 — Auth + Multi-user** lub **Faza 6 — Deploy produkcyjny**.
 
 ---
 
@@ -380,6 +380,11 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - [x] **3.11** Head-to-head: **statystyki przeciwnika** obok moich — widok „Ja vs On" (avg, First 9, checkout, 100+/140+/180), grid porównawczy
 - [x] **3.12** Widok meczu Details: kolory **100+/140+/180** (jak w rozwiniętej karcie profilu)
 - [x] **3.13** `ProfileStatsBlock` labels & layout: `3-DART AVG`, `FIRST 9 AVG`, `LEGS WIN RATE` (procent main, W/L sub), `Matches` pill (mobile), `100+ Finish`, checkout ratio format, compact bottom row
+- [ ] **3.18** ~~Batch loading~~ — **COFNIĘTE** (bug: Supabase limit 1000 wierszy przy jednym zapytaniu visits → rozjechane statystyki). Do poprawy z paginacją `.range()`.
+- [x] **3.19** Wykres formy: tooltip po indeksie meczu (fix duplikatów dat), pełna data+godzina, przeciwnik, W/L
+- [x] **3.20** Aktywność dni/godziny — układ poziomy (jak histogram zamknięć), fix mobile
+- [x] **3.21** Kolory bucketów w kartach meczów + Details: 100+/120+ (accent), 140+/170+ (violet), 180 (signal)
+- [x] **3.22** `BEST LEG AVG` — kafel w statystykach głównych (max avg z wygranych legów, liczone live)
 
 **Małe feature'y analityczne** ⏸️ ZAWIESZONE
 
@@ -510,25 +515,36 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v0.12 — Fazy 0–3 ✅ DONE (3.1–3.13) | Faza 3.14–3.17 ⏸️ ZAWIESZONE
+### v1.0.0 — Milestone: Fazy 0–3 ✅ DONE | Faza 3.14–3.17 ⏸️ ZAWIESZONE
 
 | Element | Status |
 |---|---|
-| Fazy 0–2 | ✅ Kompletne (MVP + fixy + analityka rdzeniowa) |
-| Faza 3.1–3.13 | ✅ **DONE** — Fix-pack UI, średnie, nazwy, H2H, godziny, ProfileStatsBlock labels |
-| Faza 3.14–3.17 | ⏸️ Zawieszone (analityka turniejowa — do późniejszej realizacji) |
-| Faza 4+ | ⏳ Auth, Premium, Testy |
+| **v1.0.0** | ✅ Pierwszy stabilny release — profil, mecze, analityka, 51 meczów |
+| Fazy 0–3 | ✅ Kompletne |
+| Faza 3.14–3.17 | ⏸️ Zawieszone (analityka turniejowa) |
+| Faza 4+ | ⏳ Auth, Premium, Testy, Deploy |
+| Backup | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + snapshot KPI) |
 
-### Najważniejsze zmiany v0.12
+### Najważniejsze zmiany v1.0.0
 
 | Zmiana | Impact |
 |---|---|
-| **Audyt średnich (3.7)** | Wykres formy = kafel (średnia ważona lotkami), koniec różnic! |
-| **Nazwy (3.4–3.5)** | Title-case per słowo, blacklista 60+ miast PL, `Małkowski Adrian` |
-| **H2H Ja vs On (3.11)** | Porównawcze statystyki przeciwnika obok moich (avg, checkout, 100+/140+/180) |
-| **Aktywność — godziny (3.8)** | Nowa sekcja z breakdownem per godzina (16–17, 17–18…) |
-| **ProfileStatsBlock (3.13)** | `3-DART AVG`, `LEGS WIN RATE`, compact layout, checkout jako % + ratio |
-| **Spójność UI (3.1, 3.10, 3.12)** | Jednolite gradienty, kolory 100+/140+/180 wszędzie |
+| **Milestone v1.0** | Stabilny profil gracza — statystyki, wykresy, H2H, import, share |
+| **BEST LEG AVG** | Nowy kafel — najlepsza średnia z wygranego lega |
+| **Wykres formy** | Tooltip po indeksie meczu, pełna data, przeciwnik, W/L |
+| **Aktywność** | Dni i godziny w poziomie — czytelne na mobile |
+| **Kolory bucketów** | 100+/120+/140+/170+/180 spójne w kartach i Details |
+| **Batch loading** | ⚠️ Cofnięty (bug limit 1000 Supabase) — N+1 przywrócony, statystyki OK |
+
+### Co dalej — najbliższe 5 zadań
+
+1. **4.1** Supabase Auth (Google login)
+2. **4.2** Sync `auth.uid()` → `customer_id`
+3. **6.5** Deploy produkcyjny na Vercel + env
+4. **6.6** Custom domain `dart.sylveoncompany.pl`
+5. **6.1–6.2** Vitest — golden samples parsera + stats (regresja przed skalowaniem)
+
+*Opcjonalnie później:* lazy loading wizyt (profil bez throw-by-throw do rozwinięcia), `player_stats JSONB` cache per mecz (przy 400+ meczach).
 
 ### Pełna mapa faz (co zostało)
 
@@ -537,25 +553,24 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | 0 | Bootstrap + MVP | 34 / 34 | ✅ DONE |
 | 1 | Fixy UI/UX | 16 / 16 | ✅ DONE |
 | 2 | Analityka rdzeniowa | 5 / 5 | ✅ DONE |
-| **3** | **Fix & Small features** | **13 / 17** | ✅ **PARTIAL** (3.14–3.17 zawieszone) |
+| **3** | **Fix & Small features** | **18 / 22** | ✅ **DONE** (3.14–3.17 zawieszone) |
 | 4 | Auth + Multi-user | 0 / 7 | ⏳ |
 | 5 | Premium + Płatności | 0 / 5 | ⏳ |
 | 6 | Testy + Deploy | 0 / 7 | ⏳ |
 | | **Razem do zrobienia** | **23** | (4 zawieszone) |
 
-### Pliki kluczowe (v0.12)
+### Pliki kluczowe (v1.0.0)
 
 ```
-lib/stats.ts                                ← computeHourStats, normalizeName (blacklista 60+ miast, title-case), średnia ważona
-app/profile/profile-form-chart.tsx          ← overallAvg = computePlayerStats (ważona lotkami)
-app/profile/profile-head-to-head.tsx        ← H2HRow (Ja vs On), oppStats z flip playerIndex
-app/profile/profile-activity-hours.tsx      ← nowy komponent (godziny 00-23, dynamiczny grid)
-app/profile/profile-match-card.tsx          ← opp avg przed rozwinięciem, biały font KPI
-app/profile/profile-stats-block.tsx         ← 3-DART AVG, LEGS WIN RATE, compact layout, Matches pill
-app/profile/profile-top-lists.tsx           ← gradient pasków
-app/profile/profile-checkout-distribution.tsx ← gradient pasków
-app/m/[shareToken]/match-view.tsx           ← kolory 100+/140+/180 w Details
-app/profile/profile-add-match.tsx           ← nowy tekst formularza
+.dev/backup-2026-07-12-v1.0.json            ← backup DB milestone (51 meczów + KPI snapshot)
+lib/matches.ts                              ← getMyMatches N+1 (batch loading cofnięty)
+lib/stats.ts                                ← bestLegAvg, computeHourStats, normalizeName
+app/profile/profile-form-chart.tsx          ← tooltip po indeksie, oppName, W/L
+app/profile/profile-activity.tsx            ← poziome słupki (dni tygodnia)
+app/profile/profile-activity-hours.tsx      ← poziome słupki (godziny)
+app/profile/profile-match-card.tsx          ← kolory 100+/120+/140+/170+/180
+app/profile/profile-stats-block.tsx         ← BEST LEG AVG, 3-DART AVG, LEGS WIN RATE
+app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 ```
 
 ### Prompt na nowy czat
@@ -564,10 +579,18 @@ app/profile/profile-add-match.tsx           ← nowy tekst formularza
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
-Stan v0.12 — Fazy 0–3 DONE (3.1–3.13), 51 meczów w DB.
+Stan v1.0.0 — Fazy 0–3 DONE, 51 meczów w DB, backup .dev/backup-2026-07-12-v1.0.json.
 Zawieszone: 3.14–3.17 (analityka turniejowa).
-ZADANIE: Faza 4 — Auth + Multi-user.
-Nie rób Premium/Testów/Faz 5+ bez prośby.
+ZADANIE: Faza 4 — Auth + Multi-user LUB Faza 6 — Deploy Vercel.
+Nie rób Premium/Faz 5+ bez prośby.
+```
+
+### Podgląd na telefonie (dev)
+
+```bash
+npm run dev -- --hostname 0.0.0.0
+ipconfig getifaddr en0   # np. 192.168.100.11
+# Na telefonie (ta sama Wi-Fi): http://192.168.100.11:3000/profile
 ```
 
 ---
@@ -576,6 +599,8 @@ Nie rób Premium/Testów/Faz 5+ bez prośby.
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
+| **v1.0.0** | 2026-07-12 | **Milestone release** — Fazy 0–3 DONE. BEST LEG AVG, wykres formy tooltip, aktywność pozioma, kolory bucketów. Batch loading cofnięty (bug). Backup `.dev/backup-2026-07-12-v1.0.json`. |
+| v0.13 | 2026-07-12 | Batch loading (cofnięty), BEST LEG AVG, wykres formy tooltip, aktywność pozioma, kolory 120+/170+ w kartach, Matches pill fix desktop. |
 | v0.12 | 2026-07-12 | Faza 3.1–3.13 done: gradient pasków, średnie ważone (wykres=kafel), nazwy (blacklista 60 miast, title-case), H2H Ja vs On, aktywność-godziny, spójność UI (100+/140+/180 kolory), ProfileStatsBlock labels (3-DART AVG, LEGS WIN RATE, compact layout). Zadania 3.14–3.17 zawieszone. README v0.12, package 0.12.0. |
 | v0.11-plan | 2026-07-12 | Reorganizacja roadmapy: Faza 3 = Fix & Small features pack (3.1–3.16). Auth→Faza 4, Premium→Faza 5, Testy→Faza 6. |
 | v0.11 | 2026-07-12 | Faza 2 done: heatmapa aktywności per dzień tygodnia (ProfileActivity + computeDayStats), histogram zamknięć (ProfileCheckoutDistribution + computeCheckoutDistribution, 8 zakresów). README v0.11. |
