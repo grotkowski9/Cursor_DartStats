@@ -75,6 +75,33 @@
   color: transparent;
 }
 
+@utility sylveon-section-num {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: color-mix(in oklab, var(--accent-from) 75%, transparent);
+}
+
+@utility dartboard-ring {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -24px;
+    border-radius: 50%;
+    border: 1px solid oklch(1 0 0 / 6%);
+    pointer-events: none;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -48px;
+    border-radius: 50%;
+    border: 1px dashed oklch(1 0 0 / 4%);
+    pointer-events: none;
+  }
+}
+
 @utility glass-tile {
   background: linear-gradient(
     180deg,

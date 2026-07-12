@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import { SYLVEON_DART_SECTION, SYLVEON_URL } from "@/lib/site-config";
+import { SYLVEON_URL } from "@/lib/site-config";
 
 export function SylveonFooter() {
   return (
@@ -19,16 +19,9 @@ export function SylveonFooter() {
             >
               Sylveon Company
             </Link>{" "}
-            — doradztwo iGaming, CRM, e-commerce i…{" "}
-            <Link
-              href={SYLVEON_DART_SECTION}
-              className="text-accent-gradient font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              dart & event management
-            </Link>
-            . Ten tracker to osobny produkt pod dartem — ale spójny z resztą marki.
+            — doradztwo iGaming, CRM, e-commerce. W dartzie: turnieje, eventy, ten tracker.
+            {" "}
+            <span className="text-foreground/80">Rozmawiamy o efektach, nie o obietnicach.</span>
           </p>
         </div>
 

@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v4.0.1 — **Demo + SEO + Landing DONE**. **Następna: Faza 4.1** (Auth Google) → 4.2–4.4 → 4.6+.
+> **Status:** v4.0.2 — **Demo + landing polish (Sylveon vibe, OG)**. **Następna: 4.1** Auth.
 
 ---
 
@@ -469,8 +469,8 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - [x] **4.0.1.6** **`/demo/m/[token]`** — demo001…demo010, rzut po rzucie
 - [x] **4.0.1.7** **Reuse UI** — `demoMode`, `matchPathPrefix`, bez Supabase na demo
 - [x] **4.0.1.8** **Landing `/`** — CTA demo + Sylveon cross-link (SEO obu domen)
-- [x] **4.0.1.9** **SEO pack** — metadata, OG, canonical (`NEXT_PUBLIC_SITE_URL`)
-- [ ] **4.0.1.10** **Weryfikacja prod** — Search Console + `site:` po deploy (6.5)
+- [x] **4.0.1.9** **SEO pack** — OG image (`app/opengraph-image.tsx`), JSON-LD, canonical
+- [ ] **4.0.1.10** **Weryfikacja prod** — Search Console po deploy (6.5)
 
 **Podmiana postaci demo:** edytuj `demo/demo-persona.ts` → opcjonalnie `npm run build:demo` → commit JSON.
 
@@ -778,6 +778,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja | Data | Co zrobiono |
 |---|---|---|
+| **v4.0.2** | 2026-07-12 | Landing Sylveon vibe (numerowane sekcje 01–06, tagline), OG image dynamiczne, JSON-LD, dartboard-ring CSS. |
 | **v4.0.1** | 2026-07-12 | **Demo publiczne + SEO + landing 4.5.** `/demo/profile` (Antoni Robot Kowalski, 10 meczów), `/demo/m/demo001–010`, robots/sitemap, middleware noindex, Sylveon cross-link, `/login` placeholder. `npm run build:demo`. |
 | **v1.0.0** | 2026-07-12 | **Milestone release** — Fazy 0–3 DONE. BEST LEG AVG, wykres formy tooltip, aktywność pozioma, kolory bucketów. Batch loading cofnięty (bug). Backup `.dev/backup-2026-07-12-v1.0.json`. |
 | v0.13 | 2026-07-12 | Batch loading (cofnięty), BEST LEG AVG, wykres formy tooltip, aktywność pozioma, kolory 120+/170+ w kartach, Matches pill fix desktop. |
