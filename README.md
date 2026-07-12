@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** v1.0.0 — **Fazy 0–3 ZAMKNIĘTE** (51 meczów). Następna praca: **Faza 4 → 5 → 6** (po kolei, patrz roadmapa).
+> **Status:** v1.0.0 — **Fazy 0–3 ZAMKNIĘTE**. **Następny release: v4.0.1** (demo publiczne + SEO) → potem **Faza 4** (Auth 4.1+).
 
 ---
 
@@ -238,15 +238,69 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 
 ## Detekcja gracza
 
-**STRICT MODE:**
+**STRICT MODE** (wzorce z `known_nicknames` customer: `Grotkowski`, `Groteł`, `Grotel`):
 
-1. **Auto-detect:** tylko `"Grotkowski"` lub `"Groteł"` (case-insensitive) w polu `name` z N01.
-2. **Wszystko inne → pytaj użytkownika:**
-   - Modal: „Kim jesteś w tym meczu?" + lista graczy (0/1) + opcja **ODRZUĆ**
-   - Jeśli ODRZUĆ → mecz nie jest zapisywany, nie jest dodawany do profilu
-3. **Zero false-positive** — nie wolno dodać meczu „na wszelki wypadek".
+1. **Auto-detect (`auto`):** dokładnie **jeden** gracz pasuje do wzorca → zapis bez pytania.
+2. **Ambiguous (`ambiguous`):** **obaj** pasują (np. `Groteł` vs `Piotr Grotkowski`) → modal wyboru.
+3. **None (`none`):** **nikt** nie pasuje (np. cudzy mecz, podobne nazwisko typu Grotowski) → **potwierdzenie + wybór** (plan: 4.3.4).
+4. **ODRZUĆ** → mecz nie jest zapisywany.
 
-**Bug z Lovable:** Stary kod wykrywał "Piotr" → zbyt szeroki zakres (wielu Piotrów).
+**Zasada:** nigdy nie zakładaj — podobne nazwiska (Grotowski, Grodkowski) **nie** matchują `Grotkowski` (substring strict). Testy poniżej.
+
+**Bug z Lovable:** Stary kod wykrywał `"Piotr"` → zbyt szeroki zakres (wielu Piotrów). Naprawione.
+
+### Scenariusze testowe (stan v1.0 — `detectPlayerIndex`)
+
+| Mecz (gracz 0 vs gracz 1) | Wynik | Co widzi user przy imporcie |
+|---|---|---|
+| Jarek Marciniak vs Mariusz Pudzianowski | `none` | Krok 1 (4.3.4): „Zawodnicy inni niż Ty — dodać mimo to?" **NIE** / **TAK**. Po TAK → „Kim jesteś?" gracz 1 / gracz 2 / odrzuć |
+| Piotr Grotkowski vs Piotr Michałowicz | `auto` → gracz 0 | Zapis **automatyczny** (tylko Grotkowski pasuje, „Piotr" samo w sobie nie liczy się) |
+| Groteł vs Piotr Grotkowski | `ambiguous` | Modal wyboru — **obaj to Ty**, trzeba wskazać który slot N01 |
+| Piotr Grotkowski vs Groteł | `ambiguous` | j.w. |
+| GROTKOWSKI Piotr vs Jan Kowalski | `auto` → gracz 0 | Zapis automatyczny |
+| Marciniak Jarek vs Grotkowski Piotr | `auto` → gracz 1 | Zapis automatyczny |
+| P. Grotkowski vs Wiśniewski Sławomir | `auto` → gracz 0 | Zapis automatyczny (inicjał + nazwisko) |
+| Groteł vs Kowalski Jan | `auto` → gracz 0 | Zapis automatyczny |
+| Piotr Grotkowski (Katowice) vs Małkowski Adrian | `auto` → gracz 0 | Zapis automatyczny (miasto w nawiasie nie blokuje) |
+| **Grotowski Piotr** vs Kowalski Jan | `none` | ⚠️ Podobne nazwisko — **nie** auto. Flow 4.3.4 (potwierdzenie + wybór) |
+| **Grodkowski Piotr** vs Kowalski Jan | `none` | j.w. — Grodkowski ≠ Grotkowski |
+| Grotowski vs **Grotkowski Piotr** | `auto` → gracz 1 | Tylko Grotkowski pasuje; Grotowski traktowany jako obcy |
+| Grodkowski vs **Grotkowski Piotr** | `auto` → gracz 1 | j.w. |
+| Piotr **Grotowski** vs Piotr **Grotkowski** | `auto` → gracz 1 | Tylko drugi pasuje — brak false-positive na podobnym nazwisku |
+| Grotowski Piotr vs Grodkowski Adrian | `none` | Obaj obcy → flow 4.3.4 |
+| Marciniak Jarek vs **Grotowski** Piotr | `none` | Flow 4.3.4 |
+| Marciniak Jarek vs **Grodkowski** Piotr | `none` | Flow 4.3.4 |
+
+**Bulk import:** przy `none` / `ambiguous` bez wcześniejszego wyboru → wiersz `wymaga wyboru gracza` (nie zapisuje).
+
+**Plan Faza 4.3.4 (`none`):** nie blokuj — **pytaj** w 2 krokach: (1) „Czy na pewno dodać?" NIE/TAK → (2) „Kim jesteś?" gracz 1 / gracz 2 / odrzuć. Przy `ambiguous` — podświetlić obie opcje jako „Ty".
+
+---
+
+## Duplikaty spotkań
+
+**Definicja duplikatu:** ten sam `n01_tmid` już istnieje w profilu (`customer_id` + `n01_tmid` UNIQUE). Backend zwraca `{ status: "duplicate", shareToken }` — **nie nadpisuje** bez Twojej decyzji.
+
+### Scenariusze (stan v1.0)
+
+| Sytuacja | Import pojedynczy (teraz) | Import hurtowy (teraz) | Plan 4.3.6 / 4.3.7 |
+|---|---|---|---|
+| Link już w profilu | Panel: „Ten mecz jest już w bazie" → **Nadpisz** / **Zobacz istniejący** / **Anuluj** | Modal: **Nadpisz** / **Nadpisz wszystkie** / **Pomiń** / **Pomiń wszystkie** | Jaśniejsze pytanie + kontekst meczu (tytuł, data, przeciwnik) |
+| Klik **Nadpisz** | Ponowny fetch z N01 + `overwrite: true` → świeże dane i stats | j.w. dla bieżącego URL | Bez zmian logicznych |
+| Klik **Anuluj** / **Pomiń** | Mecz **nie** trafia ponownie do profilu | Wiersz `pominięto` | Etykieta **Pomiń** zamiast Anuluj |
+| **Pomiń wszystkie duplikaty** | — | `skip-all` — kolejne duplikaty w tej sesji bulk **bez pytania** | Przemianować przycisk na **„Pomiń wszystkie duplikaty"** (jasne znaczenie) |
+| **Nadpisz wszystkie** | — | `overwrite-all` — kolejne duplikaty w bulk **auto-nadpisuj** | Etykieta bez zmian; opcjonalnie potwierdzenie „Na pewno nadpisać wszystkie?" |
+| Duplikat + `none` (obcy gracze) | Najpierw duplikat **albo** identity — kolejność API | Bulk: duplikat obsłużony modal; identity → `wymaga wyboru gracza` | 4.3.5: modal identity też w bulk |
+
+**Zasada (jak 4.3.4):** duplikat = **pytaj**, nie zakładaj. Nigdy ciche nadpisanie.
+
+**Plan 4.3.6 (pojedynczy import):**
+1. „Ten mecz jest już w Twoim profilu." + podgląd (tytuł turnieju, data, przeciwnik, link)
+2. **Nadpisz** (pobierz ponownie z N01) / **Zobacz istniejący** / **Pomiń**
+
+**Plan 4.3.7 (bulk):**
+- Przy duplikacie: ten sam modal co wyżej + **Pomiń wszystkie duplikaty** / **Nadpisz wszystkie duplikaty**
+- `skip-all` dotyczy **tylko duplikatów** w bieżącym bulk (nie pomija błędów ani nowych meczów)
 
 ---
 
@@ -396,46 +450,131 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ---
 
+### Release v4.0.1 — Demo publiczne + SEO ⏳ NASTĘPNY (przed Auth 4.1)
+
+> **Cel:** Prawdziwe profile/mecze = **noindex** (prywatne). Osobna **zanonimizowana wersja demo** = **index** (marketing dla nowych graczy przed rejestracją).
+>
+> **Postać demo (wstępnie):** **Antoni „Robot" Kowalski** — persona w jednym pliku konfiguracyjnym, żeby później szybko podmienić osobę w demo bez grzebania w danych meczów.
+
+**Stan v1.0 (już jest):**
+- `/profile` → `robots: noindex, nofollow` ✅
+- `/m/[shareToken]` → `robots: noindex, nofollow` ✅
+- `/` (landing) → indexowalny (brak noindex) ✅
+
+**Do zrobienia:**
+
+- [ ] **4.0.1.1** **Audit noindex** — checklist wszystkich route'ów prywatnych
+  - `/profile`, `/m/*`, `/api/*`, przyszły `/admin`
+  - `X-Robots-Tag: noindex` na odpowiedziach API (opcjonalnie)
+  - Test: Google Rich Results / „site:" nie pokazuje realnych share tokenów
+- [ ] **4.0.1.2** **`robots.txt`** — jawne reguły
+  - `Disallow: /profile`, `/m/`, `/api/`, `/admin`
+  - `Allow: /`, `/demo/`
+- [ ] **4.0.1.3** **`sitemap.xml`** — tylko strony publiczne: `/`, `/demo`, `/demo/profile`, `/demo/m/*`
+- [ ] **4.0.1.4** **Dataset demo (anonimizacja)** — skrypt `scripts/build-demo-dataset.ts`
+  - Źródło: struktura z prawdziwego profilu (np. backup JSON), **zero prawdziwych imion**
+  - Główny gracz → **Antoni „Robot" Kowalski** (`demo/demo-persona.ts` — imię, nick, nazwisko; łatwa podmiana całej postaci)
+  - Przeciwnicy → fikcyjne nazwiska (Nowak Adam, Wiśniewski Piotr, itd.)
+  - Lekko zmienione wyniki (avg ±1–2, daty przesunięte, wyniki legów zaokrąglone)
+  - **Dokładnie 10 meczów** w profilu demo; output: `demo/demo-matches.json` (commitowalne, bez PII)
+  - **Nigdy nie serwuj demo z produkcyjnej tabeli `matches` usera**
+- [ ] **4.0.1.5** **Route `/demo/profile`** — pełny profil (**10 spotkań**, statystyki, wykresy, H2H, top 10, karty meczów)
+  - Nagłówek z personą: Antoni „Robot" Kowalski
+  - Banner sticky: „To przykładowy profil demo — zarejestruj się, aby śledzić swoje mecze"
+  - `robots: { index: true, follow: true }` + meta description pod SEO
+  - CTA → przyszły login (4.5) / tymczasowo anchor na landing
+- [ ] **4.0.1.6** **Route `/demo/m/[shareToken]`** — każdy z **10 meczów** z „Rzut po rzucie"
+  - Demo share tokeny (np. `demo001`…`demo010`) — **nie** prawdziwe tokeny z DB
+  - Indexowalne, zanonimizowane nazwy w legach
+- [ ] **4.0.1.7** **Reuse UI** — `ProfileClient` / `MatchView` z `demoMode` + loader z `demo/demo-matches.json` + `demo/demo-persona.ts`
+  - Brak importu, brak edycji, brak API do Supabase na demo routes
+  - Formularz „Dodaj mecz" ukryty lub disabled z tooltipem
+- [ ] **4.0.1.8** **Landing `/`** — sekcja + CTA „Zobacz profil Antoni „Robot" Kowalski" → `/demo/profile`
+- [ ] **4.0.1.9** **SEO pack** — title/description/OG/canonical per demo page; `lang=pl`; opcjonalnie JSON-LD `WebApplication`
+- [ ] **4.0.1.10** **Weryfikacja końcowa** — przed merge: manual + checklist
+  - Real `/profile` i `/m/abc` → noindex w HTML
+  - `/demo/*` → index, brak wycieku PII, profil = 10 meczów
+  - Search Console: submit sitemap po deploy (6.5)
+
+**Po v4.0.1:** dopiero **4.1** (Auth).
+
+---
+
 ### Kolejność prac po v1.0.0
 
-Realizuj **po kolei**: najpierw cała **Faza 4**, potem **5**, potem **6**. Nie skacz do 6.5 przed 4.7.
+Realizuj **po kolei**: **v4.0.1** (demo + SEO) → cała **Faza 4** → **5** → **6**.
 
-| # | Faza | Zadanie | Opis |
+| # | Release / Faza | Zadanie | Opis |
 |---|---|---|---|
-| 1 | 4 | **4.1** | Supabase Auth (Google login) |
-| 2 | 4 | **4.2** | Sync `auth.uid()` → `customer_id` |
-| 3 | 4 | **4.3** | Onboarding: „Który zawodnik to Ty?" przy pierwszym ingest |
-| 4 | 4 | **4.4** | Usunięcie stałej `DEFAULT_CUSTOMER_ID` |
-| 5 | 4 | **4.5** | Landing z CTA „Zaloguj się / Zarejestruj" |
-| 6 | 4 | **4.6** | Middleware — ochrona `/profile`, API tylko dla zalogowanego |
-| 7 | 4 | **4.7** | RLS per user (zamiast deny-all + service_role) |
-| 8 | 5 | **5.1** | Model freemium (free: 3 mecze; premium: pełne) |
-| 9 | 5 | **5.2** | Bramka płatności (PayNow lub PayU) |
-| 10 | 5 | **5.3** | Role: user / premium / admin / superadmin |
-| 11 | 5 | **5.4** | Panel admina (userzy, subskrypcje) |
-| 12 | 5 | **5.5** | Limity w UI (blokada importu / wykresów dla free) |
-| 13 | 6 | **6.1** | Vitest — golden samples parsera N01 |
-| 14 | 6 | **6.2** | Vitest — golden samples stats |
-| 15 | 6 | **6.3** | Playwright (ingest → profil → share → mecz) |
-| 16 | 6 | **6.4** | CI na PR (`typecheck && test`) |
-| 17 | 6 | **6.5** | Deploy produkcyjny Vercel + env |
-| 18 | 6 | **6.6** | Custom domain `dart.sylveoncompany.pl` |
-| 19 | 6 | **6.7** | Backup DB — procedura + harmonogram |
-| 20 | 6 | **6.8** | Perf: batch loading z paginacją (fix 1000-row limit) |
+| 1 | 4.0.1 | **4.0.1.1** | Audit noindex — checklist route'ów prywatnych |
+| 2 | 4.0.1 | **4.0.1.2** | `robots.txt` |
+| 3 | 4.0.1 | **4.0.1.3** | `sitemap.xml` (tylko publiczne) |
+| 4 | 4.0.1 | **4.0.1.4** | Anonimizacja → `demo/demo-persona.ts` + `demo/demo-matches.json` (10 meczów) |
+| 5 | 4.0.1 | **4.0.1.5** | `/demo/profile` — Antoni „Robot" Kowalski, 10 spotkań |
+| 6 | 4.0.1 | **4.0.1.6** | `/demo/m/[token]` — wszystkie 10 meczów, rzut po rzucie |
+| 7 | 4.0.1 | **4.0.1.7** | Reuse UI (`demoMode`, bez Supabase) |
+| 8 | 4.0.1 | **4.0.1.8** | Landing CTA → demo |
+| 9 | 4.0.1 | **4.0.1.9** | SEO meta + OG |
+| 10 | 4.0.1 | **4.0.1.10** | Weryfikacja noindex / brak wycieku PII |
+| 11 | 4 | **4.1** | Supabase Auth (Google login) |
+| 12 | 4 | **4.2** | Sync `auth.uid()` → `customer_id` |
+| 13 | 4 | **4.3** | Onboarding + detekcja gracza (4.3.1–4.3.7) |
+| 14 | 4 | **4.4** | Usunięcie stałej `DEFAULT_CUSTOMER_ID` |
+| 15 | 4 | **4.5** | Landing z CTA „Zaloguj się / Zarejestruj" |
+| 16 | 4 | **4.6** | Middleware — ochrona `/profile`, API tylko dla zalogowanego |
+| 17 | 4 | **4.7** | RLS per user (zamiast deny-all + service_role) |
+| 18 | 4 | **4.8** | **Usuwanie meczu** przez usera (triple-check, wpisz „usuwam") |
+| 19 | 4 | **4.9** | **Panel admina superadmin** (Ty) — userzy, mecze, audit, backup |
+| 20 | 5 | **5.1** | Model freemium (free: 3 mecze; premium: pełne) |
+| 21 | 5 | **5.2** | Bramka płatności (PayNow lub PayU) |
+| 22 | 5 | **5.3** | Role: user / premium / admin / superadmin |
+| 23 | 5 | **5.4** | Panel admina — subskrypcje premium (biznes) |
+| 24 | 5 | **5.5** | Limity w UI (blokada importu / wykresów dla free) |
+| 25 | 6 | **6.1** | Vitest — golden samples parsera N01 |
+| 26 | 6 | **6.2** | Vitest — golden samples stats |
+| 27 | 6 | **6.3** | Playwright (ingest → profil → share → mecz) |
+| 28 | 6 | **6.4** | CI na PR (`typecheck && test`) |
+| 29 | 6 | **6.5** | Deploy produkcyjny Vercel + env |
+| 30 | 6 | **6.6** | Custom domain `dart.sylveoncompany.pl` |
+| 31 | 6 | **6.7** | Backup DB — procedura + harmonogram |
+| 32 | 6 | **6.8** | Perf: batch loading z paginacją (fix 1000-row limit) |
 
 *Opcjonalnie później (poza główną kolejnością):* 3.14–3.17 analityka turniejowa.
 
 ---
 
-### Faza 4 — Auth + Multi-user ⏳ NASTĘPNA
+### Faza 4 — Auth + Multi-user + Admin ⏳ (po v4.0.1)
 
 - [ ] **4.1** Supabase Auth (Google login)
 - [ ] **4.2** Sync `auth.uid()` → `customer_id` (tabela `customers`)
-- [ ] **4.3** Onboarding: „Który zawodnik to Ty?" przy pierwszym ingest
+- [ ] **4.3** Onboarding + detekcja gracza przy imporcie
+  - [ ] **4.3.1** Ekran onboarding po pierwszym logowaniu: ustaw `known_nicknames` (Grotkowski, Groteł, Grotel + edycja)
+  - [ ] **4.3.2** Testy scenariuszy auto-detect (tabela w README → Vitest w 6.2)
+  - [ ] **4.3.3** UI `ambiguous`: obaj gracze oznaczeni jako „Ty" — wybór slotu N01 (Groteł vs Grotkowski)
+  - [ ] **4.3.4** UI `none` — **nie blokuj, pytaj** (2 kroki):
+    1. „Wygląda na to, że zawodnicy są inni niż Ty. Czy na pewno chcesz dodać ten mecz do profilu?" → **NIE** / **TAK**
+    2. Po **TAK** → „Kim jesteś?" → wybierz **gracz 1** / **gracz 2** / **odrzuć mecz**
+    - Dotyczy m.in. Marciniak vs Pudzianowski, Grotowski, Grodkowski (podobne nazwiska ≠ auto-match)
+  - [ ] **4.3.5** Bulk import: przy `none`/`ambiguous` → wstrzymaj i pokaż modal (nie tylko „wymaga wyboru gracza" w tabeli)
+  - [ ] **4.3.6** Duplikat — import pojedynczy: pytaj z kontekstem meczu → **Nadpisz** / **Zobacz istniejący** / **Pomiń** (nie ciche nadpisanie)
+  - [ ] **4.3.7** Duplikat — bulk: modal + **Pomiń wszystkie duplikaty** / **Nadpisz wszystkie duplikaty** (tylko duplikaty w sesji, reszta URL-i normalnie)
 - [ ] **4.4** Usunięcie stałej `DEFAULT_CUSTOMER_ID` / `OWNER_ID`
 - [ ] **4.5** Landing z CTA „Zaloguj się / Zarejestruj"
 - [ ] **4.6** Middleware — ochrona `/profile`, API tylko dla zalogowanego usera
 - [ ] **4.7** RLS per user (zamiast deny-all + service_role everywhere)
+- [ ] **4.8** **Usuwanie meczu przez usera** z profilu
+  - [ ] **4.8.1** Przycisk „Usuń mecz" na karcie meczu (rozwiniętej) i/lub widoku `/m/[shareToken]`
+  - [ ] **4.8.2** Triple-check: (1) „Czy na pewno?" → (2) podsumowanie meczu → (3) wpisz **`usuwam`** aby potwierdzić
+  - [ ] **4.8.3** API `DELETE /api/matches/[id]` — cascade legs + visits + share_links; tylko własne mecze (RLS)
+  - [ ] **4.8.4** Odświeżenie profilu + undo toast opcjonalnie (30 s) — nice-to-have
+- [ ] **4.9** **Panel admina superadmin** (`/admin`, rola `superadmin` — **Ty**)
+  - [ ] **4.9.1** Lista userów (customers): email, rola, liczba meczów, data rejestracji
+  - [ ] **4.9.2** Podgląd / usuwanie meczów dowolnego usera (audit log)
+  - [ ] **4.9.3** Ręczny backup DB (export JSON jak `.dev/backup-*`)
+  - [ ] **4.9.4** Podgląd ingest log / snapshot access log
+  - [ ] **4.9.5** Ochrona route — tylko `role = superadmin` (Twój account)
+
+> **Uwaga:** Panel **5.4** to później warstwa **biznesowa** (subskrypcje premium). Panel **4.9** to **Twój** panel operacyjny jako właściciel aplikacji.
 
 ---
 
@@ -444,7 +583,7 @@ Realizuj **po kolei**: najpierw cała **Faza 4**, potem **5**, potem **6**. Nie 
 - [ ] **5.1** Model freemium (free: 3 mecze, basic stats; premium: pełne)
 - [ ] **5.2** Bramka płatności (PayNow lub PayU)
 - [ ] **5.3** Role: user / premium / admin / superadmin
-- [ ] **5.4** Panel admina (zarządzanie userami, subskrypcjami)
+- [ ] **5.4** Panel admina — **subskrypcje i płatności premium** (nie mylić z 4.9 superadmin)
 - [ ] **5.5** Limity w UI (blokada importu / wykresów dla free tier)
 
 ---
@@ -470,10 +609,11 @@ Realizuj **po kolei**: najpierw cała **Faza 4**, potem **5**, potem **6**. Nie 
 4. **Parser: negative-score encoding** — N01 koduje ujemny `score` jako liczbę lotek.
 5. **Share-link: deterministyczny token** — 8 znaków base36, krótki, bezpieczny.
 6. **Schemat DB bez skrótów** — `customer_id`, `match_id`, `n01_tmid` (czytelność).
-7. **Noindex na profilach/share** — prywatne dane, bez Google.
-8. **Vercel jako hosting** — zero config, free tier, custom domain.
-9. **Detekcja gracza STRICT** — wzorce z `known_nicknames` customer, reszta → pytaj lub odrzuć.
-10. **Customer name split** — `first_name`, `last_name`, `nickname` w DB; `display_name` GENERATED.
+7. **Noindex na profilach/share** — prywatne dane, bez Google (`/profile`, `/m/*`).
+8. **Demo publiczne pod `/demo/*`** — zanonimizowany dataset statyczny (JSON) + `demo/demo-persona.ts` (postać: Antoni „Robot" Kowalski, łatwa podmiana); indexowalny; **nigdy** dane usera z DB (plan: **v4.0.1**).
+9. **Vercel jako hosting** — zero config, free tier, custom domain.
+10. **Detekcja gracza STRICT** — wzorce z `known_nicknames` customer, reszta → pytaj lub odrzuć.
+11. **Customer name split** — `first_name`, `last_name`, `nickname` w DB; `display_name` GENERATED.
 
 ---
 
@@ -561,13 +701,14 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.0.0 — Fazy 0–3 ✅ ZAMKNIĘTE | Faza 4 ⏳ NASTĘPNA
+### v1.0.0 — Fazy 0–3 ✅ ZAMKNIĘTE | v4.0.1 ⏳ NASTĘPNY
 
 | Element | Status |
 |---|---|
 | **v1.0.0** | ✅ Pierwszy stabilny release — profil, mecze, analityka, 51 meczów |
 | Fazy 0–3 | ✅ **ZAMKNIĘTE** (3.14–3.17 zawieszone, 3.18 → 6.8) |
-| **Faza 4** | ⏳ **NASTĘPNA** — Auth + Multi-user (4.1 → 4.7) |
+| **v4.0.1** | ⏳ **NASTĘPNY** — demo publiczne + SEO (Antoni „Robot" Kowalski, 10 meczów) |
+| **Faza 4** | ⏳ Auth + Multi-user (po v4.0.1) |
 | Faza 5 | ⏳ Premium + Płatności (po Fazie 4) |
 | Faza 6 | ⏳ Testy + Deploy (po Fazie 5) |
 | Backup | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + snapshot KPI) |
@@ -587,7 +728,8 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 Patrz tabelę **„Kolejność prac po v1.0.0"** w sekcji Roadmapa. Skrót:
 
-**Faza 4 (teraz):** 4.1 → 4.2 → 4.3 → 4.4 → 4.5 → 4.6 → 4.7  
+**v4.0.1 (teraz):** 4.0.1.1 → … → 4.0.1.10  
+**Faza 4 (potem):** 4.1 → 4.2 → 4.3 (4.3.1–4.3.7) → 4.4 → 4.5 → 4.6 → 4.7 → 4.8 → 4.9  
 **Faza 5 (potem):** 5.1 → 5.2 → 5.3 → 5.4 → 5.5  
 **Faza 6 (na końcu):** 6.1 → 6.2 → 6.3 → 6.4 → 6.5 → 6.6 → 6.7 → 6.8
 
@@ -599,12 +741,13 @@ Patrz tabelę **„Kolejność prac po v1.0.0"** w sekcji Roadmapa. Skrót:
 | 1 | Fixy UI/UX | 16 / 16 | ✅ ZAMKNIĘTA |
 | 2 | Analityka rdzeniowa | 5 / 5 | ✅ ZAMKNIĘTA |
 | 3 | Fix & Small features | 19 / 19* | ✅ ZAMKNIĘTA |
-| **4** | **Auth + Multi-user** | **0 / 7** | ⏳ **NASTĘPNA** |
+| **4.0.1** | **Demo publiczne + SEO** | **0 / 10** | ⏳ **NASTĘPNY** |
+| **4** | **Auth + Admin + UX** | **0 / 9** (+ subtaski) | ⏳ po **v4.0.1** |
 | 5 | Premium + Płatności | 0 / 5 | ⏳ |
 | 6 | Testy + Deploy + Perf | 0 / 8 | ⏳ |
-| | **Razem do zrobienia** | **20** | (+ 4 zawieszone: 3.14–3.17) |
+| | **Razem do zrobienia** | **32** | (+ 4 zawieszone: 3.14–3.17) |
 
-\*Obowiązkowe zadania Fazy 3 done; 3.14–3.17 zawieszone; 3.18 przeniesione do 6.8.
+\*Obowiązkowe zadania Fazy 3 done; 3.14–3.17 zawieszone; 3.18 → 6.8. **v4.0.1** (10 zadań) przed Auth 4.1.
 
 ### Pliki kluczowe (v1.0.0)
 
@@ -627,8 +770,8 @@ Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
 Stan v1.0.0 — Fazy 0–3 ZAMKNIĘTE, 51 meczów w DB.
-NASTĘPNA: Faza 4 (4.1 → 4.7), potem 5, potem 6 — po kolei!
-Nie rób Premium/Deploy przed Auth bez prośby.
+NASTĘPNY: v4.0.1 (demo: Antoni „Robot" Kowalski, 10 meczów, SEO) → potem Faza 4 (Auth).
+Nie rób Auth/Deploy przed v4.0.1 bez prośby.
 ```
 
 ### Podgląd na telefonie (dev)
