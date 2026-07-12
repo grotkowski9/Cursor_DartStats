@@ -1,13 +1,14 @@
 {
   "name": "cursor-dart-stats",
-  "version": "1.0.0",
+  "version": "4.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx scripts/seed-matches.ts"
+    "seed": "tsx scripts/seed-matches.ts",
+    "build:demo": "tsx scripts/build-demo-dataset.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

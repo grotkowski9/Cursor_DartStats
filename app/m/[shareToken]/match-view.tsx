@@ -8,9 +8,11 @@ import { computeMatchStats, dartWord, normalizeName, type LegStats, type MatchSt
 
 type Props = {
   match: N01Match;
+  backHref?: string;
+  matchPathPrefix?: string;
 };
 
-export function MatchView({ match }: Props) {
+export function MatchView({ match, backHref = "/profile", matchPathPrefix = "/m/" }: Props) {
   const stats = useMemo(() => computeMatchStats(match), [match]);
   const [copied, setCopied] = useState(false);
 
@@ -20,13 +22,15 @@ export function MatchView({ match }: Props) {
   });
 
   const shareUrl =
-    typeof window !== "undefined" ? window.location.href : `/m/${match.shareToken}`;
+    typeof window !== "undefined"
+      ? window.location.href
+      : `${matchPathPrefix}${match.shareToken}`;
 
   return (
     <>
       <nav>
         <Link
-          href="/profile"
+          href={backHref}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
         >
           <ChevronLeft className="h-3.5 w-3.5" />

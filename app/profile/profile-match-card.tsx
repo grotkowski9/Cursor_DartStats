@@ -11,9 +11,16 @@ type Props = {
   defaultExpanded?: boolean;
   /** Override display name for "me" player (use customer lastName + firstName) */
   myDisplayName?: string;
+  /** Path prefix for match detail links, default `/m/` */
+  matchPathPrefix?: string;
 };
 
-export function ProfileMatchCard({ match, defaultExpanded = false, myDisplayName }: Props) {
+export function ProfileMatchCard({
+  match,
+  defaultExpanded = false,
+  myDisplayName,
+  matchPathPrefix = "/m/",
+}: Props) {
   const stats = useMemo(() => computeMatchStats(match), [match]);
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -26,8 +33,8 @@ export function ProfileMatchCard({ match, defaultExpanded = false, myDisplayName
   const oppName = normalizeName(stats.opp.name);
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/m/${match.shareToken}`
-      : `/m/${match.shareToken}`;
+      ? `${window.location.origin}${matchPathPrefix}${match.shareToken}`
+      : `${matchPathPrefix}${match.shareToken}`;
 
   return (
     <article className="glass-tile overflow-hidden">
@@ -131,7 +138,7 @@ export function ProfileMatchCard({ match, defaultExpanded = false, myDisplayName
 
           <div className="mt-4 flex items-center justify-between gap-2">
             <Link
-              href={`/m/${match.shareToken}`}
+              href={`${matchPathPrefix}${match.shareToken}`}
               className="text-xs font-medium text-primary/90 underline-offset-4 hover:text-primary hover:underline"
             >
               Rzut po rzucie →

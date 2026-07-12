@@ -27,11 +27,20 @@ const PAGE_SIZE = 10;
 
 type Props = {
   myDisplayName?: string;
+  demoMode?: boolean;
+  initialMatches?: N01Match[];
+  /** e.g. `/demo/m/` for public demo */
+  matchPathPrefix?: string;
 };
 
-export function ProfileClient({ myDisplayName }: Props) {
-  const [matches, setMatches] = useState<N01Match[]>([]);
-  const [loading, setLoading] = useState(true);
+export function ProfileClient({
+  myDisplayName,
+  demoMode = false,
+  initialMatches,
+  matchPathPrefix = "/m/",
+}: Props) {
+  const [matches, setMatches] = useState<N01Match[]>(initialMatches ?? []);
+  const [loading, setLoading] = useState(!demoMode && !initialMatches);
   const [range, setRange] = useState<TimeRange>("all");
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
@@ -51,8 +60,9 @@ export function ProfileClient({ myDisplayName }: Props) {
   }, []);
 
   useEffect(() => {
+    if (demoMode || initialMatches) return;
     void loadMatches();
-  }, [loadMatches]);
+  }, [loadMatches, demoMode, initialMatches]);
 
   const filtered = useMemo(() => filterByRange(matches, range), [matches, range]);
   const playerStats = useMemo(() => computePlayerStats(filtered), [filtered]);
@@ -65,7 +75,7 @@ export function ProfileClient({ myDisplayName }: Props) {
     [filtered],
   );
 
-  const initialMatches = sortedMatches.slice(0, INITIAL_SHOW);
+  const firstPageMatches = sortedMatches.slice(0, INITIAL_SHOW);
   const extraMatches = sortedMatches.slice(INITIAL_SHOW);
   const totalPages = Math.ceil(extraMatches.length / PAGE_SIZE);
   const pageMatches = extraMatches.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
@@ -77,7 +87,7 @@ export function ProfileClient({ myDisplayName }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />
+      {!demoMode && <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />}
 
       <ProfileStatsBlock
         stats={playerStats}
@@ -121,15 +131,20 @@ export function ProfileClient({ myDisplayName }: Props) {
             </div>
             <h3 className="font-medium">Brak meczów w tym zakresie</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Dodaj pierwszy link z N01 powyżej.
+              {demoMode ? "Brak meczów w tym zakresie czasu." : "Dodaj pierwszy link z N01 powyżej."}
             </p>
           </div>
         ) : (
           <>
             {/* Initial 3 matches */}
             <div className="flex flex-col gap-2">
-              {initialMatches.map((m) => (
-                <ProfileMatchCard key={m.tmid} match={m} myDisplayName={myDisplayName} />
+              {firstPageMatches.map((m) => (
+                <ProfileMatchCard
+                  key={m.tmid}
+                  match={m}
+                  myDisplayName={myDisplayName}
+                  matchPathPrefix={matchPathPrefix}
+                />
               ))}
             </div>
 
@@ -149,7 +164,12 @@ export function ProfileClient({ myDisplayName }: Props) {
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   {pageMatches.map((m) => (
-                    <ProfileMatchCard key={m.tmid} match={m} myDisplayName={myDisplayName} />
+                    <ProfileMatchCard
+                  key={m.tmid}
+                  match={m}
+                  myDisplayName={myDisplayName}
+                  matchPathPrefix={matchPathPrefix}
+                />
                   ))}
                 </div>
 

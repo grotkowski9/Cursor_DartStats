@@ -1,0 +1,5885 @@
+[
+  {
+    "tmid": "demo_tmid_001",
+    "ttype": "tournament",
+    "title": "TURNIEJ DRUGIEJ SZANSY PUB Pub Zielona Tarcza 10.07 Top 16",
+    "startTime": 1781893278,
+    "updateTime": 1781894419,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": false,
+        "name": "NOWAK Sławomir / Gliwice",
+        "average": 37.58,
+        "winLegs": 2,
+        "allDarts": 80,
+        "allScore": 1002
+      },
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 36.22,
+        "winLegs": 0,
+        "allDarts": 81,
+        "allScore": 978
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 0,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 45,
+              "left": 456,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 70,
+              "left": 386,
+              "actualScore": 70,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 345,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 85,
+              "left": 260,
+              "actualScore": 85,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 219,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 17,
+              "left": 202,
+              "actualScore": 17,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 142,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 61,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 35,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 15,
+              "left": 20,
+              "actualScore": 15,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 20,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 20,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 15,
+              "left": 486,
+              "actualScore": 15,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 140,
+              "left": 346,
+              "actualScore": 140,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 303,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 9,
+              "left": 294,
+              "actualScore": 9,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 272,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 244,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 203,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 162,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 6,
+              "left": 156,
+              "actualScore": 6,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 140,
+              "left": 16,
+              "actualScore": 140,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 11,
+              "left": 5,
+              "actualScore": 11,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 1,
+              "left": 4,
+              "actualScore": 1,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 0,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 40,
+              "left": 461,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 418,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 392,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 55,
+              "left": 337,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 277,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 217,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 176,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 135,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 75,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 35,
+              "left": 40,
+              "actualScore": 35,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 40,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 20,
+              "left": 20,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 10,
+              "left": 10,
+              "actualScore": 10,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 5,
+              "left": 5,
+              "actualScore": 5,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 5,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 5,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 45,
+              "left": 456,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 426,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 21,
+              "left": 405,
+              "actualScore": 21,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 324,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 300,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 52,
+              "left": 248,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 205,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 124,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 80,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 39,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 34,
+              "left": 5,
+              "actualScore": 34,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 5,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 5,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 5,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 1,
+              "left": 4,
+              "actualScore": 1,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_1.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 1,
+    "shareToken": "demo001"
+  },
+  {
+    "tmid": "demo_tmid_002",
+    "ttype": "tournament",
+    "title": "TURNIEJ INDYWIDUALNY OPEN - PUB Pub Zielona Tarcza 10.07 Top 16",
+    "startTime": 1781285986,
+    "updateTime": 1781286941,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 36.02,
+        "winLegs": 0,
+        "allDarts": 78,
+        "allScore": 936
+      },
+      {
+        "isMe": false,
+        "name": "WIŚNIEWSKI Adam / Kobiór",
+        "average": 38.46,
+        "winLegs": 2,
+        "allDarts": 78,
+        "allScore": 1000
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 1,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 55,
+              "left": 446,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 6,
+              "left": 440,
+              "actualScore": 6,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 396,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 357,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 58,
+              "left": 299,
+              "actualScore": 58,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 260,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 179,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 29,
+              "left": 150,
+              "actualScore": 29,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 126,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 32,
+              "left": 94,
+              "actualScore": 32,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 54,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 47,
+              "left": 454,
+              "actualScore": 47,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 394,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 314,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 288,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 76,
+              "left": 212,
+              "actualScore": 76,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 171,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 7,
+              "left": 164,
+              "actualScore": 7,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 47,
+              "left": 117,
+              "actualScore": 47,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 91,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 53,
+              "left": 38,
+              "actualScore": 53,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 38,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 1,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 33,
+              "left": 468,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 90,
+              "left": 378,
+              "actualScore": 90,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 338,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 296,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 35,
+              "left": 261,
+              "actualScore": 35,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 233,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 188,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 7,
+              "left": 181,
+              "actualScore": 7,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 33,
+              "left": 148,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 120,
+              "left": 28,
+              "actualScore": 120,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 21,
+              "left": 7,
+              "actualScore": 21,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 7,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 7,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 7,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 3,
+              "left": 4,
+              "actualScore": 3,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 26,
+              "left": 475,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 394,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 313,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 272,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 87,
+              "left": 185,
+              "actualScore": 87,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 145,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 105,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 60,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 60,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 60,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 20,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 10,
+              "left": 10,
+              "actualScore": 10,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 10,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 8,
+              "left": 2,
+              "actualScore": 8,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_2.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo002"
+  },
+  {
+    "tmid": "demo_tmid_003",
+    "ttype": "tournament",
+    "title": "TURNIEJ INDYWIDUALNY OPEN - PUB Pub Zielona Tarcza 10.07 Group 4",
+    "startTime": 1780678492,
+    "updateTime": 1780679227,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 49.28,
+        "winLegs": 2,
+        "allDarts": 61,
+        "allScore": 1002
+      },
+      {
+        "isMe": false,
+        "name": "KURPAN Karol / Czerwionka",
+        "average": 47.05,
+        "winLegs": 0,
+        "allDarts": 60,
+        "allScore": 941
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 0,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 100,
+              "left": 401,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 301,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 68,
+              "left": 233,
+              "actualScore": 68,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 152,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 111,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 33,
+              "left": 78,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 52,
+              "left": 26,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 26,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 26,
+              "left": 475,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 432,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 372,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 272,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 250,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 120,
+              "left": 130,
+              "actualScore": 120,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 85,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 49,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 0,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 41,
+              "left": 460,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 121,
+              "left": 339,
+              "actualScore": 121,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 313,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 270,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 230,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 58,
+              "left": 172,
+              "actualScore": 58,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 131,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 103,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 79,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 7,
+              "left": 72,
+              "actualScore": 7,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 20,
+              "left": 52,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 20,
+              "left": 32,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 32,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 45,
+              "left": 456,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 396,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 356,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 20,
+              "left": 336,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 20,
+              "left": 316,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 286,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 241,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 21,
+              "left": 220,
+              "actualScore": 21,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 178,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 97,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 13,
+              "left": 84,
+              "actualScore": 13,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 72,
+              "left": 12,
+              "actualScore": 72,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_3.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo003"
+  },
+  {
+    "tmid": "demo_tmid_004",
+    "ttype": "tournament",
+    "title": "TURNIEJ INDYWIDUALNY OPEN - PUB Pub Zielona Tarcza 10.07 Group 4",
+    "startTime": 1780071552,
+    "updateTime": 1780072704,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 40.41,
+        "winLegs": 1,
+        "allDarts": 105,
+        "allScore": 1414
+      },
+      {
+        "isMe": false,
+        "name": "FRANCUZ Piotr / Kobiór",
+        "average": 38.43,
+        "winLegs": 2,
+        "allDarts": 105,
+        "allScore": 1345
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 1,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 15,
+              "left": 486,
+              "actualScore": 15,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 35,
+              "left": 451,
+              "actualScore": 35,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 415,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 379,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 38,
+              "left": 341,
+              "actualScore": 38,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 281,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 200,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 9,
+              "left": 191,
+              "actualScore": 9,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 13,
+              "left": 178,
+              "actualScore": 13,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 47,
+              "left": 131,
+              "actualScore": 47,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 106,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 76,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 78,
+              "left": 423,
+              "actualScore": 78,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 140,
+              "left": 283,
+              "actualScore": 140,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 238,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 212,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 70,
+              "left": 142,
+              "actualScore": 70,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 77,
+              "left": 65,
+              "actualScore": 77,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 33,
+              "left": 32,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 16,
+              "left": 16,
+              "actualScore": 16,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 16,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 16,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 16,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 16,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 0,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 52,
+              "left": 449,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 349,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 292,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 253,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 208,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 27,
+              "left": 181,
+              "actualScore": 27,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 59,
+              "left": 122,
+              "actualScore": 59,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 21,
+              "left": 101,
+              "actualScore": 21,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 44,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 22,
+              "left": 479,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 453,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 29,
+              "left": 424,
+              "actualScore": 29,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 379,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 52,
+              "left": 327,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 297,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 252,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 207,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 27,
+              "left": 180,
+              "actualScore": 27,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 158,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 3,
+        "winner": 1,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 61,
+              "left": 440,
+              "actualScore": 61,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 52,
+              "left": 388,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 362,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 322,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 292,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 17,
+              "left": 275,
+              "actualScore": 17,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 250,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 55,
+              "left": 195,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 165,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 124,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 64,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 24,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 24,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 100,
+              "left": 401,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 360,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 300,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 219,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 178,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 142,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 90,
+              "left": 52,
+              "actualScore": 90,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 20,
+              "left": 32,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 23,
+              "left": 9,
+              "actualScore": 23,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 9,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 9,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 1,
+              "left": 8,
+              "actualScore": 1,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 8,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_4.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo004"
+  },
+  {
+    "tmid": "demo_tmid_005",
+    "ttype": "tournament",
+    "title": "TURNIEJ INDYWIDUALNY OPEN - PUB Pub Zielona Tarcza 10.07 Group 4",
+    "startTime": 1779464805,
+    "updateTime": 1779465348,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 53.28,
+        "winLegs": 0,
+        "allDarts": 54,
+        "allScore": 959
+      },
+      {
+        "isMe": false,
+        "name": "KAIN Dariusz / Tychy",
+        "average": 56.72,
+        "winLegs": 2,
+        "allDarts": 53,
+        "allScore": 1002
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 1,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 30,
+              "left": 471,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 426,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 62,
+              "left": 364,
+              "actualScore": 62,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 61,
+              "left": 303,
+              "actualScore": 61,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 258,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 158,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 113,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 83,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 49,
+              "left": 34,
+              "actualScore": 49,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 60,
+              "left": 441,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 397,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 68,
+              "left": 329,
+              "actualScore": 68,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 289,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 29,
+              "left": 260,
+              "actualScore": 29,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 77,
+              "left": 183,
+              "actualScore": 77,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 123,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 95,
+              "left": 28,
+              "actualScore": 95,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 28,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 1,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 53,
+              "left": 448,
+              "actualScore": 53,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 368,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 328,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 228,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 202,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 176,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 152,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 52,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 24,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 31,
+              "left": 470,
+              "actualScore": 31,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 426,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 382,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 301,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 244,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 100,
+              "left": 144,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 83,
+              "left": 61,
+              "actualScore": 83,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 20,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 18,
+              "left": 2,
+              "actualScore": 18,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 2,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_5.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo005"
+  },
+  {
+    "tmid": "demo_tmid_006",
+    "ttype": "tournament",
+    "title": "TURNIEJ INDYWIDUALNY OPEN - PUB Pub Zielona Tarcza 10.07 Group 4",
+    "startTime": 1778857875,
+    "updateTime": 1778858682,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 36.07,
+        "winLegs": 2,
+        "allDarts": 82,
+        "allScore": 986
+      },
+      {
+        "isMe": false,
+        "name": "BRYCHLIK Mateusz / Piasek",
+        "average": 35.67,
+        "winLegs": 0,
+        "allDarts": 81,
+        "allScore": 963
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 0,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 8,
+              "left": 493,
+              "actualScore": 8,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 27,
+              "left": 466,
+              "actualScore": 27,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 440,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 95,
+              "left": 345,
+              "actualScore": 95,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 79,
+              "left": 266,
+              "actualScore": 79,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 46,
+              "left": 220,
+              "actualScore": 46,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 194,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 150,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 70,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 18,
+              "left": 52,
+              "actualScore": 18,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 52,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 16,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 11,
+              "left": 5,
+              "actualScore": 11,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 5,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 5,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 5,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 62,
+              "left": 439,
+              "actualScore": 62,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 403,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 362,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 13,
+              "left": 349,
+              "actualScore": 13,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 325,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 299,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 263,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 95,
+              "left": 168,
+              "actualScore": 95,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 78,
+              "left": 90,
+              "actualScore": 78,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 33,
+              "left": 57,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 17,
+              "left": 40,
+              "actualScore": 17,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 40,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 14,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 7,
+              "left": 7,
+              "actualScore": 7,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 7,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 7,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 0,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 64,
+              "left": 437,
+              "actualScore": 64,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 47,
+              "left": 390,
+              "actualScore": 47,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 309,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 66,
+              "left": 243,
+              "actualScore": 66,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 219,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 174,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 135,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 94,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 66,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 24,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 18,
+              "left": 6,
+              "actualScore": 18,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 6,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 100,
+              "left": 401,
+              "actualScore": 100,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 362,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 56,
+              "left": 306,
+              "actualScore": 56,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 261,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 21,
+              "left": 240,
+              "actualScore": 21,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 85,
+              "left": 155,
+              "actualScore": 85,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 27,
+              "left": 128,
+              "actualScore": 27,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 88,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 9,
+              "left": 79,
+              "actualScore": 9,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 51,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 19,
+              "left": 32,
+              "actualScore": 19,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_6.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo006"
+  },
+  {
+    "tmid": "demo_tmid_007",
+    "ttype": "tournament",
+    "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+    "startTime": 1778075023,
+    "updateTime": 1778076047,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": false,
+        "name": "BRYCHLIK Mateusz / Piasek",
+        "average": 41.31,
+        "winLegs": 2,
+        "allDarts": 100,
+        "allScore": 1377
+      },
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 43.95,
+        "winLegs": 1,
+        "allDarts": 98,
+        "allScore": 1435
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 0,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 52,
+              "left": 449,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 389,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 348,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 288,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 7,
+              "left": 281,
+              "actualScore": 7,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 55,
+              "left": 226,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 204,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 83,
+              "left": 121,
+              "actualScore": 83,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 61,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 61,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 5,
+              "left": 56,
+              "actualScore": 5,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 28,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 28,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 39,
+              "left": 462,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 23,
+              "left": 439,
+              "actualScore": 23,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 398,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 16,
+              "left": 382,
+              "actualScore": 16,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 342,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 50,
+              "left": 292,
+              "actualScore": 50,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 252,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 195,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 165,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 126,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 88,
+              "left": 38,
+              "actualScore": 88,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 14,
+              "left": 24,
+              "actualScore": 14,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 18,
+              "left": 6,
+              "actualScore": 18,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 1,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 60,
+              "left": 441,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 415,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 375,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 295,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 65,
+              "left": 230,
+              "actualScore": 65,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 204,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 182,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 156,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 126,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 41,
+              "left": 460,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 418,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 52,
+              "left": 366,
+              "actualScore": 52,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 140,
+              "left": 226,
+              "actualScore": 140,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 46,
+              "left": 180,
+              "actualScore": 46,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 154,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 109,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 50,
+              "left": 59,
+              "actualScore": 50,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 20,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -2,
+              "left": 0,
+              "actualScore": 20,
+              "darts": 2,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 3,
+        "winner": 0,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 40,
+              "left": 461,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 29,
+              "left": 432,
+              "actualScore": 29,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 387,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 361,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 321,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 85,
+              "left": 236,
+              "actualScore": 85,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 176,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 116,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 56,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 16,
+              "left": 40,
+              "actualScore": 16,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 40,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 44,
+              "left": 457,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 19,
+              "left": 438,
+              "actualScore": 19,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 381,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 300,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 257,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 227,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 15,
+              "left": 212,
+              "actualScore": 15,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 58,
+              "left": 154,
+              "actualScore": 58,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 34,
+              "left": 120,
+              "actualScore": 34,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 70,
+              "left": 50,
+              "actualScore": 70,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_7.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 1,
+    "shareToken": "demo007"
+  },
+  {
+    "tmid": "demo_tmid_008",
+    "ttype": "tournament",
+    "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+    "startTime": 1777456184,
+    "updateTime": 1777457203,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 44.21,
+        "winLegs": 2,
+        "allDarts": 68,
+        "allScore": 1002
+      },
+      {
+        "isMe": false,
+        "name": "LIS Tomasz / Chorzów",
+        "average": 40.73,
+        "winLegs": 0,
+        "allDarts": 66,
+        "allScore": 896
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 0,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 42,
+              "left": 459,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 73,
+              "left": 386,
+              "actualScore": 73,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 306,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 70,
+              "left": 236,
+              "actualScore": 70,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 193,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 95,
+              "left": 98,
+              "actualScore": 95,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 62,
+              "left": 36,
+              "actualScore": 62,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 11,
+              "left": 25,
+              "actualScore": 11,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 25,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 25,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 19,
+              "left": 6,
+              "actualScore": 19,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 6,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 6,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 73,
+              "left": 428,
+              "actualScore": 73,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 31,
+              "left": 397,
+              "actualScore": 31,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 367,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 322,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 296,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 252,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 23,
+              "left": 229,
+              "actualScore": 23,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 33,
+              "left": 196,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 34,
+              "left": 162,
+              "actualScore": 34,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 37,
+              "left": 125,
+              "actualScore": 37,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 101,
+              "left": 24,
+              "actualScore": 101,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 24,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 24,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 0,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 50,
+              "left": 451,
+              "actualScore": 50,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 81,
+              "left": 370,
+              "actualScore": 81,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 66,
+              "left": 304,
+              "actualScore": 66,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 21,
+              "left": 283,
+              "actualScore": 21,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 258,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 228,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 120,
+              "left": 108,
+              "actualScore": 120,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 67,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 39,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -2,
+              "left": 0,
+              "actualScore": 39,
+              "darts": 2,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 57,
+              "left": 444,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 399,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 319,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 63,
+              "left": 256,
+              "actualScore": 63,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 31,
+              "left": 225,
+              "actualScore": 31,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 55,
+              "left": 170,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 18,
+              "left": 152,
+              "actualScore": 18,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 109,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 27,
+              "left": 82,
+              "actualScore": 27,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_8.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo008"
+  },
+  {
+    "tmid": "demo_tmid_009",
+    "ttype": "tournament",
+    "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+    "startTime": 1776776379,
+    "updateTime": 1776777597,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 34.64,
+        "winLegs": 0,
+        "allDarts": 81,
+        "allScore": 935
+      },
+      {
+        "isMe": false,
+        "name": "WÓJCik Michał / Sosnowiec",
+        "average": 35.71,
+        "winLegs": 2,
+        "allDarts": 84,
+        "allScore": 1000
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 1,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 25,
+              "left": 476,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 436,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 391,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 351,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 36,
+              "left": 315,
+              "actualScore": 36,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 70,
+              "left": 245,
+              "actualScore": 70,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 217,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 195,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 22,
+              "left": 173,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 54,
+              "left": 119,
+              "actualScore": 54,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 24,
+              "left": 95,
+              "actualScore": 24,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 56,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 33,
+              "left": 23,
+              "actualScore": 33,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 15,
+              "left": 8,
+              "actualScore": 15,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 6,
+              "left": 2,
+              "actualScore": 6,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 31,
+              "left": 470,
+              "actualScore": 31,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 429,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 390,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 310,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 80,
+              "left": 230,
+              "actualScore": 80,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 30,
+              "left": 200,
+              "actualScore": 30,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 155,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 110,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 29,
+              "left": 81,
+              "actualScore": 29,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 42,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 2,
+              "left": 40,
+              "actualScore": 2,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 18,
+              "left": 22,
+              "actualScore": 18,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 22,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 11,
+              "left": 11,
+              "actualScore": 11,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 11,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 3,
+              "left": 8,
+              "actualScore": 3,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 8,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 8,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 6,
+              "left": 2,
+              "actualScore": 6,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 2,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 1,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 58,
+              "left": 443,
+              "actualScore": 58,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 9,
+              "left": 434,
+              "actualScore": 9,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 61,
+              "left": 373,
+              "actualScore": 61,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 331,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 85,
+              "left": 246,
+              "actualScore": 85,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 95,
+              "left": 151,
+              "actualScore": 95,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 79,
+              "left": 72,
+              "actualScore": 79,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 57,
+              "left": 444,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 399,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 38,
+              "left": 361,
+              "actualScore": 38,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 123,
+              "left": 238,
+              "actualScore": 123,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 213,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 133,
+              "left": 80,
+              "actualScore": 133,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 40,
+              "left": 40,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -3,
+              "left": 0,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_9.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 0,
+    "shareToken": "demo009"
+  },
+  {
+    "tmid": "demo_tmid_010",
+    "ttype": "tournament",
+    "title": "Dart League - S1 Turniej 6: Edycja wakacyjna (01.07 - 28.08)",
+    "startTime": 1776088195,
+    "updateTime": 1776089407,
+    "startScore": 501,
+    "players": [
+      {
+        "isMe": false,
+        "name": "WÓJCik Michał / Sosnowiec",
+        "average": 42,
+        "winLegs": 1,
+        "allDarts": 98,
+        "allScore": 1372
+      },
+      {
+        "isMe": true,
+        "name": "KOWALSKI Antoni / Robot",
+        "average": 45.1,
+        "winLegs": 2,
+        "allDarts": 99,
+        "allScore": 1488
+      }
+    ],
+    "legs": [
+      {
+        "index": 1,
+        "winner": 0,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 22,
+              "left": 479,
+              "actualScore": 22,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 61,
+              "left": 418,
+              "actualScore": 61,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 13,
+              "left": 405,
+              "actualScore": 13,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 78,
+              "left": 327,
+              "actualScore": 78,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 286,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 247,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 67,
+              "left": 180,
+              "actualScore": 67,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 35,
+              "left": 145,
+              "actualScore": 35,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 101,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 53,
+              "left": 48,
+              "actualScore": 53,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 41,
+              "left": 7,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -2,
+              "left": 0,
+              "actualScore": 7,
+              "darts": 2,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 41,
+              "left": 460,
+              "actualScore": 41,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 28,
+              "left": 432,
+              "actualScore": 28,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 46,
+              "left": 386,
+              "actualScore": 46,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 61,
+              "left": 325,
+              "actualScore": 61,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 286,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 55,
+              "left": 231,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 14,
+              "left": 217,
+              "actualScore": 14,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 174,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 58,
+              "left": 116,
+              "actualScore": 58,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 44,
+              "left": 72,
+              "actualScore": 44,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 32,
+              "left": 40,
+              "actualScore": 32,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 2,
+              "left": 38,
+              "actualScore": 2,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 2,
+        "winner": 1,
+        "first": 0,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 20,
+              "left": 481,
+              "actualScore": 20,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 35,
+              "left": 446,
+              "actualScore": 35,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 389,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 363,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 55,
+              "left": 308,
+              "actualScore": 55,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 38,
+              "left": 270,
+              "actualScore": 38,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 79,
+              "left": 191,
+              "actualScore": 79,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 166,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 121,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 4,
+              "left": 117,
+              "actualScore": 4,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 92,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 39,
+              "left": 462,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 60,
+              "left": 402,
+              "actualScore": 60,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 357,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 46,
+              "left": 311,
+              "actualScore": 46,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 268,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 23,
+              "left": 245,
+              "actualScore": 23,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 27,
+              "left": 218,
+              "actualScore": 27,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 176,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 78,
+              "left": 98,
+              "actualScore": 78,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 47,
+              "left": 51,
+              "actualScore": 47,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -2,
+              "left": 0,
+              "actualScore": 51,
+              "darts": 2,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      },
+      {
+        "index": 3,
+        "winner": 1,
+        "first": 1,
+        "visits": [
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 45,
+              "left": 456,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 79,
+              "left": 377,
+              "actualScore": 79,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 320,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 42,
+              "left": 278,
+              "actualScore": 42,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 31,
+              "left": 247,
+              "actualScore": 31,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 29,
+              "left": 218,
+              "actualScore": 29,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 58,
+              "left": 160,
+              "actualScore": 58,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 39,
+              "left": 121,
+              "actualScore": 39,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 25,
+              "left": 96,
+              "actualScore": 25,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 57,
+              "left": 39,
+              "actualScore": 57,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            }
+          ],
+          [
+            {
+              "score": 0,
+              "left": 501,
+              "actualScore": 0,
+              "darts": 0,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": true
+            },
+            {
+              "score": 40,
+              "left": 461,
+              "actualScore": 40,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 65,
+              "left": 396,
+              "actualScore": 65,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 123,
+              "left": 273,
+              "actualScore": 123,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 247,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 26,
+              "left": 221,
+              "actualScore": 26,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 84,
+              "left": 137,
+              "actualScore": 84,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 9,
+              "left": 128,
+              "actualScore": 9,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 45,
+              "left": 83,
+              "actualScore": 45,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 43,
+              "left": 40,
+              "actualScore": 43,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": 0,
+              "left": 40,
+              "actualScore": 0,
+              "darts": 3,
+              "isCheckout": false,
+              "isBust": false,
+              "isSetup": false
+            },
+            {
+              "score": -1,
+              "left": 0,
+              "actualScore": 40,
+              "darts": 1,
+              "isCheckout": true,
+              "isBust": false,
+              "isSetup": false
+            }
+          ]
+        ]
+      }
+    ],
+    "snapshotPath": "demo/snapshot_10.json",
+    "htmlSnapshotPath": null,
+    "playerIndex": 1,
+    "shareToken": "demo010"
+  }
+]
