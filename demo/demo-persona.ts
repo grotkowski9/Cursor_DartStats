@@ -1,6 +1,6 @@
 /**
  * Demo player persona — edit this file to swap the whole demo character.
- * Re-run `npm run build:demo` after changing nicknames (for knownNicknames in dataset).
+ * Re-run `npm run seed:demo` after changing nicknames or importing new demo matches.
  */
 export type DemoPersona = {
   firstName: string;
@@ -18,12 +18,10 @@ export const DEMO_PERSONA: DemoPersona = {
   nickname: "Robot",
   n01Name: "KOWALSKI Antoni / Robot",
   knownNicknames: ["Kowalski", "Robot", "Antoni", "KOWALSKI"],
-  tagline: "Gracz klubowy — turnieje open, pub league, zero ściemy w statystykach.",
+  tagline: "Twój Dart Profile Tracker — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.",
 };
 
-export const DEMO_MATCH_COUNT = 10;
-
-/** Share tokens for demo matches — demo001 … demo010 */
+/** Share tokens for demo matches — demo001, demo002, … */
 export function demoShareToken(index: number): string {
   return `demo${String(index + 1).padStart(3, "0")}`;
 }

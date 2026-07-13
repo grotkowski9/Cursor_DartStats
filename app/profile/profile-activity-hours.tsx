@@ -3,14 +3,18 @@
 import { useMemo } from "react";
 import { Clock } from "lucide-react";
 import { N01Match } from "@/lib/n01-parser";
-import { computeHourStats } from "@/lib/stats";
+import { computeHourStats, type HourStats } from "@/lib/stats";
 
 interface Props {
-  matches: N01Match[];
+  matches?: N01Match[];
+  hourStats?: HourStats[];
 }
 
-export default function ProfileActivityHours({ matches }: Props) {
-  const hours = useMemo(() => computeHourStats(matches), [matches]);
+export default function ProfileActivityHours({ matches = [], hourStats: hourStatsProp }: Props) {
+  const hours = useMemo(
+    () => hourStatsProp ?? computeHourStats(matches),
+    [hourStatsProp, matches],
+  );
 
   const maxCount = Math.max(...hours.map((h) => h.count), 1);
 

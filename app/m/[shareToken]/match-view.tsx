@@ -4,16 +4,27 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Check, ChevronLeft, Share2, Trophy } from "lucide-react";
 import type { N01Match, N01Visit } from "@/lib/n01-parser";
-import { computeMatchStats, dartWord, normalizeName, type LegStats, type MatchStats } from "@/lib/stats";
+import type { MatchStats } from "@/lib/stats";
+import { computeMatchStats, dartWord, normalizeName, type LegStats } from "@/lib/stats";
+import { getMatchShareUrl } from "@/lib/share-url";
 
 type Props = {
   match: N01Match;
   backHref?: string;
   matchPathPrefix?: string;
+  initialMatchStats?: MatchStats;
 };
 
-export function MatchView({ match, backHref = "/profile", matchPathPrefix = "/m/" }: Props) {
-  const stats = useMemo(() => computeMatchStats(match), [match]);
+export function MatchView({
+  match,
+  backHref = "/profile",
+  matchPathPrefix = "/m/",
+  initialMatchStats,
+}: Props) {
+  const stats = useMemo(
+    () => initialMatchStats ?? computeMatchStats(match),
+    [initialMatchStats, match],
+  );
   const [copied, setCopied] = useState(false);
 
   const date = new Date(match.startTime * 1000).toLocaleString("pl-PL", {
@@ -21,10 +32,17 @@ export function MatchView({ match, backHref = "/profile", matchPathPrefix = "/m/
     timeStyle: "short",
   });
 
-  const shareUrl =
-    typeof window !== "undefined"
-      ? window.location.href
-      : `${matchPathPrefix}${match.shareToken}`;
+  async function copyShareLink() {
+    try {
+      await navigator.clipboard.writeText(
+        getMatchShareUrl(match.shareToken, matchPathPrefix),
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* noop */
+    }
+  }
 
   return (
     <>
@@ -43,15 +61,7 @@ export function MatchView({ match, backHref = "/profile", matchPathPrefix = "/m/
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{match.title}</h1>
         <button
           type="button"
-          onClick={async () => {
-            try {
-              await navigator.clipboard.writeText(shareUrl);
-              setCopied(true);
-              setTimeout(() => setCopied(false), 1600);
-            } catch {
-              /* noop */
-            }
-          }}
+          onClick={() => void copyShareLink()}
           className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium hover:border-accent-from/50"
         >
           {copied ? (

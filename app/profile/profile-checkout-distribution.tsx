@@ -3,14 +3,21 @@
 import { useMemo } from "react";
 import { BarChart3 } from "lucide-react";
 import { N01Match } from "@/lib/n01-parser";
-import { computeCheckoutDistribution } from "@/lib/stats";
+import { computeCheckoutDistribution, type CheckoutBucket } from "@/lib/stats";
 
 interface Props {
-  matches: N01Match[];
+  matches?: N01Match[];
+  checkoutBuckets?: CheckoutBucket[];
 }
 
-export default function ProfileCheckoutDistribution({ matches }: Props) {
-  const buckets = useMemo(() => computeCheckoutDistribution(matches), [matches]);
+export default function ProfileCheckoutDistribution({
+  matches = [],
+  checkoutBuckets: bucketsProp,
+}: Props) {
+  const buckets = useMemo(
+    () => bucketsProp ?? computeCheckoutDistribution(matches),
+    [bucketsProp, matches],
+  );
 
   const maxAttempts = Math.max(...buckets.map((b) => b.attempts), 1);
   const hasData = buckets.some((b) => b.attempts > 0);

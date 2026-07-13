@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { DemoBanner } from "@/components/demo-banner";
 import { SiteFooter } from "@/components/site-footer";
-import { getDemoMatches, personaToCustomer } from "@/lib/demo";
+import { getDemoSnapshot, personaToCustomer } from "@/lib/demo";
 import { DEMO_PERSONA } from "@/demo/demo-persona";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { ProfileClient } from "@/app/profile/profile-client";
@@ -11,11 +11,11 @@ import { ProfileHeader } from "@/app/profile/profile-header";
 
 const persona = DEMO_PERSONA;
 const customer = personaToCustomer(persona);
-const demoMatches = getDemoMatches();
+const demoSnapshot = getDemoSnapshot();
 
 export const metadata: Metadata = {
   title: `${persona.firstName} „${persona.nickname}" ${persona.lastName} — profil demo | ${SITE_NAME}`,
-  description: `Przykładowy profil gracza darta: statystyki, wykres formy, H2H i ${demoMatches.length} meczów. Zobacz, co oferuje ${SITE_NAME} przed rejestracją.`,
+  description: `Przykładowy profil gracza darta: statystyki, wykres formy, H2H. Zobacz, co oferuje ${SITE_NAME} przed rejestracją.`,
   robots: { index: true, follow: true },
   alternates: { canonical: `${getSiteUrl()}/demo/profile` },
   openGraph: {
@@ -59,7 +59,7 @@ export default function DemoProfilePage() {
 
           <ProfileClient
             demoMode
-            initialMatches={demoMatches}
+            demoSnapshot={demoSnapshot}
             matchPathPrefix="/demo/m/"
             myDisplayName={`${customer.lastName} ${customer.firstName}`.trim()}
           />

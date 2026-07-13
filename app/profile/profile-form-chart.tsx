@@ -15,7 +15,9 @@ import type { N01Match } from "@/lib/n01-parser";
 import { computeFormSeries, computePlayerStats, type FormPoint } from "@/lib/stats";
 
 type Props = {
-  matches: N01Match[];
+  matches?: N01Match[];
+  formSeries?: FormPoint[];
+  overallAverage?: number;
 };
 
 type ChartPoint = FormPoint & { index: number };
@@ -57,13 +59,24 @@ function CustomTooltip({
   );
 }
 
-export function ProfileFormChart({ matches }: Props) {
-  const data = useMemo(() => computeFormSeries(matches), [matches]);
+export function ProfileFormChart({ matches, formSeries: formSeriesProp, overallAverage }: Props) {
+  const data = useMemo(
+    () => formSeriesProp ?? (matches ? computeFormSeries(matches) : []),
+    [formSeriesProp, matches],
+  );
   const chartData = useMemo(
     () => data.map((point, index) => ({ ...point, index })),
     [data],
   );
-  const playerStats = useMemo(() => computePlayerStats(matches), [matches]);
+  const playerStats = useMemo(
+    () =>
+      overallAverage !== undefined
+        ? { average: overallAverage }
+        : matches
+          ? computePlayerStats(matches)
+          : { average: 0 },
+    [overallAverage, matches],
+  );
 
   if (chartData.length < 2) return null;
 

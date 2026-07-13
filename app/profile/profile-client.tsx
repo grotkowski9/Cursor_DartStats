@@ -11,6 +11,7 @@ import {
   filterByRange,
   type TimeRange,
 } from "@/lib/stats";
+import { refreshDemoSnapshotDates, type DemoProfileSnapshot } from "@/lib/demo-snapshot";
 import { ProfileAddMatch } from "./profile-add-match";
 import ProfileActivity from "./profile-activity";
 import ProfileActivityHours from "./profile-activity-hours";
@@ -28,6 +29,8 @@ const PAGE_SIZE = 10;
 type Props = {
   myDisplayName?: string;
   demoMode?: boolean;
+  /** Statyczny snapshot — demo bez liczenia statystyk w runtime */
+  demoSnapshot?: DemoProfileSnapshot;
   initialMatches?: N01Match[];
   /** e.g. `/demo/m/` for public demo */
   matchPathPrefix?: string;
@@ -36,11 +39,19 @@ type Props = {
 export function ProfileClient({
   myDisplayName,
   demoMode = false,
+  demoSnapshot,
   initialMatches,
   matchPathPrefix = "/m/",
 }: Props) {
-  const [matches, setMatches] = useState<N01Match[]>(initialMatches ?? []);
-  const [loading, setLoading] = useState(!demoMode && !initialMatches);
+  const liveDemoSnapshot = useMemo(
+    () => (demoSnapshot ? refreshDemoSnapshotDates(demoSnapshot) : undefined),
+    [demoSnapshot],
+  );
+
+  const [matches, setMatches] = useState<N01Match[]>(
+    liveDemoSnapshot?.matches ?? initialMatches ?? [],
+  );
+  const [loading, setLoading] = useState(!demoMode && !demoSnapshot && !initialMatches);
   const [range, setRange] = useState<TimeRange>("all");
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
@@ -60,15 +71,32 @@ export function ProfileClient({
   }, []);
 
   useEffect(() => {
-    if (demoMode || initialMatches) return;
+    if (demoMode || demoSnapshot || initialMatches) return;
     void loadMatches();
-  }, [loadMatches, demoMode, initialMatches]);
+  }, [loadMatches, demoMode, demoSnapshot, initialMatches]);
 
-  const filtered = useMemo(() => filterByRange(matches, range), [matches, range]);
-  const playerStats = useMemo(() => computePlayerStats(filtered), [filtered]);
-  const topThrows = useMemo(() => computeTopThrows(filtered, 10), [filtered]);
-  const topCheckouts = useMemo(() => computeTopCheckouts(filtered, 10), [filtered]);
-  const recent = useMemo(() => computeLast5(filtered), [filtered]);
+  const rangeData = liveDemoSnapshot?.byRange[range];
+
+  const filtered = useMemo(
+    () => (liveDemoSnapshot ? (rangeData?.matches ?? []) : filterByRange(matches, range)),
+    [liveDemoSnapshot, rangeData, matches, range],
+  );
+  const playerStats = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.playerStats : computePlayerStats(filtered)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const topThrows = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.topThrows : computeTopThrows(filtered, 10)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const topCheckouts = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.topCheckouts : computeTopCheckouts(filtered, 10)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const recent = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.recent : computeLast5(filtered)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
 
   const sortedMatches = useMemo(
     () => filtered.slice().sort((a, b) => b.startTime - a.startTime),
@@ -97,23 +125,44 @@ export function ProfileClient({
       />
 
       {/* Form chart */}
-      {!loading && filtered.length >= 2 && <ProfileFormChart matches={filtered} />}
+      {!loading && filtered.length >= 2 && (
+        <ProfileFormChart
+          matches={demoSnapshot ? undefined : filtered}
+          formSeries={rangeData?.formSeries}
+          overallAverage={playerStats.average}
+        />
+      )}
 
-      <ProfileRecentMatches items={recent} />
+      <ProfileRecentMatches items={recent} matchPathPrefix={matchPathPrefix} />
 
       <ProfileTopLists throws={topThrows} checkouts={topCheckouts} />
 
       {/* Head-to-head */}
-      {!loading && filtered.length > 0 && <ProfileHeadToHead matches={filtered} />}
+      {!loading && filtered.length > 0 && (
+        <ProfileHeadToHead
+          matches={demoSnapshot ? undefined : filtered}
+          opponents={rangeData?.opponents}
+          h2hByOpponent={rangeData?.h2hByOpponent}
+        />
+      )}
 
-      {/* Aktywność per dzień tygodnia */}
-      {!loading && filtered.length > 0 && <ProfileActivity matches={filtered} />}
+      {!loading && filtered.length > 0 && (
+        <ProfileActivity matches={demoSnapshot ? undefined : filtered} dayStats={rangeData?.dayStats} />
+      )}
 
-      {/* Aktywność per godzina */}
-      {!loading && filtered.length > 0 && <ProfileActivityHours matches={filtered} />}
+      {!loading && filtered.length > 0 && (
+        <ProfileActivityHours
+          matches={demoSnapshot ? undefined : filtered}
+          hourStats={rangeData?.hourStats}
+        />
+      )}
 
-      {/* Histogram zamknięć */}
-      {!loading && filtered.length > 0 && <ProfileCheckoutDistribution matches={filtered} />}
+      {!loading && filtered.length > 0 && (
+        <ProfileCheckoutDistribution
+          matches={demoSnapshot ? undefined : filtered}
+          checkoutBuckets={rangeData?.checkoutBuckets}
+        />
+      )}
 
       {/* Match list */}
       <section className="flex flex-col gap-3">
@@ -144,6 +193,7 @@ export function ProfileClient({
                   match={m}
                   myDisplayName={myDisplayName}
                   matchPathPrefix={matchPathPrefix}
+                  initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
                 />
               ))}
             </div>
@@ -165,11 +215,12 @@ export function ProfileClient({
                 <div className="flex flex-col gap-2">
                   {pageMatches.map((m) => (
                     <ProfileMatchCard
-                  key={m.tmid}
-                  match={m}
-                  myDisplayName={myDisplayName}
-                  matchPathPrefix={matchPathPrefix}
-                />
+                      key={m.tmid}
+                      match={m}
+                      myDisplayName={myDisplayName}
+                      matchPathPrefix={matchPathPrefix}
+                      initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
+                    />
                   ))}
                 </div>
 

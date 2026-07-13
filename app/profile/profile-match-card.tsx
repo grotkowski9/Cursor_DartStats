@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, Share2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
+import { getMatchShareUrl } from "@/lib/share-url";
 
 type Props = {
   match: N01Match;
@@ -13,6 +14,7 @@ type Props = {
   myDisplayName?: string;
   /** Path prefix for match detail links, default `/m/` */
   matchPathPrefix?: string;
+  initialMatchStats?: MatchStats;
 };
 
 export function ProfileMatchCard({
@@ -20,8 +22,12 @@ export function ProfileMatchCard({
   defaultExpanded = false,
   myDisplayName,
   matchPathPrefix = "/m/",
+  initialMatchStats,
 }: Props) {
-  const stats = useMemo(() => computeMatchStats(match), [match]);
+  const stats = useMemo(
+    () => initialMatchStats ?? computeMatchStats(match),
+    [initialMatchStats, match],
+  );
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -31,10 +37,18 @@ export function ProfileMatchCard({
   });
   const myName = myDisplayName ?? normalizeName(stats.me.name);
   const oppName = normalizeName(stats.opp.name);
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}${matchPathPrefix}${match.shareToken}`
-      : `${matchPathPrefix}${match.shareToken}`;
+
+  async function copyShareLink() {
+    try {
+      await navigator.clipboard.writeText(
+        getMatchShareUrl(match.shareToken, matchPathPrefix),
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* noop */
+    }
+  }
 
   return (
     <article className="glass-tile overflow-hidden">
@@ -145,15 +159,9 @@ export function ProfileMatchCard({
             </Link>
             <button
               type="button"
-              onClick={async (e) => {
+              onClick={(e) => {
                 e.stopPropagation();
-                try {
-                  await navigator.clipboard.writeText(shareUrl);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 1600);
-                } catch {
-                  /* noop */
-                }
+                void copyShareLink();
               }}
               className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent-from/50 hover:bg-accent-from/10"
             >

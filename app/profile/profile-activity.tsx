@@ -3,14 +3,18 @@
 import { useMemo } from "react";
 import { BarChart3 } from "lucide-react";
 import { N01Match } from "@/lib/n01-parser";
-import { computeDayStats } from "@/lib/stats";
+import { computeDayStats, type DayStats } from "@/lib/stats";
 
 interface Props {
-  matches: N01Match[];
+  matches?: N01Match[];
+  dayStats?: DayStats[];
 }
 
-export default function ProfileActivity({ matches }: Props) {
-  const days = useMemo(() => computeDayStats(matches), [matches]);
+export default function ProfileActivity({ matches = [], dayStats: dayStatsProp }: Props) {
+  const days = useMemo(
+    () => dayStatsProp ?? computeDayStats(matches),
+    [dayStatsProp, matches],
+  );
 
   const maxCount = Math.max(...days.map((d) => d.count), 1);
   const played = days.filter((d) => d.count > 0);

@@ -1,6 +1,6 @@
 {
   "name": "cursor-dart-stats",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed-matches.ts",
-    "build:demo": "tsx scripts/build-demo-dataset.ts"
+    "seed:demo": "tsx scripts/seed-demo-matches.ts",
+    "repolish:demo": "tsx scripts/seed-demo-matches.ts --repolish",
+    "snapshot:demo": "tsx scripts/snapshot-demo.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

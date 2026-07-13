@@ -3,17 +3,21 @@
 import { useMemo, useState } from "react";
 import { Swords } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
-import { computePlayerStats, normalizeName } from "@/lib/stats";
+import { computePlayerStats, normalizeName, type PlayerStats } from "@/lib/stats";
+import type { DemoH2HStats } from "@/lib/demo-snapshot";
 
 type Props = {
-  matches: N01Match[];
+  matches?: N01Match[];
+  opponents?: { name: string; count: number }[];
+  h2hByOpponent?: Record<string, DemoH2HStats>;
 };
 
-export function ProfileHeadToHead({ matches }: Props) {
+export function ProfileHeadToHead({ matches = [], opponents: opponentsProp, h2hByOpponent }: Props) {
   const [selected, setSelected] = useState<string>("");
 
   const opponents = useMemo(() => {
-    const names = new Map<string, number>(); // normalized name → count
+    if (opponentsProp) return opponentsProp;
+    const names = new Map<string, number>();
     for (const m of matches) {
       if (m.playerIndex === null) continue;
       const oppIdx = m.playerIndex === 0 ? 1 : 0;
@@ -21,31 +25,33 @@ export function ProfileHeadToHead({ matches }: Props) {
       names.set(name, (names.get(name) ?? 0) + 1);
     }
     return Array.from(names.entries())
-      .sort((a, b) => b[1] - a[1]) // most played first
+      .sort((a, b) => b[1] - a[1])
       .map(([name, count]) => ({ name, count }));
-  }, [matches]);
+  }, [matches, opponentsProp]);
 
   const h2hMatches = useMemo(() => {
-    if (!selected) return [];
+    if (h2hByOpponent || !selected) return [];
     return matches.filter((m) => {
       if (m.playerIndex === null) return false;
       const oppIdx = m.playerIndex === 0 ? 1 : 0;
       return normalizeName(m.players[oppIdx].name) === selected;
     });
-  }, [matches, selected]);
+  }, [matches, selected, h2hByOpponent]);
 
-  const stats = useMemo(() => computePlayerStats(h2hMatches), [h2hMatches]);
+  const stats: PlayerStats = useMemo(() => {
+    if (h2hByOpponent && selected) return h2hByOpponent[selected]?.stats ?? computePlayerStats([]);
+    return computePlayerStats(h2hMatches);
+  }, [h2hByOpponent, selected, h2hMatches]);
 
-  // Opponent stats from same matches (flip perspective)
   const oppStats = useMemo(() => {
+    if (h2hByOpponent && selected) return h2hByOpponent[selected]?.oppStats ?? null;
     if (h2hMatches.length === 0) return null;
-    // Create "flipped" matches where opponent is "me"
     const flippedMatches = h2hMatches.map((m) => {
       const oppIdx = (m.playerIndex === 0 ? 1 : 0) as 0 | 1;
       return { ...m, playerIndex: oppIdx } as N01Match;
     });
     return computePlayerStats(flippedMatches);
-  }, [h2hMatches]);
+  }, [h2hByOpponent, selected, h2hMatches]);
 
   if (opponents.length === 0) return null;
 

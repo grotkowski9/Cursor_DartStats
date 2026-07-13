@@ -6,9 +6,10 @@ import type { RecentMatch } from "@/lib/stats";
 
 type Props = {
   items: RecentMatch[];
+  matchPathPrefix?: string;
 };
 
-export function ProfileRecentMatches({ items }: Props) {
+export function ProfileRecentMatches({ items, matchPathPrefix = "/m/" }: Props) {
   if (items.length === 0) return null;
 
   const wins = items.filter((i) => i.won === true).length;
@@ -30,7 +31,7 @@ export function ProfileRecentMatches({ items }: Props) {
           {items.map((it) => (
             <li key={it.shareToken}>
               <Link
-                href={`/m/${it.shareToken}`}
+                href={`${matchPathPrefix}${it.shareToken}`}
                 className="grid grid-cols-[28px_1fr_auto_auto] items-center gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs transition-colors hover:border-accent-from/40 hover:bg-accent-from/5"
               >
                 <span

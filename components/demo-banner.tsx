@@ -8,8 +8,9 @@ export function DemoBanner() {
         <p className="flex items-start gap-2 text-sm leading-relaxed text-foreground/90">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-accent-from" aria-hidden />
           <span>
-            To <strong className="font-semibold">przykładowy profil demo</strong> — zanonimizowane
-            dane, pełna analityka. Zaimportuj swoje mecze z N01 po rejestracji.
+            To <strong className="font-semibold">przykładowy profil demo</strong>. Pełna analityka
+            dostępna na wyciągnięcie ręki. Utwórz swoje konto, zaimportuj swoje mecze i śledź swoją
+            formę.
           </span>
         </p>
         <Link

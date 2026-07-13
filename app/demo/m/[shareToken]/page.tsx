@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { DemoBanner } from "@/components/demo-banner";
 import { SiteFooter } from "@/components/site-footer";
-import { getDemoMatchByShareToken } from "@/lib/demo";
+import { getDemoMatchByShareToken, getDemoMatchStats } from "@/lib/demo";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { MatchView } from "@/app/m/[shareToken]/match-view";
 
@@ -33,6 +33,8 @@ export default async function DemoMatchPage({ params }: Props) {
   const match = getDemoMatchByShareToken(shareToken);
   if (!match) notFound();
 
+  const matchStats = getDemoMatchStats(shareToken);
+
   return (
     <>
       <main className="relative min-h-screen overflow-hidden bg-background px-4 py-8 text-foreground md:py-12">
@@ -48,6 +50,7 @@ export default async function DemoMatchPage({ params }: Props) {
             match={match}
             backHref="/demo/profile"
             matchPathPrefix="/demo/m/"
+            initialMatchStats={matchStats ?? undefined}
           />
           <p className="text-center text-xs text-muted-foreground">
             <Link href="/demo/profile" className="text-primary hover:underline">

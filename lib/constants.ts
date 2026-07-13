@@ -1,6 +1,10 @@
 export const DEFAULT_CUSTOMER_ID =
   process.env.DEFAULT_CUSTOMER_ID ?? "a0000000-0000-4000-8000-000000000001";
 
+/** Stały klient demo — mecze w Supabase, nie w plikach repo. */
+export const DEMO_CUSTOMER_ID =
+  process.env.DEMO_CUSTOMER_ID ?? "b0000000-0000-4000-8000-000000000001";
+
 /** Auto-detect only these patterns (case-insensitive). Everything else → ask user. */
 export const AUTO_DETECT_PATTERNS = ["grotkowski", "groteł", "grotel"] as const;
 

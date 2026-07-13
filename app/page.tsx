@@ -11,10 +11,10 @@ import {
 import { LandingJsonLd } from "@/components/landing-json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { DEMO_PERSONA } from "@/demo/demo-persona";
-import { getDemoMatches } from "@/lib/demo";
+import { getDemoSnapshot } from "@/lib/demo";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 
-const matchCount = getDemoMatches().length;
+const matchCount = getDemoSnapshot().matchCount;
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} — statystyki darta z N01, profil gracza, analityka meczów`,
@@ -39,12 +39,6 @@ export const metadata: Metadata = {
   ],
 };
 
-const HERO_STATS = [
-  { value: String(matchCount), label: "Meczów w demo" },
-  { value: "501", label: "Start score" },
-  { value: "N01", label: "Import linkiem" },
-  { value: "H2H", label: "vs przeciwnicy" },
-] as const;
 
 const FEATURES = [
   {
@@ -70,6 +64,13 @@ const FEATURES = [
 ] as const;
 
 export default function HomePage() {
+  const heroStats = [
+    { value: String(matchCount), label: "Meczów w demo" },
+    { value: "501", label: "Start score" },
+    { value: "N01", label: "Import linkiem" },
+    { value: "H2H", label: "vs przeciwnicy" },
+  ] as const;
+
   return (
     <>
       <LandingJsonLd />
@@ -122,7 +123,7 @@ export default function HomePage() {
             </div>
 
             <div className="grid shrink-0 grid-cols-2 gap-3 lg:w-72">
-              {HERO_STATS.map((s) => (
+              {heroStats.map((s) => (
                 <article key={s.label} className="glass-tile flex flex-col items-center px-3 py-5 text-center">
                   <span className="text-2xl font-bold text-accent-gradient">{s.value}</span>
                   <span className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
