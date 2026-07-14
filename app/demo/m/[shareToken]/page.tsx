@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DemoBanner } from "@/components/demo-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { getDemoMatchByShareToken, getDemoMatchStats } from "@/lib/demo";
+import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { MatchView } from "@/app/m/[shareToken]/match-view";
 
@@ -12,16 +13,16 @@ type Props = { params: Promise<{ shareToken: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { shareToken } = await params;
   const match = getDemoMatchByShareToken(shareToken);
-  if (!match) return { title: "Mecz demo — nie znaleziono" };
+  if (!match) return { title: siteDocumentTitle() };
 
   return {
-    title: `${match.title} — mecz demo | ${SITE_NAME}`,
-    description: `Podgląd przykładowego meczu darta — rzut po rzucie, statystyki legów. Demo ${SITE_NAME}.`,
+    title: siteDocumentTitle(),
+    description: `Podgląd przykładowego meczu darta — rzut po rzucie. Demo ${SITE_NAME}.`,
     robots: { index: true, follow: true },
     alternates: { canonical: `${getSiteUrl()}/demo/m/${shareToken}` },
     openGraph: {
-      title: match.title,
-      description: `Mecz demo — ${SITE_NAME}`,
+      title: SITE_OG_TITLE,
+      description: `Przykładowy mecz demo — ${SITE_NAME}`,
       url: `${getSiteUrl()}/demo/m/${shareToken}`,
       type: "article",
     },

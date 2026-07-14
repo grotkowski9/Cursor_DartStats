@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { DEMO_PERSONA } from "@/demo/demo-persona";
 import { SITE_NAME } from "@/lib/site-config";
 
 export const alt = `${SITE_NAME} — statystyki darta z N01`;
@@ -126,7 +125,7 @@ export default function OgImage() {
             ))}
           </div>
           <div style={{ display: "flex", fontSize: 15, color: "rgba(255,255,255,0.5)" }}>
-            {DEMO_PERSONA.firstName} „{DEMO_PERSONA.nickname}" {DEMO_PERSONA.lastName}
+            dart.sylveoncompany.pl
           </div>
         </div>
       </div>

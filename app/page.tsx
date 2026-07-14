@@ -10,20 +10,20 @@ import {
 } from "lucide-react";
 import { LandingJsonLd } from "@/components/landing-json-ld";
 import { SiteFooter } from "@/components/site-footer";
-import { DEMO_PERSONA } from "@/demo/demo-persona";
 import { getDemoSnapshot } from "@/lib/demo";
+import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 
 const matchCount = getDemoSnapshot().matchCount;
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} — statystyki darta z N01, profil gracza, analityka meczów`,
+  title: siteDocumentTitle(),
   description:
     "Importuj mecze z n01darts.com, śledź średnie, checkout, formę i H2H. Demo profil z 10 meczami — zobacz przed rejestracją.",
   robots: { index: true, follow: true },
   alternates: { canonical: getSiteUrl() },
   openGraph: {
-    title: SITE_NAME,
+    title: SITE_OG_TITLE,
     description:
       "Statystyki darta z N01 — wykres formy, H2H, checkout. Zobacz demo przed rejestracją.",
     url: getSiteUrl(),
@@ -117,8 +117,7 @@ export default function HomePage() {
               </div>
 
               <p className="mt-6 text-xs text-muted-foreground">
-                Demo: {DEMO_PERSONA.firstName} „{DEMO_PERSONA.nickname}"{" "}
-                {DEMO_PERSONA.lastName} · {matchCount} spotkań
+                Demo: przykładowy profil gracza · {matchCount} spotkań
               </p>
             </div>
 
@@ -159,10 +158,8 @@ export default function HomePage() {
               {matchCount} spotkań demo — bez konta
             </h2>
             <p className="mt-3 max-w-2xl text-muted-foreground">
-              Pełna analityka na przykładowym profilu{" "}
-              <strong className="text-foreground">
-                {DEMO_PERSONA.firstName} „{DEMO_PERSONA.nickname}" {DEMO_PERSONA.lastName}
-              </strong>
+              Pełna analityka na{" "}
+              <strong className="text-foreground">przykładowym profilu demo</strong>
               : statystyki, wykres formy, H2H i mecze z widokiem rzut po rzucie.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">

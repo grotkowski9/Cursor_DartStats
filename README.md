@@ -19,14 +19,14 @@ Docelowo pod `dart.sylveoncompany.pl`.
 8. [Design System — Sylveon Lift](#design-system--sylveon-lift)
 9. [Konwencje pracy](#konwencje-pracy)
 10. [Status / Roadmapa](#status--roadmapa)
-11. [ADR — kluczowe decyzje](#adr--kluczowe-decyzje)
-12. [Uruchomienie lokalne](#uruchomienie-lokalne)
-13. [Stan na koniec czatu + handoff](#stan-na-koniec-czatu--handoff)
-14. [Dziennik zmian](#dziennik-zmian)
+11. [Audyt bezpieczeństwa i prywatności (RODO)](#audyt-bezpieczeństwa-i-prywatności-rodo)
+12. [Hosting i skalowanie](#hosting-i-skalowanie)
+13. [ADR — kluczowe decyzje](#adr--kluczowe-decyzje)
+14. [Uruchomienie lokalne](#uruchomienie-lokalne)
+15. [Stan na koniec czatu + handoff](#stan-na-koniec-czatu--handoff)
+16. [Dziennik zmian](#dziennik-zmian)
 
 ---
-
-
 
 ## Cel projektu
 
@@ -40,24 +40,20 @@ Mobile-first, ciemny motyw, glassmorphism.
 
 ---
 
-
-
 ## Założenia biznesowe
 
 - **MVP = single user** (Piotr „Groteł" Grotkowski). Bez logowania.
 - **Multi-user-ready od dnia 0** — schemat DB z `customer_id` wszędzie.
 - **Zero halucynacji** — brak pola w danych → ukrywam kafel, nie zmyślam.
 - **Noindex** na profilach i share-linkach. Landing `/` — indeksowalny.
-- **Docelowo freemium SaaS:**
-  - Free: 3 mecze, podstawowe statystyki
-  - Premium: pełne statystyki, bulk import, wykresy, eksport
-  - Płatność: PayNow/PayU (polska bramka, PLN)
+- **Docelowo freemium SaaS** (limity jako **konfiguracja**, nie na sztywno w kodzie — patrz **1.2.1**):
+  - Free: domyślnie N meczów (start: 3), **wybrane** statystyki widoczne
+  - Premium: pełny limit meczów, **wszystkie** wykresy i sekcje
+  - Płatność: PayNow/PayU (polska bramka, PLN) — dopiero po audycie **1.0.1.x**
   - Role: user → premium → admin → superadmin
-- **Hosting:** Vercel (free tier). DB: Supabase (free → Pro $25/mies.).
+- **Hosting:** rekomendacja **Vercel + Supabase** (patrz [Hosting i skalowanie](#hosting-i-skalowanie)); Mikrus możliwy, ale więcej roboty ops.
 
 ---
-
-
 
 ## Stack technologiczny
 
@@ -76,8 +72,6 @@ Mobile-first, ciemny motyw, glassmorphism.
 
 
 ---
-
-
 
 ## Schemat bazy danych
 
@@ -206,8 +200,6 @@ snapshot_access_log (
 
 ---
 
-
-
 ## Parser N01 — kontrakt
 
 **Endpoint (zweryfikowany w Lovable):**
@@ -233,8 +225,6 @@ Zwraca JSON: `statsData`, `legData`, `title`, `startTime`, `startScore`.
 
 ---
 
-
-
 ## KPI — kontrakt
 
 Statystyki per-mecz i agregat gracza:
@@ -257,8 +247,6 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 
 ---
 
-
-
 ## Detekcja gracza
 
 **STRICT MODE** (wzorce z `known_nicknames` customer: `Grotkowski`, `Groteł`, `Grotel`):
@@ -275,22 +263,22 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 ### Scenariusze testowe (stan v1.0 — `detectPlayerIndex`)
 
 
-| Mecz (gracz 0 vs gracz 1)                       | Wynik            | Co widzi user przy imporcie                                                                                                   |
-| ----------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Mecz (gracz 0 vs gracz 1)                       | Wynik            | Co widzi user przy imporcie                                                                                                         |
+| ----------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | Jarek Marciniak vs Mariusz Pudzianowski         | `none`           | Krok 1 (**1.1.3.4**): „Zawodnicy inni niż Ty — dodać mimo to?" **NIE** / **TAK**. Po TAK → „Kim jesteś?" gracz 1 / gracz 2 / odrzuć |
-| Piotr Grotkowski vs Piotr Michałowicz           | `auto` → gracz 0 | Zapis **automatyczny** (tylko Grotkowski pasuje, „Piotr" samo w sobie nie liczy się)                                          |
-| Groteł vs Piotr Grotkowski                      | `ambiguous`      | Modal wyboru — **obaj to Ty**, trzeba wskazać który slot N01                                                                  |
-| Piotr Grotkowski vs Groteł                      | `ambiguous`      | j.w.                                                                                                                          |
-| GROTKOWSKI Piotr vs Jan Kowalski                | `auto` → gracz 0 | Zapis automatyczny                                                                                                            |
-| Marciniak Jarek vs Grotkowski Piotr             | `auto` → gracz 1 | Zapis automatyczny                                                                                                            |
-| P. Grotkowski vs Wiśniewski Sławomir            | `auto` → gracz 0 | Zapis automatyczny (inicjał + nazwisko)                                                                                       |
-| Groteł vs Kowalski Jan                          | `auto` → gracz 0 | Zapis automatyczny                                                                                                            |
-| Piotr Grotkowski (Katowice) vs Małkowski Adrian | `auto` → gracz 0 | Zapis automatyczny (miasto w nawiasie nie blokuje)                                                                            |
+| Piotr Grotkowski vs Piotr Michałowicz           | `auto` → gracz 0 | Zapis **automatyczny** (tylko Grotkowski pasuje, „Piotr" samo w sobie nie liczy się)                                                |
+| Groteł vs Piotr Grotkowski                      | `ambiguous`      | Modal wyboru — **obaj to Ty**, trzeba wskazać który slot N01                                                                        |
+| Piotr Grotkowski vs Groteł                      | `ambiguous`      | j.w.                                                                                                                                |
+| GROTKOWSKI Piotr vs Jan Kowalski                | `auto` → gracz 0 | Zapis automatyczny                                                                                                                  |
+| Marciniak Jarek vs Grotkowski Piotr             | `auto` → gracz 1 | Zapis automatyczny                                                                                                                  |
+| P. Grotkowski vs Wiśniewski Sławomir            | `auto` → gracz 0 | Zapis automatyczny (inicjał + nazwisko)                                                                                             |
+| Groteł vs Kowalski Jan                          | `auto` → gracz 0 | Zapis automatyczny                                                                                                                  |
+| Piotr Grotkowski (Katowice) vs Małkowski Adrian | `auto` → gracz 0 | Zapis automatyczny (miasto w nawiasie nie blokuje)                                                                                  |
 | **Grotowski Piotr** vs Kowalski Jan             | `none`           | ⚠️ Podobne nazwisko — **nie** auto. Flow **1.1.3.4** (potwierdzenie + wybór)                                                        |
-| **Grodkowski Piotr** vs Kowalski Jan            | `none`           | j.w. — Grodkowski ≠ Grotkowski                                                                                                |
-| Grotowski vs **Grotkowski Piotr**               | `auto` → gracz 1 | Tylko Grotkowski pasuje; Grotowski traktowany jako obcy                                                                       |
-| Grodkowski vs **Grotkowski Piotr**              | `auto` → gracz 1 | j.w.                                                                                                                          |
-| Piotr **Grotowski** vs Piotr **Grotkowski**     | `auto` → gracz 1 | Tylko drugi pasuje — brak false-positive na podobnym nazwisku                                                                 |
+| **Grodkowski Piotr** vs Kowalski Jan            | `none`           | j.w. — Grodkowski ≠ Grotkowski                                                                                                      |
+| Grotowski vs **Grotkowski Piotr**               | `auto` → gracz 1 | Tylko Grotkowski pasuje; Grotowski traktowany jako obcy                                                                             |
+| Grodkowski vs **Grotkowski Piotr**              | `auto` → gracz 1 | j.w.                                                                                                                                |
+| Piotr **Grotowski** vs Piotr **Grotkowski**     | `auto` → gracz 1 | Tylko drugi pasuje — brak false-positive na podobnym nazwisku                                                                       |
 | Grotowski Piotr vs Grodkowski Adrian            | `none`           | Obaj obcy → flow **1.1.3.4**                                                                                                        |
 | Marciniak Jarek vs **Grotowski** Piotr          | `none`           | Flow **1.1.3.4**                                                                                                                    |
 | Marciniak Jarek vs **Grodkowski** Piotr         | `none`           | Flow **1.1.3.4**                                                                                                                    |
@@ -298,11 +286,9 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 
 **Bulk import:** przy `none` / `ambiguous` bez wcześniejszego wyboru → wiersz `wymaga wyboru gracza` (nie zapisuje).
 
-**Plan 1.1.3.4 (**`none`**):** nie blokuj — **pytaj** w 2 krokach: (1) „Czy na pewno dodać?" NIE/TAK → (2) „Kim jesteś?" gracz 1 / gracz 2 / odrzuć. Przy `ambiguous` — podświetlić obie opcje jako „Ty".
+**Plan Faza 4.3.4 (**`none`**):** nie blokuj — **pytaj** w 2 krokach: (1) „Czy na pewno dodać?" NIE/TAK → (2) „Kim jesteś?" gracz 1 / gracz 2 / odrzuć. Przy `ambiguous` — podświetlić obie opcje jako „Ty".
 
 ---
-
-
 
 ## Duplikaty spotkań
 
@@ -311,14 +297,14 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 ### Scenariusze (stan v1.0)
 
 
-| Sytuacja                        | Import pojedynczy (teraz)                                                             | Import hurtowy (teraz)                                                       | Plan **1.1.3.6** / **1.1.3.7**                                                           |
+| Sytuacja                        | Import pojedynczy (teraz)                                                             | Import hurtowy (teraz)                                                       | Plan **1.1.3.6** / **1.1.3.7**                                               |
 | ------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | Link już w profilu              | Panel: „Ten mecz jest już w bazie" → **Nadpisz** / **Zobacz istniejący** / **Anuluj** | Modal: **Nadpisz** / **Nadpisz wszystkie** / **Pomiń** / **Pomiń wszystkie** | Jaśniejsze pytanie + kontekst meczu (tytuł, data, przeciwnik)                |
 | Klik **Nadpisz**                | Ponowny fetch z N01 + `overwrite: true` → świeże dane i stats                         | j.w. dla bieżącego URL                                                       | Bez zmian logicznych                                                         |
 | Klik **Anuluj** / **Pomiń**     | Mecz **nie** trafia ponownie do profilu                                               | Wiersz `pominięto`                                                           | Etykieta **Pomiń** zamiast Anuluj                                            |
 | **Pomiń wszystkie duplikaty**   | —                                                                                     | `skip-all` — kolejne duplikaty w tej sesji bulk **bez pytania**              | Przemianować przycisk na **„Pomiń wszystkie duplikaty"** (jasne znaczenie)   |
 | **Nadpisz wszystkie**           | —                                                                                     | `overwrite-all` — kolejne duplikaty w bulk **auto-nadpisuj**                 | Etykieta bez zmian; opcjonalnie potwierdzenie „Na pewno nadpisać wszystkie?" |
-| Duplikat + `none` (obcy gracze) | Najpierw duplikat **albo** identity — kolejność API                                   | Bulk: duplikat obsłużony modal; identity → `wymaga wyboru gracza`            | **1.1.3.5**: modal identity też w bulk                                             |
+| Duplikat + `none` (obcy gracze) | Najpierw duplikat **albo** identity — kolejność API                                   | Bulk: duplikat obsłużony modal; identity → `wymaga wyboru gracza`            | **1.1.3.5**: modal identity też w bulk                                       |
 
 
 **Zasada (jak 1.1.3.4):** duplikat = **pytaj**, nie zakładaj. Nigdy ciche nadpisanie.
@@ -334,8 +320,6 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 - `skip-all` dotyczy **tylko duplikatów** w bieżącym bulk (nie pomija błędów ani nowych meczów)
 
 ---
-
-
 
 ## Design System — Sylveon Lift
 
@@ -357,8 +341,6 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ---
 
-
-
 ## Konwencje pracy
 
 - **Kod EN, UI PL.** Funkcje po angielsku, teksty użytkownika po polsku.
@@ -369,20 +351,21 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ---
 
-
-
 ## Status / Roadmapa
 
 ### Konwencja numeracji
 
-| Prefiks | Znaczenie | Status |
-| ------- | --------- | ------ |
-| **0.x.x** | Prace historyczne (bootstrap → demo) | ✅ zamknięte w **1.0.0** |
-| **1.0.0** | Release milestone — backup na GitHub | ✅ `backup/v1.0.0`, tag `v1.0.0-backup` |
-| **1.0.1.x** | Poprawki po release (prod, SEO, deploy) | ⏳ **teraz** |
-| **1.1.x** | Auth + multi-user + admin | ⏳ po 1.0.1 |
-| **1.2.x** | Premium + płatności | ⏳ |
-| **1.3.x** | Testy + hardening + perf | ⏳ |
+
+| Prefiks     | Znaczenie                               | Status                                 |
+| ----------- | --------------------------------------- | -------------------------------------- |
+| **0.x.x**   | Prace historyczne (bootstrap → demo)    | ✅ zamknięte w **1.0.0**                |
+| **1.0.0**   | Release milestone — backup na GitHub    | ✅ `backup/v1.0.0`, tag `v1.0.0-backup` |
+| **1.0.1.x** | Po release: prod, audyt, deploy | ⏳ **teraz** |
+| **1.0.2.x** | Copy / teksty UI (plan) | ⏳ po 1.0.1 |
+| **1.1.x**   | Auth + multi-user + admin               | ⏳ po 1.0.1                             |
+| **1.2.x**   | Premium + płatności                     | ⏳                                      |
+| **1.3.x**   | Testy + hardening + perf                | ⏳                                      |
+
 
 Subtaski: czwarty poziom, np. **1.1.2.4** = onboarding, flow `none`.
 
@@ -394,7 +377,7 @@ Subtaski: czwarty poziom, np. **1.1.2.4** = onboarding, flow `none`.
 
 Pełny stan projektu zamrożony poza `main`:
 
-- Branch: [`backup/v1.0.0`](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v1.0.0)
+- Branch: `[backup/v1.0.0](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v1.0.0)`
 - Tag: `v1.0.0-backup`
 - Zawiera: profil prywatny (51 meczów), pełna analityka, demo publiczne + snapshot, landing, SEO
 
@@ -496,23 +479,26 @@ Pełny stan projektu zamrożony poza `main`:
 - [x] **0.3.21** Kolory bucketów w kartach + Details
 - [x] **0.3.22** `BEST LEG AVG` — kafel w statystykach głównych
 
-**Odłożone (poza 1.0.0):**
+**Odłożone (analityka turniejowa — można modyfikować przed wdrożeniem):**
 
-- [ ] **0.3.18** → przeniesione do **1.3.8** (batch loading, limit 1000 Supabase)
-- [ ] **0.3.14** ⏸️ Porównanie sesji / turniejów
-- [ ] **0.3.15** ⏸️ Grupowanie meczów po `title`
-- [ ] **0.3.16** ⏸️ Trendy per turniej
-- [ ] **0.3.17** ⏸️ Filtr „sezon"
+- [ ] **0.3.14** ⏸️ **Porównanie sesji / turniejów** — filtr po nazwie rozgrywek z N01 (`title`), np. „Liga X" vs „Turniej Y"
+- [ ] **0.3.15** ⏸️ **Grupowanie meczów po turnieju** — lista turniejów z liczbą meczów, avg, W/L
+- [ ] **0.3.16** ⏸️ **Trendy per turniej** — wykres formy osobno dla wybranego `title`
+- [ ] **0.3.17** ⏸️ **Filtr sezon** — rok / półrocze na bazie `start_time`
+
+> **Czy da się modyfikować?** Tak. To nie jest osobna baza — dane już są w `matches.title` i datach. Możemy wdrożyć od lekkiego filtra (**0.3.14**) po pełny dashboard turniejowy. Priorytet niższy niż Auth i prod.
+
+- [ ] **0.3.18** → przeniesione do **1.3.6** (batch loading, limit 1000 Supabase)
 
 ---
 
 ### 0.4.x — Demo publiczne + SEO + landing ✅
 
-> Profile/mecze usera = **noindex**. Demo `/demo/*` = **index**. Postać: **Antoni „Robot" Kowalski** (`demo/demo-persona.ts`).
+> Profile/mecze usera = **noindex**. Demo `/demo/`* = **index**. Postać: **Antoni „Robot" Kowalski** (`demo/demo-persona.ts`).
 
 **Demo + SEO:**
 
-- [x] **0.4.1.1** Audit noindex — `/profile`, `/m/*`, `/api/*` + middleware
+- [x] **0.4.1.1** Audit noindex — `/profile`, `/m/`*, `/api/*` + middleware
 - [x] **0.4.1.2** `robots.txt` — `app/robots.ts`
 - [x] **0.4.1.3** `sitemap.xml` — `app/sitemap.ts`
 - [x] **0.4.1.4** Dataset demo — 10 meczów zanonimizowanych (Supabase + snapshot)
@@ -532,6 +518,7 @@ Pełny stan projektu zamrożony poza `main`:
 - [x] **0.4.2.6** Skrypty `seed:demo`, `repolish:demo`, `snapshot:demo`
 - [x] **0.4.2.7** Share URL meczu — `lib/share-url.ts`
 - [x] **0.4.2.8** Izolacja od profilu usera — `DEFAULT_CUSTOMER_ID` nietknięty
+- [x] **0.4.2.9** Demo: sekcja „Dodaj mecz" (UI jak profil, bez zapisu → CTA rejestracji)
 
 **Landing polish:**
 
@@ -543,13 +530,41 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 1.0.1.x — Po release (prod + deploy) ⏳ NASTĘPNE
+### 1.0.1.x — Po release: audyt, bezpieczeństwo, prod ⏳ NASTĘPNE
 
-> Domknięcie release **1.0.0** na produkcji. **Auth dopiero w 1.1.x** — najpierw weryfikacja SEO i deploy.
+> Domknięcie release **1.0.0** na produkcji + checklist pod RODO i przyszłą bramkę płatności. **Auth dopiero w 1.1.x.**
 
-- [ ] **1.0.1.1** **Weryfikacja prod** — audit noindex na żywym URL, Search Console, brak wycieku PII w demo
-- [ ] **1.0.1.2** Deploy produkcyjny Vercel + env (`NEXT_PUBLIC_SITE_URL`, klucze Supabase)
-- [ ] **1.0.1.3** Custom domain `dart.sylveoncompany.pl`
+- [ ] **1.0.1.1** **Audyt prod — robots & indeksacja**
+  - [ ] `/profile`, `/m/*`, `/api/*` — noindex na żywym URL (nagłówki + meta)
+  - [ ] `/demo/*`, `/` — indexowalne; brak PII w HTML demo
+  - [ ] Search Console: sitemap, brak przypadkowych URL-i usera
+- [ ] **1.0.1.2** **Audyt prod — wyciek danych**
+  - [ ] Demo ≠ dane Piotra Grotkowskiego (osobny customer, snapshot)
+  - [ ] Share linki prywatne — brak listowania tokenów
+  - [ ] `.env` / klucze service_role tylko na serwerze
+  - [ ] Supabase Storage private + signed URL TTL
+- [ ] **1.0.1.3** **Audyt prod — API i ataki**
+  - [ ] Rate limit na `/api/ingest` (anty-spam, anty-DDoS warstwa app)
+  - [ ] Brak SQL injection (parametryzowane zapytania — audit)
+  - [ ] CSP / security headers (middleware)
+  - [ ] Logi dostępu do snapshotów (już jest — weryfikacja)
+- [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
+- [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
+
+**Checklist przed bramką płatności (1.2.x):** Auth + RLS (**1.1.x**), DPA z Supabase/Vercel, polityka prywatności, rejestr czynności, minimalizacja danych, prawo do usunięcia (**1.1.7**), audyt pentest light.
+
+---
+
+### 1.0.2.x — Copy i komunikacja UI ⏳ (plan wstępny)
+
+> Poprawki tekstów na całej stronie — **bez zmian logiki**. Szczegóły doprecyzujemy przed wdrożeniem.
+
+- [ ] **1.0.2.1** Landing `/` — nagłówki, CTA, tone of voice (dart-first, mniej korpo)
+- [ ] **1.0.2.2** Profil demo + banner — spójne komunikaty „to jest podgląd"
+- [ ] **1.0.2.3** Formularz importu — helper text, błędy po polsku, emoji tam gdzie pasuje
+- [ ] **1.0.2.4** Empty states, loadery, 404
+- [ ] **1.0.2.5** `/login` + onboarding — pierwsze wrażenie po rejestracji
+- [ ] **1.0.2.6** Audyt spójności: „mecz/meczów", „lotek", nazwy KPI
 
 ---
 
@@ -565,6 +580,7 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.1.3.5** Bulk import: modal przy `none`/`ambiguous`
   - [ ] **1.1.3.6** Duplikat — import pojedynczy: Nadpisz / Zobacz / Pomiń
   - [ ] **1.1.3.7** Duplikat — bulk: Pomiń wszystkie / Nadpisz wszystkie
+  - [ ] **1.1.3.8** **Samouczek** — opcjonalny tour po `/demo/profile` (podświetlenia sekcji + krótki opis); przycisk **Pomiń samouczek**; po onboardingu
 - [ ] **1.1.4** Usunięcie stałej `DEFAULT_CUSTOMER_ID`
 - [ ] **1.1.5** Middleware — ochrona `/profile`, API tylko dla zalogowanego
 - [ ] **1.1.6** RLS per user (zamiast deny-all + service_role)
@@ -586,11 +602,16 @@ Pełny stan projektu zamrożony poza `main`:
 
 ### 1.2.x — Premium + Płatności ⏳
 
-- [ ] **1.2.1** Model freemium (free: 3 mecze; premium: pełne)
-- [ ] **1.2.2** Bramka płatności (PayNow lub PayU)
-- [ ] **1.2.3** Role: user / premium / admin / superadmin
-- [ ] **1.2.4** Panel admina — subskrypcje premium
-- [ ] **1.2.5** Limity w UI (blokada importu / wykresów dla free)
+> Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie.
+
+- [ ] **1.2.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
+  - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
+  - `freeVisibleStats[]` / `premiumVisibleStats[]` — które kafle/wykresy widać
+  - `freeFeatures[]` — np. bulk import tylko premium
+- [ ] **1.2.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit
+- [ ] **1.2.3** Bramka płatności (PayNow lub PayU)
+- [ ] **1.2.4** Role: user / premium / admin / superadmin
+- [ ] **1.2.5** Panel admina — subskrypcje premium
 
 ---
 
@@ -602,30 +623,150 @@ Pełny stan projektu zamrożony poza `main`:
 - [ ] **1.3.4** CI na PR (`typecheck && test`)
 - [ ] **1.3.5** Backup DB — procedura + harmonogram
 - [ ] **1.3.6** Perf: paginacja Supabase (fix limit 1000; było 0.3.18)
+- [ ] **1.3.7** **Hardening pola importu meczów** (single + bulk):
+  - [x] Demo: walidacja client (`lib/n01-url.ts`) — URL vs N01, komunikaty UX
+  - [ ] Server-side whitelist + rate limit (prod)
 
 ---
 
 ### Kolejność prac — skrót
 
-| # | ID | Zadanie |
-| - | -- | ------- |
-| **→** | **1.0.1.1** | Audit noindex prod + Search Console |
-| 2 | 1.0.1.2 | Deploy Vercel prod |
-| 3 | 1.0.1.3 | Custom domain |
-| 4 | 1.1.1 | Supabase Auth (Google) |
-| 5 | 1.1.2 | Sync auth → customer |
-| 6 | 1.1.3 | Onboarding + detekcja (1.1.3.1–7) |
-| 7 | 1.1.4–1.1.6 | Usuń DEFAULT_CUSTOMER_ID, middleware, RLS |
-| 8 | 1.1.7 | Usuwanie meczu |
-| 9 | 1.1.8 | Panel superadmin |
-| 10 | 1.2.x | Premium |
-| 11 | 1.3.x | Testy + perf |
+
+| #     | ID          | Zadanie                                   |
+| ----- | ----------- | ----------------------------------------- |
+| **→** | **1.0.1.1–5** | Audyt bezpieczeństwa prod + deploy + domena |
+| 2     | 1.0.2.x       | Copy UI (plan)                              |
+| 3     | 1.1.1         | Supabase Auth (Google)                      |
+| 4     | 1.1.2–1.1.3   | Sync auth, onboarding, **samouczek 1.1.3.8** |
+| 5     | 1.1.4–1.1.8   | RLS, middleware, usuwanie, admin            |
+| 6     | 1.2.x         | Freemium (limity jako config)               |
+| 7     | 1.3.x         | Testy + **hardening importu 1.3.7** + perf  |
 
 *Opcjonalnie później:* 0.3.14–0.3.17 analityka turniejowa.
 
 ---
 
+## Audyt bezpieczeństwa i prywatności (RODO)
 
+> **Cel docelowy:** aplikacja na tyle solidna, żeby prawnik RODO w UE nie kręcił nosem, a integrator płatności (PayNow/PayU) nie odrzucił ze względu na oczywiste dziury. **Stan 1.0.0:** fundament OK, pełny audyt = **1.0.1.x** + **1.1.x**.
+
+### Co chronimy
+
+| Dane | Gdzie | Ryzyko |
+| ---- | ----- | ------ |
+| Mecze, statystyki, nicki | Supabase Postgres | Wysokie — dane osobowe graczy i przeciwników |
+| Raw JSON/HTML N01 | Storage (private) | Wysokie — pełny zapis meczu |
+| Share tokeny | DB + URL | Średnie — kto zna link, widzi mecz |
+| Demo | Statyczny snapshot | Niskie — zanonimizowane, bez Piotra G. |
+
+### Warstwa 1 — Roboty i indeksacja (stan + audyt 1.0.1.1)
+
+| Route | Polityka | Mechanizm |
+| ----- | -------- | --------- |
+| `/profile`, `/m/*` | **noindex, nofollow** | `metadata.robots` + middleware `X-Robots-Tag` |
+| `/api/*` | **noindex** | middleware |
+| `/demo/*`, `/`, `/login` | **index** (marketing) | brak noindex |
+| Demo | Brak PII | snapshot + `DEMO_CUSTOMER_ID` |
+
+**Weryfikacja prod:** curl/Google Search Console — upewnić się, że Google **nie** indeksuje profilu Piotra.
+
+### Tytuł karty przeglądarki (`<title>`) — jeden wszędzie
+
+**Reguła (od main po 1.0.0):** każda podstrona ma identyczny tytuł:
+
+```text
+Twoje statystyki darta | Dart Profile Tracker
+```
+
+- **Bez imion/nazwisk** w `<title>`, OpenGraph ani JSON-LD na `/` (wyciek SEO).
+- **Bez różnych tytułów per route** (profil, mecz, login — to samo).
+- Implementacja: `lib/page-metadata.ts` → `siteDocumentTitle()`; `app/layout.tsx` ustawia domyślny.
+- **backup/v1.0.0** miał różne tytuły per strona (w tym „Antoni Robot" na demo) — **poprawione**.
+
+Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
+
+### Warstwa 2 — Dostęp i auth (plan 1.1.x)
+
+| Teraz (1.0.0) | Docelowo |
+| ------------- | -------- |
+| Jeden `DEFAULT_CUSTOMER_ID`, brak logowania | Supabase Auth + RLS per user |
+| API przez service_role | Middleware: tylko zalogowany właściciel |
+| Każdy kto zna URL może wejść na `/profile` | `/profile` za loginem |
+
+### Warstwa 3 — RODO / prawo (plan przed 1.2.3 płatności)
+
+- **Minimalizacja:** nie zbieramy więcej niż potrzeba do statystyk darta
+- **Cel przetwarzania:** usługa statystyk dla zawodnika (nie marketing do obcych bez zgody)
+- **Prawo dostępu / usunięcia:** usuwanie konta i meczów (**1.1.7**)
+- **DPA:** umowy powierzenia z Supabase i hostem (Vercel)
+- **Polityka prywatności + cookies:** strona informacyjna (do napisania przed płatnościami)
+- **Rejestr czynności:** dokument wewnętrzny (administrator = Ty)
+- **Demo:** wyłącznie zanonimizowane dane — nigdy profil usera
+
+### Warstwa 4 — Input i API (plan 1.3.7)
+
+- Pole „Dodaj mecz" **nie jest** polem dowolnym — tylko URL N01
+- Server-side walidacja (klient można ominąć)
+- Rate limiting na ingest — ochrona przed spamem i obciążeniem N01/DB
+- Brak `eval`, brak zapisu surowego HTML usera do DB bez parsowania
+
+### Warstwa 5 — Infrastruktura (DDoS, skalowanie)
+
+| Zagrożenie | Ochrona |
+| ---------- | ------- |
+| DDoS na stronę | Vercel / CDN — filtracja ruchu (domyślnie); opcjonalnie Cloudflare przed domeną |
+| DDoS na API | Rate limit + Vercel edge; Supabase connection pooling |
+| Wyciek kluczy | `SUPABASE_SERVICE_ROLE_KEY` tylko server-side; nigdy w repo |
+| SQL injection | Supabase client + parametry; audit zapytań raw |
+
+**Mikrus/VPS:** DDoS spada głównie na Ciebie — przy kilkuset userach lepiej Vercel + Supabase niż samodzielny serwer bez CDN.
+
+### Checklist „gotowość pod płatności"
+
+- [ ] Auth + RLS (**1.1.x**)
+- [ ] Audyt prod (**1.0.1.x**)
+- [ ] Polityka prywatności + regulamin
+- [ ] Usuwanie danych usera (**1.1.7**)
+- [ ] Hardening importu (**1.3.7**)
+- [ ] HTTPS everywhere (Vercel domyślnie)
+- [ ] Logi i backup (**1.3.5**, **1.1.8**)
+
+---
+
+## Hosting i skalowanie
+
+### Czym jest Vercel (w skrócie)
+
+**Vercel** to hosting pod aplikacje **Next.js**. Podłączasz GitHub → push na `main` → strona sama się buduje i wstaje na internecie. Nie instalujesz nginx, Node, certyfikatów SSL — robi to za Ciebie.
+
+- **Darmowy tier** — wystarczy na start i demo
+- **Auto HTTPS** — kłódka od razu
+- **Skalowanie** — przy większym ruchu Vercel dokłada maszyny (płacisz więcej dopiero gdy przekroczysz darmowy limit)
+- **Custom domain** — podpinasz `dart.sylveoncompany.pl` w panelu + DNS
+
+**Supabase** (osobno) = baza danych w chmurze. Frontend na Vercel, dane w Supabase — standardowy układ.
+
+### Mikrus / własny VPS — czy się da?
+
+**Tak**, ale:
+
+- Sam stawiasz Node, reverse proxy, SSL, aktualizacje, backupy
+- Przy **kilkuset userach** jeden mały VPS może **nie wystarczyć** bez tuningu
+- **Skalowanie „3 kliki"** — na Vercel/Supabase: upgrade planu w panelu. Na Mikrusie: kup większy pakiet + migracja ręczna
+
+### Rekomendacja pod Twój cel (tanio + szybko więcej mocy)
+
+| Etap | Frontend | Baza | Koszt orientacyjny |
+| ---- | -------- | ---- | ------------------ |
+| Start (0–100 userów) | Vercel Hobby (free) | Supabase Free | ~0 zł |
+| Wzrost (100–500) | Vercel Pro | Supabase Pro (~$25/m) | ~100–150 zł/m |
+| Duży ruch | Vercel + ewent. Cloudflare | Supabase Pro + read replicas | skalowanie w panelu |
+
+**Mikrus** ma sens jako backup/dev albo jeśli **koniecznie** chcesz wszystko w PL i masz czas na admina. Na produkcję SaaS z płatnościami — **Vercel + Supabase** mniej bólu głowy.
+
+**Domena:** zawsze przez env `NEXT_PUBLIC_SITE_URL` — zmiana domeny = zmiana DNS + env, bez przepisywania kodu.
+
+---
 
 ## ADR — kluczowe decyzje
 
@@ -643,8 +784,6 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-
-
 ## Uruchomienie lokalne
 
 ```bash
@@ -653,8 +792,6 @@ cp .env.example .env.local   # uzupełnij klucze Supabase
 npm install
 npm run dev
 ```
-
-
 
 ### Podgląd na telefonie (ta sama Wi-Fi)
 
@@ -696,8 +833,6 @@ Jeśli baza ma jeszcze starą kolumnę `display_name` (tekstowa), zastosuj:
 # supabase/migrations/20260711190000_customer_name_fields.sql
 ```
 
-
-
 ### Seed 3 meczów testowych
 
 Po migracji i `.env.local`:
@@ -733,36 +868,31 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ---
 
-
-
 ## Stan na koniec czatu + handoff
-
-
 
 ### v1.0.0 — Release ✅ | **1.0.1.1** ⏳ NASTĘPNE
 
 
-| Element      | Status                                                        |
-| ------------ | ------------------------------------------------------------- |
-| **1.0.0**    | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup`        |
-| **0.x.x**    | ✅ Bootstrap → demo (zamknięte w 1.0.0)                        |
-| **1.0.1.x**  | ⏳ Prod audit + deploy + domena                                |
-| **1.1.x**    | ⏳ Auth + multi-user (po 1.0.1)                                |
-| **1.2.x**    | ⏳ Premium                                                     |
-| **1.3.x**    | ⏳ Testy + perf                                                |
-| Backup lokalny | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
-
-
+| Element        | Status                                                 |
+| -------------- | ------------------------------------------------------ |
+| **1.0.0**      | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup` |
+| **0.x.x**      | ✅ Bootstrap → demo (zamknięte w 1.0.0)                 |
+| **1.0.1.x**    | ⏳ Prod audit + deploy + domena                         |
+| **1.1.x**      | ⏳ Auth + multi-user (po 1.0.1)                         |
+| **1.2.x**      | ⏳ Premium                                              |
+| **1.3.x**      | ⏳ Testy + perf                                         |
+| Backup lokalny | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)   |
 
 
 ### Co wchodzi w 1.0.0
 
 
-| Obszar | Zakres (ID) |
-| ------ | ----------- |
-| Profil prywatny | 0.0.x–0.3.x — 51 meczów, pełna analityka |
-| Demo publiczne | 0.4.x — snapshot, stałe daty, landing, SEO |
-| Git backup | `backup/v1.0.0` + tag `v1.0.0-backup` |
+| Obszar          | Zakres (ID)                                |
+| --------------- | ------------------------------------------ |
+| Profil prywatny | 0.0.x–0.3.x — 51 meczów, pełna analityka   |
+| Demo publiczne  | 0.4.x — snapshot, stałe daty, landing, SEO |
+| Git backup      | `backup/v1.0.0` + tag `v1.0.0-backup`      |
+
 
 ### Co dalej — skrót
 
@@ -772,16 +902,14 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 ### Mapa wersji
 
 
-| Wersja | Nazwa | Status |
-| ------ | ----- | ------ |
-| **0.x** | Bootstrap → demo | ✅ w 1.0.0 |
-| **1.0.0** | Release milestone | ✅ WYDANY |
-| **1.0.1** | Prod + deploy | ⏳ **teraz** |
-| **1.1** | Auth + admin | ⏳ |
-| **1.2** | Premium | ⏳ |
-| **1.3** | Testy + perf | ⏳ |
-
-
+| Wersja    | Nazwa             | Status      |
+| --------- | ----------------- | ----------- |
+| **0.x**   | Bootstrap → demo  | ✅ w 1.0.0   |
+| **1.0.0** | Release milestone | ✅ WYDANY    |
+| **1.0.1** | Prod + deploy     | ⏳ **teraz** |
+| **1.1**   | Auth + admin      | ⏳           |
+| **1.2**   | Premium           | ⏳           |
+| **1.3**   | Testy + perf      | ⏳           |
 
 
 ### Pliki kluczowe (1.0.0)
@@ -791,6 +919,8 @@ demo/demo-persona.ts                          ← postać demo (podmiana osoby)
 demo/demo-profile-snapshot.json               ← statyczne KPI + mecze (commit)
 lib/demo.ts / lib/demo-snapshot.ts            ← loader + refresh dat
 lib/demo-dates.ts / lib/demo-import.ts        ← offsety dat + anonimizacja
+lib/page-metadata.ts                          ← jeden tytuł: Twoje statystyki darta | DPT
+lib/n01-url.ts                                ← walidacja URL N01 (demo + przyszły server)
 lib/share-url.ts                              ← link do udostępnienia meczu
 scripts/seed-demo-matches.ts                  ← npm run seed:demo / repolish:demo
 scripts/snapshot-demo.ts                      ← npm run snapshot:demo
@@ -802,8 +932,6 @@ app/robots.ts / app/sitemap.ts                ← SEO
 middleware.ts                                 ← X-Robots-Tag na /profile, /m, /api
 components/demo-banner.tsx
 ```
-
-
 
 ### Pliki kluczowe (profil prywatny — 0.0.x–0.3.x)
 
@@ -819,8 +947,6 @@ app/profile/profile-stats-block.tsx         ← BEST LEG AVG, 3-DART AVG, LEGS W
 app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 ```
 
-
-
 ### Prompt na nowy czat
 
 ```
@@ -832,8 +958,6 @@ Potem: 1.0.1.2 deploy → 1.0.1.3 domena → **1.1.1 Auth**.
 Numeracja: 0.x = historia, 1.0.0 = release, 1.0.1+ = dalsze prace.
 ```
 
-
-
 ### Podgląd na telefonie (dev)
 
 ```bash
@@ -844,15 +968,14 @@ npm run dev -- --hostname 0.0.0.0
 
 ---
 
-
-
 ## Dziennik zmian
 
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0` + tag `v1.0.0-backup`. Zawiera 0.x (bootstrap→demo hardening). Roadmapa przenumerowana na schemat 0.x / 1.0.x.                                                                                                                                                       |
-| v4.0.3     | 2026-07-14 | Demo hardening: Supabase, snapshot KPI, stałe daty, skrypty seed/repolish/snapshot. *(→ wchodzi w 1.0.0)*                                                                                                                                                                                                           |
+| **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |
+| **1.0.0-post** | 2026-07-14 | SEO: jeden tytuł dokumentu wszędzie; bez imion w meta/OG/JSON-LD; demo „Dodaj mecz" + walidacja N01; README audyt. |
+| v4.0.3     | 2026-07-14 | Demo hardening *(→ 1.0.0)* |
 | **v4.0.2** | 2026-07-12 | Landing Sylveon vibe (numerowane sekcje 01–06, tagline), OG image dynamiczne, JSON-LD, dartboard-ring CSS.                                                                                                                                                                                                          |
 | **v4.0.1** | 2026-07-12 | **Demo publiczne + SEO + landing 4.5.** `/demo/profile` (Antoni Robot Kowalski, 10 meczów), `/demo/m/demo001–010`, robots/sitemap, middleware noindex, Sylveon cross-link, `/login` placeholder. `npm run build:demo`.                                                                                              |
 | **v1.0.0** | 2026-07-12 | **Milestone release** — Fazy 0–3 DONE. BEST LEG AVG, wykres formy tooltip, aktywność pozioma, kolory bucketów. Batch loading cofnięty (bug). Backup `.dev/backup-2026-07-12-v1.0.json`.                                                                                                                             |
@@ -873,8 +996,6 @@ npm run dev -- --hostname 0.0.0.0
 
 ---
 
-
-
 ## Seed URLs (testy)
 
 Z kodu Lovable, zweryfikowane:
@@ -884,8 +1005,6 @@ Z kodu Lovable, zweryfikowane:
 - `https://n01darts.com/n01/league/n01_view.html?tmid=t_84WD_6808_rr_1_6zyK_WvbB`
 
 ---
-
-
 
 ## Źródła
 

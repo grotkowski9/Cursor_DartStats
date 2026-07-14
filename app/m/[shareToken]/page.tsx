@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getMatchByShareToken } from "@/lib/matches";
+import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { MatchView } from "./match-view";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Mecz — Dart Profile Tracker",
-  description: "Podgląd meczu darta — rzut po rzucie.",
+  title: siteDocumentTitle(),
+  description: "Prywatny podgląd meczu darta — rzut po rzucie. Nieindeksowany.",
   robots: { index: false, follow: false },
+  openGraph: {
+    title: SITE_OG_TITLE,
+    description: "Prywatny mecz — dostęp tylko przez link.",
+  },
 };
 
 type MatchPageProps = {

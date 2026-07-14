@@ -3,10 +3,11 @@ import Link from "next/link";
 import { ArrowLeft, LogIn, Target, UserPlus } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
+import { siteDocumentTitle } from "@/lib/page-metadata";
 
 export const metadata: Metadata = {
-  title: `Logowanie — ${SITE_NAME}`,
-  description: "Konto w Dart Profile Tracker — wkrótce logowanie Google. Tymczasowo przejdź do profilu demo.",
+  title: siteDocumentTitle(),
+  description: "Logowanie do Dart Profile Tracker — wkrótce Google. Zobacz demo profilu bez konta.",
   robots: { index: true, follow: true },
   alternates: { canonical: `${getSiteUrl()}/login` },
 };
@@ -39,7 +40,7 @@ export default function LoginPage() {
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Logowanie Google i rejestracja pojawią się w{" "}
-            <strong className="font-medium text-foreground">Fazie 4.1</strong> (Auth).
+            <strong className="font-medium text-foreground">wersji 1.1</strong> (Auth).
             Na razie zobacz, jak wygląda tracker na przykładowym profilu.
           </p>
 
@@ -48,7 +49,7 @@ export default function LoginPage() {
               href="/demo/profile"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/20 transition hover:shadow-accent-to/40"
             >
-              Zobacz profil demo — Antoni „Robot" Kowalski
+              Zobacz profil demo
             </Link>
 
             <button

@@ -2,15 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { getCustomerById } from "@/lib/customer";
+import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { ProfileClient } from "./profile-client";
 import { ProfileHeader } from "./profile-header";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Profil — Dart Profile Tracker",
-  description: "Twój profil zawodnika: importuj mecze z n01 i przeglądaj statystyki.",
+  title: siteDocumentTitle(),
+  description: "Prywatny profil zawodnika — import meczów z N01 i statystyki. Nieindeksowany.",
   robots: { index: false, follow: false },
+  openGraph: {
+    title: SITE_OG_TITLE,
+    description: "Prywatny profil — dostęp tylko dla właściciela.",
+  },
 };
 
 export default async function ProfilePage() {

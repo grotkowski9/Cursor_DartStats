@@ -1,4 +1,3 @@
-import { DEMO_PERSONA } from "@/demo/demo-persona";
 import { getSiteUrl, SITE_NAME, SYLVEON_URL } from "@/lib/site-config";
 
 export function LandingJsonLd() {
@@ -25,24 +24,10 @@ export function LandingJsonLd() {
     },
   };
 
-  const demoPage = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: `Profil demo — ${DEMO_PERSONA.firstName} ${DEMO_PERSONA.lastName}`,
-    url: `${url}/demo/profile`,
-    isPartOf: { "@type": "WebSite", name: SITE_NAME, url },
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webApp) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(demoPage) }}
-      />
-    </>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(webApp) }}
+    />
   );
 }

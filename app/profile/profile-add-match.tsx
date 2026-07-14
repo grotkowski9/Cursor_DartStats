@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRef } from "react";
 import { AlertTriangle, Loader2, Plus } from "lucide-react";
+import {
+  checkN01MatchUrl,
+  N01_ONLY_MESSAGE,
+  N01_URL_HINT,
+} from "@/lib/n01-url";
 
 type IdentityPrompt = {
   players: [string, string];
@@ -22,9 +27,19 @@ type BulkRow = { url: string; status: BulkStatus; message?: string };
 
 type Props = {
   onMatchesChanged: () => void;
+  /** Demo: ten sam UI, bez zapisu — komunikat CTA do rejestracji */
+  demoMode?: boolean;
+  loginHref?: string;
 };
 
-export function ProfileAddMatch({ onMatchesChanged }: Props) {
+const DEMO_CTA =
+  "Załóż konto i zacznij śledzić swoje statystyki. Dodasz swoje mecze, a my pokażemy Ci jak grasz.";
+
+export function ProfileAddMatch({
+  onMatchesChanged,
+  demoMode = false,
+  loginHref = "/login",
+}: Props) {
   const [addOpen, setAddOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [ingesting, setIngesting] = useState(false);
@@ -43,6 +58,50 @@ export function ProfileAddMatch({ onMatchesChanged }: Props) {
   const [pendingDup, setPendingDup] = useState<{ url: string; shareToken: string | null } | null>(
     null,
   );
+  const [demoCta, setDemoCta] = useState(false);
+
+  function showDemoCta() {
+    setError(null);
+    setSuccess(null);
+    setIdentity(null);
+    setDuplicate(null);
+    setDemoCta(true);
+  }
+
+  function handleDemoInput(raw: string): boolean {
+    setDemoCta(false);
+    const check = checkN01MatchUrl(raw);
+    if (check.ok) {
+      showDemoCta();
+      return true;
+    }
+    if (check.kind === "empty") return false;
+    setError(check.kind === "not_url" ? N01_URL_HINT : N01_ONLY_MESSAGE);
+    return false;
+  }
+
+  function handleDemoBulk(lines: string[]): boolean {
+    setDemoCta(false);
+    setError(null);
+    if (lines.length === 0) return false;
+
+    for (const line of lines) {
+      const check = checkN01MatchUrl(line);
+      if (check.ok) continue;
+      if (check.kind === "empty") continue;
+      setError(check.kind === "not_url" ? N01_URL_HINT : N01_ONLY_MESSAGE);
+      return false;
+    }
+
+    const hasValid = lines.some((line) => checkN01MatchUrl(line).ok);
+    if (!hasValid) {
+      setError(N01_URL_HINT);
+      return false;
+    }
+
+    showDemoCta();
+    return true;
+  }
 
   async function runIngest(opts: {
     ingestUrl: string;
@@ -113,6 +172,10 @@ export function ProfileAddMatch({ onMatchesChanged }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!url.trim()) return;
+    if (demoMode) {
+      handleDemoInput(url);
+      return;
+    }
     void runIngest({ ingestUrl: url.trim() });
   }
 
@@ -189,6 +252,10 @@ export function ProfileAddMatch({ onMatchesChanged }: Props) {
       .map((l) => l.trim())
       .filter(Boolean);
     if (urls.length === 0) return;
+    if (demoMode) {
+      handleDemoBulk(urls);
+      return;
+    }
     setBulkRunning(true);
     setDupPolicy("ask");
     dupPolicyRef.current = "ask";
@@ -254,6 +321,18 @@ export function ProfileAddMatch({ onMatchesChanged }: Props) {
                 {ingesting ? "Pobieram…" : "Pobierz dane"}
               </button>
             </form>
+
+            {demoCta && (
+              <div className="rounded-xl border border-accent-from/40 bg-accent-from/10 p-4 text-sm text-foreground">
+                <p>{DEMO_CTA}</p>
+                <Link
+                  href={loginHref}
+                  className="mt-3 inline-flex rounded-lg bg-gradient-to-r from-accent-from to-accent-to px-4 py-2 text-xs font-semibold text-primary-foreground"
+                >
+                  Załóż konto →
+                </Link>
+              </div>
+            )}
 
             {error && (
               <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">

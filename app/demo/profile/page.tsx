@@ -5,6 +5,7 @@ import { DemoBanner } from "@/components/demo-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { getDemoSnapshot, personaToCustomer } from "@/lib/demo";
 import { DEMO_PERSONA } from "@/demo/demo-persona";
+import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { ProfileClient } from "@/app/profile/profile-client";
 import { ProfileHeader } from "@/app/profile/profile-header";
@@ -14,12 +15,12 @@ const customer = personaToCustomer(persona);
 const demoSnapshot = getDemoSnapshot();
 
 export const metadata: Metadata = {
-  title: `${persona.firstName} „${persona.nickname}" ${persona.lastName} — profil demo | ${SITE_NAME}`,
+  title: siteDocumentTitle(),
   description: `Przykładowy profil gracza darta: statystyki, wykres formy, H2H. Zobacz, co oferuje ${SITE_NAME} przed rejestracją.`,
   robots: { index: true, follow: true },
   alternates: { canonical: `${getSiteUrl()}/demo/profile` },
   openGraph: {
-    title: `Profil demo — Antoni „Robot" Kowalski | ${SITE_NAME}`,
+    title: SITE_OG_TITLE,
     description: persona.tagline,
     url: `${getSiteUrl()}/demo/profile`,
     type: "website",

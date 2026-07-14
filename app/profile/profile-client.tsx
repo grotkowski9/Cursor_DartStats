@@ -115,7 +115,11 @@ export function ProfileClient({
 
   return (
     <div className="flex flex-col gap-6">
-      {!demoMode && <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />}
+      {demoMode ? (
+        <ProfileAddMatch demoMode loginHref="/login" onMatchesChanged={() => {}} />
+      ) : (
+        <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />
+      )}
 
       <ProfileStatsBlock
         stats={playerStats}
