@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.0.0 WYDANY** (`backup/v1.0.0` na GitHub). **Następne:** **1.0.1.1** — audit noindex prod.
+> **Status:** **v1.0.1 WYDANY** — feedback po 1.0 i testach manualnych (inwentaryzacja copy). **Następne:** **1.0.1.1** — audit noindex prod.
 
 ---
 
@@ -24,7 +24,8 @@ Docelowo pod `dart.sylveoncompany.pl`.
 13. [ADR — kluczowe decyzje](#adr--kluczowe-decyzje)
 14. [Uruchomienie lokalne](#uruchomienie-lokalne)
 15. [Stan na koniec czatu + handoff](#stan-na-koniec-czatu--handoff)
-16. [Dziennik zmian](#dziennik-zmian)
+16. [Inwentaryzacja copy klienta](#inwentaryzacja-copy-klienta)
+17. [Dziennik zmian](#dziennik-zmian)
 
 ---
 
@@ -346,6 +347,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 - **Kod EN, UI PL.** Funkcje po angielsku, teksty użytkownika po polsku.
 - **README = źródło prawdy.** Aktualizacja po każdej zmianie.
 - **Nie zakładamy — pytamy.** Zero halucynacji.
+- **Copy klienta:** przed wdrożeniem komunikatów UI — **pytam o docelowe teksty** (patrz **1.0.2.x**); brak technicznego żargonu w UI.
 - **Iteracyjnie.** Po każdym etapie: Co zrobiłem / Co dalej / Ryzyka / Pytania.
 - **Nie idziemy dalej bez akceptacji.**
 
@@ -360,8 +362,9 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | ----------- | --------------------------------------- | -------------------------------------- |
 | **0.x.x**   | Prace historyczne (bootstrap → demo)    | ✅ zamknięte w **1.0.0**                |
 | **1.0.0**   | Release milestone — backup na GitHub    | ✅ `backup/v1.0.0`, tag `v1.0.0-backup` |
-| **1.0.1.x** | Po release: prod, audyt, deploy | ⏳ **teraz** |
-| **1.0.2.x** | Copy / teksty UI (plan) | ⏳ po 1.0.1 |
+| **1.0.1**   | Feedback po testach manualnych — inwentaryzacja copy | ✅ **wydany** |
+| **1.0.1.x** | Prod, audyt, deploy | ⏳ **teraz** |
+| **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji) | ⏳ po inwentaryzacji |
 | **1.1.x**   | Auth + multi-user + admin               | ⏳ po 1.0.1                             |
 | **1.2.x**   | Premium + płatności                     | ⏳                                      |
 | **1.3.x**   | Testy + hardening + perf                | ⏳                                      |
@@ -530,6 +533,18 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
+### 1.0.1 — Feedback po testach manualnych ✅ WYDANY (2026-07-14)
+
+> Checkpoint po **1.0.0** i ręcznych testach UI. **Bez zmian w kodzie copy** — tylko pełna lista komunikatów frontowych do Twojego review.
+
+- [x] **1.0.1.0** Inwentaryzacja copy — ~245 pozycji MSG (patrz [Inwentaryzacja copy klienta](#inwentaryzacja-copy-klienta))
+- [x] **1.0.1.0** Znane problemy copy/UX — tabela w **1.0.2.x** (tmid w UI, bulk identity, przycisk Odrzuć)
+- [ ] **1.0.1.0** Twoja akceptacja tekstów — checkbox `[ ] do review` przy każdym MSG
+
+**Workflow dalej:** przechodzisz MSG-y w README → podajesz docelowe copy → **1.0.2.x** implementacja.
+
+---
+
 ### 1.0.1.x — Po release: audyt, bezpieczeństwo, prod ⏳ NASTĘPNE
 
 > Domknięcie release **1.0.0** na produkcji + checklist pod RODO i przyszłą bramkę płatności. **Auth dopiero w 1.1.x.**
@@ -555,16 +570,46 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 1.0.2.x — Copy i komunikacja UI ⏳ (plan wstępny)
+### 1.0.2.x — Copy i komunikaty klienta ⏳ (plan — **bez kodu na razie**)
 
-> Poprawki tekstów na całej stronie — **bez zmian logiki**. Szczegóły doprecyzujemy przed wdrożeniem.
+> **Workflow:** przed wdrożeniem każdej podsekcji — **pytam Cię o docelowe copy** (lista komunikatów → Ty podajesz teksty PL → dopiero wtedy commit). Żadnych technicznych `throw Error(...)` w UI bez mapowania na ludzki język.
 
-- [ ] **1.0.2.1** Landing `/` — nagłówki, CTA, tone of voice (dart-first, mniej korpo)
+- [x] **1.0.2.0** **Inwentaryzacja copy** — ✅ w **1.0.1** ([pełna lista MSG](#inwentaryzacja-copy-klienta)). Ty zatwierdzasz słownik.
+- [ ] **1.0.2.1** Landing `/` — nagłówki, CTA, tone of voice (dart-first)
 - [ ] **1.0.2.2** Profil demo + banner — spójne komunikaty „to jest podgląd"
-- [ ] **1.0.2.3** Formularz importu — helper text, błędy po polsku, emoji tam gdzie pasuje
-- [ ] **1.0.2.4** Empty states, loadery, 404
-- [ ] **1.0.2.5** `/login` + onboarding — pierwsze wrażenie po rejestracji
-- [ ] **1.0.2.6** Audyt spójności: „mecz/meczów", „lotek", nazwy KPI
+- [ ] **1.0.2.3** Formularz importu (single) — helper, sukces, błędy po polsku
+- [ ] **1.0.2.4** Import hurtowy — te same reguły co single; **bez** suchego „wymaga wyboru gracza" w tabeli
+- [ ] **1.0.2.5** Empty states, loadery, 404
+- [ ] **1.0.2.6** `/login` + onboarding — pierwsze wrażenie po rejestracji
+- [ ] **1.0.2.7** Spójność PL: „mecz/meczów", „lotek", nazwy KPI
+
+#### Znane problemy do fixu (copy + UX) — czeka na Twoje teksty
+
+**Walidacja URL / import (dziś w kodzie — technicznie, niespójnie):**
+
+| Gdzie | Obecny komunikat (źle) | Uwaga |
+| ----- | ------------------------ | ----- |
+| HTML `type=url` + „asdf" | „Wprowadź adres URL" (browser) | Obejść walidacją własną + copy od Ciebie |
+| Demo / klient | Teksty z `lib/n01-url.ts` | OK kierunek, ale do zatwierdzenia |
+| Backend `lib/matches.ts` | `URL nie zawiera prawidłowego tmid` | **Runtime Error** w UI — mapować na PL |
+| `lib/n01-parser.ts` | `Brak parametru tmid w URL` | j.w. |
+| `lib/n01-parser.ts` | `URL musi pochodzić z n01darts.com` | j.w. |
+| Bulk (ang.) | `invalid url` / surowe błędy fetch | PL + jeden styl |
+| Bulk + identity | status `error`, message `wymaga wyboru gracza` | **Powinno pytać** (modal jak przy single), nie cichy błąd w liście |
+
+**Modale / przyciski:**
+
+| Gdzie | Obecnie | Docelowo (propozycja do Twojej akceptacji) |
+| ----- | ------- | ------------------------------------------ |
+| Identity: „Nie rozpoznano Cię…" | „Odrzuć — nie zapisuj" — szary, mało widoczny | **Czerwony, domyślny/destructive** primary |
+| Bulk duplikat / identity | Brak spójnego flow z importem pojedynczym | Zunifikować z **1.1.3.5** |
+
+**Zasady na fix (1.0.2.x + część 1.1.3):**
+
+1. User **nigdy** nie widzi `tmid`, stack trace ani angielskiego z parsera.
+2. Jeden słownik błędów: `lib/user-messages.ts` (robocza nazwa) — mapowanie kod → copy PL.
+3. Bulk przy `needs_identity_confirmation` → **modal pytania**, nie wiersz „error".
+4. Wszystkie teksty zatwierdza **Piotr** przed merge.
 
 ---
 
@@ -635,7 +680,7 @@ Pełny stan projektu zamrożony poza `main`:
 | #     | ID          | Zadanie                                   |
 | ----- | ----------- | ----------------------------------------- |
 | **→** | **1.0.1.1–5** | Audyt bezpieczeństwa prod + deploy + domena |
-| 2     | 1.0.2.x       | Copy UI (plan)                              |
+| 2     | 1.0.2.x       | **Copy klienta** — inwentaryzacja → Twoje teksty → fix |
 | 3     | 1.1.1         | Supabase Auth (Google)                      |
 | 4     | 1.1.2–1.1.3   | Sync auth, onboarding, **samouczek 1.1.3.8** |
 | 5     | 1.1.4–1.1.8   | RLS, middleware, usuwanie, admin            |
@@ -870,12 +915,13 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.0.0 — Release ✅ | **1.0.1.1** ⏳ NASTĘPNE
+### v1.0.1 — Feedback ✅ | **1.0.1.1** ⏳ NASTĘPNE
 
 
 | Element        | Status                                                 |
 | -------------- | ------------------------------------------------------ |
 | **1.0.0**      | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup` |
+| **1.0.1**      | ✅ WYDANY — inwentaryzacja copy (~245 MSG)              |
 | **0.x.x**      | ✅ Bootstrap → demo (zamknięte w 1.0.0)                 |
 | **1.0.1.x**    | ⏳ Prod audit + deploy + domena                         |
 | **1.1.x**      | ⏳ Auth + multi-user (po 1.0.1)                         |
@@ -906,7 +952,8 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | --------- | ----------------- | ----------- |
 | **0.x**   | Bootstrap → demo  | ✅ w 1.0.0   |
 | **1.0.0** | Release milestone | ✅ WYDANY    |
-| **1.0.1** | Prod + deploy     | ⏳ **teraz** |
+| **1.0.1** | Feedback + inwentaryzacja copy | ✅ WYDANY    |
+| **1.0.1.x** | Prod + deploy     | ⏳ **teraz** |
 | **1.1**   | Auth + admin      | ⏳           |
 | **1.2**   | Premium           | ⏳           |
 | **1.3**   | Testy + perf      | ⏳           |
@@ -953,9 +1000,9 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
-Stan: **1.0.0 WYDANY** (backup/v1.0.0). NASTĘPNE: **1.0.1.1** audit noindex prod.
-Potem: 1.0.1.2 deploy → 1.0.1.3 domena → **1.1.1 Auth**.
-Numeracja: 0.x = historia, 1.0.0 = release, 1.0.1+ = dalsze prace.
+Stan: **1.0.1 WYDANY** (inwentaryzacja copy). NASTĘPNE: **1.0.1.1** audit noindex prod.
+Potem: 1.0.1.2 deploy → 1.0.1.3 domena → **1.0.2.x copy fix** → **1.1.1 Auth**.
+Numeracja: 0.x = historia, 1.0.0 = release, 1.0.1 = feedback/copy audit, 1.0.1.x+ = prod.
 ```
 
 ### Podgląd na telefonie (dev)
@@ -968,11 +1015,389 @@ npm run dev -- --hostname 0.0.0.0
 
 ---
 
+## Inwentaryzacja copy klienta
+
+> **Wersja:** 1.0.1 · **Data:** 2026-07-14 · **~245 pozycji MSG**  
+> **Cel:** każdy komunikat widoczny dla usera — do przejrzenia i zatwierdzenia przed **1.0.2.x**.  
+> **Legenda:** `[ ] do review` → Ty podajesz docelowy tekst (lub ✓ zostawiamy).  
+> **Uwaga:** nazwy graczy, tytuły meczów, daty i liczby to dane dynamiczne — nie są tu wymienione.
+
+### Global / tytuł / branding
+
+| ID | Plik / kontekst | Kiedy | Tekst | Review |
+|----|-----------------|-------|-------|--------|
+| MSG-001 | `lib/page-metadata.ts` — `<title>` | Każda strona | `Twoje statystyki darta \| Dart Profile Tracker` | [ ] do review |
+| MSG-002 | `lib/site-config.ts` | Footer, OG, JSON-LD | `Dart Profile Tracker` | [ ] do review |
+| MSG-003 | `lib/site-config.ts` — OG alt | Share preview | `Dart Profile Tracker — statystyki darta z N01` | [ ] do review |
+
+### Landing — `app/page.tsx`
+
+| ID | Kontekst | Tekst | Review |
+|----|----------|-------|--------|
+| MSG-010 | Hero H1 | `Dart` + `Profile` + ` Tracker` | [ ] do review |
+| MSG-011 | Hero subtitle | `Importuj mecze z N01, zobacz jak grasz naprawdę — średnie, checkout, forma, head-to-head. Prywatny profil, publiczne demo do obejrzenia przed rejestracją.` | [ ] do review |
+| MSG-012 | CTA primary | `Zobacz profil demo` | [ ] do review |
+| MSG-013 | CTA secondary | `Zaloguj się / Zarejestruj` | [ ] do review |
+| MSG-014 | Demo note | `Demo: przykładowy profil gracza · {matchCount} spotkań` | [ ] do review |
+| MSG-015 | Hero tile | `Meczów w demo` | [ ] do review |
+| MSG-016 | Hero tile | `Start score` | [ ] do review |
+| MSG-017 | Hero tile | `Import linkiem` | [ ] do review |
+| MSG-018 | Hero tile | `vs przeciwnicy` | [ ] do review |
+| MSG-019 | Features heading | `Co dostajesz` | [ ] do review |
+| MSG-020 | Features sub | `Od linku N01 do profilu gracza` | [ ] do review |
+| MSG-021 | Feature | `Import z N01` | [ ] do review |
+| MSG-022 | Feature body | `Wklejasz link z n01darts.com — legi, lotki, checkouty. Bez ręcznego przepisywania po turnieju.` | [ ] do review |
+| MSG-023 | Feature | `Analityka na serio` | [ ] do review |
+| MSG-024 | Feature body | `Średnia ważona, first 9, forma, aktywność po dniach i godzinach, histogram checkoutów.` | [ ] do review |
+| MSG-025 | Feature | `H2H i top listy` | [ ] do review |
+| MSG-026 | Feature body | `Kto cię bije, kogo bijesz, najlepsze rzuty i finish — z meczów, nie z pamięci.` | [ ] do review |
+| MSG-027 | Feature | `Share meczu` | [ ] do review |
+| MSG-028 | Feature body | `Link do meczu z rzutem po rzucie. Profil zostaje prywatny (noindex).` | [ ] do review |
+| MSG-029 | Demo block heading | `{matchCount} spotkań demo — bez konta` | [ ] do review |
+| MSG-030 | Demo block body | `Pełna analityka na` + `przykładowym profilu demo` + `: statystyki, wykres formy, H2H i mecze z widokiem rzut po rzucie.` | [ ] do review |
+| MSG-031 | Demo CTA | `Otwórz profil demo` | [ ] do review |
+| MSG-032 | Demo link | `Przykładowy mecz` | [ ] do review |
+| MSG-033 | Footer note | `Masz już dostęp?` + `/profile` + `(prywatny)` | [ ] do review |
+
+### Login — `app/login/page.tsx`
+
+| ID | Kontekst | Tekst | Review |
+|----|----------|-------|--------|
+| MSG-040 | Nav | `Strona główna` | [ ] do review |
+| MSG-041 | H1 | `Konto gracza` | [ ] do review |
+| MSG-042 | Intro | `Logowanie Google i rejestracja pojawią się w` + `wersji 1.1` + `(Auth). Na razie zobacz, jak wygląda tracker na przykładowym profilu.` | [ ] do review |
+| MSG-043 | CTA | `Zobacz profil demo` | [ ] do review |
+| MSG-044 | Disabled btn | `Zaloguj się przez Google` | [ ] do review |
+| MSG-045 | Tooltip | `Wkrótce — Faza 4.1` | [ ] do review |
+| MSG-046 | Disabled btn | `Zarejestruj się` | [ ] do review |
+| MSG-047 | Footer | `Masz już dostęp developerski?` + `Przejdź do /profile` | [ ] do review |
+
+### Footer — `components/site-footer.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-050 | `Dart Profile Tracker` | [ ] do review |
+| MSG-051 | `Profil demo` | [ ] do review |
+| MSG-052 | `Logowanie` | [ ] do review |
+| MSG-053 | `Mój profil` | [ ] do review |
+| MSG-054 | `© {year}` + `Sylveon Company` | [ ] do review |
+
+### Demo banner — `components/demo-banner.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-060 | `To` + `przykładowy profil demo` + `. Pełna analityka dostępna na wyciągnięcie ręki. Utwórz swoje konto, zaimportuj swoje mecze i śledź swoją formę.` | [ ] do review |
+| MSG-061 | `Załóż konto` | [ ] do review |
+
+### Demo profile — `app/demo/profile/page.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-070 | `Strona główna` | [ ] do review |
+| MSG-071 | `Załóż konto →` | [ ] do review |
+| MSG-072 | Tagline (`demo-persona.ts`) | `Twój Dart Profile Tracker — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.` | [ ] do review |
+
+### Demo match — `app/demo/m/[shareToken]/page.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-080 | `← Wróć do profilu demo` | [ ] do review |
+| MSG-081 | `Załóż własne konto` | [ ] do review |
+
+### Private profile — `app/profile/page.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-090 | `Strona główna` | [ ] do review |
+| MSG-091 | Fallback greeting | `Witaj,` | [ ] do review |
+| MSG-092 | Fallback H1 | `Profil zawodnika` | [ ] do review |
+
+### Profile header — `app/profile/profile-header.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-100 | Greeting | `Witaj,` | [ ] do review |
+| MSG-101 | Nickname | `„{nickname}"` | [ ] do review |
+
+### Dodaj mecz — `app/profile/profile-add-match.tsx`
+
+| ID | Kontekst | Tekst | Review |
+|----|----------|-------|--------|
+| MSG-110 | Tytuł sekcji | `Dodaj nowy mecz` | [ ] do review |
+| MSG-111 | Opis | `Wklej link do swojego meczu z n01 — pobiorę dane, zrobię wyliczenia i uaktualnię Twój profil gracza.` | [ ] do review |
+| MSG-112 | Toggle | `−` / `+` | [ ] do review |
+| MSG-120 | Placeholder URL | `https://n01darts.com/n01/...` | [ ] do review |
+| MSG-121 | Submit idle | `Pobierz dane` | [ ] do review |
+| MSG-122 | Submit loading | `Pobieram…` | [ ] do review |
+| MSG-123 | Demo CTA body | `Załóż konto i zacznij śledzić swoje statystyki. Dodasz swoje mecze, a my pokażemy Ci jak grasz.` | [ ] do review |
+| MSG-124 | Demo CTA btn | `Załóż konto →` | [ ] do review |
+| MSG-125 | Sukces | `Zapisano: {match.title}` | [ ] do review |
+| MSG-126 | Sukces fallback | `Mecz zapisany` | [ ] do review |
+| MSG-127 | Błąd fallback | `Import nieudany` | [ ] do review |
+| MSG-128 | Overwrite błąd | `Nadpisanie nieudane` | [ ] do review |
+| MSG-130 | Identity prompt | `Nie rozpoznano Cię automatycznie. Który gracz to Ty?` | [ ] do review |
+| MSG-131 | Identity buttons | `{players[0]}` / `{players[1]}` | [ ] do review |
+| MSG-132 | Identity reject | `Odrzuć — nie zapisuj` | [ ] do review |
+| MSG-140 | Duplikat heading | `Ten mecz jest już w bazie` | [ ] do review |
+| MSG-141 | Duplikat btn | `Nadpisz` | [ ] do review |
+| MSG-142 | Duplikat link | `Zobacz istniejący` | [ ] do review |
+| MSG-143 | Duplikat btn | `Anuluj` | [ ] do review |
+| MSG-150 | Bulk tytuł | `Import hurtowy` | [ ] do review |
+| MSG-151 | Bulk opis | `Wiele linków — jeden URL w każdej linii.` | [ ] do review |
+| MSG-152 | Bulk placeholder | `https://n01darts.com/n01/league/...` (2 linie przykładu) | [ ] do review |
+| MSG-153 | Bulk idle | `Importuj wszystkie` | [ ] do review |
+| MSG-154 | Bulk progress | `Importuję… ({done}/{total})` | [ ] do review |
+| MSG-155 | Bulk dup heading | `Duplikat: mecz już istnieje` | [ ] do review |
+| MSG-156 | Bulk dup | `Nadpisz` | [ ] do review |
+| MSG-157 | Bulk dup | `Nadpisz wszystkie` | [ ] do review |
+| MSG-158 | Bulk dup | `Pomiń` | [ ] do review |
+| MSG-159 | Bulk dup | `Pomiń wszystkie` | [ ] do review |
+| MSG-160 | Bulk badge | `OK {n}` | [ ] do review |
+| MSG-161 | Bulk badge | `Duplikat {n}` | [ ] do review |
+| MSG-162 | Bulk badge | `Błąd {n}` | [ ] do review |
+| MSG-163 | Bulk row icon | `…` | [ ] do review |
+| MSG-164 | Bulk row icon | `✓` | [ ] do review |
+| MSG-165 | Bulk row icon | `=` | [ ] do review |
+| MSG-166 | Bulk row icon | `!` | [ ] do review |
+| MSG-167 | Bulk row msg | `pominięto` | [ ] do review |
+| MSG-168 | Bulk row msg | `nadpisano` | [ ] do review |
+| MSG-169 | Bulk row msg | `wymaga wyboru gracza` | [ ] do review |
+| MSG-170 | Bulk row msg | `błąd` | [ ] do review |
+
+### Walidacja URL — `lib/n01-url.ts`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-180 | `N01_URL_HINT` | `Wklej pełny adres URL meczu z n01darts.com (np. https://n01darts.com/n01/league/n01_view.html?tmid=…).` | [ ] do review |
+| MSG-181 | `N01_ONLY_MESSAGE` | `Ups. Tutaj możesz nawrzucać, ale tylko mecze n01 🙈` | [ ] do review |
+
+### Profile client — `app/profile/profile-client.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-190 | `Ostatnie mecze` | [ ] do review |
+| MSG-191 | `Ładuję mecze…` | [ ] do review |
+| MSG-192 | `Brak meczów w tym zakresie` | [ ] do review |
+| MSG-193 | `Dodaj pierwszy link z N01 powyżej.` | [ ] do review |
+| MSG-194 | `Brak meczów w tym zakresie czasu.` | [ ] do review |
+| MSG-195 | `Więcej spotkań ({count})` | [ ] do review |
+| MSG-196 | `Wstecz` | [ ] do review |
+| MSG-197 | `Strona {page+1} / {totalPages}` | [ ] do review |
+| MSG-198 | `Dalej` | [ ] do review |
+| MSG-199 | `Zwiń listę` | [ ] do review |
+| MSG-19A | Fetch error (nie wyświetlane dziś) | `Błąd pobierania` | [ ] do review |
+
+### Statystyki — `app/profile/profile-stats-block.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-200 | `Statystyki zawodnika` | [ ] do review |
+| MSG-201 | `{n} mecz` / `{n} meczów` | [ ] do review |
+| MSG-202 | `30 dni` | [ ] do review |
+| MSG-203 | `90 dni` | [ ] do review |
+| MSG-204 | `180 dni` | [ ] do review |
+| MSG-205 | `365 dni` | [ ] do review |
+| MSG-206 | `Wszystko` | [ ] do review |
+| MSG-207 | `Ładuję dane…` | [ ] do review |
+| MSG-208 | `Brak meczów w tym zakresie.` | [ ] do review |
+| MSG-209 | `3-DART AVG` | [ ] do review |
+| MSG-210 | `FIRST 9 AVG` | [ ] do review |
+| MSG-211 | `Win rate` | [ ] do review |
+| MSG-212 | `{wins}W · {losses}L` | [ ] do review |
+| MSG-213 | `LEGS WIN RATE` | [ ] do review |
+| MSG-214 | `{legsWon}W · {legsLost}L` | [ ] do review |
+| MSG-215 | `Mecze` | [ ] do review |
+| MSG-216 | `60+` | [ ] do review |
+| MSG-217 | `80+` | [ ] do review |
+| MSG-218 | `100+` | [ ] do review |
+| MSG-219 | `120+` | [ ] do review |
+| MSG-220 | `140+` | [ ] do review |
+| MSG-221 | `170+` | [ ] do review |
+| MSG-222 | `180` | [ ] do review |
+| MSG-223 | `High finish` | [ ] do review |
+| MSG-224 | `100+ Finish` | [ ] do review |
+| MSG-225 | `Best leg` | [ ] do review |
+| MSG-226 | `Best leg avg` | [ ] do review |
+| MSG-227 | `Checkout` | [ ] do review |
+| MSG-228 | Brak danych | `—` | [ ] do review |
+
+### Wykres formy — `app/profile/profile-form-chart.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-230 | `Wykres formy` | [ ] do review |
+| MSG-231 | Tooltip | `vs {oppName}` | [ ] do review |
+| MSG-232 | Tooltip | `Avg` + `{average}` | [ ] do review |
+| MSG-233 | Tooltip | `First 9` + `{first9}` | [ ] do review |
+| MSG-234 | Tooltip win | `Wygrana` | [ ] do review |
+| MSG-235 | Tooltip loss | `Przegrana` | [ ] do review |
+| MSG-236 | Legenda | `3-dart avg` | [ ] do review |
+| MSG-237 | Legenda | `First 9` | [ ] do review |
+| MSG-238 | Legenda | `Śr. ogólna: {overallAvg}` | [ ] do review |
+
+### Ostatnie 5 — `app/profile/profile-recent-matches.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-240 | `Ostatnie 5 meczów` | [ ] do review |
+| MSG-241 | `{wins}W · {losses}L` | [ ] do review |
+| MSG-242 | Badge | `W` / `L` / `–` | [ ] do review |
+
+### Top listy — `app/profile/profile-top-lists.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-250 | `Top 10 najczęstszych podejść` | [ ] do review |
+| MSG-251 | `Top 10 najczęstszych zamknięć` | [ ] do review |
+| MSG-252 | Suffix | `×{count}` | [ ] do review |
+
+### Head-to-head — `app/profile/profile-head-to-head.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-260 | `Head-to-head` | [ ] do review |
+| MSG-261 | Select placeholder | `— wybierz przeciwnika —` | [ ] do review |
+| MSG-262 | Select option | `{name} ({count} meczów)` | [ ] do review |
+| MSG-263 | `Win` | [ ] do review |
+| MSG-264 | `Win rate` | [ ] do review |
+| MSG-265 | `Loss` | [ ] do review |
+| MSG-266 | Header | `Ja` / `vs` / `{selected}` | [ ] do review |
+| MSG-267 | Row labels | `Mecze`, `Avg`, `First 9`, `Legi`, `Checkout`, `100+`, `140+`, `180` | [ ] do review |
+| MSG-268 | Empty | `Brak meczów z tym przeciwnikiem w wybranym zakresie.` | [ ] do review |
+
+### Aktywność — dni — `app/profile/profile-activity.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-270 | `Aktywność — dni tygodnia` | [ ] do review |
+| MSG-271 | Dni (`lib/stats.ts`) | `Pon`, `Wt`, `Śr`, `Czw`, `Pt`, `Sob`, `Nd` | [ ] do review |
+| MSG-272 | Bar (1 mecz) | `{n} mecz` | [ ] do review |
+| MSG-273 | Bar (≠1) | `{n} meczów` | [ ] do review |
+| MSG-274 | Pusty | `–` | [ ] do review |
+| MSG-275 | Suffix | `{avg} avg` | [ ] do review |
+
+### Aktywność — godziny — `app/profile/profile-activity-hours.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-280 | `Aktywność — godziny` | [ ] do review |
+| MSG-281 | Etykiety | `{HH}-{HH+1}` | [ ] do review |
+| MSG-282 | Bar | `{n} mecz` / `{n} meczów` | [ ] do review |
+| MSG-283 | Suffix | `{avg} avg` | [ ] do review |
+
+### Histogram checkoutów — `app/profile/profile-checkout-distribution.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-290 | `Histogram zamknięć` | [ ] do review |
+| MSG-291 | Zakresy | `2–20`, `21–40`, `41–60`, `61–80`, `81–100`, `101–120`, `121–140`, `141–170` | [ ] do review |
+| MSG-292 | Overlay | `{n} prób` | [ ] do review |
+| MSG-293 | Rate | `{rate}% ({hits}/{attempts})` | [ ] do review |
+| MSG-294 | Pusty | `–` | [ ] do review |
+
+### Karta meczu — `app/profile/profile-match-card.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-300 | Badge | `W` / `L` | [ ] do review |
+| MSG-301 | KPI labels | `3-dart`, `First 9`, `60+`, `80+`, `100+`, `120+`, `140+`, `170+`, `180`, `High fin.`, `100+ fin.`, `Best leg`, `Worst leg`, `Checkout` | [ ] do review |
+| MSG-302 | Link | `Rzut po rzucie →` | [ ] do review |
+| MSG-303 | Share idle | `Udostępnij mecz` | [ ] do review |
+| MSG-304 | Share copied | `Skopiowano` | [ ] do review |
+
+### Widok meczu — `app/m/[shareToken]/match-view.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-310 | Nav | `Wróć do profilu` | [ ] do review |
+| MSG-311 | Share idle | `Udostępnij ten mecz` | [ ] do review |
+| MSG-312 | Share copied | `Skopiowano link` | [ ] do review |
+| MSG-313 | Score sub | `avg {average}` | [ ] do review |
+| MSG-314 | Section | `Details` | [ ] do review |
+| MSG-315 | KPI labels | `First 9`, `60+`, `80+`, `100+`, `120+`, `140+`, `170+`, `180`, `High finish`, `100+ fin.`, `Best leg`, `Worst leg`, `Checkout` | [ ] do review |
+| MSG-316 | Section | `Rzut po rzucie` | [ ] do review |
+| MSG-317 | Leg header | `Leg {index}` | [ ] do review |
+| MSG-318 | Winner | `{winnerName}` + ` · {darts} {dartWord}` | [ ] do review |
+| MSG-319 | Leg avg | `avg Ja` / `avg Opp` | [ ] do review |
+| MSG-320 | Table headers | `#`, `Ja`, `left`, `Opp`, `left` | [ ] do review |
+| MSG-321 | Empty visit | `—` | [ ] do review |
+| MSG-322 | Checkout suffix | ` ✓{darts}` | [ ] do review |
+| MSG-323 | Bust suffix | ` ×` | [ ] do review |
+
+### Odmiana lotek — `lib/stats.ts` (`dartWord`)
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-330 | darts=1 | `lotka` | [ ] do review |
+| MSG-331 | darts 2–4 | `lotki` | [ ] do review |
+| MSG-332 | inne | `lotek` | [ ] do review |
+
+### OG image — `app/opengraph-image.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-340 | Tagline | `Statystyki darta · import N01` | [ ] do review |
+| MSG-341 | Title | `Dart Profile Tracker` | [ ] do review |
+| MSG-342 | Subtitle | `Import N01 · forma · H2H · checkout` | [ ] do review |
+| MSG-343 | Stat labels | `MECZÓW DEMO`, `START`, `IMPORT` | [ ] do review |
+| MSG-344 | Domain | `dart.sylveoncompany.pl` | [ ] do review |
+
+### API → UI — `app/api/**`
+
+| ID | Route / status | Tekst | Review |
+|----|----------------|-------|--------|
+| MSG-400 | ingest 400 | `Nieprawidłowy JSON` | [ ] do review |
+| MSG-401 | ingest 400 | `Podaj URL meczu z n01darts.com` | [ ] do review |
+| MSG-402 | ingest 422 fallback | `Import nieudany` | [ ] do review |
+| MSG-403 | ingest 422 passthrough | `{Error.message}` z backendu | [ ] do review |
+| MSG-410 | matches 500 fallback | `Błąd pobierania meczów` | [ ] do review |
+| MSG-411 | matches 500 passthrough | `getMyMatches: {supabase msg}` | [ ] do review |
+| MSG-420 | customer 404 | `Customer not found` | [ ] do review |
+| MSG-421 | customer 500 | `Unknown error` | [ ] do review |
+
+### Błędy ingest — `lib/matches.ts` (w UI przez MSG-403)
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-430 | validateTmid | `URL nie zawiera prawidłowego tmid` | [ ] do review |
+| MSG-431 | timeout | `N01 nie odpowiada (timeout). Spróbuj za chwilę.` | [ ] do review |
+| MSG-432 | 404 | `N01 nie zna tego meczu (404).` | [ ] do review |
+| MSG-433 | wrapper | `Import z N01 nieudany: {originalMessage}` | [ ] do review |
+| MSG-434 | save guard | `Nie można zapisać meczu bez potwierdzonej tożsamości gracza` | [ ] do review |
+
+### Błędy parsera — `lib/n01-parser.ts` (w UI przez MSG-433)
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-440 | brak tmid | `Brak parametru tmid w URL` | [ ] do review |
+| MSG-441 | zły host | `URL musi pochodzić z n01darts.com` | [ ] do review |
+| MSG-442 | API status | `n01 API zwróciło {status}` | [ ] do review |
+| MSG-443 | backup JSON | `Backup JSON: {message}` | [ ] do review |
+| MSG-444 | backup HTML | `Backup HTML: {message}` | [ ] do review |
+
+### Komunikaty przeglądarki (poza kodem — do obejścia w 1.0.2)
+
+| ID | Kontekst | Tekst | Review |
+|----|----------|-------|--------|
+| MSG-450 | HTML `type=url` + invalid | `Wprowadź adres URL` (browser PL) | [ ] do review |
+| MSG-451 | Bulk client (ang.) | `invalid url` | [ ] do review |
+
+### Notatki do review
+
+1. **Mieszanka PL/EN** — wiele KPI po angielsku (`Win rate`, `First 9`, `Details`, `Checkout`, `avg`, `left`, `Opp`) — decyzja w **1.0.2.7**.
+2. **MSG-403 / 433** — user dziś widzi surowe błędy techniczne (tmid) — priorytet fix w **1.0.2.3–4**.
+3. **MSG-169** — bulk `wymaga wyboru gracza` zamiast modala — UX fix w **1.0.2.4** + **1.1.3.5**.
+4. **MSG-132** — „Odrzuć" powinien być destructive (czerwony) — **1.0.2.x**.
+5. Brak własnego `not-found.tsx` — Next.js default 404 (framework, nie w repo).
+
+---
+
 ## Dziennik zmian
 
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.0.1**  | 2026-07-14 | **Feedback po testach manualnych.** Pełna inwentaryzacja copy klienta (~245 MSG) w README — do review przed 1.0.2.x. Bez zmian w kodzie UI. |
 | **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |
 | **1.0.0-post** | 2026-07-14 | SEO: jeden tytuł dokumentu wszędzie; bez imion w meta/OG/JSON-LD; demo „Dodaj mecz" + walidacja N01; README audyt. |
 | v4.0.3     | 2026-07-14 | Demo hardening *(→ 1.0.0)* |
