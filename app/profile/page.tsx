@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-import { getCustomerById } from "@/lib/customer";
+import { ChevronLeft, LogOut } from "lucide-react";
+import { requireAuthCustomer } from "@/lib/auth";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { ProfileClient } from "./profile-client";
 import { ProfileHeader } from "./profile-header";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const customer = await getCustomerById();
+  const { customer } = await requireAuthCustomer();
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background px-4 py-8 text-foreground md:py-12">
@@ -30,7 +30,7 @@ export default async function ProfilePage() {
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col gap-8 md:max-w-2xl">
-        <nav>
+        <nav className="flex items-center justify-between gap-3">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
@@ -38,27 +38,21 @@ export default async function ProfilePage() {
             <ChevronLeft className="h-3.5 w-3.5" />
             Strona główna
           </Link>
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Wyloguj
+            </button>
+          </form>
         </nav>
 
-        {customer ? (
-          <ProfileHeader customer={customer} />
-        ) : (
-          <header className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/80">
-              Witaj,
-            </span>
-            <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-4xl">
-              Profil zawodnika
-            </h1>
-          </header>
-        )}
+        <ProfileHeader customer={customer} />
 
         <ProfileClient
-          myDisplayName={
-            customer
-              ? `${customer.lastName} ${customer.firstName}`.trim()
-              : undefined
-          }
+          myDisplayName={`${customer.lastName} ${customer.firstName}`.trim()}
         />
       </div>
     </main>

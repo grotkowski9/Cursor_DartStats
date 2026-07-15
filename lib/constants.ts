@@ -1,12 +1,24 @@
-export const DEFAULT_CUSTOMER_ID =
-  process.env.DEFAULT_CUSTOMER_ID ?? "a0000000-0000-4000-8000-000000000001";
+/**
+ * Seed / legacy MVP customer (Piotr). Used only by seed scripts and
+ * OWNER_EMAIL linking — never as a silent runtime default for APIs.
+ */
+export const SEED_CUSTOMER_ID =
+  process.env.SEED_CUSTOMER_ID ??
+  process.env.DEFAULT_CUSTOMER_ID ??
+  "a0000000-0000-4000-8000-000000000001";
+
+/** @deprecated Use SEED_CUSTOMER_ID — kept for seed script compat. */
+export const DEFAULT_CUSTOMER_ID = SEED_CUSTOMER_ID;
 
 /** Stały klient demo — mecze w Supabase, nie w plikach repo. */
 export const DEMO_CUSTOMER_ID =
   process.env.DEMO_CUSTOMER_ID ?? "b0000000-0000-4000-8000-000000000001";
 
-/** Auto-detect only these patterns (case-insensitive). Everything else → ask user. */
-export const AUTO_DETECT_PATTERNS = ["grotkowski", "groteł", "grotel"] as const;
+/**
+ * @deprecated Prefer customer.known_nicknames via autoDetectPatterns().
+ * Empty default — multi-user must not inherit Grotkowski patterns.
+ */
+export const AUTO_DETECT_PATTERNS = [] as const;
 
 /** @deprecated Use customer.displayName from DB via getCustomerById() */
 export const PLAYER_DISPLAY_NAME = 'Piotr „Groteł" Grotkowski';

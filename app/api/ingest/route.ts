@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAuthCustomerApi } from "@/lib/auth";
 import { ingestAndSave } from "@/lib/matches";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,9 @@ type IngestBody = {
 };
 
 export async function POST(request: Request) {
+  const auth = await requireAuthCustomerApi();
+  if (!auth.ok) return auth.response;
+
   let body: IngestBody;
   try {
     body = (await request.json()) as IngestBody;
@@ -32,6 +36,7 @@ export async function POST(request: Request) {
       overwrite: body.overwrite,
       playerIndex: body.playerIndex,
       action: body.action,
+      customerId: auth.customer.customerId,
     });
     return NextResponse.json(result);
   } catch (e) {

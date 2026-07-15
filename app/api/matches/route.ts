@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
+import { requireAuthCustomerApi } from "@/lib/auth";
 import { getMyMatchSummaries } from "@/lib/matches";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const auth = await requireAuthCustomerApi();
+  if (!auth.ok) return auth.response;
+
   try {
-    const matches = await getMyMatchSummaries();
+    const matches = await getMyMatchSummaries(auth.customer.customerId);
     return NextResponse.json({ matches });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Błąd pobierania meczów";

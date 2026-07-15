@@ -1,4 +1,4 @@
-import { DEFAULT_CUSTOMER_ID, TMID_REGEX } from "@/lib/constants";
+import { TMID_REGEX } from "@/lib/constants";
 import { autoDetectPatterns, getCustomerById } from "@/lib/customer";
 import {
   parseAndBackupN01,
@@ -110,7 +110,7 @@ async function loadMatchById(matchId: string): Promise<N01Match | null> {
 
 export async function saveMatch(
   m: N01Match,
-  customerId: string = DEFAULT_CUSTOMER_ID,
+  customerId: string,
 ): Promise<{ matchId: string }> {
   if (m.playerIndex !== 0 && m.playerIndex !== 1) {
     throw new Error("Nie można zapisać meczu bez potwierdzonej tożsamości gracza");
@@ -208,7 +208,7 @@ export async function saveMatch(
   return { matchId: matchRow.match_id };
 }
 
-export async function getMyMatches(customerId: string = DEFAULT_CUSTOMER_ID): Promise<N01Match[]> {
+export async function getMyMatches(customerId: string): Promise<N01Match[]> {
   const supabase = getSupabaseAdmin();
   const { data: matches, error } = await supabase
     .from("matches")
@@ -240,7 +240,13 @@ export async function getMatchByShareToken(shareToken: string): Promise<N01Match
 
 export type IngestResult =
   | { status: "saved"; match: N01Match }
-  | { status: "needs_identity_confirmation"; players: [string, string]; tmid: string; url: string }
+  | {
+      status: "needs_identity_confirmation";
+      reason: "ambiguous" | "none";
+      players: [string, string];
+      tmid: string;
+      url: string;
+    }
   | { status: "duplicate"; shareToken: string; tmid: string }
   | { status: "rejected" };
 
@@ -255,9 +261,9 @@ export async function ingestAndSave(opts: {
   overwrite?: boolean;
   playerIndex?: 0 | 1;
   action?: "save" | "reject";
-  customerId?: string;
+  customerId: string;
 }): Promise<IngestResult> {
-  const customerId = opts.customerId ?? DEFAULT_CUSTOMER_ID;
+  const customerId = opts.customerId;
 
   if (opts.action === "reject") {
     return { status: "rejected" };
@@ -293,7 +299,7 @@ export async function ingestAndSave(opts: {
   const customer = await getCustomerById(customerId);
   const playerDetection = detectPlayerIndex(
     [parsed.players[0].name, parsed.players[1].name],
-    customer ? autoDetectPatterns(customer) : undefined,
+    customer ? autoDetectPatterns(customer) : [],
   );
 
   if (opts.playerIndex === 0 || opts.playerIndex === 1) {
@@ -307,6 +313,7 @@ export async function ingestAndSave(opts: {
   } else {
     return {
       status: "needs_identity_confirmation",
+      reason: playerDetection.status,
       players: [parsed.players[0].name, parsed.players[1].name],
       tmid,
       url: opts.url,
@@ -329,7 +336,7 @@ export type MatchListItem = {
 };
 
 export async function getMyMatchSummaries(
-  customerId: string = DEFAULT_CUSTOMER_ID,
+  customerId: string,
 ): Promise<MatchListItem[]> {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase

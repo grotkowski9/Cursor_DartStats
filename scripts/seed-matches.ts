@@ -8,11 +8,12 @@ import { config } from "dotenv";
 
 config({ path: ".env.local" });
 
-import { SEED_URLS } from "../lib/constants";
+import { SEED_CUSTOMER_ID, SEED_URLS } from "../lib/constants";
 import { ingestAndSave } from "../lib/matches";
 
 async function main() {
   console.log("Seeding matches from SEED_URLS…\n");
+  console.log(`customer: ${SEED_CUSTOMER_ID}\n`);
 
   let saved = 0;
   let skipped = 0;
@@ -21,7 +22,7 @@ async function main() {
   for (const url of SEED_URLS) {
     process.stdout.write(`→ ${url}\n  `);
     try {
-      const result = await ingestAndSave({ url });
+      const result = await ingestAndSave({ url, customerId: SEED_CUSTOMER_ID });
       if (result.status === "saved") {
         console.log(`✓ saved: ${result.match.title}`);
         saved += 1;

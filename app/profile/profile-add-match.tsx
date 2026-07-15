@@ -13,6 +13,9 @@ import {
 type IdentityPrompt = {
   players: [string, string];
   url: string;
+  reason: "ambiguous" | "none";
+  /** For reason=none: must confirm before choosing player */
+  noneConfirmed?: boolean;
 };
 
 type DuplicatePrompt = {
@@ -58,6 +61,12 @@ export function ProfileAddMatch({
   const [pendingDup, setPendingDup] = useState<{ url: string; shareToken: string | null } | null>(
     null,
   );
+  const [pendingIdentity, setPendingIdentity] = useState<{
+    url: string;
+    players: [string, string];
+    reason: "ambiguous" | "none";
+    noneConfirmed: boolean;
+  } | null>(null);
   const [demoCta, setDemoCta] = useState(false);
 
   function showDemoCta() {
@@ -127,6 +136,7 @@ export function ProfileAddMatch({
         status?: string;
         error?: string;
         players?: [string, string];
+        reason?: "ambiguous" | "none";
         shareToken?: string;
         match?: { title?: string };
       };
@@ -134,7 +144,13 @@ export function ProfileAddMatch({
       if (!res.ok) throw new Error(data.error ?? "Import nieudany");
 
       if (data.status === "needs_identity_confirmation" && data.players) {
-        setIdentity({ players: data.players, url: opts.ingestUrl });
+        const reason = data.reason === "ambiguous" ? "ambiguous" : "none";
+        setIdentity({
+          players: data.players,
+          url: opts.ingestUrl,
+          reason,
+          noneConfirmed: reason === "ambiguous",
+        });
         setDuplicate(null);
         return "identity";
       }
@@ -193,6 +209,8 @@ export function ProfileAddMatch({
         status?: string;
         error?: string;
         shareToken?: string;
+        players?: [string, string];
+        reason?: "ambiguous" | "none";
       };
 
       if (!res.ok) throw new Error(data.error ?? "Import nieudany");
@@ -233,8 +251,38 @@ export function ProfileAddMatch({
       }
 
       if (data.status === "saved") return { url: ingestUrl, status: "ok" };
-      if (data.status === "needs_identity_confirmation") {
-        return { url: ingestUrl, status: "error", message: "wymaga wyboru gracza" };
+      if (data.status === "needs_identity_confirmation" && data.players) {
+        const reason = data.reason === "ambiguous" ? "ambiguous" : "none";
+        const playerIndex = await new Promise<0 | 1 | "reject">((resolve) => {
+          setPendingIdentity({
+            url: ingestUrl,
+            players: data.players!,
+            reason,
+            noneConfirmed: reason === "ambiguous",
+          });
+          (
+            window as unknown as {
+              __dartsBulkIdentityResolve?: (v: 0 | 1 | "reject") => void;
+            }
+          ).__dartsBulkIdentityResolve = resolve;
+        });
+        setPendingIdentity(null);
+        if (playerIndex === "reject") {
+          return { url: ingestUrl, status: "error", message: "odrzucono" };
+        }
+        const res2 = await fetch("/api/ingest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: ingestUrl,
+            playerIndex,
+            overwrite: forceOverwrite || dupPolicyRef.current === "overwrite",
+          }),
+        });
+        const data2 = (await res2.json()) as { status?: string; error?: string };
+        if (!res2.ok) throw new Error(data2.error ?? "Import nieudany");
+        if (data2.status === "saved") return { url: ingestUrl, status: "ok" };
+        return { url: ingestUrl, status: "error", message: data2.status ?? "błąd" };
       }
       return { url: ingestUrl, status: "error", message: data.status ?? "błąd" };
     } catch (e) {
@@ -272,6 +320,15 @@ export function ProfileAddMatch({
     const fn = (window as unknown as { __dartsBulkResolve?: (v: DupDecision) => void })
       .__dartsBulkResolve;
     if (fn) fn(kind);
+  }
+
+  function resolveBulkIdentity(choice: 0 | 1 | "reject") {
+    const fn = (
+      window as unknown as {
+        __dartsBulkIdentityResolve?: (v: 0 | 1 | "reject") => void;
+      }
+    ).__dartsBulkIdentityResolve;
+    if (fn) fn(choice);
   }
 
   const bulkSummary = useMemo(() => {
@@ -345,32 +402,75 @@ export function ProfileAddMatch({
               </p>
             )}
 
-            {identity && (
+            {identity && identity.reason === "none" && !identity.noneConfirmed && (
               <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-100">
-                <p className="mb-3">Nie rozpoznano Cię automatycznie. Który gracz to Ty?</p>
+                <p className="mb-3">
+                  Zawodnicy w tym meczu wyglądają na innych niż Ty. Dodać mecz mimo to?
+                </p>
+                <p className="mb-3 font-mono text-[10px] opacity-80">
+                  {identity.players[0]} vs {identity.players[1]}
+                </p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => setIdentity(null)}
+                    className="flex-1 rounded-lg border border-white/15 px-3 py-2 hover:bg-white/5"
+                  >
+                    Nie
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setIdentity((prev) => (prev ? { ...prev, noneConfirmed: true } : prev))
+                    }
+                    className="flex-1 rounded-lg border border-amber-400/40 bg-amber-500/20 px-3 py-2 font-semibold"
+                  >
+                    Tak — wybierz siebie
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {identity && (identity.reason === "ambiguous" || identity.noneConfirmed) && (
+              <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-100">
+                <p className="mb-3">
+                  {identity.reason === "ambiguous"
+                    ? "Obaj gracze pasują do Twoich wzorców. Który slot N01 to Ty?"
+                    : "Który gracz to Ty?"}
+                </p>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <button
                     type="button"
                     disabled={ingesting}
                     onClick={() => void runIngest({ ingestUrl: identity.url, playerIndex: 0 })}
-                    className="flex-1 rounded-lg border border-white/15 px-3 py-2 hover:bg-white/5"
+                    className={`flex-1 rounded-lg border px-3 py-2 hover:bg-white/5 ${
+                      identity.reason === "ambiguous"
+                        ? "border-accent-from/50 bg-accent-from/10 font-semibold"
+                        : "border-white/15"
+                    }`}
                   >
                     {identity.players[0]}
+                    {identity.reason === "ambiguous" ? " (Ty?)" : ""}
                   </button>
                   <button
                     type="button"
                     disabled={ingesting}
                     onClick={() => void runIngest({ ingestUrl: identity.url, playerIndex: 1 })}
-                    className="flex-1 rounded-lg border border-white/15 px-3 py-2 hover:bg-white/5"
+                    className={`flex-1 rounded-lg border px-3 py-2 hover:bg-white/5 ${
+                      identity.reason === "ambiguous"
+                        ? "border-accent-from/50 bg-accent-from/10 font-semibold"
+                        : "border-white/15"
+                    }`}
                   >
                     {identity.players[1]}
+                    {identity.reason === "ambiguous" ? " (Ty?)" : ""}
                   </button>
                 </div>
                 <button
                   type="button"
                   disabled={ingesting}
                   onClick={() => void runIngest({ ingestUrl: identity.url, action: "reject" })}
-                  className="mt-3 w-full rounded-lg px-3 py-2 text-muted-foreground hover:bg-white/5"
+                  className="mt-3 w-full rounded-lg border border-red-500/40 bg-red-500/15 px-3 py-2 font-semibold text-red-200 hover:bg-red-500/25"
                 >
                   Odrzuć — nie zapisuj
                 </button>
@@ -469,6 +569,69 @@ export function ProfileAddMatch({
                       </div>
                     </div>
                   )}
+
+                  {pendingIdentity && pendingIdentity.reason === "none" && !pendingIdentity.noneConfirmed && (
+                    <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-100">
+                      <p className="mb-2 font-semibold">Zawodnicy inni niż Ty — dodać mimo to?</p>
+                      <p className="mb-3 font-mono text-[10px] opacity-80">
+                        {pendingIdentity.players[0]} vs {pendingIdentity.players[1]}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => resolveBulkIdentity("reject")}
+                          className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1"
+                        >
+                          Nie
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setPendingIdentity((prev) =>
+                              prev ? { ...prev, noneConfirmed: true } : prev,
+                            )
+                          }
+                          className="rounded-lg border border-amber-400/40 bg-amber-500/20 px-2.5 py-1 font-semibold"
+                        >
+                          Tak
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {pendingIdentity &&
+                    (pendingIdentity.reason === "ambiguous" || pendingIdentity.noneConfirmed) && (
+                      <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-100">
+                        <p className="mb-2 font-semibold">
+                          {pendingIdentity.reason === "ambiguous"
+                            ? "Który slot N01 to Ty?"
+                            : "Który gracz to Ty?"}
+                        </p>
+                        <div className="flex flex-col gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => resolveBulkIdentity(0)}
+                            className="rounded-lg border border-accent-from/40 bg-accent-from/10 px-2.5 py-1.5 text-left font-semibold"
+                          >
+                            {pendingIdentity.players[0]}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => resolveBulkIdentity(1)}
+                            className="rounded-lg border border-accent-from/40 bg-accent-from/10 px-2.5 py-1.5 text-left font-semibold"
+                          >
+                            {pendingIdentity.players[1]}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => resolveBulkIdentity("reject")}
+                            className="rounded-lg border border-red-500/40 bg-red-500/15 px-2.5 py-1.5 font-semibold text-red-200"
+                          >
+                            Odrzuć — nie zapisuj
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                   {bulkRows.length > 0 && (
                     <div className="space-y-2">

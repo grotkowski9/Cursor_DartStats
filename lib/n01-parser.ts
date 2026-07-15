@@ -1,4 +1,4 @@
-import { DEFAULT_CUSTOMER_ID, N01_API } from "@/lib/constants";
+import { N01_API } from "@/lib/constants";
 import { detectPlayerIndex, applyPlayerIndex } from "@/lib/player-detect";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
@@ -223,8 +223,8 @@ export async function backupToStorage(
 
 export async function parseAndBackupN01(
   url: string,
-  playerIndex?: 0 | 1 | null,
-  customerId: string = DEFAULT_CUSTOMER_ID,
+  playerIndex: 0 | 1 | null | undefined,
+  customerId: string,
 ): Promise<N01Match> {
   const { payload, jsonText, htmlText, tmid, ttype } = await fetchN01Payload(url);
   const shareToken = await computeShareToken(customerId, tmid);

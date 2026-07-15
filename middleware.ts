@@ -1,21 +1,27 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 
-const NOINDEX_PREFIXES = ["/profile", "/m/", "/api/"];
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const isPrivate = NOINDEX_PREFIXES.some(
-    (p) => pathname === p.replace(/\/$/, "") || pathname.startsWith(p),
-  );
-
-  if (!isPrivate) return NextResponse.next();
-
-  const response = NextResponse.next();
-  response.headers.set("X-Robots-Tag", "noindex, nofollow");
-  return response;
+export async function middleware(request: NextRequest) {
+  // Jeśli Supabase wróci z ?code= na główną stronę — przekieruj do /auth/callback
+  const { pathname, searchParams } = request.nextUrl;
+  if (pathname === "/" && searchParams.has("code")) {
+    const dest = request.nextUrl.clone();
+    dest.pathname = "/auth/callback";
+    return NextResponse.redirect(dest);
+  }
+  return updateSession(request);
 }
 
 export const config = {
-  matcher: ["/profile", "/profile/:path*", "/m/:path*", "/api/:path*"],
+  matcher: [
+    "/",
+    "/profile",
+    "/profile/:path*",
+    "/onboarding",
+    "/onboarding/:path*",
+    "/login",
+    "/auth/callback",
+    "/m/:path*",
+    "/api/:path*",
+  ],
 };

@@ -14,11 +14,13 @@ export function getDemoPersona(): DemoPersona {
 export function personaToCustomer(persona: DemoPersona = DEMO_PERSONA): CustomerProfile {
   return {
     customerId: "demo",
+    authUserId: null,
     firstName: persona.firstName,
     lastName: persona.lastName,
     nickname: persona.nickname,
     displayName: `${persona.lastName} ${persona.firstName}`,
     knownNicknames: persona.knownNicknames,
+    role: "user",
   };
 }
 

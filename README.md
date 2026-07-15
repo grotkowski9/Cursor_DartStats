@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.0.1 WYDANY** — feedback po 1.0 i testach manualnych (inwentaryzacja copy). **Następne:** **1.0.1.1** — audit noindex prod.
+> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN). **Następne:** **1.1.7** usuwanie meczu.
 
 ---
 
@@ -363,16 +363,17 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **0.x.x**   | Prace historyczne (bootstrap → demo)    | ✅ zamknięte w **1.0.0**                |
 | **1.0.0**   | Release milestone — backup na GitHub    | ✅ `backup/v1.0.0`, tag `v1.0.0-backup` |
 | **1.0.1**   | Feedback po testach manualnych — inwentaryzacja copy | ✅ **wydany** |
-| **1.0.1.x** | Prod, audyt, deploy | ⏳ **teraz** |
+| **1.0.1.x** | Prod, audyt, deploy | ⏳ po 1.1.7 / równolegle |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji) | ⏳ po inwentaryzacji |
-| **1.1.x**   | Auth + multi-user + admin               | ⏳ po 1.0.1                             |
+| **1.1.x**   | Auth + multi-user + admin               | ✅ **1.1.0** (1.1.1–6) · dalej **1.1.7+** |
 | **1.2.x**   | Premium + płatności                     | ⏳                                      |
 | **1.3.x**   | Testy + hardening + perf                | ⏳                                      |
+| **5.x**     | Pełne wydanie produktu (odłożone)     | ⏸️ po 1.x — m.in. **Apple login**        |
 
 
 Subtaski: czwarty poziom, np. **1.1.2.4** = onboarding, flow `none`.
 
-**Kolejność:** `1.0.1` → `1.1` → `1.2` → `1.3` (po kolei, bez skakania).
+**Kolejność:** `1.0.1` → `1.1` → `1.2` → `1.3` (po kolei, bez skakania). **5.x** = dopiero po domknięciu pełnego produktu 1.x (hen hen do przodu).
 
 ---
 
@@ -613,23 +614,28 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 1.1.x — Auth + Multi-user + Admin ⏳
+### 1.1.x — Auth + Multi-user + Admin
 
-- [ ] **1.1.1** Supabase Auth (Google login)
-- [ ] **1.1.2** Sync `auth.uid()` → `customer_id`
-- [ ] **1.1.3** Onboarding + detekcja gracza przy imporcie
-  - [ ] **1.1.3.1** Ekran onboarding: ustaw `known_nicknames`
+> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Dalej: usuwanie / admin / tour.
+
+- [x] **1.1.1** Supabase Auth (**Google** login) — `/login`, `/api/auth/google`, `/auth/callback`, `/auth/signout`, `@supabase/ssr`
+  - OAuth start po stronie serwera (PKCE cookies); callback zapisuje sesję na redirect
+  - Dev z telefonu: Site URL w Supabase = `http://<IP-Maca>:3000` (nie `localhost` na iPhonie)
+  - ⏸️ **Apple Sign In** → **5.0.1**
+- [x] **1.1.2** Sync `auth.uid()` → `customer_id` — `ensureCustomerForUser()`; `OWNER_EMAIL` → `SEED_CUSTOMER_ID`
+- [x] **1.1.3** Onboarding + detekcja gracza przy imporcie
+  - [x] **1.1.3.1** Ekran `/onboarding` — imię, nazwisko, nick, `known_nicknames`
   - [ ] **1.1.3.2** Testy scenariuszy auto-detect → Vitest **1.3.2**
-  - [ ] **1.1.3.3** UI `ambiguous` — wybór slotu N01
-  - [ ] **1.1.3.4** UI `none` — 2 kroki: potwierdź → wybierz gracza / odrzuć
-  - [ ] **1.1.3.5** Bulk import: modal przy `none`/`ambiguous`
-  - [ ] **1.1.3.6** Duplikat — import pojedynczy: Nadpisz / Zobacz / Pomiń
-  - [ ] **1.1.3.7** Duplikat — bulk: Pomiń wszystkie / Nadpisz wszystkie
-  - [ ] **1.1.3.8** **Samouczek** — opcjonalny tour po `/demo/profile` (podświetlenia sekcji + krótki opis); przycisk **Pomiń samouczek**; po onboardingu
-- [ ] **1.1.4** Usunięcie stałej `DEFAULT_CUSTOMER_ID`
-- [ ] **1.1.5** Middleware — ochrona `/profile`, API tylko dla zalogowanego
-- [ ] **1.1.6** RLS per user (zamiast deny-all + service_role)
-- [ ] **1.1.7** Usuwanie meczu przez usera
+  - [x] **1.1.3.3** UI `ambiguous` — wybór slotu N01 (podświetlenie „Ty?")
+  - [x] **1.1.3.4** UI `none` — 2 kroki: potwierdź → wybierz gracza / odrzuć
+  - [x] **1.1.3.5** Bulk import: modal przy `none`/`ambiguous`
+  - [x] **1.1.3.6** Duplikat — import pojedynczy: Nadpisz / Zobacz / Pomiń
+  - [x] **1.1.3.7** Duplikat — bulk: Pomiń wszystkie / Nadpisz wszystkie
+  - [ ] **1.1.3.8** **Samouczek** — opcjonalny tour po `/demo/profile`
+- [x] **1.1.4** Usunięcie runtime `DEFAULT_CUSTOMER_ID` — API wymaga sesji; seed → `SEED_CUSTOMER_ID`
+- [x] **1.1.5** Middleware — `/profile`, `/onboarding`, `/api/*` tylko zalogowany (+ noindex); `/?code=` → `/auth/callback`
+- [x] **1.1.6** RLS per user — migracja `20260715210000_auth_rls_per_user.sql` (zastosowana na Supabase)
+- [ ] **1.1.7** Usuwanie meczu przez usera ⏳ **NASTĘPNE**
   - [ ] **1.1.7.1** Przycisk „Usuń mecz" na karcie / widoku meczu
   - [ ] **1.1.7.2** Triple-check: potwierdź → podsumowanie → wpisz `usuwam`
   - [ ] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS
@@ -674,18 +680,33 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
+### 5.x — Pełne wydanie produktu ⏸️ (odłożone — po zamknięciu 1.x)
+
+> **Nie teraz.** Dopiero gdy 1.x (auth, premium, prod, copy, testy) będzie domknięte i wypuszczony pełny produkt. Numer **5.0** = milestone „pełna wersja”, nie kolejny krok po 1.3.
+
+- [ ] **5.0.0** Milestone — pełne wydanie (kryteria doprecyzujemy przy 1.3)
+- [ ] **5.0.1** **Logowanie Apple** — „Zaloguj przez Apple” obok Google (`Sign in with Apple` w Supabase + przycisk na `/login`)
+  - Wymaga: konto Apple Developer, konfiguracja domeny, uwaga na ukryte e-maile Apple (relay)
+- [ ] **5.x** Inne providery auth (opcjonalnie) — tylko jeśli biznesowo potrzebne
+
+**Na dziś:** wystarczy **Google** (1.1.1). Apple nie jest w scope aż do **5.x**.
+
+---
+
 ### Kolejność prac — skrót
 
 
-| #     | ID          | Zadanie                                   |
-| ----- | ----------- | ----------------------------------------- |
-| **→** | **1.0.1.1–5** | Audyt bezpieczeństwa prod + deploy + domena |
-| 2     | 1.0.2.x       | **Copy klienta** — inwentaryzacja → Twoje teksty → fix |
-| 3     | 1.1.1         | Supabase Auth (Google)                      |
-| 4     | 1.1.2–1.1.3   | Sync auth, onboarding, **samouczek 1.1.3.8** |
-| 5     | 1.1.4–1.1.8   | RLS, middleware, usuwanie, admin            |
-| 6     | 1.2.x         | Freemium (limity jako config)               |
-| 7     | 1.3.x         | Testy + **hardening importu 1.3.7** + perf  |
+| #     | ID            | Zadanie                                      |
+| ----- | ------------- | -------------------------------------------- |
+| **→** | **1.1.7**     | Usuwanie meczu (UI + API + triple-check)     |
+| 2     | 1.1.8         | Panel admina superadmin                      |
+| 3     | 1.1.3.8       | Samouczek po onboardingu                     |
+| 4     | 1.0.1.4–5     | Deploy Vercel + custom domain                |
+| 5     | 1.0.1.1–3     | Audyt prod (robots, wycieki, API)            |
+| 6     | 1.0.2.x       | Copy klienta (Twoje teksty → fix)            |
+| 7     | 1.3.2         | Vitest detekcja gracza (`1.1.3.2`)           |
+| 8     | 1.2.x         | Freemium (limity jako config)                |
+| 9     | 1.3.x         | Testy + hardening importu + perf             |
 
 *Opcjonalnie później:* 0.3.14–0.3.17 analityka turniejowa.
 
@@ -730,13 +751,30 @@ Twoje statystyki darta | Dart Profile Tracker
 
 Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
 
-### Warstwa 2 — Dostęp i auth (plan 1.1.x)
+### Warstwa 2 — Dostęp i auth (stan po 1.1.1–1.1.6)
 
-| Teraz (1.0.0) | Docelowo |
-| ------------- | -------- |
-| Jeden `DEFAULT_CUSTOMER_ID`, brak logowania | Supabase Auth + RLS per user |
-| API przez service_role | Middleware: tylko zalogowany właściciel |
-| Każdy kto zna URL może wejść na `/profile` | `/profile` za loginem |
+| Było (1.0) | Teraz |
+| ---------- | ----- |
+| Jeden `DEFAULT_CUSTOMER_ID`, brak logowania | Google OAuth → `customers.auth_user_id` |
+| API otwarte + service_role | Middleware + `requireAuthCustomerApi()` |
+| `/profile` publiczny | `/profile` + `/onboarding` za loginem |
+| RLS deny-all | RLS per user (`current_customer_id()`) |
+
+**Setup Google (jednorazowo):**
+
+1. **Google Cloud** → OAuth client → Authorized redirect URI =  
+   `https://<project-ref>.supabase.co/auth/v1/callback`
+2. **Supabase** → Authentication → Providers → Google (Client ID/Secret)
+3. **Supabase** → URL Configuration:
+   - **Site URL (dev Mac):** `http://localhost:3000`
+   - **Site URL (test iPhone w LAN):** `http://<IP-Maca>:3000` — inaczej Safari wraca na `localhost` (= telefon) i „brak odpowiedzi"
+   - **Redirect URLs:**  
+     `http://localhost:3000/auth/callback`  
+     `http://<IP-Maca>:3000/auth/callback`  
+     (+ prod URL po deployu)
+4. **`.env.local`:** `OWNER_EMAIL=` Twój Gmail → link do seed 51 meczów; `NEXT_PUBLIC_SITE_URL=http://localhost:3000` (dev)
+
+Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
 ### Warstwa 3 — RODO / prawo (plan przed 1.2.3 płatności)
 
@@ -768,7 +806,7 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
 
 ### Checklist „gotowość pod płatności"
 
-- [ ] Auth + RLS (**1.1.x**)
+- [x] Auth + RLS (**1.1.1–1.1.6** / v1.1.0)
 - [ ] Audyt prod (**1.0.1.x**)
 - [ ] Polityka prywatności + regulamin
 - [ ] Usuwanie danych usera (**1.1.7**)
@@ -845,9 +883,11 @@ npm run dev -- --hostname 0.0.0.0
 ipconfig getifaddr en0   # np. 192.168.100.11
 ```
 
-Na telefonie: `http://192.168.100.11:3000/profile` (nie `localhost` — to na telefonie wskazuje na sam telefon).
+Na telefonie: `http://192.168.100.11:3000/login` (nie `localhost` — na telefonie to sam telefon).
 
 `next.config.ts` ma `allowedDevOrigins` pod IP Maca — po zmianie sieci zaktualizuj IP i zrestartuj serwer.
+
+**Logowanie Google z iPhone (dev):** w Supabase ustaw **Site URL** na `http://192.168.100.11:3000` oraz Redirect URL `…/auth/callback` dla tego hosta. Potem wróć Site URL na `localhost` gdy testujesz tylko na Macu — albo trzymaj IP jako Site URL w trakcie testów LAN.
 
 **Uwaga:** pierwsze ładowanie meczów trwa ~12 s (51 meczów). Poczekaj — spinner „Ładuję mecze…" zniknie dopiero po pobraniu danych.
 
@@ -856,8 +896,9 @@ W `.env.local` potrzebne:
 - `NEXT_PUBLIC_SUPABASE_URL` — URL projektu Supabase
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — klucz publishable (`sb_publishable_…`)
 - `SUPABASE_SERVICE_ROLE_KEY` — klucz secret (`sb_secret_…`, tylko serwer)
-- `DEFAULT_CUSTOMER_ID` — UUID seed customer (MVP: `a0000000-0000-4000-8000-000000000001`)
-- `DEMO_CUSTOMER_ID` — opcjonalnie; domyślnie `b0000000-0000-4000-8000-000000000001` (tylko demo)
+- `SEED_CUSTOMER_ID` — UUID seed customer Piotra (`a0000000-…`) — skrypty + link `OWNER_EMAIL`
+- `OWNER_EMAIL` — e-mail Google właściciela → auto-link do seed (51 meczów)
+- `DEMO_CUSTOMER_ID` — opcjonalnie; domyślnie `b0000000-…` (tylko demo)
 
 **Nigdy nie commituj** `.env.local`**.**
 
@@ -907,7 +948,8 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
   - `NEXT_PUBLIC_SUPABASE_URL`
   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
-  - `DEFAULT_CUSTOMER_ID`
+  - `SEED_CUSTOMER_ID`
+  - `OWNER_EMAIL`
   - `NEXT_PUBLIC_SITE_URL` — `https://dart.sylveoncompany.pl` lub `https://darts.pl` (canonical)
 4. Deploy. Custom domain: `dart.sylveoncompany.pl` / `darts.pl` — ten sam build, inny env.
 
@@ -915,19 +957,18 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.0.1 — Feedback ✅ | **1.0.1.1** ⏳ NASTĘPNE
+### v1.1.0 Auth ✅ | **1.1.7** ⏳ NASTĘPNE
 
 
-| Element        | Status                                                 |
-| -------------- | ------------------------------------------------------ |
-| **1.0.0**      | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup` |
-| **1.0.1**      | ✅ WYDANY — inwentaryzacja copy (~245 MSG)              |
-| **0.x.x**      | ✅ Bootstrap → demo (zamknięte w 1.0.0)                 |
-| **1.0.1.x**    | ⏳ Prod audit + deploy + domena                         |
-| **1.1.x**      | ⏳ Auth + multi-user (po 1.0.1)                         |
-| **1.2.x**      | ⏳ Premium                                              |
-| **1.3.x**      | ⏳ Testy + perf                                         |
-| Backup lokalny | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)   |
+| Element         | Status                                                      |
+| --------------- | ----------------------------------------------------------- |
+| **1.0.0**       | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup`      |
+| **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
+| **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) |
+| **1.1.7+**      | ⏳ Usuwanie meczu, admin, samouczek                          |
+| **1.0.1.x**     | ⏳ Prod audit + deploy + domena                              |
+| **1.2.x**       | ⏳ Premium                                                   |
+| Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
 
 
 ### Co wchodzi w 1.0.0
@@ -942,22 +983,41 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ### Co dalej — skrót
 
-**Teraz:** 1.0.1.1 → 1.0.1.2 → 1.0.1.3  
-**Potem:** 1.1.1 (Auth) → 1.1.2 → 1.1.3 → … → 1.2.x → 1.3.x
+**Teraz:** **1.1.7** usuwanie meczu → **1.1.8** admin → **1.1.3.8** samouczek  
+**Potem:** 1.0.1.x prod / 1.0.2 copy → 1.2.x → 1.3.x
 
 ### Mapa wersji
 
 
-| Wersja    | Nazwa             | Status      |
-| --------- | ----------------- | ----------- |
-| **0.x**   | Bootstrap → demo  | ✅ w 1.0.0   |
-| **1.0.0** | Release milestone | ✅ WYDANY    |
-| **1.0.1** | Feedback + inwentaryzacja copy | ✅ WYDANY    |
-| **1.0.1.x** | Prod + deploy     | ⏳ **teraz** |
-| **1.1**   | Auth + admin      | ⏳           |
-| **1.2**   | Premium           | ⏳           |
-| **1.3**   | Testy + perf      | ⏳           |
+| Wersja      | Nazwa                        | Status        |
+| ----------- | ---------------------------- | ------------- |
+| **0.x**     | Bootstrap → demo             | ✅ w 1.0.0     |
+| **1.0.0**   | Release milestone            | ✅ WYDANY      |
+| **1.0.1**   | Feedback + copy inventory    | ✅ WYDANY      |
+| **1.1.0**   | Auth core (Google + RLS)     | ✅ WYDANY      |
+| **1.1.7+**  | Usuwanie / admin / tour      | ⏳ **teraz**   |
+| **1.0.1.x** | Prod + deploy                | ⏳             |
+| **1.2**     | Premium                      | ⏳             |
+| **1.3**     | Testy + perf                 | ⏳             |
+| **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
+
+### Pliki kluczowe (Auth v1.1.0)
+
+```
+lib/auth.ts                                   ← ensureCustomerForUser, requireAuth*
+lib/request-origin.ts / lib/app-origin.ts     ← origin LAN vs localhost
+lib/auth-redirect-*.ts                        ← cookies origin/next po OAuth
+lib/supabase/server.ts / middleware.ts        ← SSR cookies + gate
+lib/customer.ts                               ← sync / onboarding
+app/api/auth/google/route.ts                  ← server-side OAuth start (PKCE)
+app/auth/callback/route.ts                    ← exchange code → session cookies
+app/auth/signout/route.ts
+app/login/*                                   ← przycisk Google
+app/onboarding/*                              ← known_nicknames
+supabase/migrations/20260715210000_auth_rls_per_user.sql
+middleware.ts                                 ← protect + /?code= → callback
+```
 
 ### Pliki kluczowe (1.0.0)
 
@@ -1000,16 +1060,16 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
 
-Stan: **1.0.1 WYDANY** (inwentaryzacja copy). NASTĘPNE: **1.0.1.1** audit noindex prod.
-Potem: 1.0.1.2 deploy → 1.0.1.3 domena → **1.0.2.x copy fix** → **1.1.1 Auth**.
-Numeracja: 0.x = historia, 1.0.0 = release, 1.0.1 = feedback/copy audit, 1.0.1.x+ = prod.
+Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6). NASTĘPNE: **1.1.7** usuwanie meczu.
+Auth działa na Mac + iPhone (LAN). Pliki: lib/auth.ts, app/api/auth/google, app/auth/callback, middleware.
 ```
 
 ### Podgląd na telefonie (dev)
 
 ```bash
 npm run dev -- --hostname 0.0.0.0
-# Telefon: http://192.168.100.11:3000/profile
+# Telefon: http://192.168.100.11:3000/login
+# Supabase Site URL na czas testów LAN = http://192.168.100.11:3000
 # allowedDevOrigins w next.config.ts — zaktualizuj IP jeśli sieć się zmieni
 ```
 
@@ -1059,18 +1119,18 @@ npm run dev -- --hostname 0.0.0.0
 | MSG-032 | Demo link | `Przykładowy mecz` | [ ] do review |
 | MSG-033 | Footer note | `Masz już dostęp?` + `/profile` + `(prywatny)` | [ ] do review |
 
-### Login — `app/login/page.tsx`
+### Login — `app/login/page.tsx` *(zaktualizowane w 1.1.0)*
 
 | ID | Kontekst | Tekst | Review |
 |----|----------|-------|--------|
 | MSG-040 | Nav | `Strona główna` | [ ] do review |
 | MSG-041 | H1 | `Konto gracza` | [ ] do review |
-| MSG-042 | Intro | `Logowanie Google i rejestracja pojawią się w` + `wersji 1.1` + `(Auth). Na razie zobacz, jak wygląda tracker na przykładowym profilu.` | [ ] do review |
-| MSG-043 | CTA | `Zobacz profil demo` | [ ] do review |
-| MSG-044 | Disabled btn | `Zaloguj się przez Google` | [ ] do review |
-| MSG-045 | Tooltip | `Wkrótce — Faza 4.1` | [ ] do review |
-| MSG-046 | Disabled btn | `Zarejestruj się` | [ ] do review |
-| MSG-047 | Footer | `Masz już dostęp developerski?` + `Przejdź do /profile` | [ ] do review |
+| MSG-042 | Intro | `Zaloguj się przez Google, zaimportuj mecze z N01…` + link demo | [ ] do review |
+| MSG-043 | CTA demo | `Zobacz profil demo` | [ ] do review |
+| MSG-044 | CTA Google | `Zaloguj się przez Google` | [ ] do review |
+| MSG-045 | Błąd auth | `Logowanie nieudane. Zamknij kartę…` | [ ] do review |
+| MSG-046 | ~~Zarejestruj~~ | usunięte (rejestracja = Google) | n/a |
+| MSG-047 | ~~dev footer~~ | usunięte | n/a |
 
 ### Footer — `components/site-footer.tsx`
 
@@ -1397,6 +1457,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.1.0**  | 2026-07-15 | **Auth core wydany.** Google OAuth server-side (`/api/auth/google` + PKCE), callback z cookies sesji, sync customer, onboarding, middleware, RLS (`20260715210000_…`). Identity none/ambiguous + bulk. Dev iPhone: Site URL = LAN IP. Seed → `SEED_CUSTOMER_ID` + `OWNER_EMAIL`. Tag `v1.1.0`. |
 | **1.0.1**  | 2026-07-14 | **Feedback po testach manualnych.** Pełna inwentaryzacja copy klienta (~245 MSG) w README — do review przed 1.0.2.x. Bez zmian w kodzie UI. |
 | **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |
 | **1.0.0-post** | 2026-07-14 | SEO: jeden tytuł dokumentu wszędzie; bez imion w meta/OG/JSON-LD; demo „Dodaj mecz" + walidacja N01; README audyt. |

@@ -11,6 +11,7 @@ import { config } from "dotenv";
 
 config({ path: ".env.local" });
 
+import { SEED_CUSTOMER_ID } from "../lib/constants";
 import { ingestAndSave } from "../lib/matches";
 
 const DEFAULT_CSV =
@@ -119,7 +120,12 @@ async function main() {
     process.stdout.write(`[${i + 1}/${rows.length}] ${tmid} … `);
 
     try {
-      const result = await ingestAndSave({ url, playerIndex: meIndex, overwrite });
+      const result = await ingestAndSave({
+        url,
+        playerIndex: meIndex,
+        overwrite,
+        customerId: SEED_CUSTOMER_ID,
+      });
       if (result.status === "saved") {
         console.log("✓");
         saved += 1;

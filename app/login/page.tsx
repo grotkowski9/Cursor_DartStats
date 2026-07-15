@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, LogIn, Target, UserPlus } from "lucide-react";
+import { ArrowLeft, Target } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
-import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
+import { getSiteUrl } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
+import { LoginGoogleButton } from "./login-google-button";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
-  description: "Logowanie do Dart Profile Tracker — wkrótce Google. Zobacz demo profilu bez konta.",
+  description: "Zaloguj się do Dart Profile Tracker przez Google i śledź swoje statystyki darta.",
   robots: { index: true, follow: true },
   alternates: { canonical: `${getSiteUrl()}/login` },
 };
 
-export default function LoginPage() {
+type Props = {
+  searchParams: Promise<{ next?: string; error?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const next = params.next?.startsWith("/") ? params.next : "/profile";
+  const authError = params.error === "auth";
+
   return (
     <>
       <main className="relative flex min-h-screen flex-col overflow-hidden bg-background text-foreground">
@@ -39,46 +48,30 @@ export default function LoginPage() {
             Konto gracza
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Logowanie Google i rejestracja pojawią się w{" "}
-            <strong className="font-medium text-foreground">wersji 1.1</strong> (Auth).
-            Na razie zobacz, jak wygląda tracker na przykładowym profilu.
+            Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym profilu.
+            Chcesz najpierw zobaczyć jak to wygląda?{" "}
+            <Link href="/demo/profile" className="text-primary hover:underline">
+              Otwórz profil demo
+            </Link>
+            .
           </p>
 
+          {authError && (
+            <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+              Logowanie nieudane. Zamknij kartę, otwórz logowanie od nowa i spróbuj jeszcze raz
+              (nie odświeżaj strony po powrocie z Google). Sprawdź też Redirect URLs w Supabase.
+            </p>
+          )}
+
           <div className="mt-10 flex flex-col gap-3">
+            <LoginGoogleButton next={next} />
             <Link
               href="/demo/profile"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/20 transition hover:shadow-accent-to/40"
             >
               Zobacz profil demo
             </Link>
-
-            <button
-              type="button"
-              disabled
-              className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-muted-foreground opacity-70"
-              title="Wkrótce — Faza 4.1"
-            >
-              <LogIn className="h-4 w-4" />
-              Zaloguj się przez Google
-            </button>
-
-            <button
-              type="button"
-              disabled
-              className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-muted-foreground opacity-70"
-              title="Wkrótce — Faza 4.1"
-            >
-              <UserPlus className="h-4 w-4" />
-              Zarejestruj się
-            </button>
           </div>
-
-          <p className="mt-8 text-xs text-muted-foreground">
-            Masz już dostęp developerski?{" "}
-            <Link href="/profile" className="text-primary hover:underline">
-              Przejdź do /profile
-            </Link>
-          </p>
         </div>
       </main>
       <SiteFooter />
