@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN). **Następne:** **1.1.7** usuwanie meczu.
+> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN). **Następne:** **1.1.7** usuwanie meczu · plan **1.1.9** obowiązkowy formularz profilu.
 
 ---
 
@@ -365,7 +365,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback po testach manualnych — inwentaryzacja copy | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy | ⏳ po 1.1.7 / równolegle |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji) | ⏳ po inwentaryzacji |
-| **1.1.x**   | Auth + multi-user + admin               | ✅ **1.1.0** (1.1.1–6) · dalej **1.1.7+** |
+| **1.1.x**   | Auth + multi-user + admin               | ✅ **1.1.0** (1.1.1–6) · dalej **1.1.7+** / **1.1.9** |
 | **1.2.x**   | Premium + płatności                     | ⏳                                      |
 | **1.3.x**   | Testy + hardening + perf                | ⏳                                      |
 | **5.x**     | Pełne wydanie produktu (odłożone)     | ⏸️ po 1.x — m.in. **Apple login**        |
@@ -624,7 +624,7 @@ Pełny stan projektu zamrożony poza `main`:
   - ⏸️ **Apple Sign In** → **5.0.1**
 - [x] **1.1.2** Sync `auth.uid()` → `customer_id` — `ensureCustomerForUser()`; `OWNER_EMAIL` → `SEED_CUSTOMER_ID`
 - [x] **1.1.3** Onboarding + detekcja gracza przy imporcie
-  - [x] **1.1.3.1** Ekran `/onboarding` — imię, nazwisko, nick, `known_nicknames`
+  - [x] **1.1.3.1** Ekran `/onboarding` — imię, nazwisko, nick, `known_nicknames` *(scaffold; pełny obowiązkowy flow → **1.1.9**)*
   - [ ] **1.1.3.2** Testy scenariuszy auto-detect → Vitest **1.3.2**
   - [x] **1.1.3.3** UI `ambiguous` — wybór slotu N01 (podświetlenie „Ty?")
   - [x] **1.1.3.4** UI `none` — 2 kroki: potwierdź → wybierz gracza / odrzuć
@@ -646,6 +646,25 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.1.8.3** Ręczny backup DB (export JSON)
   - [ ] **1.1.8.4** Podgląd ingest / snapshot access log
   - [ ] **1.1.8.5** Ochrona route — tylko `role = superadmin`
+- [ ] **1.1.9** **Obowiązkowy formularz profilu po rejestracji** ⏳ PLAN *(bez kodu w tym commicie)*
+  - Auth na ten moment: tylko **Google** (**1.1.1**). Apple → **5.0.1**.
+  - [ ] **1.1.9.1** Formularz **wymagany** po pierwszym logowaniu Google (`/onboarding`)
+    - Pola obowiązkowe:
+      1. **Imię**
+      2. **Nazwisko**
+      3. **Pseudonim główny** (wyświetlany na profilu)
+      4. **Pseudonimy do rozpoznawania w spotkaniach** (`known_nicknames`) — ≥1 wzorzec N01
+    - Imię + nazwisko: **prefill z Google** (`user_metadata` / `full_name`) — user może poprawić
+    - Bez ukończenia → brak pełnego `/profile` (redirect `/onboarding`) — wzmocnić scaffold **1.1.3.1**
+  - [ ] **1.1.9.2** Prefill imię/nazwisko z Google przy `ensureCustomerForUser` / tworzeniu customer
+  - [ ] **1.1.9.3** **Gate na ingest (obrona w głąb):** jeśli brak kluczowych danych (imię, nazwisko, `known_nicknames`) — nawet gdy ktoś „ominie” onboarding — **odmowa zapisu meczu**
+    - API + UI: błąd PL w stylu „Brakuje danych kluczowych do rozpoznawania zawodnika — uzupełnij profil”
+    - CTA / redirect → `/onboarding` (ten sam formularz)
+    - Dotyczy single i bulk; **pierwszy** i każdy kolejny import bez kompletnego profilu
+  - [ ] **1.1.9.4** **Edycja profilu** później w `/profile` — te same pola co w formularzu rejestracji (Edytuj → zapis PATCH)
+  - [ ] **1.1.9.5** Placeholder UI w profilu: przycisk **„Włącz wyższy bieg — konto premium”**
+    - Na razie: widoczny, **bez płatności** (disabled / „wkrótce” albo soft link do przyszłego **1.2.x**)
+    - Pełna bramka + limity → **1.2.1–1.2.3**
 
 > Panel **1.2.4** = subskrypcje premium (biznes). Panel **1.1.8** = operacyjny (Ty).
 
@@ -654,12 +673,13 @@ Pełny stan projektu zamrożony poza `main`:
 ### 1.2.x — Premium + Płatności ⏳
 
 > Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie.
+> CTA w UI profilu przygotować wcześniej jako placeholder (**1.1.9.5**): **„Włącz wyższy bieg — konto premium”**.
 
 - [ ] **1.2.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
   - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
   - `freeVisibleStats[]` / `premiumVisibleStats[]` — które kafle/wykresy widać
   - `freeFeatures[]` — np. bulk import tylko premium
-- [ ] **1.2.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit
+- [ ] **1.2.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit (ten sam copy co **1.1.9.5**)
 - [ ] **1.2.3** Bramka płatności (PayNow lub PayU)
 - [ ] **1.2.4** Role: user / premium / admin / superadmin
 - [ ] **1.2.5** Panel admina — subskrypcje premium
@@ -699,14 +719,15 @@ Pełny stan projektu zamrożony poza `main`:
 | #     | ID            | Zadanie                                      |
 | ----- | ------------- | -------------------------------------------- |
 | **→** | **1.1.7**     | Usuwanie meczu (UI + API + triple-check)     |
-| 2     | 1.1.8         | Panel admina superadmin                      |
-| 3     | 1.1.3.8       | Samouczek po onboardingu                     |
-| 4     | 1.0.1.4–5     | Deploy Vercel + custom domain                |
-| 5     | 1.0.1.1–3     | Audyt prod (robots, wycieki, API)            |
-| 6     | 1.0.2.x       | Copy klienta (Twoje teksty → fix)            |
-| 7     | 1.3.2         | Vitest detekcja gracza (`1.1.3.2`)           |
-| 8     | 1.2.x         | Freemium (limity jako config)                |
-| 9     | 1.3.x         | Testy + hardening importu + perf             |
+| 2     | **1.1.9**     | Obowiązkowy formularz po Google + gate ingest + edycja profilu + CTA premium (placeholder) |
+| 3     | 1.1.8         | Panel admina superadmin                      |
+| 4     | 1.1.3.8       | Samouczek po onboardingu                     |
+| 5     | 1.0.1.4–5     | Deploy Vercel + custom domain                |
+| 6     | 1.0.1.1–3     | Audyt prod (robots, wycieki, API)            |
+| 7     | 1.0.2.x       | Copy klienta (Twoje teksty → fix)            |
+| 8     | 1.3.2         | Vitest detekcja gracza (`1.1.3.2`)           |
+| 9     | 1.2.x         | Freemium (limity jako config) — podłącza **1.1.9.5** |
+| 10    | 1.3.x         | Testy + hardening importu + perf             |
 
 *Opcjonalnie później:* 0.3.14–0.3.17 analityka turniejowa.
 
@@ -965,7 +986,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.0.0**       | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup`      |
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
 | **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) |
-| **1.1.7+**      | ⏳ Usuwanie meczu, admin, samouczek                          |
+| **1.1.7+**      | ⏳ Usuwanie meczu, **1.1.9** formularz obowiązkowy, admin, samouczek |
 | **1.0.1.x**     | ⏳ Prod audit + deploy + domena                              |
 | **1.2.x**       | ⏳ Premium                                                   |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
@@ -983,8 +1004,8 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ### Co dalej — skrót
 
-**Teraz:** **1.1.7** usuwanie meczu → **1.1.8** admin → **1.1.3.8** samouczek  
-**Potem:** 1.0.1.x prod / 1.0.2 copy → 1.2.x → 1.3.x
+**Teraz:** **1.1.7** usuwanie meczu → **1.1.9** obowiązkowy formularz / gate / edycja profilu → **1.1.8** admin → **1.1.3.8** samouczek  
+**Potem:** 1.0.1.x prod / 1.0.2 copy → 1.2.x (podłącza CTA premium z 1.1.9.5) → 1.3.x
 
 ### Mapa wersji
 
@@ -1457,6 +1478,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **roadmap** | 2026-07-17 | Plan **1.1.9**: obowiązkowy formularz po Google (imię/nazwisko prefill, nick, `known_nicknames`), gate ingest przy braku danych, edycja w profilu, placeholder CTA „Włącz wyższy bieg — konto premium”. Bez kodu — tylko roadmapa. |
 | **1.1.0**  | 2026-07-15 | **Auth core wydany.** Google OAuth server-side (`/api/auth/google` + PKCE), callback z cookies sesji, sync customer, onboarding, middleware, RLS (`20260715210000_…`). Identity none/ambiguous + bulk. Dev iPhone: Site URL = LAN IP. Seed → `SEED_CUSTOMER_ID` + `OWNER_EMAIL`. Tag `v1.1.0`. |
 | **1.0.1**  | 2026-07-14 | **Feedback po testach manualnych.** Pełna inwentaryzacja copy klienta (~245 MSG) w README — do review przed 1.0.2.x. Bez zmian w kodzie UI. |
 | **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |
