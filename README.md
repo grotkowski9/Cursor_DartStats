@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN). **Następne:** **1.1.7** usuwanie meczu.
+> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN). **Następne:** **1.1.7** usuwanie meczu · plan **1.1.9** obowiązkowy formularz profilu.
 
 ---
 
@@ -365,7 +365,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback po testach manualnych — inwentaryzacja copy | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy | ⏳ po 1.1.7 / równolegle |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji) | ⏳ po inwentaryzacji |
-| **1.1.x**   | Auth + multi-user + admin               | ✅ **1.1.0** (1.1.1–6) · dalej **1.1.7+** |
+| **1.1.x**   | Auth + multi-user + admin               | ✅ **1.1.0** (1.1.1–6) · dalej **1.1.7+** / **1.1.9** |
 | **1.2.x**   | Premium + płatności                     | ⏳                                      |
 | **1.3.x**   | Testy + hardening + perf                | ⏳                                      |
 | **5.x**     | Pełne wydanie produktu (odłożone)     | ⏸️ po 1.x — m.in. **Apple login**        |
