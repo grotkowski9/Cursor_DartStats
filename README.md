@@ -48,10 +48,10 @@ Mobile-first, ciemny motyw, glassmorphism.
 - **Multi-user-ready od dnia 0** — schemat DB z `customer_id` wszędzie.
 - **Zero halucynacji** — brak pola w danych → ukrywam kafel, nie zmyślam.
 - **Noindex** na profilach i share-linkach. Landing `/` — indeksowalny.
-- **Docelowo freemium SaaS** (limity jako **konfiguracja**, nie na sztywno w kodzie — patrz **1.2.1**):
+- **Docelowo freemium SaaS** (limity jako **konfiguracja**, nie na sztywno w kodzie — patrz **2.0.x**; **startujemy bez premium / płatności**):
   - Free: domyślnie N meczów (start: 3), **wybrane** statystyki widoczne
   - Premium: pełny limit meczów, **wszystkie** wykresy i sekcje
-  - Płatność: PayNow/PayU (polska bramka, PLN) — dopiero po audycie **1.0.1.x**
+  - Płatność: PayNow/PayU (polska bramka, PLN) — dopiero w **2.0.x** (po audycie **1.0.1.x**)
   - Role: user → premium → admin → superadmin
 - **Hosting:** rekomendacja **Vercel + Supabase** (patrz [Hosting i skalowanie](#hosting-i-skalowanie)); Mikrus możliwy, ale więcej roboty ops.
 
@@ -366,9 +366,10 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
 | **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · otwarte **1.1.3.8**, **1.1.7–1.1.9** |
-| **1.2.x**   | Premium + płatności                            | ⏳ |
+| **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
-| **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x — m.in. **Apple login** |
+| **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
+| **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
 
 Subtaski: czwarty poziom, np. **1.1.9.1**.
 
@@ -565,14 +566,14 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] Logi dostępu do snapshotów (już jest — weryfikacja)
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
-- [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (1.2.3)**
+- [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (2.0.3)**
   - [ ] **1.0.1.6.1** Polityka prywatności — strona `/privacy` (administrator, cele, podmioty: Supabase/Vercel/Google, prawa RODO)
   - [ ] **1.0.1.6.2** Regulamin serwisu — strona `/terms`
   - [ ] **1.0.1.6.3** Cookies / informacja o plikach (sesja Auth) — strona lub sekcja; banner tylko jeśli faktycznie potrzebny
   - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
   - [ ] **1.0.1.6.5** (wewnętrzne, nie w app) DPA Supabase + Vercel, rejestr czynności
 
-**Checklist przed bramką płatności (1.2.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (doprecyzować przy prawnych / osobny task), audyt pentest light.
+**Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (doprecyzować przy prawnych / osobny task), audyt pentest light.
 
 ---
 
@@ -657,24 +658,14 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser`)
   - [ ] **1.1.9.3** Gate na ingest: bez danych → błąd + przekierowanie do formularza
   - [ ] **1.1.9.4** Edycja tych pól później w profilu
-  - [ ] **1.1.9.5** Placeholder CTA w profilu: „Włącz wyższy bieg — konto premium” (pełna płatność = **1.2.x**)
 
-> Panel **1.2.4** / **1.2.5** = subskrypcje premium (biznes). Panel **1.1.8** = operacyjny (Ty). CTA **1.1.9.5** = tylko guzik/placeholder pod przyszły upgrade.
+> Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
 
 ---
 
-### 1.2.x — Premium + Płatności ⏳
+### 1.2.x — *(przeniesione)*
 
-> Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie.
-
-- [ ] **1.2.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
-  - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
-  - `freeVisibleStats[]` / `premiumVisibleStats[]` — które kafle/wykresy widać
-  - `freeFeatures[]` — np. bulk import tylko premium
-- [ ] **1.2.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit
-- [ ] **1.2.3** Bramka płatności (PayNow lub PayU)
-- [ ] **1.2.4** Role: user / premium / admin / superadmin
-- [ ] **1.2.5** Panel admina — subskrypcje premium
+> **Premium + płatności** przeniesione do **[2.0.x](#20x--premium--płatności--)**. Startujemy **bez** freemium, bramki i CTA premium.
 
 ---
 
@@ -692,9 +683,25 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 5.x — Pełne wydanie produktu ⏸️ (odłożone — po zamknięciu 1.x)
+### 2.0.x — Premium + Płatności ⏸️
 
-> **Nie teraz.** Dopiero gdy 1.x (auth, premium, prod, copy, testy) będzie domknięte i wypuszczony pełny produkt. Numer **5.0** = milestone „pełna wersja”, nie kolejny krok po 1.3.
+> **Odłożone.** Startujemy bez premium / płatności / CTA upgrade. Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie. *(Było: **1.2.x** + CTA **1.1.9.5**.)*
+
+- [ ] **2.0.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
+  - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
+  - `freeVisibleStats[]` / `premiumVisibleStats[]` — które kafle/wykresy widać
+  - `freeFeatures[]` — np. bulk import tylko premium
+- [ ] **2.0.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit
+- [ ] **2.0.3** Bramka płatności (PayNow lub PayU)
+- [ ] **2.0.4** Role: user / premium / admin / superadmin
+- [ ] **2.0.5** Panel admina — subskrypcje premium
+- [ ] **2.0.6** Placeholder CTA w profilu: „Włącz wyższy bieg — konto premium” *(było **1.1.9.5**)*
+
+---
+
+### 5.x — Pełne wydanie produktu ⏸️ (odłożone — po zamknięciu 1.x / 2.x)
+
+> **Nie teraz.** Dopiero gdy 1.x (auth, prod, copy, testy) i ewentualnie **2.0.x** (premium) będą domknięte. Numer **5.0** = milestone „pełna wersja”, nie kolejny krok po 1.3.
 
 - [ ] **5.0.0** Milestone — pełne wydanie (kryteria doprecyzujemy przy 1.3)
 - [ ] **5.0.1** **Logowanie Apple** — „Zaloguj przez Apple” obok Google (`Sign in with Apple` w Supabase + przycisk na `/login`)
@@ -727,13 +734,12 @@ Pełny stan projektu zamrożony poza `main`:
 | **1.1.9.2** | ⏳ | Prefill z Google przy tworzeniu customer |
 | **1.1.9.3** | ⏳ | Gate na ingest bez danych → błąd + formularz |
 | **1.1.9.4** | ⏳ | Edycja pól tożsamości w profilu |
-| **1.1.9.5** | ⏳ | CTA placeholder „Włącz wyższy bieg — konto premium” (płatność w 1.2.x) |
-| **1.2.1–5** | ⏳ | Freemium + płatności + role premium |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
+| **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
 
-**Uwaga numeracji:** **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Nie mylić.
+**Uwaga numeracji:** **1.1.9** = profil tożsamości (bez CTA premium). **1.0.1.6** = dokumenty prawne. **2.0.x** = premium / płatności (odłożone).
 
 ---
 
@@ -801,7 +807,7 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
 
 Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
-### Warstwa 3 — RODO / prawo (plan **1.0.1.6**, przed **1.2.3** płatności)
+### Warstwa 3 — RODO / prawo (plan **1.0.1.6**, przed **2.0.3** płatności)
 
 - **Minimalizacja:** nie zbieramy więcej niż potrzeba do statystyk darta
 - **Cel przetwarzania:** usługa statystyk dla zawodnika (nie marketing do obcych bez zgody)
@@ -996,9 +1002,9 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.1.3.8**     | ⏳ Samouczek                                                 |
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
-| **1.1.9**       | ⏳ Profil tożsamości (formularz, prefill, gate, edycja, CTA premium placeholder) |
-| **1.2.x**       | ⏳ Premium                                                   |
+| **1.1.9**       | ⏳ Profil tożsamości (formularz, prefill, gate, edycja) |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
+| **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
 
 
@@ -1030,10 +1036,9 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 14. **1.1.9.2** — prefill z Google przy tworzeniu customer
 15. **1.1.9.3** — gate ingest bez danych
 16. **1.1.9.4** — edycja pól w profilu
-17. **1.1.9.5** — CTA placeholder premium („Włącz wyższy bieg”)
-18. **1.2.x** — freemium + płatności
-19. **1.3.x** — testy + CI + perf + hardening
-20. **5.0.x** — pełne wydanie + Apple (⏸️)
+17. **1.3.x** — testy + CI + perf + hardening
+18. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
+19. **5.0.x** — pełne wydanie + Apple (⏸️)
 
 Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
@@ -1051,9 +1056,10 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.3.8** | Samouczek                    | ⏳             |
 | **1.1.7**   | Usuwanie meczu               | ⏳             |
 | **1.1.8**   | Admin                        | ⏳             |
-| **1.1.9**   | Profil tożsamości (+ CTA premium) | ⏳             |
-| **1.2**     | Premium                      | ⏳             |
+| **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ⏳             |
+| **1.2**     | *(→ **2.0.x**)*              | —             |
 | **1.3**     | Testy + perf                 | ⏳             |
+| **2.0**     | Premium + płatności          | ⏸️ odłożone   |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
 
@@ -1118,6 +1124,7 @@ README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + ha
 Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6).
 Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
 1.1.9 = profil tożsamości (form/prefill/gate/edycja). 1.0.1.6 = dokumenty prawne.
+2.0.x = premium / płatności — **odłożone**, start bez tego.
 Auth działa na Mac + iPhone (LAN).
 ```
 
@@ -1514,7 +1521,8 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości (form/prefill/gate/edycja/**1.1.9.5** CTA premium placeholder). **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
+| **docs**   | 2026-07-20 | **Premium → 2.0.x.** **1.1.9.5** CTA + cały blok freemium/płatności (**było 1.2.x**) przeniesione do **2.0.1–6**. Start bez premium. **1.1.9** = tylko 1.1.9.1–4 (profil tożsamości). |
+| **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
 | **1.1.0**  | 2026-07-15 | **Auth core wydany.** Google OAuth server-side (`/api/auth/google` + PKCE), callback z cookies sesji, sync customer, onboarding, middleware, RLS (`20260715210000_…`). Identity none/ambiguous + bulk. Dev iPhone: Site URL = LAN IP. Seed → `SEED_CUSTOMER_ID` + `OWNER_EMAIL`. Tag `v1.1.0`. |
 | **1.0.1**  | 2026-07-14 | **Feedback po testach manualnych.** Pełna inwentaryzacja copy klienta (~245 MSG) w README — do review przed 1.0.2.x. Bez zmian w kodzie UI. |
 | **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |
