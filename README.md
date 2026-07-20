@@ -3,7 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN). **Następne:** **1.1.7** usuwanie meczu.
+> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN).  
+> **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
 
@@ -18,7 +19,7 @@ Docelowo pod `dart.sylveoncompany.pl`.
 7. [Detekcja gracza](#detekcja-gracza)
 8. [Design System — Sylveon Lift](#design-system--sylveon-lift)
 9. [Konwencje pracy](#konwencje-pracy)
-10. [Status / Roadmapa](#status--roadmapa)
+10. [Status / Roadmapa](#status--roadmapa) (w tym [Backlog otwarty](#backlog-otwarty--rosnąco-po-id))
 11. [Audyt bezpieczeństwa i prywatności (RODO)](#audyt-bezpieczeństwa-i-prywatności-rodo)
 12. [Hosting i skalowanie](#hosting-i-skalowanie)
 13. [ADR — kluczowe decyzje](#adr--kluczowe-decyzje)
@@ -357,33 +358,21 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 
 ### Konwencja numeracji
 
+| Prefiks     | Znaczenie                                      | Status |
+| ----------- | ---------------------------------------------- | ------ |
+| **0.x.x**   | Prace historyczne (bootstrap → demo)           | ✅ zamknięte w **1.0.0** |
+| **1.0.0**   | Release milestone — backup na GitHub           | ✅ `backup/v1.0.0`, tag `v1.0.0-backup` |
+| **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
+| **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
+| **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · otwarte **1.1.3.8**, **1.1.7–1.1.9** |
+| **1.2.x**   | Premium + płatności                            | ⏳ |
+| **1.3.x**   | Testy + hardening + perf                       | ⏳ |
+| **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x — m.in. **Apple login** |
 
-| Prefiks     | Znaczenie                               | Status                                 |
-| ----------- | --------------------------------------- | -------------------------------------- |
-| **0.x.x**   | Prace historyczne (bootstrap → demo)    | ✅ zamknięte w **1.0.0**                |
-| **1.0.0**   | Release milestone — backup na GitHub    | ✅ `backup/v1.0.0`, tag `v1.0.0-backup` |
-| **1.0.1**   | Feedback po testach manualnych — inwentaryzacja copy | ✅ **wydany** |
-| **1.0.1.x** | Prod, audyt, deploy | ⏳ po 1.1.7 / równolegle |
-| **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji) | ⏳ po inwentaryzacji |
-| **1.1.x**   | Auth + multi-user + admin               | ✅ **1.1.0** (1.1.1–6) · dalej **1.1.7+** |
-| **1.2.x**   | Premium + płatności                     | ⏳                                      |
-| **1.3.x**   | Testy + hardening + perf                | ⏳                                      |
-| **5.x**     | Pełne wydanie produktu (odłożone)     | ⏸️ po 1.x — m.in. **Apple login**        |
+Subtaski: czwarty poziom, np. **1.1.9.1**.
 
-
-Subtaski: czwarty poziom, np. **1.1.2.4** = onboarding, flow `none`.
-
-**Kolejność:** `1.0.1` → `1.1` → `1.2` → `1.3` (po kolei, bez skakania). **5.x** = dopiero po domknięciu pełnego produktu 1.x (hen hen do przodu).
-
----
-
-### 1.0.0 — Release ✅ WYDANY (2026-07-14)
-
-Pełny stan projektu zamrożony poza `main`:
-
-- Branch: `[backup/v1.0.0](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v1.0.0)`
-- Tag: `v1.0.0-backup`
-- Zawiera: profil prywatny (51 meczów), pełna analityka, demo publiczne + snapshot, landing, SEO
+**Zasada list:** w roadmapie i backlogu pozycje zawsze **rosnąco po ID**. Nie mieszamy numerów (np. **1.1.9 ≠ dokumenty prawne** — to profil tożsamości; prawo = **1.0.1.6**).
 
 ---
 
@@ -478,10 +467,6 @@ Pełny stan projektu zamrożony poza `main`:
 - [x] **0.3.11** H2H: statystyki przeciwnika — widok „Ja vs On"
 - [x] **0.3.12** Widok meczu Details: kolory 100+/140+/180
 - [x] **0.3.13** `ProfileStatsBlock` labels & layout
-- [x] **0.3.19** Wykres formy: tooltip po indeksie, data+godzina, opp, W/L
-- [x] **0.3.20** Aktywność dni/godziny — układ poziomy, fix mobile
-- [x] **0.3.21** Kolory bucketów w kartach + Details
-- [x] **0.3.22** `BEST LEG AVG` — kafel w statystykach głównych
 
 **Odłożone (analityka turniejowa — można modyfikować przed wdrożeniem):**
 
@@ -489,10 +474,14 @@ Pełny stan projektu zamrożony poza `main`:
 - [ ] **0.3.15** ⏸️ **Grupowanie meczów po turnieju** — lista turniejów z liczbą meczów, avg, W/L
 - [ ] **0.3.16** ⏸️ **Trendy per turniej** — wykres formy osobno dla wybranego `title`
 - [ ] **0.3.17** ⏸️ **Filtr sezon** — rok / półrocze na bazie `start_time`
-
-> **Czy da się modyfikować?** Tak. To nie jest osobna baza — dane już są w `matches.title` i datach. Możemy wdrożyć od lekkiego filtra (**0.3.14**) po pełny dashboard turniejowy. Priorytet niższy niż Auth i prod.
-
 - [ ] **0.3.18** → przeniesione do **1.3.6** (batch loading, limit 1000 Supabase)
+
+> **Czy da się modyfikować?** Tak. Dane już są w `matches.title` i datach. Priorytet niższy niż Auth i prod.
+
+- [x] **0.3.19** Wykres formy: tooltip po indeksie, data+godzina, opp, W/L
+- [x] **0.3.20** Aktywność dni/godziny — układ poziomy, fix mobile
+- [x] **0.3.21** Kolory bucketów w kartach + Details
+- [x] **0.3.22** `BEST LEG AVG` — kafel w statystykach głównych
 
 ---
 
@@ -534,6 +523,16 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
+### 1.0.0 — Release ✅ WYDANY (2026-07-14)
+
+Pełny stan projektu zamrożony poza `main`:
+
+- Branch: `[backup/v1.0.0](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v1.0.0)`
+- Tag: `v1.0.0-backup`
+- Zawiera: profil prywatny (51 meczów), pełna analityka, demo publiczne + snapshot, landing, SEO
+
+---
+
 ### 1.0.1 — Feedback po testach manualnych ✅ WYDANY (2026-07-14)
 
 > Checkpoint po **1.0.0** i ręcznych testach UI. **Bez zmian w kodzie copy** — tylko pełna lista komunikatów frontowych do Twojego review.
@@ -546,9 +545,9 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 1.0.1.x — Po release: audyt, bezpieczeństwo, prod ⏳ NASTĘPNE
+### 1.0.1.x — Po release: audyt, bezpieczeństwo, prod, prawo ⏳
 
-> Domknięcie release **1.0.0** na produkcji + checklist pod RODO i przyszłą bramkę płatności. **Auth dopiero w 1.1.x.**
+> Domknięcie na produkcji + checklist pod RODO i przyszłą bramkę płatności.
 
 - [ ] **1.0.1.1** **Audyt prod — robots & indeksacja**
   - [ ] `/profile`, `/m/*`, `/api/*` — noindex na żywym URL (nagłówki + meta)
@@ -566,8 +565,14 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] Logi dostępu do snapshotów (już jest — weryfikacja)
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
+- [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (1.2.3)**
+  - [ ] **1.0.1.6.1** Polityka prywatności — strona `/privacy` (administrator, cele, podmioty: Supabase/Vercel/Google, prawa RODO)
+  - [ ] **1.0.1.6.2** Regulamin serwisu — strona `/terms`
+  - [ ] **1.0.1.6.3** Cookies / informacja o plikach (sesja Auth) — strona lub sekcja; banner tylko jeśli faktycznie potrzebny
+  - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
+  - [ ] **1.0.1.6.5** (wewnętrzne, nie w app) DPA Supabase + Vercel, rejestr czynności
 
-**Checklist przed bramką płatności (1.2.x):** Auth + RLS (**1.1.x**), DPA z Supabase/Vercel, polityka prywatności, rejestr czynności, minimalizacja danych, prawo do usunięcia (**1.1.7**), audyt pentest light.
+**Checklist przed bramką płatności (1.2.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (doprecyzować przy prawnych / osobny task), audyt pentest light.
 
 ---
 
@@ -614,9 +619,9 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 1.1.x — Auth + Multi-user + Admin
+### 1.1.x — Auth + Multi-user + Admin + profil tożsamości
 
-> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Dalej: usuwanie / admin / tour.
+> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Otwarte: **1.1.3.8**, **1.1.7**, **1.1.8**, **1.1.9**.
 
 - [x] **1.1.1** Supabase Auth (**Google** login) — `/login`, `/api/auth/google`, `/auth/callback`, `/auth/signout`, `@supabase/ssr`
   - OAuth start po stronie serwera (PKCE cookies); callback zapisuje sesję na redirect
@@ -624,7 +629,7 @@ Pełny stan projektu zamrożony poza `main`:
   - ⏸️ **Apple Sign In** → **5.0.1**
 - [x] **1.1.2** Sync `auth.uid()` → `customer_id` — `ensureCustomerForUser()`; `OWNER_EMAIL` → `SEED_CUSTOMER_ID`
 - [x] **1.1.3** Onboarding + detekcja gracza przy imporcie
-  - [x] **1.1.3.1** Ekran `/onboarding` — imię, nazwisko, nick, `known_nicknames`
+  - [x] **1.1.3.1** Ekran `/onboarding` — imię, nazwisko, nick, `known_nicknames` *(bazowy UI; hardening = **1.1.9**)*
   - [ ] **1.1.3.2** Testy scenariuszy auto-detect → Vitest **1.3.2**
   - [x] **1.1.3.3** UI `ambiguous` — wybór slotu N01 (podświetlenie „Ty?")
   - [x] **1.1.3.4** UI `none` — 2 kroki: potwierdź → wybierz gracza / odrzuć
@@ -635,19 +640,26 @@ Pełny stan projektu zamrożony poza `main`:
 - [x] **1.1.4** Usunięcie runtime `DEFAULT_CUSTOMER_ID` — API wymaga sesji; seed → `SEED_CUSTOMER_ID`
 - [x] **1.1.5** Middleware — `/profile`, `/onboarding`, `/api/*` tylko zalogowany (+ noindex); `/?code=` → `/auth/callback`
 - [x] **1.1.6** RLS per user — migracja `20260715210000_auth_rls_per_user.sql` (zastosowana na Supabase)
-- [ ] **1.1.7** Usuwanie meczu przez usera ⏳ **NASTĘPNE**
+- [ ] **1.1.7** Usuwanie meczu przez usera
   - [ ] **1.1.7.1** Przycisk „Usuń mecz" na karcie / widoku meczu
   - [ ] **1.1.7.2** Triple-check: potwierdź → podsumowanie → wpisz `usuwam`
   - [ ] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS
   - [ ] **1.1.7.4** Undo toast (nice-to-have)
+  - Usuwanie **konta** (cały customer + auth) ≠ ten task — osobno przy RODO / po **1.0.1.6**
 - [ ] **1.1.8** Panel admina superadmin (`/admin`)
   - [ ] **1.1.8.1** Lista userów (customers)
   - [ ] **1.1.8.2** Podgląd / usuwanie meczów dowolnego usera
   - [ ] **1.1.8.3** Ręczny backup DB (export JSON)
   - [ ] **1.1.8.4** Podgląd ingest / snapshot access log
   - [ ] **1.1.8.5** Ochrona route — tylko `role = superadmin`
+- [ ] **1.1.9** **Profil tożsamości** (domknięcie danych po Google — **nie** dokumenty prawne)
+  - [ ] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), pseudonim główny, pseudonimy N01
+  - [ ] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser`)
+  - [ ] **1.1.9.3** Gate na ingest: bez danych → błąd + przekierowanie do formularza
+  - [ ] **1.1.9.4** Edycja tych pól później w profilu
+  - [ ] **1.1.9.5** Placeholder CTA w profilu: „Włącz wyższy bieg — konto premium” (pełna płatność = **1.2.x**)
 
-> Panel **1.2.4** = subskrypcje premium (biznes). Panel **1.1.8** = operacyjny (Ty).
+> Panel **1.2.4** / **1.2.5** = subskrypcje premium (biznes). Panel **1.1.8** = operacyjny (Ty). CTA **1.1.9.5** = tylko guzik/placeholder pod przyszły upgrade.
 
 ---
 
@@ -693,22 +705,35 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### Kolejność prac — skrót
+### Backlog otwarty — rosnąco po ID
 
+> Jedyna tabela „co jest do zrobienia”. Sort **po numerze ID** (mały → duży). Przed startem implementacji — potwierdź zakres w czacie.
 
-| #     | ID            | Zadanie                                      |
-| ----- | ------------- | -------------------------------------------- |
-| **→** | **1.1.7**     | Usuwanie meczu (UI + API + triple-check)     |
-| 2     | 1.1.8         | Panel admina superadmin                      |
-| 3     | 1.1.3.8       | Samouczek po onboardingu                     |
-| 4     | 1.0.1.4–5     | Deploy Vercel + custom domain                |
-| 5     | 1.0.1.1–3     | Audyt prod (robots, wycieki, API)            |
-| 6     | 1.0.2.x       | Copy klienta (Twoje teksty → fix)            |
-| 7     | 1.3.2         | Vitest detekcja gracza (`1.1.3.2`)           |
-| 8     | 1.2.x         | Freemium (limity jako config)                |
-| 9     | 1.3.x         | Testy + hardening importu + perf             |
+| ID | Status | Zadanie |
+| -- | ------ | ------- |
+| **0.3.14–17** | ⏸️ | Analityka turniejowa / sesje / sezon |
+| **1.0.1.1** | ⏳ | Audyt prod — robots & indeksacja |
+| **1.0.1.2** | ⏳ | Audyt prod — wyciek danych |
+| **1.0.1.3** | ⏳ | Audyt prod — API i ataki |
+| **1.0.1.4** | ⏳ | Deploy Vercel + env |
+| **1.0.1.5** | ⏳ | Custom domain |
+| **1.0.1.6** | ⏳ | Dokumenty prawne: polityka, regulamin, cookies, linki, DPA |
+| **1.0.2.1–7** | ⏳ | Copy klienta (Twoje teksty → fix) |
+| **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
+| **1.1.3.8** | ⏳ | Samouczek po onboardingu (`/demo/profile`) |
+| **1.1.7** | ⏳ | Usuwanie meczu (UI + API + triple-check) |
+| **1.1.8** | ⏳ | Panel admina superadmin |
+| **1.1.9.1** | ⏳ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
+| **1.1.9.2** | ⏳ | Prefill z Google przy tworzeniu customer |
+| **1.1.9.3** | ⏳ | Gate na ingest bez danych → błąd + formularz |
+| **1.1.9.4** | ⏳ | Edycja pól tożsamości w profilu |
+| **1.1.9.5** | ⏳ | CTA placeholder „Włącz wyższy bieg — konto premium” (płatność w 1.2.x) |
+| **1.2.1–5** | ⏳ | Freemium + płatności + role premium |
+| **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
+| **5.0.0** | ⏸️ | Milestone pełnego wydania |
+| **5.0.1** | ⏸️ | Logowanie Apple |
 
-*Opcjonalnie później:* 0.3.14–0.3.17 analityka turniejowa.
+**Uwaga numeracji:** **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Nie mylić.
 
 ---
 
@@ -776,14 +801,14 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
 
 Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
-### Warstwa 3 — RODO / prawo (plan przed 1.2.3 płatności)
+### Warstwa 3 — RODO / prawo (plan **1.0.1.6**, przed **1.2.3** płatności)
 
 - **Minimalizacja:** nie zbieramy więcej niż potrzeba do statystyk darta
 - **Cel przetwarzania:** usługa statystyk dla zawodnika (nie marketing do obcych bez zgody)
-- **Prawo dostępu / usunięcia:** usuwanie konta i meczów (**1.1.7**)
-- **DPA:** umowy powierzenia z Supabase i hostem (Vercel)
-- **Polityka prywatności + cookies:** strona informacyjna (do napisania przed płatnościami)
-- **Rejestr czynności:** dokument wewnętrzny (administrator = Ty)
+- **Prawo dostępu / usunięcia meczów:** **1.1.7** (usuwanie konta — osobno, przy prawnych)
+- **DPA:** umowy powierzenia z Supabase i hostem (Vercel) — **1.0.1.6.5**
+- **Polityka prywatności + regulamin + cookies:** strony publiczne — **1.0.1.6.1–4**
+- **Rejestr czynności:** dokument wewnętrzny (administrator = Ty) — **1.0.1.6.5**
 - **Demo:** wyłącznie zanonimizowane dane — nigdy profil usera
 
 ### Warstwa 4 — Input i API (plan 1.3.7)
@@ -807,9 +832,10 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 ### Checklist „gotowość pod płatności"
 
 - [x] Auth + RLS (**1.1.1–1.1.6** / v1.1.0)
-- [ ] Audyt prod (**1.0.1.x**)
-- [ ] Polityka prywatności + regulamin
-- [ ] Usuwanie danych usera (**1.1.7**)
+- [ ] Audyt prod (**1.0.1.1–5**)
+- [ ] Dokumenty prawne (**1.0.1.6** — polityka, regulamin, cookies, DPA)
+- [ ] Usuwanie meczów (**1.1.7**); usuwanie konta — osobno
+- [ ] Profil tożsamości domknięty (**1.1.9**)
 - [ ] Hardening importu (**1.3.7**)
 - [ ] HTTPS everywhere (Vercel domyślnie)
 - [ ] Logi i backup (**1.3.5**, **1.1.8**)
@@ -957,17 +983,22 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.1.0 Auth ✅ | **1.1.7** ⏳ NASTĘPNE
+### v1.1.0 Auth ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
 | --------------- | ----------------------------------------------------------- |
 | **1.0.0**       | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup`      |
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
+| **1.0.1.1–6**   | ⏳ Audyt, deploy, domena, **dokumenty prawne**               |
+| **1.0.2.x**     | ⏳ Copy (Twoje teksty)                                       |
 | **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) |
-| **1.1.7+**      | ⏳ Usuwanie meczu, admin, samouczek                          |
-| **1.0.1.x**     | ⏳ Prod audit + deploy + domena                              |
+| **1.1.3.8**     | ⏳ Samouczek                                                 |
+| **1.1.7**       | ⏳ Usuwanie meczu                                            |
+| **1.1.8**       | ⏳ Panel admina                                              |
+| **1.1.9**       | ⏳ Profil tożsamości (formularz, prefill, gate, edycja, CTA premium placeholder) |
 | **1.2.x**       | ⏳ Premium                                                   |
+| **1.3.x**       | ⏳ Testy + hardening                                         |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
 
 
@@ -981,10 +1012,30 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | Git backup      | `backup/v1.0.0` + tag `v1.0.0-backup`      |
 
 
-### Co dalej — skrót
+### Plan otwartych — punkt po punkcie (rosnąco po ID)
 
-**Teraz:** **1.1.7** usuwanie meczu → **1.1.8** admin → **1.1.3.8** samouczek  
-**Potem:** 1.0.1.x prod / 1.0.2 copy → 1.2.x → 1.3.x
+1. **0.3.14–17** — analityka turniejowa (⏸️ niski priorytet)
+2. **1.0.1.1** — audyt robots / indeksacja
+3. **1.0.1.2** — audyt wycieków
+4. **1.0.1.3** — audyt API / ataki
+5. **1.0.1.4** — deploy Vercel
+6. **1.0.1.5** — custom domain
+7. **1.0.1.6** — polityka prywatności, regulamin, cookies, linki, DPA
+8. **1.0.2.1–7** — copy UI (po Twoich tekstach)
+9. **1.1.3.2** — testy detekcji → **1.3.2**
+10. **1.1.3.8** — samouczek po onboardingu
+11. **1.1.7** — usuwanie meczu
+12. **1.1.8** — panel admina
+13. **1.1.9.1** — obowiązkowy formularz po Google
+14. **1.1.9.2** — prefill z Google przy tworzeniu customer
+15. **1.1.9.3** — gate ingest bez danych
+16. **1.1.9.4** — edycja pól w profilu
+17. **1.1.9.5** — CTA placeholder premium („Włącz wyższy bieg”)
+18. **1.2.x** — freemium + płatności
+19. **1.3.x** — testy + CI + perf + hardening
+20. **5.0.x** — pełne wydanie + Apple (⏸️)
+
+Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
 ### Mapa wersji
 
@@ -994,9 +1045,13 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **0.x**     | Bootstrap → demo             | ✅ w 1.0.0     |
 | **1.0.0**   | Release milestone            | ✅ WYDANY      |
 | **1.0.1**   | Feedback + copy inventory    | ✅ WYDANY      |
+| **1.0.1.x** | Prod + prawo (**1.0.1.6**)   | ⏳             |
+| **1.0.2**   | Copy UI                      | ⏳             |
 | **1.1.0**   | Auth core (Google + RLS)     | ✅ WYDANY      |
-| **1.1.7+**  | Usuwanie / admin / tour      | ⏳ **teraz**   |
-| **1.0.1.x** | Prod + deploy                | ⏳             |
+| **1.1.3.8** | Samouczek                    | ⏳             |
+| **1.1.7**   | Usuwanie meczu               | ⏳             |
+| **1.1.8**   | Admin                        | ⏳             |
+| **1.1.9**   | Profil tożsamości (+ CTA premium) | ⏳             |
 | **1.2**     | Premium                      | ⏳             |
 | **1.3**     | Testy + perf                 | ⏳             |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
@@ -1058,10 +1113,12 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 
 ```
 Projekt: Dart Profile Tracker (Cursor_DartStats)
-README = źródło prawdy — sekcja „Stan na koniec czatu + handoff".
+README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
 
-Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6). NASTĘPNE: **1.1.7** usuwanie meczu.
-Auth działa na Mac + iPhone (LAN). Pliki: lib/auth.ts, app/api/auth/google, app/auth/callback, middleware.
+Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6).
+Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
+1.1.9 = profil tożsamości (form/prefill/gate/edycja). 1.0.1.6 = dokumenty prawne.
+Auth działa na Mac + iPhone (LAN).
 ```
 
 ### Podgląd na telefonie (dev)
@@ -1457,6 +1514,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości (form/prefill/gate/edycja/**1.1.9.5** CTA premium placeholder). **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
 | **1.1.0**  | 2026-07-15 | **Auth core wydany.** Google OAuth server-side (`/api/auth/google` + PKCE), callback z cookies sesji, sync customer, onboarding, middleware, RLS (`20260715210000_…`). Identity none/ambiguous + bulk. Dev iPhone: Site URL = LAN IP. Seed → `SEED_CUSTOMER_ID` + `OWNER_EMAIL`. Tag `v1.1.0`. |
 | **1.0.1**  | 2026-07-14 | **Feedback po testach manualnych.** Pełna inwentaryzacja copy klienta (~245 MSG) w README — do review przed 1.0.2.x. Bez zmian w kodzie UI. |
 | **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |
