@@ -17,9 +17,17 @@ type Props = {
   mode: "onboarding" | "edit";
   submitLabel?: string;
   onSaved?: () => void;
+  /** When set, render without outer glass-tile (embedded in parent card). */
+  embedded?: boolean;
 };
 
-export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
+export function IdentityForm({
+  initial,
+  mode,
+  submitLabel,
+  onSaved,
+  embedded = false,
+}: Props) {
   const router = useRouter();
   const [firstName, setFirstName] = useState(initial.firstName);
   const [lastName, setLastName] = useState(initial.lastName);
@@ -35,6 +43,11 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
     setError(null);
     setSavedOk(false);
     try {
+      const nick = nickname.trim();
+      if (!nick) {
+        throw new Error("Podaj pseudonim główny.");
+      }
+
       const nicknames = knownNicknames
         .split(/[,;\n]/)
         .map((n) => n.trim())
@@ -46,7 +59,7 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
         body: JSON.stringify({
           firstName,
           lastName,
-          nickname: nickname.trim() || null,
+          nickname: nick,
           knownNicknames: nicknames,
         }),
       });
@@ -71,10 +84,13 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
 
   const label =
     submitLabel ??
-    (mode === "onboarding" ? "Zapisz i przejdź dalej" : "Zapisz zmiany");
+    (mode === "onboarding" ? "Zapisz i przejdź dalej" : "Zapisz dane tożsamości");
 
-  return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="glass-tile space-y-4 p-5">
+  const form = (
+    <form
+      onSubmit={(e) => void handleSubmit(e)}
+      className={embedded ? "space-y-4" : "glass-tile space-y-4 p-5"}
+    >
       <label className="block space-y-1.5">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           Imię
@@ -106,13 +122,14 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
           Pseudonim główny
         </span>
         <input
+          required
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           placeholder="np. Groteł"
           className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
         <span className="block text-[11px] text-muted-foreground">
-          Opcjonalnie — wyświetlamy jako Imię „pseudonim” Nazwisko.
+          Twój główny nick w aplikacji — wyświetlamy jako Imię „pseudonim” Nazwisko.
         </span>
       </label>
 
@@ -125,11 +142,15 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
           value={knownNicknames}
           onChange={(e) => setKnownNicknames(e.target.value)}
           rows={3}
-          placeholder="Grotkowski, Groteł"
+          placeholder="Grotkowski, Groteł, Piotr Grotkowski"
           className="w-full resize-y rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
-        <span className="block text-[11px] text-muted-foreground">
-          Fragmenty nazw z N01, po których rozpoznamy Cię w meczu. Minimum jeden wzorzec.
+        <span className="block text-[11px] leading-relaxed text-muted-foreground">
+          Spokojnie — wypisz po przecinku wszystkie nazwy, pod jakimi zwykle jesteś zapisywany w
+          meczach N01. Spacje wewnątrz nazwy są OK (np.{" "}
+          <span className="text-foreground/80">Piotr Grotkowski</span> = jeden wzorzec). Rozdzielamy
+          tylko przecinkiem / średnikiem / nową linią. Jak nie będziemy pewni przy imporcie —
+          dopytamy.
         </span>
       </label>
 
@@ -154,4 +175,6 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
       </button>
     </form>
   );
+
+  return form;
 }

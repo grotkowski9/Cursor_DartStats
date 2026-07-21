@@ -85,9 +85,14 @@ export async function PATCH(request: Request) {
     if (!firstName?.trim() || !lastName?.trim()) {
       return NextResponse.json({ error: "Podaj imię i nazwisko." }, { status: 400 });
     }
+    const nickname =
+      body.nickname !== undefined ? body.nickname : auth.customer.nickname;
+    if (!nickname?.trim()) {
+      return NextResponse.json({ error: "Podaj pseudonim główny." }, { status: 400 });
+    }
     patch.firstName = firstName;
     patch.lastName = lastName;
-    if (body.nickname !== undefined) patch.nickname = body.nickname;
+    patch.nickname = nickname;
     patch.knownNicknames = nicknames;
   }
 
@@ -95,7 +100,7 @@ export async function PATCH(request: Request) {
     const city = body.city?.trim() || null;
     if (city && !CITY_SET.has(city)) {
       return NextResponse.json(
-        { error: "Wybierz miasto z listy (wpisz min. 3 litery)." },
+        { error: "Wybierz gminę z listy (wpisz min. 3 litery)." },
         { status: 400 },
       );
     }

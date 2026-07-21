@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 
@@ -10,7 +10,6 @@ type Step = {
   id: string;
   title: string;
   body: string;
-  /** CSS selector preferred; falls back to centered card */
   selector?: string;
 };
 
@@ -21,16 +20,16 @@ const STEPS: Step[] = [
     body: "Tu zbierasz mecze z N01 i widzisz swoje KPI. Krótki przegląd — możesz pominąć w każdej chwili.",
   },
   {
-    id: "stats",
-    title: "Statystyki",
-    body: "Kafel ze średnią, win rate i filtrami zakresu czasu. To serce Twojego profilu.",
-    selector: '[data-tour="stats"]',
-  },
-  {
     id: "add",
     title: "Dodaj mecz",
     body: "Wklej link z n01darts.com — rozpoznamy Cię po wzorcach z onboardingu.",
     selector: '[data-tour="add-match"]',
+  },
+  {
+    id: "stats",
+    title: "Statystyki",
+    body: "Kafel ze średnią, win rate i filtrami zakresu czasu. To serce Twojego profilu.",
+    selector: '[data-tour="stats"]',
   },
   {
     id: "list",
@@ -41,13 +40,12 @@ const STEPS: Step[] = [
 ];
 
 type Props = {
-  /** Auto-start (e.g. ?tour=1 after onboarding) */
   autoStart?: boolean;
-  /** Persist completion for logged-in user */
   persistServer?: boolean;
-  /** After finish / skip for post-onboarding flow */
   finishHref?: string | null;
 };
+
+type Rect = { top: number; left: number; width: number; height: number };
 
 export function ProductTour({
   autoStart = false,
@@ -57,6 +55,7 @@ export function ProductTour({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const [hole, setHole] = useState<Rect | null>(null);
 
   useEffect(() => {
     if (!autoStart) return;
@@ -71,9 +70,50 @@ export function ProductTour({
     setOpen(true);
   }, [autoStart, finishHref, router]);
 
+  const current = STEPS[step]!;
+
+  const measure = useCallback(() => {
+    if (!open) {
+      setHole(null);
+      return;
+    }
+    const sel = current.selector;
+    if (!sel) {
+      setHole(null);
+      return;
+    }
+    const el = document.querySelector(sel) as HTMLElement | null;
+    if (!el) {
+      setHole(null);
+      return;
+    }
+    el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    const r = el.getBoundingClientRect();
+    const pad = 8;
+    setHole({
+      top: Math.max(8, r.top - pad),
+      left: Math.max(8, r.left - pad),
+      width: Math.min(window.innerWidth - 16, r.width + pad * 2),
+      height: r.height + pad * 2,
+    });
+  }, [current.selector, open]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const t = window.setTimeout(measure, 80);
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, true);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure, true);
+    };
+  }, [measure, open, step]);
+
   const close = useCallback(
     async (markDone: boolean) => {
       setOpen(false);
+      setHole(null);
       if (markDone) {
         try {
           localStorage.setItem(TOUR_STORAGE_KEY, "1");
@@ -116,22 +156,52 @@ export function ProductTour({
     );
   }
 
-  const current = STEPS[step]!;
   const isLast = step >= STEPS.length - 1;
+  const tooltipStyle = hole
+    ? {
+        top: Math.min(
+          window.innerHeight - 220,
+          hole.top + hole.height + 12,
+        ),
+        left: Math.min(window.innerWidth - 320, Math.max(12, hole.left)),
+      }
+    : {
+        top: "30%",
+        left: "50%",
+        transform: "translateX(-50%)",
+      };
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/55 p-4 backdrop-blur-[2px] sm:items-center">
+    <div className="pointer-events-none fixed inset-0 z-[80]">
+      {/* Soft dim — page stays readable; hole cut via box-shadow on spotlight */}
+      {hole ? (
+        <div
+          className="pointer-events-none absolute rounded-2xl ring-2 ring-accent-from/70 transition-all duration-200"
+          style={{
+            top: hole.top,
+            left: hole.left,
+            width: hole.width,
+            height: hole.height,
+            boxShadow: "0 0 0 9999px rgb(0 0 0 / 0.45)",
+          }}
+          aria-hidden
+        />
+      ) : (
+        <div className="absolute inset-0 bg-black/35" aria-hidden />
+      )}
+
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="tour-title"
-        className="glass-tile relative w-full max-w-md p-5 shadow-2xl"
+        className="pointer-events-auto absolute z-[81] w-[min(100%-24px,20rem)] rounded-2xl border border-white/15 bg-card/95 p-4 shadow-2xl backdrop-blur-md"
+        style={tooltipStyle as CSSProperties}
       >
         <button
           type="button"
           aria-label="Zamknij"
           onClick={() => void close(true)}
-          className="absolute right-3 top-3 rounded-lg p-1 text-muted-foreground hover:bg-white/5 hover:text-foreground"
+          className="absolute right-2 top-2 rounded-lg p-1 text-muted-foreground hover:bg-white/5 hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -139,12 +209,12 @@ export function ProductTour({
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/80">
           Samouczek {step + 1}/{STEPS.length}
         </p>
-        <h2 id="tour-title" className="mt-2 text-xl font-bold tracking-tight">
+        <h2 id="tour-title" className="mt-1.5 pr-6 text-base font-bold tracking-tight">
           {current.title}
         </h2>
-        <p className="mt-2 text-sm text-muted-foreground">{current.body}</p>
+        <p className="mt-1.5 text-sm text-muted-foreground">{current.body}</p>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
             onClick={() => void close(true)}
@@ -157,7 +227,7 @@ export function ProductTour({
               <button
                 type="button"
                 onClick={() => setStep((s) => s - 1)}
-                className="rounded-xl border border-white/10 px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground"
+                className="rounded-xl border border-white/10 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
               >
                 Wstecz
               </button>
@@ -168,9 +238,9 @@ export function ProductTour({
                 if (isLast) void close(true);
                 else setStep((s) => s + 1);
               }}
-              className="rounded-xl bg-gradient-to-r from-accent-from to-accent-to px-4 py-2 text-xs font-semibold text-primary-foreground"
+              className="rounded-xl bg-gradient-to-r from-accent-from to-accent-to px-3 py-1.5 text-xs font-semibold text-primary-foreground"
             >
-              {isLast ? (finishHref ? "Przejdź do profilu" : "Gotowe") : "Dalej"}
+              {isLast ? (finishHref ? "Do profilu" : "Gotowe") : "Dalej"}
             </button>
           </div>
         </div>

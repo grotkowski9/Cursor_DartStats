@@ -10,21 +10,22 @@ import dartBrands from "@/data/dart-brands.json";
 import favoritePlayers from "@/data/favorite-players.json";
 
 type Brand = { id: string; label: string };
-type Player = { id: string; name: string; tier: string };
+type Player = { id: string; name: string; popularityRank?: number };
 
 const CITIES = plCities as string[];
 const BRANDS = dartBrands as Brand[];
 const PLAYERS = (favoritePlayers as Player[])
   .slice()
-  .sort((a, b) => a.name.localeCompare(b.name, "pl"));
+  .sort((a, b) => (a.popularityRank ?? 999) - (b.popularityRank ?? 999));
 
 type Props = {
   initial: AboutFormValues;
   mode: "onboarding" | "edit";
-  /** After save/skip in onboarding */
   nextHref?: string;
   showEncouragement?: boolean;
   onSaved?: () => void;
+  /** Without outer glass-tile — for shared profile accordion */
+  embedded?: boolean;
 };
 
 export function AboutForm({
@@ -33,6 +34,7 @@ export function AboutForm({
   nextHref = "/demo/profile?tour=1",
   showEncouragement = false,
   onSaved,
+  embedded = false,
 }: Props) {
   const router = useRouter();
   const [values, setValues] = useState(initial);
@@ -45,13 +47,13 @@ export function AboutForm({
   const citySuggestions = useMemo(() => {
     const q = cityQuery.trim().toLocaleLowerCase("pl");
     if (q.length < 3) return [];
-    return CITIES.filter((c) => c.toLocaleLowerCase("pl").includes(q)).slice(0, 8);
+    return CITIES.filter((c) => c.toLocaleLowerCase("pl").includes(q)).slice(0, 12);
   }, [cityQuery]);
 
-  const playerSuggestions = useMemo(() => {
+  const playerList = useMemo(() => {
     const q = playerQuery.trim().toLocaleLowerCase("pl");
-    if (!q) return PLAYERS.slice(0, 12);
-    return PLAYERS.filter((p) => p.name.toLocaleLowerCase("pl").includes(q)).slice(0, 12);
+    if (!q) return PLAYERS;
+    return PLAYERS.filter((p) => p.name.toLocaleLowerCase("pl").includes(q));
   }, [playerQuery]);
 
   const selectedPlayer = PLAYERS.find((p) => p.id === values.favoritePlayerId);
@@ -106,36 +108,32 @@ export function AboutForm({
   }
 
   const inputClass =
-    "w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-[color:var(--onb-mint,#7dd3c0)] focus:outline-none";
+    "w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none";
 
-  return (
-    <div className="space-y-5">
+  const formInner = (
+    <>
       {showEncouragement ? (
-        <div className="glass-tile space-y-3 p-5">
+        <div className="mb-4 space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
           <p className="text-sm font-semibold leading-snug text-foreground">
             Uzupełnij „O Tobie” — odblokujesz więcej z profilu.
           </p>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
-              <span className="text-[color:var(--onb-mint,#7dd3c0)]">●</span> Statystyki
-              porównujące graczy z{" "}
+              ● Statystyki porównujące graczy z{" "}
               <strong className="font-medium text-foreground">tymi samymi lotkami</strong>{" "}
               (wkrótce)
             </li>
             <li>
-              <span className="text-[color:var(--onb-rose,#e8a0c0)]">●</span>{" "}
+              ●{" "}
               <strong className="font-medium text-foreground">
                 Spersonalizowana, dedykowana komunikacja
               </strong>
             </li>
             <li>
-              <span className="text-[color:var(--onb-lilac,#c4a8e8)]">●</span>{" "}
-              <strong className="font-medium text-foreground">Punkty gracza wkrótce</strong> —
+              ● <strong className="font-medium text-foreground">Punkty gracza wkrótce</strong> —
               uzupełnione pola dadzą dodatkowe punkty
             </li>
-            <li>
-              <span className="text-primary">●</span> I wiele więcej
-            </li>
+            <li>● I wiele więcej</li>
           </ul>
         </div>
       ) : null}
@@ -145,11 +143,17 @@ export function AboutForm({
           e.preventDefault();
           void persist({ markCompleted: true });
         }}
-        className="glass-tile space-y-4 p-5"
+        className="space-y-4"
       >
+        {mode === "edit" ? (
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            O Tobie (opcjonalne)
+          </p>
+        ) : null}
+
         <label className="block space-y-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Miasto
+            Miasto / gmina
           </span>
           <input
             value={cityQuery}
@@ -162,7 +166,7 @@ export function AboutForm({
             className={inputClass}
           />
           {citySuggestions.length > 0 && !values.city ? (
-            <ul className="overflow-hidden rounded-xl border border-white/10 bg-black/50">
+            <ul className="max-h-48 overflow-y-auto rounded-xl border border-white/10 bg-black/50">
               {citySuggestions.map((c) => (
                 <li key={c}>
                   <button
@@ -180,12 +184,12 @@ export function AboutForm({
             </ul>
           ) : null}
           {values.city ? (
-            <span className="block text-[11px] text-[color:var(--onb-mint,#7dd3c0)]">
-              Wybrane: {values.city}
+            <span className="block text-[11px] text-muted-foreground">
+              Wybrano: <span className="text-foreground/90">{values.city}</span>
             </span>
           ) : (
             <span className="block text-[11px] text-muted-foreground">
-              Tylko miasta z listy PL.
+              Baza obejmuje wszystkie polskie gminy.
             </span>
           )}
         </label>
@@ -268,7 +272,7 @@ export function AboutForm({
                 onClick={() => patchValue("throwingHand", val)}
                 className={`flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium transition ${
                   values.throwingHand === val
-                    ? "border-[color:var(--onb-mint,#7dd3c0)]/50 bg-[color:var(--onb-mint,#7dd3c0)]/15 text-foreground"
+                    ? "border-accent-from/50 bg-accent-from/15 text-foreground"
                     : "border-white/10 bg-black/20 text-muted-foreground hover:border-white/20"
                 }`}
               >
@@ -278,39 +282,65 @@ export function AboutForm({
           </div>
         </fieldset>
 
-        <label className="block space-y-1.5">
+        <div className="block space-y-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Ulubiony zawodnik
           </span>
-          <input
-            value={playerQuery}
-            onChange={(e) => setPlayerQuery(e.target.value)}
-            placeholder={selectedPlayer?.name ?? "Szukaj A–Z…"}
-            className={inputClass}
-          />
-          <ul className="max-h-40 overflow-y-auto rounded-xl border border-white/10 bg-black/40">
-            {playerSuggestions.map((p) => (
-              <li key={p.id}>
-                <button
-                  type="button"
-                  className={`w-full px-3 py-2 text-left text-sm hover:bg-white/5 ${
-                    values.favoritePlayerId === p.id ? "text-[color:var(--onb-mint,#7dd3c0)]" : ""
-                  }`}
-                  onClick={() => {
-                    patchValue("favoritePlayerId", p.id);
-                    setPlayerQuery(p.name);
-                  }}
-                >
-                  {p.name}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </label>
+          {!values.favoritePlayerId ? (
+            <>
+              <input
+                value={playerQuery}
+                onChange={(e) => setPlayerQuery(e.target.value)}
+                placeholder="Szukaj albo przewiń listę…"
+                autoComplete="off"
+                className={inputClass}
+              />
+              <ul className="max-h-56 overflow-y-auto overscroll-contain rounded-xl border border-white/10 bg-black/40">
+                {playerList.map((p) => (
+                  <li key={p.id}>
+                    <button
+                      type="button"
+                      className="w-full px-3 py-2 text-left text-sm hover:bg-white/5"
+                      onClick={() => {
+                        patchValue("favoritePlayerId", p.id);
+                        setPlayerQuery("");
+                      }}
+                    >
+                      {p.name}
+                    </button>
+                  </li>
+                ))}
+                {playerList.length === 0 ? (
+                  <li className="px-3 py-2 text-sm text-muted-foreground">Brak wyników</li>
+                ) : null}
+              </ul>
+            </>
+          ) : (
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] text-muted-foreground">
+                Wybrano:{" "}
+                <span className="text-foreground/90">{selectedPlayer?.name ?? values.favoritePlayerId}</span>
+              </span>
+              <button
+                type="button"
+                className="text-[11px] text-primary hover:underline"
+                onClick={() => {
+                  patchValue("favoritePlayerId", "");
+                  setPlayerQuery("");
+                }}
+              >
+                Zmień
+              </button>
+            </div>
+          )}
+        </div>
 
-        <p className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-[11px] text-muted-foreground">
-          Twoje dane mogą być używane do porównań społecznościowych (zawsze włączone).
-        </p>
+        <label className="flex cursor-not-allowed items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3 opacity-90">
+          <input type="checkbox" checked readOnly disabled className="mt-0.5" />
+          <span className="text-sm text-muted-foreground">
+            Dane widoczne do porównań społecznościowych (zawsze włączone).
+          </span>
+        </label>
 
         <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3">
           <input
@@ -339,10 +369,10 @@ export function AboutForm({
         <button
           type="submit"
           disabled={saving}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[color:var(--onb-mint,#7dd3c0)] via-[color:var(--onb-lilac,#c4a8e8)] to-[color:var(--onb-rose,#e8a0c0)] px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-from to-accent-to px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
         >
           {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-          {mode === "onboarding" ? "Zapisz i kontynuuj" : "Zapisz"}
+          {mode === "onboarding" ? "Zapisz i kontynuuj" : "Zapisz „O Tobie”"}
         </button>
 
         {mode === "onboarding" ? (
@@ -356,6 +386,12 @@ export function AboutForm({
           </button>
         ) : null}
       </form>
-    </div>
+    </>
   );
+
+  if (embedded) {
+    return <div className="space-y-4 border-t border-white/10 pt-5">{formInner}</div>;
+  }
+
+  return <div className="glass-tile space-y-4 p-5">{formInner}</div>;
 }

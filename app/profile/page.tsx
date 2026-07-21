@@ -7,7 +7,6 @@ import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { ProfileClient } from "./profile-client";
 import { ProfileHeader } from "./profile-header";
 import { ProfileIdentityEdit } from "./profile-identity-edit";
-import { ProfileAboutEdit } from "./profile-about-edit";
 
 export const dynamic = "force-dynamic";
 
@@ -53,8 +52,7 @@ export default async function ProfilePage() {
         </nav>
 
         <ProfileHeader customer={customer} />
-        <ProfileIdentityEdit customer={customer} />
-        <ProfileAboutEdit customer={customer} softCta={needsAboutSoftCta(customer)} />
+        <ProfileIdentityEdit customer={customer} softCta={needsAboutSoftCta(customer)} />
 
         <ProfileClient
           myDisplayName={`${customer.lastName} ${customer.firstName}`.trim()}

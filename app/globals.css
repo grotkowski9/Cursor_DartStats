@@ -109,18 +109,3 @@
     0 20px 50px -20px oklch(0 0 0 / 45%),
     0 0 0 1px oklch(1 0 0 / 3%);
 }
-
-/* Onboarding — subtle mint + rose/lilac (page-local, not a brand mark) */
-.onboarding-shell {
-  --onb-mint: oklch(0.78 0.11 165);
-  --onb-rose: oklch(0.78 0.1 350);
-  --onb-lilac: oklch(0.76 0.1 305);
-}
-
-.onboarding-shell .glass-tile {
-  border-color: color-mix(in oklab, var(--onb-lilac) 28%, oklch(1 0 0 / 12%));
-  box-shadow:
-    0 1px 0 0 oklch(1 0 0 / 8%) inset,
-    0 20px 50px -20px oklch(0 0 0 / 45%),
-    0 0 40px -18px color-mix(in oklab, var(--onb-mint) 35%, transparent);
-}
