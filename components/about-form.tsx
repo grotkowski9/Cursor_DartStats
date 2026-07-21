@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import type { CustomerProfile } from "@/lib/customer";
 import { DART_WEIGHT_OPTIONS } from "@/lib/about-options";
+import type { AboutFormValues } from "@/lib/about-form-values";
 import plCities from "@/data/pl-cities.json";
 import dartBrands from "@/data/dart-brands.json";
 import favoritePlayers from "@/data/favorite-players.json";
@@ -18,17 +18,6 @@ const PLAYERS = (favoritePlayers as Player[])
   .slice()
   .sort((a, b) => a.name.localeCompare(b.name, "pl"));
 
-export type AboutFormValues = {
-  city: string;
-  dartBrand: string;
-  dartBrandOther: string;
-  dartModel: string;
-  dartWeightBucket: string;
-  throwingHand: "" | "L" | "R";
-  favoritePlayerId: string;
-  newsletterOptIn: boolean;
-};
-
 type Props = {
   initial: AboutFormValues;
   mode: "onboarding" | "edit";
@@ -37,19 +26,6 @@ type Props = {
   showEncouragement?: boolean;
   onSaved?: () => void;
 };
-
-export function customerToAboutValues(c: CustomerProfile): AboutFormValues {
-  return {
-    city: c.city ?? "",
-    dartBrand: c.dartBrand ?? "",
-    dartBrandOther: c.dartBrandOther ?? "",
-    dartModel: c.dartModel ?? "",
-    dartWeightBucket: c.dartWeightBucket ?? "",
-    throwingHand: c.throwingHand ?? "",
-    favoritePlayerId: c.favoritePlayerId ?? "",
-    newsletterOptIn: c.newsletterOptIn,
-  };
-}
 
 export function AboutForm({
   initial,

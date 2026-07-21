@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import type { CustomerProfile } from "@/lib/customer";
-import { AboutForm, customerToAboutValues } from "@/components/about-form";
+import { AboutForm } from "@/components/about-form";
+import { customerToAboutValues } from "@/lib/about-form-values";
 
 type Props = {
   customer: CustomerProfile;
