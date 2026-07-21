@@ -1100,8 +1100,8 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
 | **1.0.1.1–6**   | ⏳ Audyt, deploy, domena, **dokumenty prawne**               |
 | **1.0.2.x**     | ⏳ Copy (Twoje teksty)                                       |
-| **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) · tag `v1.1.0` |
-| **1.1.1**       | ✅ WYDANY — **1.1.9** tożsamość + docs **1.1.10** + premium→2.0 · `backup/v1.1.1`, tag `v1.1.1-backup` |
+| **v1.1.0**      | ✅ WYDANY — Auth roadmap 1.1.1–1.1.6 · tag `v1.1.0` |
+| **v1.1.1**      | ✅ WYDANY — **1.1.9** tożsamość + docs **1.1.10** + premium→2.0 · `backup/v1.1.1`, tag `v1.1.1-backup` |
 | **1.1.3.8**     | ⏳ Samouczek                                                 |
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
@@ -1229,7 +1229,8 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
 
-Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6) + **1.1.9.1–4** profil tożsamości.
+Stan: **v1.1.1 WYDANY** (Auth v1.1.0 + tożsamość 1.1.9 + docs 1.1.10).
+Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.
 Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
 1.1.9 = profil tożsamości ✅.
 1.1.10 = opcjonalne „O Tobie” — zakres zatwierdzony; kolejność: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2.
