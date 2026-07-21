@@ -1,8 +1,12 @@
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { DemoBanner } from "@/components/demo-banner";
 import { SiteFooter } from "@/components/site-footer";
+import { ProductTour } from "@/components/product-tour";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCustomerByAuthUserId } from "@/lib/customer";
 import { getDemoSnapshot, personaToCustomer } from "@/lib/demo";
 import { DEMO_PERSONA } from "@/demo/demo-persona";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
@@ -27,7 +31,35 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DemoProfilePage() {
+type Props = {
+  searchParams: Promise<{ tour?: string }>;
+};
+
+export default async function DemoProfilePage({ searchParams }: Props) {
+  const sp = await searchParams;
+  const autoTour = sp.tour === "1";
+
+  let persistServer = false;
+  let finishHref: string | null = null;
+  if (autoTour) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        const c = await getCustomerByAuthUserId(data.user.id);
+        if (c?.tourCompletedAt) {
+          redirect("/profile");
+        }
+        if (c) {
+          persistServer = true;
+          finishHref = "/profile";
+        }
+      }
+    } catch {
+      /* public demo without auth is fine */
+    }
+  }
+
   return (
     <>
       <main className="relative min-h-screen overflow-hidden bg-background px-4 py-8 text-foreground md:py-12">
@@ -46,12 +78,19 @@ export default function DemoProfilePage() {
               <ChevronLeft className="h-3.5 w-3.5" />
               Strona główna
             </Link>
-            <Link
-              href="/login"
-              className="text-xs font-medium text-primary/90 transition hover:text-primary"
-            >
-              Załóż konto →
-            </Link>
+            <div className="flex items-center gap-3">
+              <ProductTour
+                autoStart={autoTour}
+                persistServer={persistServer}
+                finishHref={finishHref}
+              />
+              <Link
+                href="/login"
+                className="text-xs font-medium text-primary/90 transition hover:text-primary"
+              >
+                Załóż konto →
+              </Link>
+            </div>
           </nav>
 
           <DemoBanner />

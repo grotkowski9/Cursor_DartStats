@@ -14,36 +14,69 @@ export type Database = {
     Tables: {
       customers: {
         Row: {
+          about_completed_at: string | null
           auth_user_id: string | null
+          city: string | null
           created_at: string
           customer_id: string
+          dart_brand: string | null
+          dart_brand_other: string | null
+          dart_model: string | null
+          dart_weight_bucket: string | null
+          favorite_player_id: string | null
           first_name: string
           known_nicknames: string[]
           last_name: string
+          newsletter_opt_in: boolean
           nickname: string | null
+          profile_stats_visible: boolean
           role: string
+          throwing_hand: string | null
+          tour_completed_at: string | null
           updated_at: string
         }
         Insert: {
+          about_completed_at?: string | null
           auth_user_id?: string | null
+          city?: string | null
           created_at?: string
           customer_id?: string
+          dart_brand?: string | null
+          dart_brand_other?: string | null
+          dart_model?: string | null
+          dart_weight_bucket?: string | null
+          favorite_player_id?: string | null
           first_name: string
           known_nicknames?: string[]
           last_name: string
+          newsletter_opt_in?: boolean
           nickname?: string | null
+          profile_stats_visible?: boolean
           role?: string
+          throwing_hand?: string | null
+          tour_completed_at?: string | null
           updated_at?: string
         }
         Update: {
+          about_completed_at?: string | null
           auth_user_id?: string | null
+          city?: string | null
           created_at?: string
           customer_id?: string
+          dart_brand?: string | null
+          dart_brand_other?: string | null
+          dart_model?: string | null
+          dart_weight_bucket?: string | null
+          favorite_player_id?: string | null
           first_name?: string
           known_nicknames?: string[]
           last_name?: string
+          newsletter_opt_in?: boolean
           nickname?: string | null
+          profile_stats_visible?: boolean
           role?: string
+          throwing_hand?: string | null
+          tour_completed_at?: string | null
           updated_at?: string
         }
         Relationships: []

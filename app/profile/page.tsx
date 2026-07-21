@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft, LogOut } from "lucide-react";
 import { requireAuthCustomer } from "@/lib/auth";
+import { needsAboutSoftCta } from "@/lib/customer";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { ProfileClient } from "./profile-client";
 import { ProfileHeader } from "./profile-header";
 import { ProfileIdentityEdit } from "./profile-identity-edit";
+import { ProfileAboutEdit } from "./profile-about-edit";
 
 export const dynamic = "force-dynamic";
 
@@ -52,9 +54,11 @@ export default async function ProfilePage() {
 
         <ProfileHeader customer={customer} />
         <ProfileIdentityEdit customer={customer} />
+        <ProfileAboutEdit customer={customer} softCta={needsAboutSoftCta(customer)} />
 
         <ProfileClient
           myDisplayName={`${customer.lastName} ${customer.firstName}`.trim()}
+          showInsights
         />
       </div>
     </main>

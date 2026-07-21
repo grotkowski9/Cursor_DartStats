@@ -1,0 +1,19 @@
+[
+  { "id": "target", "label": "Target" },
+  { "id": "winmau", "label": "Winmau" },
+  { "id": "mission", "label": "Mission" },
+  { "id": "red-dragon", "label": "Red Dragon" },
+  { "id": "unicorn", "label": "Unicorn" },
+  { "id": "shot", "label": "Shot Darts" },
+  { "id": "one80", "label": "One80" },
+  { "id": "cosmo", "label": "Cosmo Darts" },
+  { "id": "dynasty", "label": "Dynasty" },
+  { "id": "bulls", "label": "Bull's" },
+  { "id": "harrows", "label": "Harrows" },
+  { "id": "designa", "label": "Designa" },
+  { "id": "bottelsen", "label": "Bottelsen" },
+  { "id": "cuesoul", "label": "CUESOUL" },
+  { "id": "trinidad", "label": "Trinidad" },
+  { "id": "loxley", "label": "Loxley" },
+  { "id": "other", "label": "Inne…" }
+]

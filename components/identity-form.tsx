@@ -54,7 +54,7 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
       if (!res.ok) throw new Error(data.error ?? "Zapis nieudany");
 
       if (mode === "onboarding") {
-        router.replace("/profile");
+        router.replace("/onboarding/about");
         router.refresh();
         return;
       }
@@ -71,7 +71,7 @@ export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
 
   const label =
     submitLabel ??
-    (mode === "onboarding" ? "Zapisz i przejdź do profilu" : "Zapisz zmiany");
+    (mode === "onboarding" ? "Zapisz i przejdź dalej" : "Zapisz zmiany");
 
   return (
     <form onSubmit={(e) => void handleSubmit(e)} className="glass-tile space-y-4 p-5">

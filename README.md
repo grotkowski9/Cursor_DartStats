@@ -567,7 +567,7 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
   - [ ] **1.0.1.6.5** (wewnętrzne, nie w app) DPA Supabase + Vercel, rejestr czynności
 
-**Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (doprecyzować przy prawnych / osobny task), audyt pentest light.
+**Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (**1.1.11**), audyt pentest light.
 
 ---
 
@@ -632,16 +632,19 @@ Pełny stan projektu zamrożony poza `main`:
   - [x] **1.1.3.5** Bulk import: modal przy `none`/`ambiguous`
   - [x] **1.1.3.6** Duplikat — import pojedynczy: Nadpisz / Zobacz / Pomiń
   - [x] **1.1.3.7** Duplikat — bulk: Pomiń wszystkie / Nadpisz wszystkie
-  - [ ] **1.1.3.8** **Samouczek** — opcjonalny tour po `/demo/profile`
+  - [x] **1.1.3.8** **Samouczek** — opcjonalny tour
+    - [x] Na `/demo/profile` (`?tour=1` / przycisk „Pokaż samouczek”; gość: `localStorage`)
+    - [x] Po nowym koncie: po Kroku 2 (zapisz/pomiń) → `/demo/profile?tour=1` (raz); CTA → `/profile`
+    - [x] Flaga `tour_completed_at` na `customers`; zawsze można **Pomiń** (nie jest gate’em)
 - [x] **1.1.4** Usunięcie runtime `DEFAULT_CUSTOMER_ID` — API wymaga sesji; seed → `SEED_CUSTOMER_ID`
 - [x] **1.1.5** Middleware — `/profile`, `/onboarding`, `/api/*` tylko zalogowany (+ noindex); `/?code=` → `/auth/callback`
 - [x] **1.1.6** RLS per user — migracja `20260715210000_auth_rls_per_user.sql` (zastosowana na Supabase)
 - [ ] **1.1.7** Usuwanie meczu przez usera
-  - [ ] **1.1.7.1** Przycisk „Usuń mecz" na karcie / widoku meczu
+  - [ ] **1.1.7.1** Przycisk / akcja „Usuń mecz" na karcie meczu w profilu
   - [ ] **1.1.7.2** Triple-check: potwierdź → podsumowanie → wpisz `usuwam`
   - [ ] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS
   - [ ] **1.1.7.4** Undo toast (nice-to-have)
-  - Usuwanie **konta** (cały customer + auth) ≠ ten task — osobno przy RODO / po **1.0.1.6**
+  - Usuwanie **konta** ≠ ten task → **1.1.11**
 - [ ] **1.1.8** Panel admina superadmin (`/admin`)
   - [ ] **1.1.8.1** Lista userów (customers)
   - [ ] **1.1.8.2** Podgląd / usuwanie meczów dowolnego usera
@@ -653,35 +656,36 @@ Pełny stan projektu zamrożony poza `main`:
   - [x] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser` — `given_name`/`family_name`/`full_name`)
   - [x] **1.1.9.3** Gate na ingest: bez danych → `403 needs_onboarding` + redirect `/onboarding`
   - [x] **1.1.9.4** Edycja tych pól później w profilu (`ProfileIdentityEdit` + wspólny `IdentityForm`)
-- [ ] **1.1.10** **Opcjonalne pola profilu dartera** (po 1.1.9 — **nie** blokują importu)
+- [x] **1.1.10** **Opcjonalne pola profilu dartera** (po 1.1.9 — **nie** blokują importu)
 
 > Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
 
 #### 1.1.10 — zatwierdzony zakres (2026-07-21)
 
 > **Gate obowiązkowy = tylko 1.1.9.** `needsOnboarding` bez zmian (tylko `known_nicknames`).  
-> **Flow:** Google → Krok 1 (1.1.9) → **Krok 2 „O Tobie”** (zachęta + **Pomiń**) → `/profile`. Te same pola edytowalne na profilu.  
+> **Flow:** Login → Krok 1 (1.1.9) → **Krok 2 „O Tobie”** (mocna zachęta + **Pomiń**) → samouczek **1.1.3.8** → `/profile`. Te same pola edytowalne na profilu.  
+> **Zachęta Krok 2:** porównania graczy z tymi samymi lotkami (wkrótce), spersonalizowana komunikacja, punkty gracza (wkrótce — **1.1.12**), i wiele więcej.  
 > **Legacy (np. Groteł):** już po 1.1.9 → **nie gate**; miękki CTA „Uzupełnij profil dartera” na `/profile` (nie modal blokujący).  
-> **DB:** kolumny w **`customers`** (bez nowej tabeli). Migracja + UI = dopiero przy „lecimy z kolejnymi X”.  
+> **DB:** kolumny w **`customers`** (bez nowej tabeli).  
 > **Kolejność wdrożeń:** `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`.
 
 **Zatwierdzone do zrobienia:** **1.1.10.0**, **.1**, **.4**, **.5**, **.6**, **.10**, **.14**, **.21**, **.22**, **.23.1**, **.23.2**.
 
 ##### UX
 
-- [ ] **1.1.10.0** ⏳ Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta + **Pomiń**; edycja na `/profile`; soft CTA dla kont legacy bez `about_completed_at`
+- [x] **1.1.10.0** ✅ Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta + **Pomiń**; edycja na `/profile`; soft CTA dla kont legacy bez `about_completed_at`
 
 ##### A. Kontekst lokalny
 
-- [ ] **1.1.10.1** ⏳ Miasto — **autocomplete** z whitelisty PL po ≥3 literach (`data/pl-cities.json`); bez free-text random
+- [x] **1.1.10.1** ✅ Miasto — **autocomplete** z whitelisty PL po ≥3 literach (`data/pl-cities.json`); bez free-text random
 - [x] **1.1.10.2** ❌ Klub / pub / venue — odrzucone
 - [x] **1.1.10.3** ❌ Federacja / liga — odrzucone
 
 ##### B. Sprzęt
 
-- [ ] **1.1.10.4** ⏳ Marka lotek (select + **Inne…** → `dart_brand_other`; słownik w `data/dart-brands.json`)
-- [ ] **1.1.10.5** ⏳ Model lotek (text)
-- [ ] **1.1.10.6** ⏳ Waga lotek (select: `≤14`, `15`…`27`, `≥28`)
+- [x] **1.1.10.4** ✅ Marka lotek (select + **Inne…** → `dart_brand_other`; słownik w `data/dart-brands.json`)
+- [x] **1.1.10.5** ✅ Model lotek (text)
+- [x] **1.1.10.6** ✅ Waga lotek (select: `≤14`, `15`…`27`, `≥28`)
 - [x] **1.1.10.7** ❌ Tip softip/steel — odrzucone
 - [x] **1.1.10.8** ❌ Shaft / flight — odrzucone
 - [x] **1.1.10.9** ❌ Board w domu — odrzucone
@@ -691,14 +695,14 @@ Pełny stan projektu zamrożony poza `main`:
 
 ##### C. Styl gry
 
-- [ ] **1.1.10.10** ⏳ Ręka (L / P)
+- [x] **1.1.10.10** ✅ Ręka (L / P)
 - [x] **1.1.10.11** ❌ Stance — odrzucone
 - [x] **1.1.10.12** ❌ Ulubiony checkout (pytanie) — odrzucone (ew. z meczów)
 - [x] **1.1.10.13** ❌ Cel treningowy — odrzucone
 
 ##### D. Fandom
 
-- [ ] **1.1.10.14** ⏳ Ulubiony zawodnik — searchable select, **~50 popularnych** (nie czysty OoM); UI sort **A–Z**; JSON `data/favorite-players.json` z `tier`: `current` | `icon` | `rising_pl`
+- [x] **1.1.10.14** ✅ Ulubiony zawodnik — searchable select, **~50 popularnych** (nie czysty OoM); UI sort **A–Z**; JSON `data/favorite-players.json` z `tier`: `current` | `icon` | `rising_pl`
 - [x] **1.1.10.15** ❌ Ulubiony turniej oglądany — odrzucone
 - [x] **1.1.10.16** ❌ Bohater PL (osobne pole) — odrzucone *(PL w liście .14)*
 
@@ -713,18 +717,18 @@ Pełny stan projektu zamrożony poza `main`:
 ##### F. Społeczność / zgody
 
 - [x] **1.1.10.20** ❌ Discord / IG — odrzucone
-- [ ] **1.1.10.21** ⏳ Widoczność danych do porównań społeczności: **zawsze włączone** w UI (brak toggle „wyłącz”). Nota wewnętrzna: kiedyś `role=premium` odblokuje wyłączenie — **zero copy o premium na stronie teraz**. Kolumna `profile_stats_visible boolean DEFAULT true`.
-- [ ] **1.1.10.22** ⏳ Newsletter / tipy — opt-in (domyślnie off) + zachęta w stylu: „Czasem konkret — np. wynik Twojego ulubionego zawodnika. Bez spamu.” Kolumna `newsletter_opt_in boolean DEFAULT false`.
+- [x] **1.1.10.21** ✅ Widoczność danych do porównań społeczności: **zawsze włączone** w UI (brak toggle „wyłącz”). Nota wewnętrzna: kiedyś `role=premium` odblokuje wyłączenie — **zero copy o premium na stronie teraz**. Kolumna `profile_stats_visible boolean DEFAULT true`.
+- [x] **1.1.10.22** ✅ Newsletter / tipy — opt-in (domyślnie off) + zachęta w stylu: „Czasem konkret — np. wynik Twojego ulubionego zawodnika. Bez spamu.” Kolumna `newsletter_opt_in boolean DEFAULT false`.
 
 ##### G. Ciekawostki (nie formularz)
 
-- [ ] **1.1.10.23** ⏳ Epic ciekawostek z danych (bez pytań w formularzu)
-  - [ ] **1.1.10.23.1** ⏳ Top passa wygranych (W) — kafelek z historii meczów
-  - [ ] **1.1.10.23.2** ⏳ Avg przy Twojej wadze lotek vs inni z tym samym bucketem — **ukryte** do czasu `min_cohort_size` (config, start: **10** osób z `dart_weight_bucket`)
+- [x] **1.1.10.23** ✅ Epic ciekawostek z danych (bez pytań w formularzu)
+  - [x] **1.1.10.23.1** ✅ Top passa wygranych (W) — kafelek z historii meczów
+  - [x] **1.1.10.23.2** ✅ Avg przy Twojej wadze lotek vs inni z tym samym bucketem — **ukryte** do czasu `min_cohort_size` (config, start: **5** osób z `dart_weight_bucket`)
 
 **Nie zbieramy:** PESEL, telefon, dokładny adres, data urodzenia; live scrape sklepów / PDC przy formularzu.
 
-##### Kolumny `customers` (migracja przy wdrożeniu — nie teraz)
+##### Kolumny `customers` (migracja przy 1.1.10)
 
 ```text
 city                   text          -- 1.1.10.1 (whitelist)
@@ -737,9 +741,22 @@ favorite_player_id     text          -- 1.1.10.14
 profile_stats_visible  boolean NOT NULL DEFAULT true   -- 1.1.10.21
 newsletter_opt_in      boolean NOT NULL DEFAULT false  -- 1.1.10.22
 about_completed_at     timestamptz   -- null = nie uzupełniono / pominięto → soft CTA
+tour_completed_at      timestamptz   -- 1.1.3.8 — auto-tour tylko raz
 ```
 
-Ref JSON (przy wdrożeniu): `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players.json`.
+Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players.json`.
+
+- [ ] **1.1.11** **Usuwanie konta** (RODO / po **1.0.1.6** — **≠** 1.1.7)
+  - [ ] Na **samym dole** `/profile` (pod listą meczów) tekst/link: **„nieodwracalnie usuń konto i wszystkie powiązane z nim dane”**
+  - [ ] Potwierdzenie destrukcyjne → kasacja customer + mecze/snapshoty + `auth.users` → wylogowanie
+  - Status: ⏳ docs — implementacja później
+
+- [ ] **1.1.12** **Punkty gracza** (motywacja — **stawki TBD**, osobna decyzja)
+  - Cel: zbieranie punktów za aktywność i uzupełnianie profilu
+  - Szkielet: saldo + ledger zdarzeń; silnik przy akcjach (import meczu, Krok 1, pola „O Tobie”, …); UI salda na profilu; ranking/nagrody później
+  - **Stawki: nieustalone** (placeholder w docs — nie hardcodować finalnych wartości bez decyzji)
+  - Na Kroku 2 copy może **zapowiadać** punkty („wkrótce”) bez przyznawania
+  - Status: ⏳ docs only — implementacja później
 
 ---
 
@@ -807,28 +824,30 @@ Ref JSON (przy wdrożeniu): `data/pl-cities.json`, `data/dart-brands.json`, `dat
 | **1.0.1.6** | ⏳ | Dokumenty prawne: polityka, regulamin, cookies, linki, DPA |
 | **1.0.2.1–7** | ⏳ | Copy klienta (Twoje teksty → fix) |
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
-| **1.1.3.8** | ⏳ | Samouczek po onboardingu (`/demo/profile`) |
+| **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
 | **1.1.7** | ⏳ | Usuwanie meczu (UI + API + triple-check) |
 | **1.1.8** | ⏳ | Panel admina superadmin |
 | **1.1.9.1** | ✅ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
 | **1.1.9.3** | ✅ | Gate na ingest bez danych → błąd + formularz |
 | **1.1.9.4** | ✅ | Edycja pól tożsamości w profilu |
-| **1.1.10.0** | ⏳ | Krok 2 „O Tobie” + Pomiń + edycja `/profile` + soft CTA legacy |
-| **1.1.10.1** | ⏳ | Miasto — autocomplete PL (≥3 litery) |
+| **1.1.10.0** | ✅ | Krok 2 „O Tobie” + Pomiń + edycja `/profile` + soft CTA legacy |
+| **1.1.10.1** | ✅ | Miasto — autocomplete PL (≥3 litery) |
 | **1.1.10.2–3** | ❌ | Klub, federacja — odrzucone |
-| **1.1.10.4** | ⏳ | Marka lotek (+ Inne) |
-| **1.1.10.5** | ⏳ | Model lotek |
-| **1.1.10.6** | ⏳ | Waga lotek |
+| **1.1.10.4** | ✅ | Marka lotek (+ Inne) |
+| **1.1.10.5** | ✅ | Model lotek |
+| **1.1.10.6** | ✅ | Waga lotek |
 | **1.1.10.7–9** | ❌ | tip / shaft / board — odrzucone |
-| **1.1.10.10** | ⏳ | Ręka L/P |
+| **1.1.10.10** | ✅ | Ręka L/P |
 | **1.1.10.11–13** | ❌ | stance / checkout-pytanie / cel — odrzucone |
-| **1.1.10.14** | ⏳ | Ulubiony zawodnik (~50 popularnych) |
+| **1.1.10.14** | ✅ | Ulubiony zawodnik (~50 popularnych) |
 | **1.1.10.15–20** | ❌ | turniej / bohater / od kiedy / poziom / częst. / Discord — odrzucone |
-| **1.1.10.21** | ⏳ | Widoczność społeczności (zawsze on w UI; premium toggle później, bez copy) |
-| **1.1.10.22** | ⏳ | Newsletter opt-in (zachęta, zero spamu) |
-| **1.1.10.23.1** | ⏳ | Ciekawostka: top passa W |
-| **1.1.10.23.2** | ⏳ | Ciekawostka: avg vs cohort wagi (ukryte do min N=10) |
+| **1.1.10.21** | ✅ | Widoczność społeczności (zawsze on w UI; premium toggle później, bez copy) |
+| **1.1.10.22** | ✅ | Newsletter opt-in (zachęta, zero spamu) |
+| **1.1.10.23.1** | ✅ | Ciekawostka: top passa W |
+| **1.1.10.23.2** | ✅ | Ciekawostka: avg vs cohort wagi (ukryte do min N=5) |
+| **1.1.11** | ⏳ | Usuwanie konta (copy na dole profilu; RODO) |
+| **1.1.12** | ⏳ | Punkty gracza (szkielet; stawki TBD) |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
@@ -906,7 +925,7 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 
 - **Minimalizacja:** nie zbieramy więcej niż potrzeba do statystyk darta
 - **Cel przetwarzania:** usługa statystyk dla zawodnika (nie marketing do obcych bez zgody)
-- **Prawo dostępu / usunięcia meczów:** **1.1.7** (usuwanie konta — osobno, przy prawnych)
+- **Prawo dostępu / usunięcia meczów:** **1.1.7**; usuwanie konta: **1.1.11**
 - **DPA:** umowy powierzenia z Supabase i hostem (Vercel) — **1.0.1.6.5**
 - **Polityka prywatności + regulamin + cookies:** strony publiczne — **1.0.1.6.1–4**
 - **Rejestr czynności:** dokument wewnętrzny (administrator = Ty) — **1.0.1.6.5**
@@ -935,7 +954,7 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 - [x] Auth + RLS (**1.1.1–1.1.6** / v1.1.0)
 - [ ] Audyt prod (**1.0.1.1–5**)
 - [ ] Dokumenty prawne (**1.0.1.6** — polityka, regulamin, cookies, DPA)
-- [ ] Usuwanie meczów (**1.1.7**); usuwanie konta — osobno
+- [ ] Usuwanie meczów (**1.1.7**); usuwanie konta (**1.1.11**)
 - [x] Profil tożsamości domknięty (**1.1.9**)
 - [ ] Hardening importu (**1.3.7**)
 - [ ] HTTPS everywhere (Vercel domyślnie)
@@ -1633,6 +1652,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.1.10** | 2026-07-21 | **Krok 2 „O Tobie”** + pola .1/.4–.6/.10/.14/.21/.22 + insighty .23.1–.23.2 (cohort N=5). Samouczek **1.1.3.8** (demo + po koncie). Docs: **1.1.11** usuwanie konta, **1.1.12** punkty (stawki TBD). Migracja `20260721220000_customer_about_fields.sql`. |
 | **docs**   | 2026-07-21 | **Drop `customers.display_name`.** Wyświetlanie tylko z `first_name` / `nickname` / `last_name` + `formatCustomerDisplayName()`. Migracja `20260721210000_drop_customer_display_name.sql`. |
 | **1.1.1**   | 2026-07-21 | **Release v1.1.1.** Profil tożsamości **1.1.9.1–4**, premium→**2.0.x**, **1.1.10** zakres zatwierdzony (docs). Branch `backup/v1.1.1`, tag `v1.1.1-backup`. Package `1.1.1`. |
 | **docs**   | 2026-07-21 | **1.1.10 decyzje.** Zatwierdzony zakres: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2. Odrzucone: .2–3 .7–9 .11–13 .15–20. Marki (~16+Inne), ~50 graczy (Wright/Chisnall/Bialecki must-have), kolumny `customers`, Krok 2 + soft CTA legacy. Bez kodu — kolejność wdrożeń w backlogu. |
