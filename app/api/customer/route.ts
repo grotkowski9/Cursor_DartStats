@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAuthCustomerApi } from "@/lib/auth";
 import {
+  needsAboutOnboarding,
   needsOnboarding,
   updateCustomerProfile,
   type CustomerProfilePatch,
@@ -28,6 +29,7 @@ export async function GET() {
   return NextResponse.json({
     customer: auth.customer,
     needsOnboarding: needsOnboarding(auth.customer),
+    needsAboutOnboarding: needsAboutOnboarding(auth.customer),
   });
 }
 

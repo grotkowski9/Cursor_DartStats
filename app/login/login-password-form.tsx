@@ -57,8 +57,12 @@ export function LoginPasswordForm({
       try {
         const res = await fetch("/api/customer");
         if (res.ok) {
-          const data = (await res.json()) as { needsOnboarding?: boolean };
+          const data = (await res.json()) as {
+            needsOnboarding?: boolean;
+            needsAboutOnboarding?: boolean;
+          };
           if (data.needsOnboarding) dest = "/onboarding";
+          else if (data.needsAboutOnboarding) dest = "/onboarding/about";
         }
       } catch {
         // non-fatal

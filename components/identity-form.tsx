@@ -13,7 +13,7 @@ export type IdentityFormInitial = {
 
 type Props = {
   initial: IdentityFormInitial;
-  /** onboarding → redirect /profile; edit → stay and refresh */
+  /** onboarding → /onboarding/about; edit → stay and refresh */
   mode: "onboarding" | "edit";
   submitLabel?: string;
   onSaved?: () => void;

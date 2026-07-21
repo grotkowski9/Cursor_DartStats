@@ -240,8 +240,21 @@ export function needsOnboarding(customer: CustomerProfile): boolean {
   return customer.knownNicknames.filter((n) => n.trim()).length === 0;
 }
 
+/** Krok 2 „O Tobie” jeszcze nie zaliczony (ani zapis, ani Pomiń). */
+export function needsAboutOnboarding(customer: CustomerProfile): boolean {
+  return !needsOnboarding(customer) && !customer.aboutCompletedAt;
+}
+
+/** Soft CTA na profilu — brak uzupełnionych pól opcjonalnych. */
 export function needsAboutSoftCta(customer: CustomerProfile): boolean {
-  return !customer.aboutCompletedAt;
+  return (
+    !customer.city &&
+    !customer.dartBrand &&
+    !customer.dartModel &&
+    !customer.dartWeightBucket &&
+    !customer.throwingHand &&
+    !customer.favoritePlayerId
+  );
 }
 
 /** Patterns for N01 auto-detect (lowercase). Falls back to nickname + last_name. */

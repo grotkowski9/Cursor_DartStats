@@ -90,7 +90,7 @@ export function AboutForm({
     setSavedOk(false);
     try {
       const body = opts.skip
-        ? { markAboutCompleted: false }
+        ? { markAboutCompleted: true }
         : {
             city: values.city || null,
             dartBrand: values.dartBrand || null,
@@ -104,17 +104,6 @@ export function AboutForm({
             newsletterOptIn: values.newsletterOptIn,
             markAboutCompleted: opts.markCompleted,
           };
-
-      // Pomiń: no DB stamp (soft CTA stays); just navigate
-      if (opts.skip) {
-        if (mode === "onboarding") {
-          router.replace(nextHref);
-          router.refresh();
-          return;
-        }
-        setSaving(false);
-        return;
-      }
 
       const res = await fetch("/api/customer", {
         method: "PATCH",

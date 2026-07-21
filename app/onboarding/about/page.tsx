@@ -17,7 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default async function OnboardingAboutPage() {
-  const { customer } = await requireAuthCustomer({ allowIncompleteOnboarding: true });
+  const { customer } = await requireAuthCustomer({
+    allowIncompleteOnboarding: true,
+    allowIncompleteAbout: true,
+  });
   if (needsOnboarding(customer)) {
     redirect("/onboarding");
   }

@@ -1063,6 +1063,13 @@ Zatrzymanie serwera: `Ctrl + C` w terminalu.
 # supabase/migrations/20260721210000_drop_customer_display_name.sql
 ```
 
+### Migracja: pola „O Tobie” + tour (1.1.10 / 1.1.3.8)
+
+```bash
+# Supabase Dashboard → SQL Editor → wklej:
+# supabase/migrations/20260721220000_customer_about_fields.sql
+```
+
 ### Migracja customer name fields (historyczna)
 
 Jeśli baza ma jeszcze starą kolumnę `display_name` (tekstowa, przed split), najpierw historyczna:
