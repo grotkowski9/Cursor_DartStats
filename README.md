@@ -365,7 +365,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · **1.1.9.1–4** ✅ · otwarte **1.1.3.8**, **1.1.7–1.1.8** |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · **1.1.9.1–4** ✅ · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** (wybór pól) |
 | **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
@@ -658,8 +658,71 @@ Pełny stan projektu zamrożony poza `main`:
   - [x] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser` — `given_name`/`family_name`/`full_name`)
   - [x] **1.1.9.3** Gate na ingest: bez danych → `403 needs_onboarding` + redirect `/onboarding`
   - [x] **1.1.9.4** Edycja tych pól później w profilu (`ProfileIdentityEdit` + wspólny `IdentityForm`)
+- [ ] **1.1.10** **Opcjonalne pola profilu dartera** (po 1.1.9 — **nie** blokują importu)
 
 > Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
+
+#### 1.1.10 — katalog pól + UX (decyzja przed kodem)
+
+> **Gate obowiązkowy = tylko 1.1.9.** Reszta = opcjonalna.  
+> **Flow:** Google → Krok 1 (tożsamość N01) → **Krok 2 „O Tobie”** (opcjonalne, zachęta + **Pomiń**) → profil. Pominięte / puste → zawsze edycja później na `/profile`.  
+> **DB:** wybrane pola → **kolumny w `customers`** (bez osobnej tabeli).  
+> **Status:** pozycje poniżej numerowane; **do wdrożenia dopiero po Twoim wyborze ID** (reszta = ❌ odrzucone).
+
+**Propozycja Fazy 1 (rekomendacja do potwierdzenia):** **1.1.10.1**, **1.1.10.4**, **1.1.10.6**, **1.1.10.10**, **1.1.10.17**.
+
+##### UX
+
+- [ ] **1.1.10.0** Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta do uzupełnienia + przycisk **Pomiń**; te same pola edytowalne na `/profile`
+
+##### A. Kontekst lokalny
+
+- [ ] **1.1.10.1** Miasto / region (text; bez kodu pocztowego)
+- [ ] **1.1.10.2** Klub / pub / venue (text free)
+- [ ] **1.1.10.3** Federacja / liga główna (select: N01 / inna / amatorska / brak)
+
+##### B. Sprzęt
+
+- [ ] **1.1.10.4** Marka lotek (select + „Inna…”; **własny słownik** w repo — bez live scrape sklepów)
+- [ ] **1.1.10.5** Model lotek (text)
+- [ ] **1.1.10.6** Waga lotek (select: `≤14`, `15`…`27`, `≥28`)
+- [ ] **1.1.10.7** Tip: softip / steel
+- [ ] **1.1.10.8** Shaft / flight (marka; niski priorytet)
+- [ ] **1.1.10.9** Board w domu (select: Blade / One80 / inna / brak)
+
+##### C. Styl gry
+
+- [ ] **1.1.10.10** Ręka (L / P)
+- [ ] **1.1.10.11** Stance (text; raczej pominąć na start)
+- [ ] **1.1.10.12** Ulubiony checkout — **❌ nie pytać** (wyliczać z meczów)
+- [ ] **1.1.10.13** Cel treningowy (text / select avg)
+
+##### D. Fandom
+
+- [ ] **1.1.10.14** Ulubiony zawodnik PDC (searchable select; snapshot OoM JSON w repo, odświeżanie ręczne)
+- [ ] **1.1.10.15** Ulubiony turniej oglądany (Worlds / PL / Euro Tour / lokalne)
+- [ ] **1.1.10.16** Bohater PL (text / krótka lista)
+
+##### E. Doświadczenie
+
+- [ ] **1.1.10.17** Od kiedy grasz (rok lub buckety `&lt;1` / `1–3` / `3–5` / `5+`)
+- [ ] **1.1.10.18** Poziom self-report (rekreacja / liga / turnieje / pro-am)
+- [ ] **1.1.10.19** Częstotliwość gry (1× / 2–3 / 4+ tyg.)
+
+##### F. Społeczność / zgody (ostrożnie RODO)
+
+- [ ] **1.1.10.20** Discord / IG publiczny — **❌ nie na start**
+- [ ] **1.1.10.21** Zgoda na widoczność pól (zanim cokolwiek publicznego)
+- [ ] **1.1.10.22** Newsletter / tipy (osobna zgoda marketingowa)
+
+##### G. Świadomie poza formularzem
+
+- [ ] **1.1.10.23** Ciekawostki **wyliczane z N01** (nie pytania): passa W/L, top przeciwnik, deklaracja wagi vs avg społeczności, „+X avg od rejestracji” — osobny slice UI później
+
+**Nie zbieramy:** PESEL, telefon, dokładny adres, data urodzenia (chyba że kiedyś wiek pod płatności); live scrape Dartshopper/Baltic/PDC przy rejestracji.
+
+**Model kolumn `customers` (tylko dla wybranych ID — migracja po decyzji):** np. `city`, `throwing_hand`, `dart_brand`, `dart_weight_bucket`, `playing_since`, `favorite_pdc_player_id`, …  
+Listy ref: `data/dart-brands.json`, `data/pdc-oom-snapshot.json` (gdy wybrane).
 
 ---
 
@@ -734,12 +797,15 @@ Pełny stan projektu zamrożony poza `main`:
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
 | **1.1.9.3** | ✅ | Gate na ingest bez danych → błąd + formularz |
 | **1.1.9.4** | ✅ | Edycja pól tożsamości w profilu |
+| **1.1.10** | ⏳ | Opcjonalne pola profilu dartera — **wybór ID przed kodem** (Krok 2 + edycja profilu) |
+| **1.1.10.0** | ⏳ | UX Krok 2 „O Tobie” (zachęta + Pomiń) + edycja na `/profile` |
+| **1.1.10.1–23** | ⏳ | Katalog pól — patrz roadmapa 1.1.10 (Faza 1 proponowana: .1 .4 .6 .10 .17) |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
 
-**Uwaga numeracji:** **1.1.9** = profil tożsamości (bez CTA premium). **1.0.1.6** = dokumenty prawne. **2.0.x** = premium / płatności (odłożone).
+**Uwaga numeracji:** **1.1.9** = profil tożsamości (gate). **1.1.10** = opcjonalne „O Tobie”. **1.0.1.6** = dokumenty prawne. **2.0.x** = premium / płatności (odłożone).
 
 ---
 
@@ -1033,9 +1099,10 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 11. **1.1.7** — usuwanie meczu
 12. **1.1.8** — panel admina
 13. **1.1.9.1–4** — profil tożsamości ✅ (2026-07-21)
-14. **1.3.x** — testy + CI + perf + hardening
-15. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
-16. **5.0.x** — pełne wydanie + Apple (⏸️)
+14. **1.1.10** — opcjonalne pola „O Tobie” (katalog numerowany — **wybór ID przed kodem**)
+15. **1.3.x** — testy + CI + perf + hardening
+16. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
+17. **5.0.x** — pełne wydanie + Apple (⏸️)
 
 Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
@@ -1054,6 +1121,7 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.7**   | Usuwanie meczu               | ⏳             |
 | **1.1.8**   | Admin                        | ⏳             |
 | **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
+| **1.1.10**  | Opcjonalne pola dartera      | ⏳ wybór ID    |
 | **1.2**     | *(→ **2.0.x**)*              | —             |
 | **1.3**     | Testy + perf                 | ⏳             |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
@@ -1522,6 +1590,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **docs**   | 2026-07-21 | **1.1.10 katalog.** Opcjonalne pola profilu dartera ponumerowane (1.1.10.0–23). UX: Krok 2 „O Tobie” + Pomiń + edycja w profilu. Gate zostaje 1.1.9. Kolumny w `customers` dopiero po wyborze ID. Propozycja Fazy 1: .1 .4 .6 .10 .17. |
 | **docs**   | 2026-07-21 | **1.1.9.1–4 ✅** Profil tożsamości: wspólny `IdentityForm`, prefill Google (`given_name`/`family_name`), gate ingest `403 needs_onboarding`, edycja w profilu. **0.3.14–17 ❌** anulowane. Usunięty mock `/demo/tournaments-preview`. |
 | **docs**   | 2026-07-20 | **Premium → 2.0.x.** **1.1.9.5** CTA + cały blok freemium/płatności (**było 1.2.x**) przeniesione do **2.0.1–6**. Start bez premium. **1.1.9** = tylko 1.1.9.1–4 (profil tożsamości). |
 | **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
