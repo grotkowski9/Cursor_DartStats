@@ -172,27 +172,6 @@ export function needsOnboarding(customer: CustomerProfile): boolean {
   return customer.knownNicknames.filter((n) => n.trim()).length === 0;
 }
 
-/**
- * Prefill N01 patterns when empty: last name + main nick (skip placeholders).
- * Safe for server + client (no React hooks).
- */
-export function suggestKnownNicknames(parts: {
-  firstName: string;
-  lastName: string;
-  nickname: string | null;
-  knownNicknames: string[];
-}): string {
-  if (parts.knownNicknames.filter((n) => n.trim()).length > 0) {
-    return parts.knownNicknames.join(", ");
-  }
-  const suggestions: string[] = [];
-  const last = parts.lastName.trim();
-  if (last && last.toLowerCase() !== "dart") suggestions.push(last);
-  const nick = parts.nickname?.trim();
-  if (nick) suggestions.push(nick);
-  return suggestions.join(", ");
-}
-
 /** Patterns for N01 auto-detect (lowercase). Falls back to nickname + last_name. */
 export function autoDetectPatterns(customer: CustomerProfile): string[] {
   const fromDb = customer.knownNicknames

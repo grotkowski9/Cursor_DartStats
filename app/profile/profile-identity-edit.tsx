@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, Pencil } from "lucide-react";
 import type { CustomerProfile } from "@/lib/customer";
-import { suggestKnownNicknames } from "@/lib/customer";
+import { suggestKnownNicknames } from "@/lib/identity-suggest";
 import { IdentityForm } from "@/components/identity-form";
 
 type Props = {
