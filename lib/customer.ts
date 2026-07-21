@@ -7,12 +7,11 @@ export type CustomerProfile = {
   firstName: string;
   lastName: string;
   nickname: string | null;
-  displayName: string;
   knownNicknames: string[];
   role: string;
 };
 
-/** Imię „pseudonim" Nazwisko — mirrors DB generated column. */
+/** Imię „pseudonim" Nazwisko — sklejane w appce, nie w DB. */
 export function formatCustomerDisplayName(parts: {
   firstName: string;
   lastName: string;
@@ -30,7 +29,6 @@ type CustomerRow = Pick<
   | "first_name"
   | "last_name"
   | "nickname"
-  | "display_name"
   | "known_nicknames"
   | "role"
 >;
@@ -42,14 +40,13 @@ function rowToProfile(row: CustomerRow): CustomerProfile {
     firstName: row.first_name,
     lastName: row.last_name,
     nickname: row.nickname,
-    displayName: row.display_name,
     knownNicknames: row.known_nicknames ?? [],
     role: row.role,
   };
 }
 
 const CUSTOMER_SELECT =
-  "customer_id, auth_user_id, first_name, last_name, nickname, display_name, known_nicknames, role";
+  "customer_id, auth_user_id, first_name, last_name, nickname, known_nicknames, role";
 
 export async function getCustomerById(customerId: string): Promise<CustomerProfile | null> {
   const supabase = getSupabaseAdmin();

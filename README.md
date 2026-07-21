@@ -87,13 +87,7 @@ customers (
   auth_user_id    uuid REFERENCES auth.users,    -- NULL w MVP
   first_name      text NOT NULL,                 -- imię: "Piotr"
   last_name       text NOT NULL,                 -- nazwisko: "Grotkowski"
-  nickname        text,                          -- pseudonim: "Groteł" (opcjonalny)
-  display_name    text GENERATED ALWAYS AS (      -- tylko do wyświetlania
-    CASE WHEN nickname IS NOT NULL AND btrim(nickname) <> ''
-      THEN first_name || ' „' || nickname || '" ' || last_name
-      ELSE first_name || ' ' || last_name
-    END
-  ) STORED,
+  nickname        text,                          -- pseudonim główny: "Groteł"
   known_nicknames text[],                        -- ["Grotkowski", "Groteł"] — auto-detect N01
   role            text DEFAULT 'user',           -- 'user' | 'premium' | 'admin' | 'superadmin'
   created_at      timestamptz DEFAULT now(),
@@ -101,8 +95,7 @@ customers (
 )
 ```
 
-**Wyświetlanie:** UI bierze `first_name`, `last_name`, `nickname` z DB. Kolumna `display_name` jest GENERATED (nie edytować ręcznie).
-Helper TS: `formatCustomerDisplayName()` w `lib/customer.ts`.
+**Wyświetlanie:** UI skleja `first_name` + `nickname` + `last_name` przez `formatCustomerDisplayName()` w `lib/customer.ts`. **Bez kolumny `display_name` w DB** (usunięta — migracja `20260721210000_drop_customer_display_name.sql`).
 
 **Detekcja N01:** wzorce z `known_nicknames` rekordu customer (nie hardcoded).
 
@@ -997,7 +990,7 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 8. **Demo publiczne pod** `/demo/`* — zanonimizowany dataset w Supabase (`DEMO_CUSTOMER_ID`) + statyczny snapshot KPI (`demo-profile-snapshot.json`) + `demo/demo-persona.ts`; indexowalny; **nigdy** dane Piotra Grotkowskiego w demo.
 9. **Vercel jako hosting** — zero config, free tier, custom domain.
 10. **Detekcja gracza STRICT** — wzorce z `known_nicknames` customer, reszta → pytaj lub odrzuć.
-11. **Customer name split** — `first_name`, `last_name`, `nickname` w DB; `display_name` GENERATED.
+11. **Customer name split** — `first_name`, `last_name`, `nickname` w DB; wyświetlanie w TS (`formatCustomerDisplayName`). Kolumna `display_name` usunięta.
 
 ---
 
@@ -1044,9 +1037,16 @@ Podgląd w przeglądarce:
 
 Zatrzymanie serwera: `Ctrl + C` w terminalu.
 
-### Migracja customer name fields (jednorazowo)
+### Migracja: drop `display_name` (jednorazowo)
 
-Jeśli baza ma jeszcze starą kolumnę `display_name` (tekstowa), zastosuj:
+```bash
+# Supabase Dashboard → SQL Editor → wklej:
+# supabase/migrations/20260721210000_drop_customer_display_name.sql
+```
+
+### Migracja customer name fields (historyczna)
+
+Jeśli baza ma jeszcze starą kolumnę `display_name` (tekstowa, przed split), najpierw historyczna:
 
 ```bash
 # Supabase Dashboard → SQL Editor → wklej zawartość:
@@ -1633,6 +1633,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **docs**   | 2026-07-21 | **Drop `customers.display_name`.** Wyświetlanie tylko z `first_name` / `nickname` / `last_name` + `formatCustomerDisplayName()`. Migracja `20260721210000_drop_customer_display_name.sql`. |
 | **1.1.1**   | 2026-07-21 | **Release v1.1.1.** Profil tożsamości **1.1.9.1–4**, premium→**2.0.x**, **1.1.10** zakres zatwierdzony (docs). Branch `backup/v1.1.1`, tag `v1.1.1-backup`. Package `1.1.1`. |
 | **docs**   | 2026-07-21 | **1.1.10 decyzje.** Zatwierdzony zakres: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2. Odrzucone: .2–3 .7–9 .11–13 .15–20. Marki (~16+Inne), ~50 graczy (Wright/Chisnall/Bialecki must-have), kolumny `customers`, Krok 2 + soft CTA legacy. Bez kodu — kolejność wdrożeń w backlogu. |
 | **docs**   | 2026-07-21 | **1.1.10 katalog.** Opcjonalne pola profilu dartera ponumerowane (1.1.10.0–23). UX: Krok 2 „O Tobie” + Pomiń + edycja w profilu. Gate zostaje 1.1.9. Kolumny w `customers` dopiero po wyborze ID. Propozycja Fazy 1: .1 .4 .6 .10 .17. |
