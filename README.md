@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN).  
+> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6** + profil tożsamości **1.1.9.1–4 ✅**.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -365,7 +365,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · otwarte **1.1.3.8**, **1.1.7–1.1.9** |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · **1.1.9.1–4** ✅ · otwarte **1.1.3.8**, **1.1.7–1.1.8** |
 | **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
@@ -469,15 +469,15 @@ Subtaski: czwarty poziom, np. **1.1.9.1**.
 - [x] **0.3.12** Widok meczu Details: kolory 100+/140+/180
 - [x] **0.3.13** `ProfileStatsBlock` labels & layout
 
-**Odłożone (analityka turniejowa — można modyfikować przed wdrożeniem):**
+**Anulowane (analityka turniejowa — bez potrzeby):**
 
-- [ ] **0.3.14** ⏸️ **Porównanie sesji / turniejów** — filtr po nazwie rozgrywek z N01 (`title`), np. „Liga X" vs „Turniej Y"
-- [ ] **0.3.15** ⏸️ **Grupowanie meczów po turnieju** — lista turniejów z liczbą meczów, avg, W/L
-- [ ] **0.3.16** ⏸️ **Trendy per turniej** — wykres formy osobno dla wybranego `title`
-- [ ] **0.3.17** ⏸️ **Filtr sezon** — rok / półrocze na bazie `start_time`
+- [x] **0.3.14** ❌ **Porównanie sesji / turniejów** — anulowane
+- [x] **0.3.15** ❌ **Grupowanie meczów po turnieju** — anulowane
+- [x] **0.3.16** ❌ **Trendy per turniej** — anulowane
+- [x] **0.3.17** ❌ **Filtr sezon** — anulowane
 - [ ] **0.3.18** → przeniesione do **1.3.6** (batch loading, limit 1000 Supabase)
 
-> **Czy da się modyfikować?** Tak. Dane już są w `matches.title` i datach. Priorytet niższy niż Auth i prod.
+> ~~Priorytet niższy niż Auth i prod.~~ **2026-07-21:** wykreślone z roadmapy — brak potrzeby.
 
 - [x] **0.3.19** Wykres formy: tooltip po indeksie, data+godzina, opp, W/L
 - [x] **0.3.20** Aktywność dni/godziny — układ poziomy, fix mobile
@@ -622,7 +622,7 @@ Pełny stan projektu zamrożony poza `main`:
 
 ### 1.1.x — Auth + Multi-user + Admin + profil tożsamości
 
-> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Otwarte: **1.1.3.8**, **1.1.7**, **1.1.8**, **1.1.9**.
+> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Otwarte: **1.1.3.8**, **1.1.7**, **1.1.8**. **1.1.9.1–4** ✅ (2026-07-21).
 
 - [x] **1.1.1** Supabase Auth (**Google** login) — `/login`, `/api/auth/google`, `/auth/callback`, `/auth/signout`, `@supabase/ssr`
   - OAuth start po stronie serwera (PKCE cookies); callback zapisuje sesję na redirect
@@ -653,11 +653,11 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.1.8.3** Ręczny backup DB (export JSON)
   - [ ] **1.1.8.4** Podgląd ingest / snapshot access log
   - [ ] **1.1.8.5** Ochrona route — tylko `role = superadmin`
-- [ ] **1.1.9** **Profil tożsamości** (domknięcie danych po Google — **nie** dokumenty prawne)
-  - [ ] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), pseudonim główny, pseudonimy N01
-  - [ ] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser`)
-  - [ ] **1.1.9.3** Gate na ingest: bez danych → błąd + przekierowanie do formularza
-  - [ ] **1.1.9.4** Edycja tych pól później w profilu
+- [x] **1.1.9** **Profil tożsamości** (domknięcie danych po Google — **nie** dokumenty prawne)
+  - [x] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), pseudonim główny, pseudonimy N01
+  - [x] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser` — `given_name`/`family_name`/`full_name`)
+  - [x] **1.1.9.3** Gate na ingest: bez danych → `403 needs_onboarding` + redirect `/onboarding`
+  - [x] **1.1.9.4** Edycja tych pól później w profilu (`ProfileIdentityEdit` + wspólny `IdentityForm`)
 
 > Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
 
@@ -718,7 +718,7 @@ Pełny stan projektu zamrożony poza `main`:
 
 | ID | Status | Zadanie |
 | -- | ------ | ------- |
-| **0.3.14–17** | ⏸️ | Analityka turniejowa / sesje / sezon |
+| **0.3.14–17** | ❌ | Analityka turniejowa — **anulowane** (2026-07-21) |
 | **1.0.1.1** | ⏳ | Audyt prod — robots & indeksacja |
 | **1.0.1.2** | ⏳ | Audyt prod — wyciek danych |
 | **1.0.1.3** | ⏳ | Audyt prod — API i ataki |
@@ -730,10 +730,10 @@ Pełny stan projektu zamrożony poza `main`:
 | **1.1.3.8** | ⏳ | Samouczek po onboardingu (`/demo/profile`) |
 | **1.1.7** | ⏳ | Usuwanie meczu (UI + API + triple-check) |
 | **1.1.8** | ⏳ | Panel admina superadmin |
-| **1.1.9.1** | ⏳ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
-| **1.1.9.2** | ⏳ | Prefill z Google przy tworzeniu customer |
-| **1.1.9.3** | ⏳ | Gate na ingest bez danych → błąd + formularz |
-| **1.1.9.4** | ⏳ | Edycja pól tożsamości w profilu |
+| **1.1.9.1** | ✅ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
+| **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
+| **1.1.9.3** | ✅ | Gate na ingest bez danych → błąd + formularz |
+| **1.1.9.4** | ✅ | Edycja pól tożsamości w profilu |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
@@ -841,7 +841,7 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 - [ ] Audyt prod (**1.0.1.1–5**)
 - [ ] Dokumenty prawne (**1.0.1.6** — polityka, regulamin, cookies, DPA)
 - [ ] Usuwanie meczów (**1.1.7**); usuwanie konta — osobno
-- [ ] Profil tożsamości domknięty (**1.1.9**)
+- [x] Profil tożsamości domknięty (**1.1.9**)
 - [ ] Hardening importu (**1.3.7**)
 - [ ] HTTPS everywhere (Vercel domyślnie)
 - [ ] Logi i backup (**1.3.5**, **1.1.8**)
@@ -1002,7 +1002,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.1.3.8**     | ⏳ Samouczek                                                 |
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
-| **1.1.9**       | ⏳ Profil tożsamości (formularz, prefill, gate, edycja) |
+| **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
@@ -1020,7 +1020,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ### Plan otwartych — punkt po punkcie (rosnąco po ID)
 
-1. **0.3.14–17** — analityka turniejowa (⏸️ niski priorytet)
+1. **0.3.14–17** — analityka turniejowa (❌ anulowane)
 2. **1.0.1.1** — audyt robots / indeksacja
 3. **1.0.1.2** — audyt wycieków
 4. **1.0.1.3** — audyt API / ataki
@@ -1032,13 +1032,10 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 10. **1.1.3.8** — samouczek po onboardingu
 11. **1.1.7** — usuwanie meczu
 12. **1.1.8** — panel admina
-13. **1.1.9.1** — obowiązkowy formularz po Google
-14. **1.1.9.2** — prefill z Google przy tworzeniu customer
-15. **1.1.9.3** — gate ingest bez danych
-16. **1.1.9.4** — edycja pól w profilu
-17. **1.3.x** — testy + CI + perf + hardening
-18. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
-19. **5.0.x** — pełne wydanie + Apple (⏸️)
+13. **1.1.9.1–4** — profil tożsamości ✅ (2026-07-21)
+14. **1.3.x** — testy + CI + perf + hardening
+15. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
+16. **5.0.x** — pełne wydanie + Apple (⏸️)
 
 Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
@@ -1056,26 +1053,30 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.3.8** | Samouczek                    | ⏳             |
 | **1.1.7**   | Usuwanie meczu               | ⏳             |
 | **1.1.8**   | Admin                        | ⏳             |
-| **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ⏳             |
+| **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
 | **1.2**     | *(→ **2.0.x**)*              | —             |
 | **1.3**     | Testy + perf                 | ⏳             |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
 
-### Pliki kluczowe (Auth v1.1.0)
+### Pliki kluczowe (Auth v1.1.0 + 1.1.9)
 
 ```
-lib/auth.ts                                   ← ensureCustomerForUser, requireAuth*
+lib/auth.ts                                   ← ensureCustomerForUser, nameFromGoogleMetadata, requireAuth*
+lib/customer.ts                               ← sync / needsOnboarding / updateCustomerProfile
+components/identity-form.tsx                  ← wspólny formularz (onboarding + edycja profilu)
+app/onboarding/page.tsx                       ← obowiązkowy formularz po Google
+app/profile/profile-identity-edit.tsx         ← edycja tożsamości na /profile
+app/api/ingest/route.ts                       ← gate 403 needs_onboarding
+app/api/customer/route.ts                     ← PATCH profilu
 lib/request-origin.ts / lib/app-origin.ts     ← origin LAN vs localhost
 lib/auth-redirect-*.ts                        ← cookies origin/next po OAuth
 lib/supabase/server.ts / middleware.ts        ← SSR cookies + gate
-lib/customer.ts                               ← sync / onboarding
 app/api/auth/google/route.ts                  ← server-side OAuth start (PKCE)
 app/auth/callback/route.ts                    ← exchange code → session cookies
 app/auth/signout/route.ts
 app/login/*                                   ← przycisk Google
-app/onboarding/*                              ← known_nicknames
 supabase/migrations/20260715210000_auth_rls_per_user.sql
 middleware.ts                                 ← protect + /?code= → callback
 ```
@@ -1121,9 +1122,9 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
 
-Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6).
+Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6) + **1.1.9.1–4** profil tożsamości.
 Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
-1.1.9 = profil tożsamości (form/prefill/gate/edycja). 1.0.1.6 = dokumenty prawne.
+1.1.9 = profil tożsamości ✅. 1.0.1.6 = dokumenty prawne.
 2.0.x = premium / płatności — **odłożone**, start bez tego.
 Auth działa na Mac + iPhone (LAN).
 ```
@@ -1521,6 +1522,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **docs**   | 2026-07-21 | **1.1.9.1–4 ✅** Profil tożsamości: wspólny `IdentityForm`, prefill Google (`given_name`/`family_name`), gate ingest `403 needs_onboarding`, edycja w profilu. **0.3.14–17 ❌** anulowane. Usunięty mock `/demo/tournaments-preview`. |
 | **docs**   | 2026-07-20 | **Premium → 2.0.x.** **1.1.9.5** CTA + cały blok freemium/płatności (**było 1.2.x**) przeniesione do **2.0.1–6**. Start bez premium. **1.1.9** = tylko 1.1.9.1–4 (profil tożsamości). |
 | **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
 | **1.1.0**  | 2026-07-15 | **Auth core wydany.** Google OAuth server-side (`/api/auth/google` + PKCE), callback z cookies sesji, sync customer, onboarding, middleware, RLS (`20260715210000_…`). Identity none/ambiguous + bulk. Dev iPhone: Site URL = LAN IP. Seed → `SEED_CUSTOMER_ID` + `OWNER_EMAIL`. Tag `v1.1.0`. |

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { requireAuthCustomer } from "@/lib/auth";
 import { siteDocumentTitle } from "@/lib/page-metadata";
-import { OnboardingForm } from "./onboarding-form";
+import { IdentityForm, suggestKnownNicknames } from "@/components/identity-form";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +15,18 @@ export const metadata: Metadata = {
 
 export default async function OnboardingPage() {
   const { customer } = await requireAuthCustomer({ allowIncompleteOnboarding: true });
+
+  const initial = {
+    firstName: customer.firstName === "Gracz" ? "" : customer.firstName,
+    lastName: customer.lastName === "Dart" ? "" : customer.lastName,
+    nickname: customer.nickname ?? "",
+    knownNicknames: suggestKnownNicknames({
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      nickname: customer.nickname,
+      knownNicknames: customer.knownNicknames,
+    }),
+  };
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background px-4 py-8 text-foreground md:py-12">
@@ -43,19 +55,12 @@ export default async function OnboardingPage() {
             Ustaw swój profil
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Podaj imię, nazwisko i wzorce z N01 (np. nazwisko, nick). Dzięki temu przy imporcie
-            rozpoznamy Cię automatycznie.
+            Po Google uzupełnij imię, nazwisko i wzorce z N01. Bez tego nie zaimportujemy
+            Twoich meczów.
           </p>
         </header>
 
-        <OnboardingForm
-          initial={{
-            firstName: customer.firstName,
-            lastName: customer.lastName,
-            nickname: customer.nickname ?? "",
-            knownNicknames: customer.knownNicknames.join(", "),
-          }}
-        />
+        <IdentityForm initial={initial} mode="onboarding" />
       </div>
     </main>
   );

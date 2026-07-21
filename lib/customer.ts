@@ -164,7 +164,10 @@ export async function updateCustomerProfile(
   return rowToProfile(data);
 }
 
-/** Onboarding incomplete when no nicknames for N01 auto-detect. */
+/**
+ * Profil tożsamości niekompletny (1.1.9): brak wzorców N01.
+ * Imię/nazwisko są wymagane w formularzu; gate ingest/profil opiera się o known_nicknames.
+ */
 export function needsOnboarding(customer: CustomerProfile): boolean {
   return customer.knownNicknames.filter((n) => n.trim()).length === 0;
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuthCustomerApi } from "@/lib/auth";
+import { needsOnboarding } from "@/lib/customer";
 import { ingestAndSave } from "@/lib/matches";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,17 @@ type IngestBody = {
 export async function POST(request: Request) {
   const auth = await requireAuthCustomerApi();
   if (!auth.ok) return auth.response;
+
+  if (needsOnboarding(auth.customer)) {
+    return NextResponse.json(
+      {
+        error: "Uzupełnij profil przed importem meczów.",
+        code: "needs_onboarding",
+        redirect: "/onboarding",
+      },
+      { status: 403 },
+    );
+  }
 
   let body: IngestBody;
   try {
