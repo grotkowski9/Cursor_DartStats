@@ -135,11 +135,18 @@ export function ProfileAddMatch({
       const data = (await res.json()) as {
         status?: string;
         error?: string;
+        code?: string;
+        redirect?: string;
         players?: [string, string];
         reason?: "ambiguous" | "none";
         shareToken?: string;
         match?: { title?: string };
       };
+
+      if (res.status === 403 && data.code === "needs_onboarding") {
+        window.location.assign(data.redirect ?? "/onboarding");
+        return "needs_onboarding";
+      }
 
       if (!res.ok) throw new Error(data.error ?? "Import nieudany");
 
@@ -208,10 +215,17 @@ export function ProfileAddMatch({
       const data = (await res.json()) as {
         status?: string;
         error?: string;
+        code?: string;
+        redirect?: string;
         shareToken?: string;
         players?: [string, string];
         reason?: "ambiguous" | "none";
       };
+
+      if (res.status === 403 && data.code === "needs_onboarding") {
+        window.location.assign(data.redirect ?? "/onboarding");
+        return { url: ingestUrl, status: "error", message: "wymaga profilu" };
+      }
 
       if (!res.ok) throw new Error(data.error ?? "Import nieudany");
 

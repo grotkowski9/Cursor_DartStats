@@ -5,6 +5,7 @@ import { requireAuthCustomer } from "@/lib/auth";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { ProfileClient } from "./profile-client";
 import { ProfileHeader } from "./profile-header";
+import { ProfileIdentityEdit } from "./profile-identity-edit";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +51,7 @@ export default async function ProfilePage() {
         </nav>
 
         <ProfileHeader customer={customer} />
+        <ProfileIdentityEdit customer={customer} />
 
         <ProfileClient
           myDisplayName={`${customer.lastName} ${customer.firstName}`.trim()}

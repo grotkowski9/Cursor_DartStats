@@ -24,6 +24,33 @@ function ownerEmails(): string[] {
     .filter(Boolean);
 }
 
+/** Prefill imię/nazwisko z metadanych Google (given/family, potem full_name/name). */
+export function nameFromGoogleMetadata(meta: Record<string, unknown>): {
+  firstName: string;
+  lastName: string;
+} {
+  const given = typeof meta.given_name === "string" ? meta.given_name.trim() : "";
+  const family = typeof meta.family_name === "string" ? meta.family_name.trim() : "";
+  if (given || family) {
+    return {
+      firstName: given || "Gracz",
+      lastName: family || "Dart",
+    };
+  }
+
+  const fullName =
+    typeof meta.full_name === "string"
+      ? meta.full_name
+      : typeof meta.name === "string"
+        ? meta.name
+        : "";
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts[0] || "Gracz",
+    lastName: parts.length > 1 ? parts.slice(1).join(" ") : "Dart",
+  };
+}
+
 /** Resolve or create customer for authenticated Supabase user. */
 export async function ensureCustomerForUser(user: User): Promise<CustomerProfile> {
   const existing = await getCustomerByAuthUserId(user.id);
@@ -35,16 +62,9 @@ export async function ensureCustomerForUser(user: User): Promise<CustomerProfile
     if (linked) return linked;
   }
 
-  const meta = user.user_metadata ?? {};
-  const fullName =
-    typeof meta.full_name === "string"
-      ? meta.full_name
-      : typeof meta.name === "string"
-        ? meta.name
-        : "";
-  const parts = fullName.trim().split(/\s+/).filter(Boolean);
-  const firstName = parts[0] || "Gracz";
-  const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "Dart";
+  const { firstName, lastName } = nameFromGoogleMetadata(
+    (user.user_metadata ?? {}) as Record<string, unknown>,
+  );
 
   return createCustomerForUser({
     authUserId: user.id,

@@ -3,7 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6 WYDANY** (Google, onboarding, RLS, test Mac + iPhone LAN).  
+> **Status:** **v1.1.1 WYDANY** — Auth **1.1.0** + profil tożsamości **1.1.9.1–4 ✅** + roadmapa **1.1.10** (zakres zatwierdzony, kod później).  
+> Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -48,10 +49,10 @@ Mobile-first, ciemny motyw, glassmorphism.
 - **Multi-user-ready od dnia 0** — schemat DB z `customer_id` wszędzie.
 - **Zero halucynacji** — brak pola w danych → ukrywam kafel, nie zmyślam.
 - **Noindex** na profilach i share-linkach. Landing `/` — indeksowalny.
-- **Docelowo freemium SaaS** (limity jako **konfiguracja**, nie na sztywno w kodzie — patrz **1.2.1**):
+- **Docelowo freemium SaaS** (limity jako **konfiguracja**, nie na sztywno w kodzie — patrz **2.0.x**; **startujemy bez premium / płatności**):
   - Free: domyślnie N meczów (start: 3), **wybrane** statystyki widoczne
   - Premium: pełny limit meczów, **wszystkie** wykresy i sekcje
-  - Płatność: PayNow/PayU (polska bramka, PLN) — dopiero po audycie **1.0.1.x**
+  - Płatność: PayNow/PayU (polska bramka, PLN) — dopiero w **2.0.x** (po audycie **1.0.1.x**)
   - Role: user → premium → admin → superadmin
 - **Hosting:** rekomendacja **Vercel + Supabase** (patrz [Hosting i skalowanie](#hosting-i-skalowanie)); Mikrus możliwy, ale więcej roboty ops.
 
@@ -365,10 +366,11 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · otwarte **1.1.3.8**, **1.1.7–1.1.9** |
-| **1.2.x**   | Premium + płatności                            | ⏳ |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + docs 1.1.10) · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** kod |
+| **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
-| **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x — m.in. **Apple login** |
+| **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
+| **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
 
 Subtaski: czwarty poziom, np. **1.1.9.1**.
 
@@ -468,15 +470,15 @@ Subtaski: czwarty poziom, np. **1.1.9.1**.
 - [x] **0.3.12** Widok meczu Details: kolory 100+/140+/180
 - [x] **0.3.13** `ProfileStatsBlock` labels & layout
 
-**Odłożone (analityka turniejowa — można modyfikować przed wdrożeniem):**
+**Anulowane (analityka turniejowa — bez potrzeby):**
 
-- [ ] **0.3.14** ⏸️ **Porównanie sesji / turniejów** — filtr po nazwie rozgrywek z N01 (`title`), np. „Liga X" vs „Turniej Y"
-- [ ] **0.3.15** ⏸️ **Grupowanie meczów po turnieju** — lista turniejów z liczbą meczów, avg, W/L
-- [ ] **0.3.16** ⏸️ **Trendy per turniej** — wykres formy osobno dla wybranego `title`
-- [ ] **0.3.17** ⏸️ **Filtr sezon** — rok / półrocze na bazie `start_time`
+- [x] **0.3.14** ❌ **Porównanie sesji / turniejów** — anulowane
+- [x] **0.3.15** ❌ **Grupowanie meczów po turnieju** — anulowane
+- [x] **0.3.16** ❌ **Trendy per turniej** — anulowane
+- [x] **0.3.17** ❌ **Filtr sezon** — anulowane
 - [ ] **0.3.18** → przeniesione do **1.3.6** (batch loading, limit 1000 Supabase)
 
-> **Czy da się modyfikować?** Tak. Dane już są w `matches.title` i datach. Priorytet niższy niż Auth i prod.
+> ~~Priorytet niższy niż Auth i prod.~~ **2026-07-21:** wykreślone z roadmapy — brak potrzeby.
 
 - [x] **0.3.19** Wykres formy: tooltip po indeksie, data+godzina, opp, W/L
 - [x] **0.3.20** Aktywność dni/godziny — układ poziomy, fix mobile
@@ -565,14 +567,14 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] Logi dostępu do snapshotów (już jest — weryfikacja)
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
-- [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (1.2.3)**
+- [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (2.0.3)**
   - [ ] **1.0.1.6.1** Polityka prywatności — strona `/privacy` (administrator, cele, podmioty: Supabase/Vercel/Google, prawa RODO)
   - [ ] **1.0.1.6.2** Regulamin serwisu — strona `/terms`
   - [ ] **1.0.1.6.3** Cookies / informacja o plikach (sesja Auth) — strona lub sekcja; banner tylko jeśli faktycznie potrzebny
   - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
   - [ ] **1.0.1.6.5** (wewnętrzne, nie w app) DPA Supabase + Vercel, rejestr czynności
 
-**Checklist przed bramką płatności (1.2.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (doprecyzować przy prawnych / osobny task), audyt pentest light.
+**Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (doprecyzować przy prawnych / osobny task), audyt pentest light.
 
 ---
 
@@ -621,7 +623,8 @@ Pełny stan projektu zamrożony poza `main`:
 
 ### 1.1.x — Auth + Multi-user + Admin + profil tożsamości
 
-> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Otwarte: **1.1.3.8**, **1.1.7**, **1.1.8**, **1.1.9**.
+> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**.  
+> **v1.1.1 (2026-07-21):** **1.1.9.1–4 ✅** + premium→**2.0.x** + **1.1.10** zakres zatwierdzony (docs). Otwarte kod: **1.1.3.8**, **1.1.7**, **1.1.8**, **1.1.10.x**. Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.
 
 - [x] **1.1.1** Supabase Auth (**Google** login) — `/login`, `/api/auth/google`, `/auth/callback`, `/auth/signout`, `@supabase/ssr`
   - OAuth start po stronie serwera (PKCE cookies); callback zapisuje sesję na redirect
@@ -652,29 +655,104 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.1.8.3** Ręczny backup DB (export JSON)
   - [ ] **1.1.8.4** Podgląd ingest / snapshot access log
   - [ ] **1.1.8.5** Ochrona route — tylko `role = superadmin`
-- [ ] **1.1.9** **Profil tożsamości** (domknięcie danych po Google — **nie** dokumenty prawne)
-  - [ ] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), pseudonim główny, pseudonimy N01
-  - [ ] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser`)
-  - [ ] **1.1.9.3** Gate na ingest: bez danych → błąd + przekierowanie do formularza
-  - [ ] **1.1.9.4** Edycja tych pól później w profilu
-  - [ ] **1.1.9.5** Placeholder CTA w profilu: „Włącz wyższy bieg — konto premium” (pełna płatność = **1.2.x**)
+- [x] **1.1.9** **Profil tożsamości** (domknięcie danych po Google — **nie** dokumenty prawne)
+  - [x] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), pseudonim główny, pseudonimy N01
+  - [x] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser` — `given_name`/`family_name`/`full_name`)
+  - [x] **1.1.9.3** Gate na ingest: bez danych → `403 needs_onboarding` + redirect `/onboarding`
+  - [x] **1.1.9.4** Edycja tych pól później w profilu (`ProfileIdentityEdit` + wspólny `IdentityForm`)
+- [ ] **1.1.10** **Opcjonalne pola profilu dartera** (po 1.1.9 — **nie** blokują importu)
 
-> Panel **1.2.4** / **1.2.5** = subskrypcje premium (biznes). Panel **1.1.8** = operacyjny (Ty). CTA **1.1.9.5** = tylko guzik/placeholder pod przyszły upgrade.
+> Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
+
+#### 1.1.10 — zatwierdzony zakres (2026-07-21)
+
+> **Gate obowiązkowy = tylko 1.1.9.** `needsOnboarding` bez zmian (tylko `known_nicknames`).  
+> **Flow:** Google → Krok 1 (1.1.9) → **Krok 2 „O Tobie”** (zachęta + **Pomiń**) → `/profile`. Te same pola edytowalne na profilu.  
+> **Legacy (np. Groteł):** już po 1.1.9 → **nie gate**; miękki CTA „Uzupełnij profil dartera” na `/profile` (nie modal blokujący).  
+> **DB:** kolumny w **`customers`** (bez nowej tabeli). Migracja + UI = dopiero przy „lecimy z kolejnymi X”.  
+> **Kolejność wdrożeń:** `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`.
+
+**Zatwierdzone do zrobienia:** **1.1.10.0**, **.1**, **.4**, **.5**, **.6**, **.10**, **.14**, **.21**, **.22**, **.23.1**, **.23.2**.
+
+##### UX
+
+- [ ] **1.1.10.0** ⏳ Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta + **Pomiń**; edycja na `/profile`; soft CTA dla kont legacy bez `about_completed_at`
+
+##### A. Kontekst lokalny
+
+- [ ] **1.1.10.1** ⏳ Miasto — **autocomplete** z whitelisty PL po ≥3 literach (`data/pl-cities.json`); bez free-text random
+- [x] **1.1.10.2** ❌ Klub / pub / venue — odrzucone
+- [x] **1.1.10.3** ❌ Federacja / liga — odrzucone
+
+##### B. Sprzęt
+
+- [ ] **1.1.10.4** ⏳ Marka lotek (select + **Inne…** → `dart_brand_other`; słownik w `data/dart-brands.json`)
+- [ ] **1.1.10.5** ⏳ Model lotek (text)
+- [ ] **1.1.10.6** ⏳ Waga lotek (select: `≤14`, `15`…`27`, `≥28`)
+- [x] **1.1.10.7** ❌ Tip softip/steel — odrzucone
+- [x] **1.1.10.8** ❌ Shaft / flight — odrzucone
+- [x] **1.1.10.9** ❌ Board w domu — odrzucone
+
+**Marki (1.1.10.4) — lista + uzasadnienie:** Target, Winmau, Mission, Red Dragon, Unicorn, Shot Darts, One80, Cosmo Darts, Dynasty, Bull's, Harrows, Designa, Bottelsen, CUESOUL, Trinidad, Loxley, **Inne…**.  
+~16 marek pokrywa ~95% tego, co widać na ligach PL / PDC; dłużej = scroll hell. Bez live scrape sklepów. „Inne” łapie resztę.
+
+##### C. Styl gry
+
+- [ ] **1.1.10.10** ⏳ Ręka (L / P)
+- [x] **1.1.10.11** ❌ Stance — odrzucone
+- [x] **1.1.10.12** ❌ Ulubiony checkout (pytanie) — odrzucone (ew. z meczów)
+- [x] **1.1.10.13** ❌ Cel treningowy — odrzucone
+
+##### D. Fandom
+
+- [ ] **1.1.10.14** ⏳ Ulubiony zawodnik — searchable select, **~50 popularnych** (nie czysty OoM); UI sort **A–Z**; JSON `data/favorite-players.json` z `tier`: `current` | `icon` | `rising_pl`
+- [x] **1.1.10.15** ❌ Ulubiony turniej oglądany — odrzucone
+- [x] **1.1.10.16** ❌ Bohater PL (osobne pole) — odrzucone *(PL w liście .14)*
+
+**Lista ~50 (szkic na wdrożenie .14):** Humphries, Littler, van Gerwen, Cross, Price, M. Smith, Heta, Clayton, Aspinall, Van den Bergh, Noppert, Rock, Bunting, Dobey, Searle, R. Smith, G. Anderson, Wade, Cullen, van Duijvenbode, Schindler, van Veen, De Decker, Joyce, Edhouse, Menzies, Gurney, Ratajski, **Wright**, **Chisnall**, **Bialecki**, van Barneveld, Taylor, A. Lewis, + dopięcie do 50 przy implementacji. Must-have poza top OoM: Wright, Chisnall, Bialecki.
+
+##### E. Doświadczenie
+
+- [x] **1.1.10.17** ❌ Od kiedy grasz — odrzucone
+- [x] **1.1.10.18** ❌ Poziom self-report — odrzucone
+- [x] **1.1.10.19** ❌ Częstotliwość gry — odrzucone
+
+##### F. Społeczność / zgody
+
+- [x] **1.1.10.20** ❌ Discord / IG — odrzucone
+- [ ] **1.1.10.21** ⏳ Widoczność danych do porównań społeczności: **zawsze włączone** w UI (brak toggle „wyłącz”). Nota wewnętrzna: kiedyś `role=premium` odblokuje wyłączenie — **zero copy o premium na stronie teraz**. Kolumna `profile_stats_visible boolean DEFAULT true`.
+- [ ] **1.1.10.22** ⏳ Newsletter / tipy — opt-in (domyślnie off) + zachęta w stylu: „Czasem konkret — np. wynik Twojego ulubionego zawodnika. Bez spamu.” Kolumna `newsletter_opt_in boolean DEFAULT false`.
+
+##### G. Ciekawostki (nie formularz)
+
+- [ ] **1.1.10.23** ⏳ Epic ciekawostek z danych (bez pytań w formularzu)
+  - [ ] **1.1.10.23.1** ⏳ Top passa wygranych (W) — kafelek z historii meczów
+  - [ ] **1.1.10.23.2** ⏳ Avg przy Twojej wadze lotek vs inni z tym samym bucketem — **ukryte** do czasu `min_cohort_size` (config, start: **10** osób z `dart_weight_bucket`)
+
+**Nie zbieramy:** PESEL, telefon, dokładny adres, data urodzenia; live scrape sklepów / PDC przy formularzu.
+
+##### Kolumny `customers` (migracja przy wdrożeniu — nie teraz)
+
+```text
+city                   text          -- 1.1.10.1 (whitelist)
+dart_brand             text          -- 1.1.10.4 (id słownika lub 'other')
+dart_brand_other       text          -- gdy Inne
+dart_model             text          -- 1.1.10.5
+dart_weight_bucket     text          -- 1.1.10.6 ('14-' … '28+')
+throwing_hand          text          -- 1.1.10.10 ('L' | 'R')
+favorite_player_id     text          -- 1.1.10.14
+profile_stats_visible  boolean NOT NULL DEFAULT true   -- 1.1.10.21
+newsletter_opt_in      boolean NOT NULL DEFAULT false  -- 1.1.10.22
+about_completed_at     timestamptz   -- null = nie uzupełniono / pominięto → soft CTA
+```
+
+Ref JSON (przy wdrożeniu): `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players.json`.
 
 ---
 
-### 1.2.x — Premium + Płatności ⏳
+### 1.2.x — *(przeniesione)*
 
-> Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie.
-
-- [ ] **1.2.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
-  - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
-  - `freeVisibleStats[]` / `premiumVisibleStats[]` — które kafle/wykresy widać
-  - `freeFeatures[]` — np. bulk import tylko premium
-- [ ] **1.2.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit
-- [ ] **1.2.3** Bramka płatności (PayNow lub PayU)
-- [ ] **1.2.4** Role: user / premium / admin / superadmin
-- [ ] **1.2.5** Panel admina — subskrypcje premium
+> **Premium + płatności** przeniesione do **[2.0.x](#20x--premium--płatności--)**. Startujemy **bez** freemium, bramki i CTA premium.
 
 ---
 
@@ -692,9 +770,25 @@ Pełny stan projektu zamrożony poza `main`:
 
 ---
 
-### 5.x — Pełne wydanie produktu ⏸️ (odłożone — po zamknięciu 1.x)
+### 2.0.x — Premium + Płatności ⏸️
 
-> **Nie teraz.** Dopiero gdy 1.x (auth, premium, prod, copy, testy) będzie domknięte i wypuszczony pełny produkt. Numer **5.0** = milestone „pełna wersja”, nie kolejny krok po 1.3.
+> **Odłożone.** Startujemy bez premium / płatności / CTA upgrade. Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie. *(Było: **1.2.x** + CTA **1.1.9.5**.)*
+
+- [ ] **2.0.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
+  - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
+  - `freeVisibleStats[]` / `premiumVisibleStats[]` — które kafle/wykresy widać
+  - `freeFeatures[]` — np. bulk import tylko premium
+- [ ] **2.0.2** UI limitów — soft block + CTA upgrade gdy przekroczony limit
+- [ ] **2.0.3** Bramka płatności (PayNow lub PayU)
+- [ ] **2.0.4** Role: user / premium / admin / superadmin
+- [ ] **2.0.5** Panel admina — subskrypcje premium
+- [ ] **2.0.6** Placeholder CTA w profilu: „Włącz wyższy bieg — konto premium” *(było **1.1.9.5**)*
+
+---
+
+### 5.x — Pełne wydanie produktu ⏸️ (odłożone — po zamknięciu 1.x / 2.x)
+
+> **Nie teraz.** Dopiero gdy 1.x (auth, prod, copy, testy) i ewentualnie **2.0.x** (premium) będą domknięte. Numer **5.0** = milestone „pełna wersja”, nie kolejny krok po 1.3.
 
 - [ ] **5.0.0** Milestone — pełne wydanie (kryteria doprecyzujemy przy 1.3)
 - [ ] **5.0.1** **Logowanie Apple** — „Zaloguj przez Apple” obok Google (`Sign in with Apple` w Supabase + przycisk na `/login`)
@@ -711,7 +805,7 @@ Pełny stan projektu zamrożony poza `main`:
 
 | ID | Status | Zadanie |
 | -- | ------ | ------- |
-| **0.3.14–17** | ⏸️ | Analityka turniejowa / sesje / sezon |
+| **0.3.14–17** | ❌ | Analityka turniejowa — **anulowane** (2026-07-21) |
 | **1.0.1.1** | ⏳ | Audyt prod — robots & indeksacja |
 | **1.0.1.2** | ⏳ | Audyt prod — wyciek danych |
 | **1.0.1.3** | ⏳ | Audyt prod — API i ataki |
@@ -723,17 +817,31 @@ Pełny stan projektu zamrożony poza `main`:
 | **1.1.3.8** | ⏳ | Samouczek po onboardingu (`/demo/profile`) |
 | **1.1.7** | ⏳ | Usuwanie meczu (UI + API + triple-check) |
 | **1.1.8** | ⏳ | Panel admina superadmin |
-| **1.1.9.1** | ⏳ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
-| **1.1.9.2** | ⏳ | Prefill z Google przy tworzeniu customer |
-| **1.1.9.3** | ⏳ | Gate na ingest bez danych → błąd + formularz |
-| **1.1.9.4** | ⏳ | Edycja pól tożsamości w profilu |
-| **1.1.9.5** | ⏳ | CTA placeholder „Włącz wyższy bieg — konto premium” (płatność w 1.2.x) |
-| **1.2.1–5** | ⏳ | Freemium + płatności + role premium |
+| **1.1.9.1** | ✅ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
+| **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
+| **1.1.9.3** | ✅ | Gate na ingest bez danych → błąd + formularz |
+| **1.1.9.4** | ✅ | Edycja pól tożsamości w profilu |
+| **1.1.10.0** | ⏳ | Krok 2 „O Tobie” + Pomiń + edycja `/profile` + soft CTA legacy |
+| **1.1.10.1** | ⏳ | Miasto — autocomplete PL (≥3 litery) |
+| **1.1.10.2–3** | ❌ | Klub, federacja — odrzucone |
+| **1.1.10.4** | ⏳ | Marka lotek (+ Inne) |
+| **1.1.10.5** | ⏳ | Model lotek |
+| **1.1.10.6** | ⏳ | Waga lotek |
+| **1.1.10.7–9** | ❌ | tip / shaft / board — odrzucone |
+| **1.1.10.10** | ⏳ | Ręka L/P |
+| **1.1.10.11–13** | ❌ | stance / checkout-pytanie / cel — odrzucone |
+| **1.1.10.14** | ⏳ | Ulubiony zawodnik (~50 popularnych) |
+| **1.1.10.15–20** | ❌ | turniej / bohater / od kiedy / poziom / częst. / Discord — odrzucone |
+| **1.1.10.21** | ⏳ | Widoczność społeczności (zawsze on w UI; premium toggle później, bez copy) |
+| **1.1.10.22** | ⏳ | Newsletter opt-in (zachęta, zero spamu) |
+| **1.1.10.23.1** | ⏳ | Ciekawostka: top passa W |
+| **1.1.10.23.2** | ⏳ | Ciekawostka: avg vs cohort wagi (ukryte do min N=10) |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
+| **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
 
-**Uwaga numeracji:** **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Nie mylić.
+**Uwaga numeracji:** **1.1.9** = profil tożsamości (gate). **1.1.10** = opcjonalne „O Tobie”. **1.0.1.6** = dokumenty prawne. **2.0.x** = premium / płatności (odłożone).
 
 ---
 
@@ -801,7 +909,7 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
 
 Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
-### Warstwa 3 — RODO / prawo (plan **1.0.1.6**, przed **1.2.3** płatności)
+### Warstwa 3 — RODO / prawo (plan **1.0.1.6**, przed **2.0.3** płatności)
 
 - **Minimalizacja:** nie zbieramy więcej niż potrzeba do statystyk darta
 - **Cel przetwarzania:** usługa statystyk dla zawodnika (nie marketing do obcych bez zgody)
@@ -835,7 +943,7 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 - [ ] Audyt prod (**1.0.1.1–5**)
 - [ ] Dokumenty prawne (**1.0.1.6** — polityka, regulamin, cookies, DPA)
 - [ ] Usuwanie meczów (**1.1.7**); usuwanie konta — osobno
-- [ ] Profil tożsamości domknięty (**1.1.9**)
+- [x] Profil tożsamości domknięty (**1.1.9**)
 - [ ] Hardening importu (**1.3.7**)
 - [ ] HTTPS everywhere (Vercel domyślnie)
 - [ ] Logi i backup (**1.3.5**, **1.1.8**)
@@ -983,7 +1091,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.1.0 Auth ✅ | backlog otwarty (rosnąco po ID)
+### v1.1.1 Auth + tożsamość ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -992,13 +1100,15 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
 | **1.0.1.1–6**   | ⏳ Audyt, deploy, domena, **dokumenty prawne**               |
 | **1.0.2.x**     | ⏳ Copy (Twoje teksty)                                       |
-| **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) |
+| **v1.1.0**      | ✅ WYDANY — Auth roadmap 1.1.1–1.1.6 · tag `v1.1.0` |
+| **v1.1.1**      | ✅ WYDANY — **1.1.9** tożsamość + docs **1.1.10** + premium→2.0 · `backup/v1.1.1`, tag `v1.1.1-backup` |
 | **1.1.3.8**     | ⏳ Samouczek                                                 |
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
-| **1.1.9**       | ⏳ Profil tożsamości (formularz, prefill, gate, edycja, CTA premium placeholder) |
-| **1.2.x**       | ⏳ Premium                                                   |
+| **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
+| **1.1.10**      | ⏳ Zakres zatwierdzony — wdrożenia rosnąco (.0→.23.2); kod po „lecimy z X” |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
+| **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
 
 
@@ -1014,7 +1124,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ### Plan otwartych — punkt po punkcie (rosnąco po ID)
 
-1. **0.3.14–17** — analityka turniejowa (⏸️ niski priorytet)
+1. **0.3.14–17** — analityka turniejowa (❌ anulowane)
 2. **1.0.1.1** — audyt robots / indeksacja
 3. **1.0.1.2** — audyt wycieków
 4. **1.0.1.3** — audyt API / ataki
@@ -1026,14 +1136,11 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 10. **1.1.3.8** — samouczek po onboardingu
 11. **1.1.7** — usuwanie meczu
 12. **1.1.8** — panel admina
-13. **1.1.9.1** — obowiązkowy formularz po Google
-14. **1.1.9.2** — prefill z Google przy tworzeniu customer
-15. **1.1.9.3** — gate ingest bez danych
-16. **1.1.9.4** — edycja pól w profilu
-17. **1.1.9.5** — CTA placeholder premium („Włącz wyższy bieg”)
-18. **1.2.x** — freemium + płatności
-19. **1.3.x** — testy + CI + perf + hardening
-20. **5.0.x** — pełne wydanie + Apple (⏸️)
+13. **1.1.9.1–4** — profil tożsamości ✅ (2026-07-21)
+14. **1.1.10** — opcjonalne „O Tobie” (**zakres zatwierdzony**). Kolejność kodu: `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`
+15. **1.3.x** — testy + CI + perf + hardening
+16. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
+17. **5.0.x** — pełne wydanie + Apple (⏸️)
 
 Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
@@ -1048,28 +1155,35 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.0.1.x** | Prod + prawo (**1.0.1.6**)   | ⏳             |
 | **1.0.2**   | Copy UI                      | ⏳             |
 | **1.1.0**   | Auth core (Google + RLS)     | ✅ WYDANY      |
+| **1.1.1**   | Tożsamość + roadmap 1.1.10   | ✅ WYDANY · `backup/v1.1.1` |
 | **1.1.3.8** | Samouczek                    | ⏳             |
 | **1.1.7**   | Usuwanie meczu               | ⏳             |
 | **1.1.8**   | Admin                        | ⏳             |
-| **1.1.9**   | Profil tożsamości (+ CTA premium) | ⏳             |
-| **1.2**     | Premium                      | ⏳             |
+| **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
+| **1.1.10**  | Opcjonalne pola dartera      | ⏳ zakres OK   |
+| **1.2**     | *(→ **2.0.x**)*              | —             |
 | **1.3**     | Testy + perf                 | ⏳             |
+| **2.0**     | Premium + płatności          | ⏸️ odłożone   |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
 
-### Pliki kluczowe (Auth v1.1.0)
+### Pliki kluczowe (Auth v1.1.0 + 1.1.9)
 
 ```
-lib/auth.ts                                   ← ensureCustomerForUser, requireAuth*
+lib/auth.ts                                   ← ensureCustomerForUser, nameFromGoogleMetadata, requireAuth*
+lib/customer.ts                               ← sync / needsOnboarding / updateCustomerProfile
+components/identity-form.tsx                  ← wspólny formularz (onboarding + edycja profilu)
+app/onboarding/page.tsx                       ← obowiązkowy formularz po Google
+app/profile/profile-identity-edit.tsx         ← edycja tożsamości na /profile
+app/api/ingest/route.ts                       ← gate 403 needs_onboarding
+app/api/customer/route.ts                     ← PATCH profilu
 lib/request-origin.ts / lib/app-origin.ts     ← origin LAN vs localhost
 lib/auth-redirect-*.ts                        ← cookies origin/next po OAuth
 lib/supabase/server.ts / middleware.ts        ← SSR cookies + gate
-lib/customer.ts                               ← sync / onboarding
 app/api/auth/google/route.ts                  ← server-side OAuth start (PKCE)
 app/auth/callback/route.ts                    ← exchange code → session cookies
 app/auth/signout/route.ts
 app/login/*                                   ← przycisk Google
-app/onboarding/*                              ← known_nicknames
 supabase/migrations/20260715210000_auth_rls_per_user.sql
 middleware.ts                                 ← protect + /?code= → callback
 ```
@@ -1115,9 +1229,14 @@ app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
 
-Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6).
+Stan: **v1.1.1 WYDANY** (Auth v1.1.0 + tożsamość 1.1.9 + docs 1.1.10).
+Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.
 Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
-1.1.9 = profil tożsamości (form/prefill/gate/edycja). 1.0.1.6 = dokumenty prawne.
+1.1.9 = profil tożsamości ✅.
+1.1.10 = opcjonalne „O Tobie” — zakres zatwierdzony; kolejność: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2.
+Legacy (Groteł): soft CTA, nie gate. Kod 1.1.10 dopiero po „lecimy z kolejnymi X”.
+1.0.1.6 = dokumenty prawne.
+2.0.x = premium / płatności — **odłożone**, start bez tego.
 Auth działa na Mac + iPhone (LAN).
 ```
 
@@ -1514,7 +1633,12 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości (form/prefill/gate/edycja/**1.1.9.5** CTA premium placeholder). **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
+| **1.1.1**   | 2026-07-21 | **Release v1.1.1.** Profil tożsamości **1.1.9.1–4**, premium→**2.0.x**, **1.1.10** zakres zatwierdzony (docs). Branch `backup/v1.1.1`, tag `v1.1.1-backup`. Package `1.1.1`. |
+| **docs**   | 2026-07-21 | **1.1.10 decyzje.** Zatwierdzony zakres: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2. Odrzucone: .2–3 .7–9 .11–13 .15–20. Marki (~16+Inne), ~50 graczy (Wright/Chisnall/Bialecki must-have), kolumny `customers`, Krok 2 + soft CTA legacy. Bez kodu — kolejność wdrożeń w backlogu. |
+| **docs**   | 2026-07-21 | **1.1.10 katalog.** Opcjonalne pola profilu dartera ponumerowane (1.1.10.0–23). UX: Krok 2 „O Tobie” + Pomiń + edycja w profilu. Gate zostaje 1.1.9. Kolumny w `customers` dopiero po wyborze ID. Propozycja Fazy 1: .1 .4 .6 .10 .17. |
+| **docs**   | 2026-07-21 | **1.1.9.1–4 ✅** Profil tożsamości: wspólny `IdentityForm`, prefill Google (`given_name`/`family_name`), gate ingest `403 needs_onboarding`, edycja w profilu. **0.3.14–17 ❌** anulowane. Usunięty mock `/demo/tournaments-preview`. |
+| **docs**   | 2026-07-20 | **Premium → 2.0.x.** **1.1.9.5** CTA + cały blok freemium/płatności (**było 1.2.x**) przeniesione do **2.0.1–6**. Start bez premium. **1.1.9** = tylko 1.1.9.1–4 (profil tożsamości). |
+| **docs**   | 2026-07-20 | **README cleanup.** Roadmapa rosnąco po ID. **1.1.9** = profil tożsamości. **1.0.1.6** = dokumenty prawne. Backlog otwarty + plan punkt po punkcie. |
 | **1.1.0**  | 2026-07-15 | **Auth core wydany.** Google OAuth server-side (`/api/auth/google` + PKCE), callback z cookies sesji, sync customer, onboarding, middleware, RLS (`20260715210000_…`). Identity none/ambiguous + bulk. Dev iPhone: Site URL = LAN IP. Seed → `SEED_CUSTOMER_ID` + `OWNER_EMAIL`. Tag `v1.1.0`. |
 | **1.0.1**  | 2026-07-14 | **Feedback po testach manualnych.** Pełna inwentaryzacja copy klienta (~245 MSG) w README — do review przed 1.0.2.x. Bez zmian w kodzie UI. |
 | **1.0.0**  | 2026-07-14 | **Release milestone.** Backup `backup/v1.0.0`. Roadmapa 0.x / 1.0.x. |

@@ -4,16 +4,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-type Props = {
-  initial: {
-    firstName: string;
-    lastName: string;
-    nickname: string;
-    knownNicknames: string;
-  };
+export type IdentityFormInitial = {
+  firstName: string;
+  lastName: string;
+  nickname: string;
+  knownNicknames: string;
 };
 
-export function OnboardingForm({ initial }: Props) {
+type Props = {
+  initial: IdentityFormInitial;
+  /** onboarding → redirect /profile; edit → stay and refresh */
+  mode: "onboarding" | "edit";
+  submitLabel?: string;
+  onSaved?: () => void;
+};
+
+export function IdentityForm({ initial, mode, submitLabel, onSaved }: Props) {
   const router = useRouter();
   const [firstName, setFirstName] = useState(initial.firstName);
   const [lastName, setLastName] = useState(initial.lastName);
@@ -21,11 +27,13 @@ export function OnboardingForm({ initial }: Props) {
   const [knownNicknames, setKnownNicknames] = useState(initial.knownNicknames);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedOk, setSavedOk] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError(null);
+    setSavedOk(false);
     try {
       const nicknames = knownNicknames
         .split(/[,;\n]/)
@@ -44,13 +52,26 @@ export function OnboardingForm({ initial }: Props) {
       });
       const data = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(data.error ?? "Zapis nieudany");
-      router.replace("/profile");
+
+      if (mode === "onboarding") {
+        router.replace("/profile");
+        router.refresh();
+        return;
+      }
+
+      setSavedOk(true);
+      onSaved?.();
       router.refresh();
+      setSaving(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Zapis nieudany");
       setSaving(false);
     }
   }
+
+  const label =
+    submitLabel ??
+    (mode === "onboarding" ? "Zapisz i przejdź do profilu" : "Zapisz zmiany");
 
   return (
     <form onSubmit={(e) => void handleSubmit(e)} className="glass-tile space-y-4 p-5">
@@ -62,6 +83,7 @@ export function OnboardingForm({ initial }: Props) {
           required
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          autoComplete="given-name"
           className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
       </label>
@@ -74,13 +96,14 @@ export function OnboardingForm({ initial }: Props) {
           required
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          autoComplete="family-name"
           className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
       </label>
 
       <label className="block space-y-1.5">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Pseudonim (opcjonalnie)
+          Pseudonim główny
         </span>
         <input
           value={nickname}
@@ -88,11 +111,14 @@ export function OnboardingForm({ initial }: Props) {
           placeholder="np. Groteł"
           className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
+        <span className="block text-[11px] text-muted-foreground">
+          Opcjonalnie — wyświetlamy jako Imię „pseudonim” Nazwisko.
+        </span>
       </label>
 
       <label className="block space-y-1.5">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Wzorce N01 (oddziel przecinkiem)
+          Pseudonimy N01 (oddziel przecinkiem)
         </span>
         <textarea
           required
@@ -112,6 +138,11 @@ export function OnboardingForm({ initial }: Props) {
           {error}
         </p>
       )}
+      {savedOk && !error && (
+        <p className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
+          Zapisano zmiany w profilu.
+        </p>
+      )}
 
       <button
         type="submit"
@@ -119,8 +150,26 @@ export function OnboardingForm({ initial }: Props) {
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-from to-accent-to px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
       >
         {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-        Zapisz i przejdź do profilu
+        {label}
       </button>
     </form>
   );
+}
+
+/** Prefill N01 patterns when empty: last name + main nick (skip placeholders). */
+export function suggestKnownNicknames(parts: {
+  firstName: string;
+  lastName: string;
+  nickname: string | null;
+  knownNicknames: string[];
+}): string {
+  if (parts.knownNicknames.filter((n) => n.trim()).length > 0) {
+    return parts.knownNicknames.join(", ");
+  }
+  const suggestions: string[] = [];
+  const last = parts.lastName.trim();
+  if (last && last.toLowerCase() !== "dart") suggestions.push(last);
+  const nick = parts.nickname?.trim();
+  if (nick) suggestions.push(nick);
+  return suggestions.join(", ");
 }
