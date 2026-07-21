@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { getSiteUrl } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
 import { LoginGoogleButton } from "./login-google-button";
+import { LoginPasswordForm } from "./login-password-form";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
@@ -48,8 +49,8 @@ export default async function LoginPage({ searchParams }: Props) {
             Konto gracza
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym profilu.
-            Chcesz najpierw zobaczyć jak to wygląda?{" "}
+            Zaloguj się e-mailem albo przez Google, zaimportuj mecze z N01 i śledź formę na
+            prywatnym profilu. Chcesz najpierw zobaczyć jak to wygląda?{" "}
             <Link href="/demo/profile" className="text-primary hover:underline">
               Otwórz profil demo
             </Link>
@@ -63,11 +64,20 @@ export default async function LoginPage({ searchParams }: Props) {
             </p>
           )}
 
-          <div className="mt-10 flex flex-col gap-3">
+          <div className="mt-10 flex flex-col gap-6">
+            <LoginPasswordForm next={next} />
+
+            <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="h-px flex-1 bg-white/10" />
+              albo
+              <span className="h-px flex-1 bg-white/10" />
+            </div>
+
             <LoginGoogleButton next={next} />
+
             <Link
               href="/demo/profile"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/20 transition hover:shadow-accent-to/40"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-foreground transition hover:bg-white/10"
             >
               Zobacz profil demo
             </Link>
