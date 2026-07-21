@@ -3,7 +3,7 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth core **1.1.1–1.1.6** + profil tożsamości **1.1.9.1–4 ✅**.  
+> **Status:** **v1.1.0** — Auth **1.1.1–1.1.6** + **1.1.9.1–4 ✅**. **1.1.10** zakres zatwierdzony (docs; kod później).  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -365,7 +365,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · **1.1.9.1–4** ✅ · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** (wybór pól) |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · **1.1.9.1–4** ✅ · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** (zakres zatwierdzony) |
 | **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
@@ -662,67 +662,89 @@ Pełny stan projektu zamrożony poza `main`:
 
 > Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
 
-#### 1.1.10 — katalog pól + UX (decyzja przed kodem)
+#### 1.1.10 — zatwierdzony zakres (2026-07-21)
 
-> **Gate obowiązkowy = tylko 1.1.9.** Reszta = opcjonalna.  
-> **Flow:** Google → Krok 1 (tożsamość N01) → **Krok 2 „O Tobie”** (opcjonalne, zachęta + **Pomiń**) → profil. Pominięte / puste → zawsze edycja później na `/profile`.  
-> **DB:** wybrane pola → **kolumny w `customers`** (bez osobnej tabeli).  
-> **Status:** pozycje poniżej numerowane; **do wdrożenia dopiero po Twoim wyborze ID** (reszta = ❌ odrzucone).
+> **Gate obowiązkowy = tylko 1.1.9.** `needsOnboarding` bez zmian (tylko `known_nicknames`).  
+> **Flow:** Google → Krok 1 (1.1.9) → **Krok 2 „O Tobie”** (zachęta + **Pomiń**) → `/profile`. Te same pola edytowalne na profilu.  
+> **Legacy (np. Groteł):** już po 1.1.9 → **nie gate**; miękki CTA „Uzupełnij profil dartera” na `/profile` (nie modal blokujący).  
+> **DB:** kolumny w **`customers`** (bez nowej tabeli). Migracja + UI = dopiero przy „lecimy z kolejnymi X”.  
+> **Kolejność wdrożeń:** `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`.
 
-**Propozycja Fazy 1 (rekomendacja do potwierdzenia):** **1.1.10.1**, **1.1.10.4**, **1.1.10.6**, **1.1.10.10**, **1.1.10.17**.
+**Zatwierdzone do zrobienia:** **1.1.10.0**, **.1**, **.4**, **.5**, **.6**, **.10**, **.14**, **.21**, **.22**, **.23.1**, **.23.2**.
 
 ##### UX
 
-- [ ] **1.1.10.0** Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta do uzupełnienia + przycisk **Pomiń**; te same pola edytowalne na `/profile`
+- [ ] **1.1.10.0** ⏳ Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta + **Pomiń**; edycja na `/profile`; soft CTA dla kont legacy bez `about_completed_at`
 
 ##### A. Kontekst lokalny
 
-- [ ] **1.1.10.1** Miasto / region (text; bez kodu pocztowego)
-- [ ] **1.1.10.2** Klub / pub / venue (text free)
-- [ ] **1.1.10.3** Federacja / liga główna (select: N01 / inna / amatorska / brak)
+- [ ] **1.1.10.1** ⏳ Miasto — **autocomplete** z whitelisty PL po ≥3 literach (`data/pl-cities.json`); bez free-text random
+- [x] **1.1.10.2** ❌ Klub / pub / venue — odrzucone
+- [x] **1.1.10.3** ❌ Federacja / liga — odrzucone
 
 ##### B. Sprzęt
 
-- [ ] **1.1.10.4** Marka lotek (select + „Inna…”; **własny słownik** w repo — bez live scrape sklepów)
-- [ ] **1.1.10.5** Model lotek (text)
-- [ ] **1.1.10.6** Waga lotek (select: `≤14`, `15`…`27`, `≥28`)
-- [ ] **1.1.10.7** Tip: softip / steel
-- [ ] **1.1.10.8** Shaft / flight (marka; niski priorytet)
-- [ ] **1.1.10.9** Board w domu (select: Blade / One80 / inna / brak)
+- [ ] **1.1.10.4** ⏳ Marka lotek (select + **Inne…** → `dart_brand_other`; słownik w `data/dart-brands.json`)
+- [ ] **1.1.10.5** ⏳ Model lotek (text)
+- [ ] **1.1.10.6** ⏳ Waga lotek (select: `≤14`, `15`…`27`, `≥28`)
+- [x] **1.1.10.7** ❌ Tip softip/steel — odrzucone
+- [x] **1.1.10.8** ❌ Shaft / flight — odrzucone
+- [x] **1.1.10.9** ❌ Board w domu — odrzucone
+
+**Marki (1.1.10.4) — lista + uzasadnienie:** Target, Winmau, Mission, Red Dragon, Unicorn, Shot Darts, One80, Cosmo Darts, Dynasty, Bull's, Harrows, Designa, Bottelsen, CUESOUL, Trinidad, Loxley, **Inne…**.  
+~16 marek pokrywa ~95% tego, co widać na ligach PL / PDC; dłużej = scroll hell. Bez live scrape sklepów. „Inne” łapie resztę.
 
 ##### C. Styl gry
 
-- [ ] **1.1.10.10** Ręka (L / P)
-- [ ] **1.1.10.11** Stance (text; raczej pominąć na start)
-- [ ] **1.1.10.12** Ulubiony checkout — **❌ nie pytać** (wyliczać z meczów)
-- [ ] **1.1.10.13** Cel treningowy (text / select avg)
+- [ ] **1.1.10.10** ⏳ Ręka (L / P)
+- [x] **1.1.10.11** ❌ Stance — odrzucone
+- [x] **1.1.10.12** ❌ Ulubiony checkout (pytanie) — odrzucone (ew. z meczów)
+- [x] **1.1.10.13** ❌ Cel treningowy — odrzucone
 
 ##### D. Fandom
 
-- [ ] **1.1.10.14** Ulubiony zawodnik PDC (searchable select; snapshot OoM JSON w repo, odświeżanie ręczne)
-- [ ] **1.1.10.15** Ulubiony turniej oglądany (Worlds / PL / Euro Tour / lokalne)
-- [ ] **1.1.10.16** Bohater PL (text / krótka lista)
+- [ ] **1.1.10.14** ⏳ Ulubiony zawodnik — searchable select, **~50 popularnych** (nie czysty OoM); UI sort **A–Z**; JSON `data/favorite-players.json` z `tier`: `current` | `icon` | `rising_pl`
+- [x] **1.1.10.15** ❌ Ulubiony turniej oglądany — odrzucone
+- [x] **1.1.10.16** ❌ Bohater PL (osobne pole) — odrzucone *(PL w liście .14)*
+
+**Lista ~50 (szkic na wdrożenie .14):** Humphries, Littler, van Gerwen, Cross, Price, M. Smith, Heta, Clayton, Aspinall, Van den Bergh, Noppert, Rock, Bunting, Dobey, Searle, R. Smith, G. Anderson, Wade, Cullen, van Duijvenbode, Schindler, van Veen, De Decker, Joyce, Edhouse, Menzies, Gurney, Ratajski, **Wright**, **Chisnall**, **Bialecki**, van Barneveld, Taylor, A. Lewis, + dopięcie do 50 przy implementacji. Must-have poza top OoM: Wright, Chisnall, Bialecki.
 
 ##### E. Doświadczenie
 
-- [ ] **1.1.10.17** Od kiedy grasz (rok lub buckety `&lt;1` / `1–3` / `3–5` / `5+`)
-- [ ] **1.1.10.18** Poziom self-report (rekreacja / liga / turnieje / pro-am)
-- [ ] **1.1.10.19** Częstotliwość gry (1× / 2–3 / 4+ tyg.)
+- [x] **1.1.10.17** ❌ Od kiedy grasz — odrzucone
+- [x] **1.1.10.18** ❌ Poziom self-report — odrzucone
+- [x] **1.1.10.19** ❌ Częstotliwość gry — odrzucone
 
-##### F. Społeczność / zgody (ostrożnie RODO)
+##### F. Społeczność / zgody
 
-- [ ] **1.1.10.20** Discord / IG publiczny — **❌ nie na start**
-- [ ] **1.1.10.21** Zgoda na widoczność pól (zanim cokolwiek publicznego)
-- [ ] **1.1.10.22** Newsletter / tipy (osobna zgoda marketingowa)
+- [x] **1.1.10.20** ❌ Discord / IG — odrzucone
+- [ ] **1.1.10.21** ⏳ Widoczność danych do porównań społeczności: **zawsze włączone** w UI (brak toggle „wyłącz”). Nota wewnętrzna: kiedyś `role=premium` odblokuje wyłączenie — **zero copy o premium na stronie teraz**. Kolumna `profile_stats_visible boolean DEFAULT true`.
+- [ ] **1.1.10.22** ⏳ Newsletter / tipy — opt-in (domyślnie off) + zachęta w stylu: „Czasem konkret — np. wynik Twojego ulubionego zawodnika. Bez spamu.” Kolumna `newsletter_opt_in boolean DEFAULT false`.
 
-##### G. Świadomie poza formularzem
+##### G. Ciekawostki (nie formularz)
 
-- [ ] **1.1.10.23** Ciekawostki **wyliczane z N01** (nie pytania): passa W/L, top przeciwnik, deklaracja wagi vs avg społeczności, „+X avg od rejestracji” — osobny slice UI później
+- [ ] **1.1.10.23** ⏳ Epic ciekawostek z danych (bez pytań w formularzu)
+  - [ ] **1.1.10.23.1** ⏳ Top passa wygranych (W) — kafelek z historii meczów
+  - [ ] **1.1.10.23.2** ⏳ Avg przy Twojej wadze lotek vs inni z tym samym bucketem — **ukryte** do czasu `min_cohort_size` (config, start: **10** osób z `dart_weight_bucket`)
 
-**Nie zbieramy:** PESEL, telefon, dokładny adres, data urodzenia (chyba że kiedyś wiek pod płatności); live scrape Dartshopper/Baltic/PDC przy rejestracji.
+**Nie zbieramy:** PESEL, telefon, dokładny adres, data urodzenia; live scrape sklepów / PDC przy formularzu.
 
-**Model kolumn `customers` (tylko dla wybranych ID — migracja po decyzji):** np. `city`, `throwing_hand`, `dart_brand`, `dart_weight_bucket`, `playing_since`, `favorite_pdc_player_id`, …  
-Listy ref: `data/dart-brands.json`, `data/pdc-oom-snapshot.json` (gdy wybrane).
+##### Kolumny `customers` (migracja przy wdrożeniu — nie teraz)
+
+```text
+city                   text          -- 1.1.10.1 (whitelist)
+dart_brand             text          -- 1.1.10.4 (id słownika lub 'other')
+dart_brand_other       text          -- gdy Inne
+dart_model             text          -- 1.1.10.5
+dart_weight_bucket     text          -- 1.1.10.6 ('14-' … '28+')
+throwing_hand          text          -- 1.1.10.10 ('L' | 'R')
+favorite_player_id     text          -- 1.1.10.14
+profile_stats_visible  boolean NOT NULL DEFAULT true   -- 1.1.10.21
+newsletter_opt_in      boolean NOT NULL DEFAULT false  -- 1.1.10.22
+about_completed_at     timestamptz   -- null = nie uzupełniono / pominięto → soft CTA
+```
+
+Ref JSON (przy wdrożeniu): `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players.json`.
 
 ---
 
@@ -797,9 +819,21 @@ Listy ref: `data/dart-brands.json`, `data/pdc-oom-snapshot.json` (gdy wybrane).
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
 | **1.1.9.3** | ✅ | Gate na ingest bez danych → błąd + formularz |
 | **1.1.9.4** | ✅ | Edycja pól tożsamości w profilu |
-| **1.1.10** | ⏳ | Opcjonalne pola profilu dartera — **wybór ID przed kodem** (Krok 2 + edycja profilu) |
-| **1.1.10.0** | ⏳ | UX Krok 2 „O Tobie” (zachęta + Pomiń) + edycja na `/profile` |
-| **1.1.10.1–23** | ⏳ | Katalog pól — patrz roadmapa 1.1.10 (Faza 1 proponowana: .1 .4 .6 .10 .17) |
+| **1.1.10.0** | ⏳ | Krok 2 „O Tobie” + Pomiń + edycja `/profile` + soft CTA legacy |
+| **1.1.10.1** | ⏳ | Miasto — autocomplete PL (≥3 litery) |
+| **1.1.10.2–3** | ❌ | Klub, federacja — odrzucone |
+| **1.1.10.4** | ⏳ | Marka lotek (+ Inne) |
+| **1.1.10.5** | ⏳ | Model lotek |
+| **1.1.10.6** | ⏳ | Waga lotek |
+| **1.1.10.7–9** | ❌ | tip / shaft / board — odrzucone |
+| **1.1.10.10** | ⏳ | Ręka L/P |
+| **1.1.10.11–13** | ❌ | stance / checkout-pytanie / cel — odrzucone |
+| **1.1.10.14** | ⏳ | Ulubiony zawodnik (~50 popularnych) |
+| **1.1.10.15–20** | ❌ | turniej / bohater / od kiedy / poziom / częst. / Discord — odrzucone |
+| **1.1.10.21** | ⏳ | Widoczność społeczności (zawsze on w UI; premium toggle później, bez copy) |
+| **1.1.10.22** | ⏳ | Newsletter opt-in (zachęta, zero spamu) |
+| **1.1.10.23.1** | ⏳ | Ciekawostka: top passa W |
+| **1.1.10.23.2** | ⏳ | Ciekawostka: avg vs cohort wagi (ukryte do min N=10) |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
@@ -1069,7 +1103,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
 | **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
-| **1.1.10**      | ⏳ Opcjonalne pola dartera — katalog; **wybór ID przed kodem** |
+| **1.1.10**      | ⏳ Zakres zatwierdzony — wdrożenia rosnąco (.0→.23.2); **bez kodu aż „lecimy z X”** |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
@@ -1100,7 +1134,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 11. **1.1.7** — usuwanie meczu
 12. **1.1.8** — panel admina
 13. **1.1.9.1–4** — profil tożsamości ✅ (2026-07-21)
-14. **1.1.10** — opcjonalne pola „O Tobie” (katalog numerowany — **wybór ID przed kodem**)
+14. **1.1.10** — opcjonalne „O Tobie” (**zakres zatwierdzony**). Kolejność kodu: `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`
 15. **1.3.x** — testy + CI + perf + hardening
 16. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
 17. **5.0.x** — pełne wydanie + Apple (⏸️)
@@ -1122,7 +1156,7 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.7**   | Usuwanie meczu               | ⏳             |
 | **1.1.8**   | Admin                        | ⏳             |
 | **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
-| **1.1.10**  | Opcjonalne pola dartera      | ⏳ wybór ID    |
+| **1.1.10**  | Opcjonalne pola dartera      | ⏳ zakres OK   |
 | **1.2**     | *(→ **2.0.x**)*              | —             |
 | **1.3**     | Testy + perf                 | ⏳             |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
@@ -1193,7 +1227,9 @@ README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + ha
 
 Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6) + **1.1.9.1–4** profil tożsamości.
 Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
-1.1.9 = profil tożsamości ✅. 1.1.10 = opcjonalne „O Tobie” (wybór pól przed kodem).
+1.1.9 = profil tożsamości ✅.
+1.1.10 = opcjonalne „O Tobie” — zakres zatwierdzony; kolejność: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2.
+Legacy (Groteł): soft CTA, nie gate. Kod 1.1.10 dopiero po „lecimy z kolejnymi X”.
 1.0.1.6 = dokumenty prawne.
 2.0.x = premium / płatności — **odłożone**, start bez tego.
 Auth działa na Mac + iPhone (LAN).
@@ -1592,6 +1628,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **docs**   | 2026-07-21 | **1.1.10 decyzje.** Zatwierdzony zakres: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2. Odrzucone: .2–3 .7–9 .11–13 .15–20. Marki (~16+Inne), ~50 graczy (Wright/Chisnall/Bialecki must-have), kolumny `customers`, Krok 2 + soft CTA legacy. Bez kodu — kolejność wdrożeń w backlogu. |
 | **docs**   | 2026-07-21 | **1.1.10 katalog.** Opcjonalne pola profilu dartera ponumerowane (1.1.10.0–23). UX: Krok 2 „O Tobie” + Pomiń + edycja w profilu. Gate zostaje 1.1.9. Kolumny w `customers` dopiero po wyborze ID. Propozycja Fazy 1: .1 .4 .6 .10 .17. |
 | **docs**   | 2026-07-21 | **1.1.9.1–4 ✅** Profil tożsamości: wspólny `IdentityForm`, prefill Google (`given_name`/`family_name`), gate ingest `403 needs_onboarding`, edycja w profilu. **0.3.14–17 ❌** anulowane. Usunięty mock `/demo/tournaments-preview`. |
 | **docs**   | 2026-07-20 | **Premium → 2.0.x.** **1.1.9.5** CTA + cały blok freemium/płatności (**było 1.2.x**) przeniesione do **2.0.1–6**. Start bez premium. **1.1.9** = tylko 1.1.9.1–4 (profil tożsamości). |
