@@ -7,7 +7,7 @@ import {
   resolvePostAuthOrigin,
 } from "@/lib/auth-redirect-server";
 import { ensureCustomerForUser } from "@/lib/auth";
-import { needsOnboarding } from "@/lib/customer";
+import { needsAboutOnboarding, needsOnboarding } from "@/lib/customer";
 
 export const dynamic = "force-dynamic";
 
@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
     try {
       const customer = await ensureCustomerForUser(user);
       if (needsOnboarding(customer)) dest = "/onboarding";
+      else if (needsAboutOnboarding(customer)) dest = "/onboarding/about";
     } catch {
       // non-fatal — still redirect to profile
     }

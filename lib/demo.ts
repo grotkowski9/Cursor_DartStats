@@ -20,6 +20,17 @@ export function personaToCustomer(persona: DemoPersona = DEMO_PERSONA): Customer
     nickname: persona.nickname,
     knownNicknames: persona.knownNicknames,
     role: "user",
+    city: null,
+    dartBrand: null,
+    dartBrandOther: null,
+    dartModel: null,
+    dartWeightBucket: null,
+    throwingHand: null,
+    favoritePlayerId: null,
+    profileStatsVisible: true,
+    newsletterOptIn: false,
+    aboutCompletedAt: null,
+    tourCompletedAt: null,
   };
 }
 

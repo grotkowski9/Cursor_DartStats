@@ -5,6 +5,7 @@ import {
   createCustomerForUser,
   getCustomerByAuthUserId,
   linkAuthUserToCustomer,
+  needsAboutOnboarding,
   needsOnboarding,
   type CustomerProfile,
 } from "@/lib/customer";
@@ -86,6 +87,8 @@ export async function getAuthUser(): Promise<User | null> {
 /** Server pages: require login + customer; redirect to onboarding when needed. */
 export async function requireAuthCustomer(opts?: {
   allowIncompleteOnboarding?: boolean;
+  /** Allow /onboarding/about without redirect loop */
+  allowIncompleteAbout?: boolean;
 }): Promise<AuthContext> {
   const user = await getAuthUser();
   if (!user) redirect("/login?next=/profile");
@@ -93,6 +96,13 @@ export async function requireAuthCustomer(opts?: {
   const customer = await ensureCustomerForUser(user);
   if (!opts?.allowIncompleteOnboarding && needsOnboarding(customer)) {
     redirect("/onboarding");
+  }
+  if (
+    !opts?.allowIncompleteOnboarding &&
+    !opts?.allowIncompleteAbout &&
+    needsAboutOnboarding(customer)
+  ) {
+    redirect("/onboarding/about");
   }
   return { user, customer };
 }

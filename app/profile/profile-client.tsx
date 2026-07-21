@@ -22,6 +22,7 @@ import { ProfileMatchCard } from "./profile-match-card";
 import { ProfileRecentMatches } from "./profile-recent-matches";
 import { ProfileStatsBlock } from "./profile-stats-block";
 import { ProfileTopLists } from "./profile-top-lists";
+import { ProfileInsights } from "./profile-insights";
 
 const INITIAL_SHOW = 3;
 const PAGE_SIZE = 10;
@@ -34,6 +35,7 @@ type Props = {
   initialMatches?: N01Match[];
   /** e.g. `/demo/m/` for public demo */
   matchPathPrefix?: string;
+  showInsights?: boolean;
 };
 
 export function ProfileClient({
@@ -42,6 +44,7 @@ export function ProfileClient({
   demoSnapshot,
   initialMatches,
   matchPathPrefix = "/m/",
+  showInsights = false,
 }: Props) {
   const liveDemoSnapshot = useMemo(
     () => (demoSnapshot ? refreshDemoSnapshotDates(demoSnapshot) : undefined),
@@ -115,18 +118,24 @@ export function ProfileClient({
 
   return (
     <div className="flex flex-col gap-6">
-      {demoMode ? (
-        <ProfileAddMatch demoMode loginHref="/login" onMatchesChanged={() => {}} />
-      ) : (
-        <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />
-      )}
+      <div data-tour="add-match">
+        {demoMode ? (
+          <ProfileAddMatch demoMode loginHref="/login" onMatchesChanged={() => {}} />
+        ) : (
+          <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />
+        )}
+      </div>
 
-      <ProfileStatsBlock
-        stats={playerStats}
-        range={range}
-        onRange={setRange}
-        loading={loading}
-      />
+      <div data-tour="stats">
+        <ProfileStatsBlock
+          stats={playerStats}
+          range={range}
+          onRange={setRange}
+          loading={loading}
+        />
+      </div>
+
+      {showInsights && !demoMode ? <ProfileInsights /> : null}
 
       {/* Form chart */}
       {!loading && filtered.length >= 2 && (
@@ -169,7 +178,7 @@ export function ProfileClient({
       )}
 
       {/* Match list */}
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-3" data-tour="match-list">
         <h2 className="px-1 text-sm font-semibold uppercase tracking-widest">Ostatnie mecze</h2>
 
         {loading ? (
