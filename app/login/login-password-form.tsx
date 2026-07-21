@@ -7,9 +7,14 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 type Props = {
   next?: string;
+  /** Gdy true: przed logowaniem upsert + reset customer (świeży onboarding). */
+  allowDevUpsert?: boolean;
 };
 
-export function LoginPasswordForm({ next = "/profile" }: Props) {
+export function LoginPasswordForm({
+  next = "/profile",
+  allowDevUpsert = false,
+}: Props) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,20 +26,33 @@ export function LoginPasswordForm({ next = "/profile" }: Props) {
     setSaving(true);
     setError(null);
     try {
+      const trimmedEmail = email.trim().toLowerCase();
+
+      if (allowDevUpsert) {
+        const upsertRes = await fetch("/api/auth/dev-upsert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: trimmedEmail, password }),
+        });
+        const upsertData = (await upsertRes.json()) as { error?: string };
+        if (!upsertRes.ok) {
+          throw new Error(upsertData.error ?? "Nie udało się utworzyć konta testowego");
+        }
+      }
+
       const supabase = createSupabaseBrowserClient();
       const { error: signError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
+        email: trimmedEmail,
         password,
       });
       if (signError) {
         throw new Error(
           signError.message === "Invalid login credentials"
-            ? "Błędny e-mail lub hasło."
+            ? "Błędny e-mail lub hasło. (Włącz Email provider w Supabase albo użyj upsert w trybie deweloperskim.)"
             : signError.message,
         );
       }
 
-      // Ustal dest: onboarding jeśli brak nicków N01
       let dest = next.startsWith("/") ? next : "/profile";
       try {
         const res = await fetch("/api/customer");
@@ -56,6 +74,14 @@ export function LoginPasswordForm({ next = "/profile" }: Props) {
 
   return (
     <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3">
+      {allowDevUpsert && (
+        <p className="rounded-lg border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-[11px] text-amber-100/90">
+          Tryb testowy: każde logowanie e-mailem <strong>tworzy / resetuje</strong> konto
+          (świeży onboarding). Np. <code className="text-amber-50">test@test.pl</code> /{" "}
+          <code className="text-amber-50">Grotkowski</code>.
+        </p>
+      )}
+
       <label className="block space-y-1.5">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           E-mail
@@ -66,6 +92,7 @@ export function LoginPasswordForm({ next = "/profile" }: Props) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="test@test.pl"
           className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
       </label>
@@ -79,7 +106,8 @@ export function LoginPasswordForm({ next = "/profile" }: Props) {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          minLength={8}
+          minLength={6}
+          placeholder="Grotkowski"
           className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
         />
       </label>
@@ -96,7 +124,7 @@ export function LoginPasswordForm({ next = "/profile" }: Props) {
         className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
       >
         {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-        Zaloguj e-mailem
+        {allowDevUpsert ? "Utwórz / zaloguj (test)" : "Zaloguj e-mailem"}
       </button>
     </form>
   );
