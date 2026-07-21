@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { requireAuthCustomer } from "@/lib/auth";
+import { suggestKnownNicknames } from "@/lib/customer";
 import { siteDocumentTitle } from "@/lib/page-metadata";
-import { IdentityForm, suggestKnownNicknames } from "@/components/identity-form";
+import { IdentityForm } from "@/components/identity-form";
 
 export const dynamic = "force-dynamic";
 
