@@ -17,7 +17,6 @@ export type Database = {
           auth_user_id: string | null
           created_at: string
           customer_id: string
-          display_name: string
           first_name: string
           known_nicknames: string[]
           last_name: string

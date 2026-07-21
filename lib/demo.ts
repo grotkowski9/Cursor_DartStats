@@ -18,7 +18,6 @@ export function personaToCustomer(persona: DemoPersona = DEMO_PERSONA): Customer
     firstName: persona.firstName,
     lastName: persona.lastName,
     nickname: persona.nickname,
-    displayName: `${persona.lastName} ${persona.firstName}`,
     knownNicknames: persona.knownNicknames,
     role: "user",
   };

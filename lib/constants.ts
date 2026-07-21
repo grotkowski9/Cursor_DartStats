@@ -20,7 +20,7 @@ export const DEMO_CUSTOMER_ID =
  */
 export const AUTO_DETECT_PATTERNS = [] as const;
 
-/** @deprecated Use customer.displayName from DB via getCustomerById() */
+/** @deprecated Prefer formatCustomerDisplayName(customer) */
 export const PLAYER_DISPLAY_NAME = 'Piotr „Groteł" Grotkowski';
 
 export const N01_API =
