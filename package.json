@@ -10,7 +10,8 @@
     "seed": "tsx scripts/seed-matches.ts",
     "seed:demo": "tsx scripts/seed-demo-matches.ts",
     "repolish:demo": "tsx scripts/seed-demo-matches.ts --repolish",
-    "snapshot:demo": "tsx scripts/snapshot-demo.ts"
+    "snapshot:demo": "tsx scripts/snapshot-demo.ts",
+    "auth:test-user": "tsx scripts/create-test-user.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.3",
