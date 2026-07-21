@@ -1,19 +1,19 @@
 /**
- * Tworzy testowe konto Auth (bez Google) i wypisuje magic link do zalogowania.
+ * Tworzy / resetuje testowe konto Auth z hasłem (bez Google).
  *
- * Wymaga `.env.local` z NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
- * W Supabase Dashboard → Authentication → URL Configuration dodaj Redirect URL:
- *   {SITE}/auth/callback  (np. http://localhost:3000/auth/callback)
+ * Wymaga `.env.local` + w Supabase: Authentication → Providers → **Email = ON**
+ * (Confirm email może być wyłączone — skrypt ustawia email_confirm: true).
  *
  * Usage:
- *   npm run auth:test-user -- test@example.com
  *   npm run auth:test-user -- test@example.com --name "Anna Nowak"
- *   npm run auth:test-user -- test@example.com --link-only   # tylko link, user już istnieje
+ *   npm run auth:test-user -- test@example.com --password "MojeHaslo1!"
+ *   npm run auth:test-user -- test@example.com --reset-password   # tylko nowe hasło
  *
- * Otwórz wypisany URL w przeglądarce (ta sama maszyna co Site URL).
- * Nie używaj maila z OWNER_EMAIL — podepniesz się pod seed Piotra.
+ * Potem na /login: e-mail + hasło.
+ * Nie używaj OWNER_EMAIL — podepniesz seed Piotra.
  */
 import { config } from "dotenv";
+import { randomBytes } from "crypto";
 
 config({ path: ".env.local" });
 
@@ -21,18 +21,18 @@ import { createSupabaseAdminClient } from "../lib/supabase/admin";
 
 function usage(): never {
   console.error(`Usage:
-  npm run auth:test-user -- <email> [--name "Imię Nazwisko"] [--link-only] [--site http://localhost:3000]
+  npm run auth:test-user -- <email> [--name "Imię Nazwisko"] [--password "Haslo1!"] [--reset-password]
 
-Nie używaj OWNER_EMAIL (seed Piotra).`);
+Nie używaj OWNER_EMAIL (seed Piotra).
+W Supabase włącz Provider: Email.`);
   process.exit(1);
 }
 
 function parseArgs(argv: string[]) {
   const positional: string[] = [];
   let name: string | undefined;
-  let linkOnly = false;
-  let site =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "http://localhost:3000";
+  let password: string | undefined;
+  let resetPassword = false;
 
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -44,12 +44,12 @@ function parseArgs(argv: string[]) {
       name = parts.join(" ") || undefined;
       continue;
     }
-    if (a === "--site") {
-      site = (argv[++i] ?? site).replace(/\/$/, "");
+    if (a === "--password") {
+      password = argv[++i];
       continue;
     }
-    if (a === "--link-only") {
-      linkOnly = true;
+    if (a === "--reset-password") {
+      resetPassword = true;
       continue;
     }
     if (a === "--help" || a === "-h") usage();
@@ -60,7 +60,7 @@ function parseArgs(argv: string[]) {
   const email = positional[0]?.trim().toLowerCase();
   if (!email || !email.includes("@")) usage();
 
-  return { email, name, linkOnly, site };
+  return { email, name, password, resetPassword };
 }
 
 function splitName(full: string | undefined): {
@@ -74,11 +74,14 @@ function splitName(full: string | undefined): {
   return { firstName, lastName, fullName: `${firstName} ${lastName}` };
 }
 
+function defaultPassword(): string {
+  return `TestDarts-${randomBytes(3).toString("hex")}!`;
+}
+
 async function findUserIdByEmail(
   admin: ReturnType<typeof createSupabaseAdminClient>,
   email: string,
 ): Promise<string | null> {
-  // listUsers is paginated — for test accounts we scan first pages
   for (let page = 1; page <= 10; page++) {
     const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 });
     if (error) throw new Error(`listUsers: ${error.message}`);
@@ -90,7 +93,9 @@ async function findUserIdByEmail(
 }
 
 async function main() {
-  const { email, name, linkOnly, site } = parseArgs(process.argv.slice(2));
+  const { email, name, password: passwordArg, resetPassword } = parseArgs(
+    process.argv.slice(2),
+  );
   const owner = (process.env.OWNER_EMAIL ?? process.env.AUTH_LINK_EMAIL ?? "")
     .split(",")
     .map((e) => e.trim().toLowerCase())
@@ -103,60 +108,70 @@ async function main() {
     process.exit(1);
   }
 
-  const redirectTo = `${site}/auth/callback`;
-  const { firstName, lastName, fullName } = splitName(name);
-  const admin = createSupabaseAdminClient();
-
-  let userId = await findUserIdByEmail(admin, email);
-
-  if (!linkOnly) {
-    if (userId) {
-      console.log(`○ User już istnieje: ${email} (${userId})`);
-    } else {
-      const { data, error } = await admin.auth.admin.createUser({
-        email,
-        email_confirm: true,
-        user_metadata: {
-          full_name: fullName,
-          name: fullName,
-          given_name: firstName,
-          family_name: lastName,
-        },
-      });
-      if (error) throw new Error(`createUser: ${error.message}`);
-      userId = data.user.id;
-      console.log(`✓ Utworzono usera: ${email} (${userId})`);
-      console.log(`  metadata: ${fullName}`);
-    }
-  } else if (!userId) {
-    console.error(`✗ Brak usera ${email}. Uruchom bez --link-only.`);
+  const password = passwordArg?.trim() || defaultPassword();
+  if (password.length < 8) {
+    console.error("✗ Hasło min. 8 znaków.");
     process.exit(1);
   }
 
-  const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-    type: "magiclink",
-    email,
-    options: { redirectTo },
-  });
+  const { firstName, lastName, fullName } = splitName(name);
+  const admin = createSupabaseAdminClient();
+  let userId = await findUserIdByEmail(admin, email);
 
-  if (linkError) throw new Error(`generateLink: ${linkError.message}`);
+  if (userId && (resetPassword || passwordArg)) {
+    const { error } = await admin.auth.admin.updateUserById(userId, {
+      password,
+      email_confirm: true,
+    });
+    if (error) throw new Error(`updateUser password: ${error.message}`);
+    console.log(`✓ Zresetowano hasło dla: ${email} (${userId})`);
+  } else if (userId) {
+    const { error } = await admin.auth.admin.updateUserById(userId, {
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        name: fullName,
+        given_name: firstName,
+        family_name: lastName,
+      },
+    });
+    if (error) throw new Error(`updateUser: ${error.message}`);
+    console.log(`○ User już istniał — ustawiono nowe hasło: ${email} (${userId})`);
+  } else {
+    const { data, error } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        name: fullName,
+        given_name: firstName,
+        family_name: lastName,
+      },
+    });
+    if (error) throw new Error(`createUser: ${error.message}`);
+    userId = data.user.id;
+    console.log(`✓ Utworzono usera: ${email} (${userId})`);
+    console.log(`  metadata: ${fullName}`);
+  }
 
-  const actionLink = linkData.properties.action_link;
-  if (!actionLink) throw new Error("Brak action_link w odpowiedzi Supabase");
+  const site =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "http://localhost:3000";
 
   console.log(`
 ────────────────────────────────────────
-Magic link (otwórz w przeglądarce):
+Zaloguj na:  ${site}/login
 
-${actionLink}
+E-mail:  ${email}
+Hasło:   ${password}
 
-Redirect po sukcesie: ${redirectTo}
-→ potem /onboarding (nowe konto) albo /profile
+1) Supabase → Authentication → Providers → Email = ON
+2) Otwórz /login → wpisz e-mail i hasło
+3) Nowe konto → /onboarding
 
-Uwagi:
-• Redirect URL musi być na liście w Supabase Auth → URL Configuration.
-• Nie odświeżaj karty w trakcie wymiany kodu.
-• Link jednorazowy / wygasa — jak padnie: npm run auth:test-user -- ${email} --link-only
+Reset hasła później:
+  npm run auth:test-user -- ${email} --reset-password
 ────────────────────────────────────────
 `);
 }
@@ -168,6 +183,9 @@ main().catch((e) => {
     console.error(
       "  Sprawdź NEXT_PUBLIC_SUPABASE_URL i SUPABASE_SERVICE_ROLE_KEY w .env.local",
     );
+  }
+  if (msg.toLowerCase().includes("email") && msg.toLowerCase().includes("provider")) {
+    console.error("  Włącz Email provider w Supabase Dashboard.");
   }
   process.exit(1);
 });
