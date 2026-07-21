@@ -1069,6 +1069,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
 | **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
+| **1.1.10**      | ⏳ Opcjonalne pola dartera — katalog; **wybór ID przed kodem** |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
@@ -1192,7 +1193,8 @@ README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + ha
 
 Stan: **v1.1.0 Auth WYDANY** (1.1.1–1.1.6) + **1.1.9.1–4** profil tożsamości.
 Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
-1.1.9 = profil tożsamości ✅. 1.0.1.6 = dokumenty prawne.
+1.1.9 = profil tożsamości ✅. 1.1.10 = opcjonalne „O Tobie” (wybór pól przed kodem).
+1.0.1.6 = dokumenty prawne.
 2.0.x = premium / płatności — **odłożone**, start bez tego.
 Auth działa na Mac + iPhone (LAN).
 ```
