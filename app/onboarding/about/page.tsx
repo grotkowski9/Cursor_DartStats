@@ -5,8 +5,9 @@ import { redirect } from "next/navigation";
 import { requireAuthCustomer } from "@/lib/auth";
 import { needsOnboarding } from "@/lib/customer";
 import { siteDocumentTitle } from "@/lib/page-metadata";
-import { AboutForm, customerToAboutValues } from "@/components/about-form";
+import { AboutForm } from "@/components/about-form";
 import { OnboardingShell } from "@/components/onboarding-shell";
+import { customerToAboutValues } from "@/lib/about-form-values";
 
 export const dynamic = "force-dynamic";
 
