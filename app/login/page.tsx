@@ -22,6 +22,9 @@ export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
   const next = params.next?.startsWith("/") ? params.next : "/profile";
   const authError = params.error === "auth";
+  const allowDevUpsert =
+    process.env.NODE_ENV === "development" ||
+    process.env.ALLOW_DEV_TEST_LOGIN === "true";
 
   return (
     <>
@@ -65,7 +68,7 @@ export default async function LoginPage({ searchParams }: Props) {
           )}
 
           <div className="mt-10 flex flex-col gap-6">
-            <LoginPasswordForm next={next} />
+            <LoginPasswordForm next={next} allowDevUpsert={allowDevUpsert} />
 
             <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span className="h-px flex-1 bg-white/10" />
