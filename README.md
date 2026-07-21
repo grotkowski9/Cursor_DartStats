@@ -3,7 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.0** — Auth **1.1.1–1.1.6** + **1.1.9.1–4 ✅**. **1.1.10** zakres zatwierdzony (docs; kod później).  
+> **Status:** **v1.1.1 WYDANY** — Auth **1.1.0** + profil tożsamości **1.1.9.1–4 ✅** + roadmapa **1.1.10** (zakres zatwierdzony, kod później).  
+> Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -365,7 +366,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **1.1.0** (1.1.1–6) · **1.1.9.1–4** ✅ · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** (zakres zatwierdzony) |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + docs 1.1.10) · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** kod |
 | **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
@@ -622,7 +623,8 @@ Pełny stan projektu zamrożony poza `main`:
 
 ### 1.1.x — Auth + Multi-user + Admin + profil tożsamości
 
-> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**. Otwarte: **1.1.3.8**, **1.1.7**, **1.1.8**. **1.1.9.1–4** ✅ (2026-07-21).
+> **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**.  
+> **v1.1.1 (2026-07-21):** **1.1.9.1–4 ✅** + premium→**2.0.x** + **1.1.10** zakres zatwierdzony (docs). Otwarte kod: **1.1.3.8**, **1.1.7**, **1.1.8**, **1.1.10.x**. Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.
 
 - [x] **1.1.1** Supabase Auth (**Google** login) — `/login`, `/api/auth/google`, `/auth/callback`, `/auth/signout`, `@supabase/ssr`
   - OAuth start po stronie serwera (PKCE cookies); callback zapisuje sesję na redirect
@@ -1089,7 +1091,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.1.0 Auth ✅ | backlog otwarty (rosnąco po ID)
+### v1.1.1 Auth + tożsamość ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -1098,12 +1100,13 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
 | **1.0.1.1–6**   | ⏳ Audyt, deploy, domena, **dokumenty prawne**               |
 | **1.0.2.x**     | ⏳ Copy (Twoje teksty)                                       |
-| **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) |
+| **1.1.0**       | ✅ WYDANY — Auth 1.1.1–1.1.6 (Google, RLS, onboarding; Mac+iPhone) · tag `v1.1.0` |
+| **1.1.1**       | ✅ WYDANY — **1.1.9** tożsamość + docs **1.1.10** + premium→2.0 · `backup/v1.1.1`, tag `v1.1.1-backup` |
 | **1.1.3.8**     | ⏳ Samouczek                                                 |
 | **1.1.7**       | ⏳ Usuwanie meczu                                            |
 | **1.1.8**       | ⏳ Panel admina                                              |
 | **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
-| **1.1.10**      | ⏳ Zakres zatwierdzony — wdrożenia rosnąco (.0→.23.2); **bez kodu aż „lecimy z X”** |
+| **1.1.10**      | ⏳ Zakres zatwierdzony — wdrożenia rosnąco (.0→.23.2); kod po „lecimy z X” |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
 | Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
@@ -1152,6 +1155,7 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.0.1.x** | Prod + prawo (**1.0.1.6**)   | ⏳             |
 | **1.0.2**   | Copy UI                      | ⏳             |
 | **1.1.0**   | Auth core (Google + RLS)     | ✅ WYDANY      |
+| **1.1.1**   | Tożsamość + roadmap 1.1.10   | ✅ WYDANY · `backup/v1.1.1` |
 | **1.1.3.8** | Samouczek                    | ⏳             |
 | **1.1.7**   | Usuwanie meczu               | ⏳             |
 | **1.1.8**   | Admin                        | ⏳             |
@@ -1628,6 +1632,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.1.1**   | 2026-07-21 | **Release v1.1.1.** Profil tożsamości **1.1.9.1–4**, premium→**2.0.x**, **1.1.10** zakres zatwierdzony (docs). Branch `backup/v1.1.1`, tag `v1.1.1-backup`. Package `1.1.1`. |
 | **docs**   | 2026-07-21 | **1.1.10 decyzje.** Zatwierdzony zakres: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2. Odrzucone: .2–3 .7–9 .11–13 .15–20. Marki (~16+Inne), ~50 graczy (Wright/Chisnall/Bialecki must-have), kolumny `customers`, Krok 2 + soft CTA legacy. Bez kodu — kolejność wdrożeń w backlogu. |
 | **docs**   | 2026-07-21 | **1.1.10 katalog.** Opcjonalne pola profilu dartera ponumerowane (1.1.10.0–23). UX: Krok 2 „O Tobie” + Pomiń + edycja w profilu. Gate zostaje 1.1.9. Kolumny w `customers` dopiero po wyborze ID. Propozycja Fazy 1: .1 .4 .6 .10 .17. |
 | **docs**   | 2026-07-21 | **1.1.9.1–4 ✅** Profil tożsamości: wspólny `IdentityForm`, prefill Google (`given_name`/`family_name`), gate ingest `403 needs_onboarding`, edycja w profilu. **0.3.14–17 ❌** anulowane. Usunięty mock `/demo/tournaments-preview`. |
