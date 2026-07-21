@@ -37,7 +37,11 @@ function parseArgs(argv: string[]) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--name") {
-      name = argv[++i];
+      const parts: string[] = [];
+      while (i + 1 < argv.length && !argv[i + 1].startsWith("-")) {
+        parts.push(argv[++i]);
+      }
+      name = parts.join(" ") || undefined;
       continue;
     }
     if (a === "--site") {
@@ -48,6 +52,7 @@ function parseArgs(argv: string[]) {
       linkOnly = true;
       continue;
     }
+    if (a === "--help" || a === "-h") usage();
     if (a.startsWith("-")) usage();
     positional.push(a);
   }
@@ -157,6 +162,12 @@ Uwagi:
 }
 
 main().catch((e) => {
-  console.error("✗", e instanceof Error ? e.message : e);
+  const msg = e instanceof Error ? e.message : String(e);
+  console.error("✗", msg);
+  if (msg.includes("fetch failed") || msg.includes("ENOTFOUND")) {
+    console.error(
+      "  Sprawdź NEXT_PUBLIC_SUPABASE_URL i SUPABASE_SERVICE_ROLE_KEY w .env.local",
+    );
+  }
   process.exit(1);
 });
