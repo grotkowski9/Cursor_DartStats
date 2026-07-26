@@ -584,7 +584,7 @@ Pełny stan projektu zamrożony poza `main`:
 - [ ] **1.0.2.2** Profil demo + banner — spójne komunikaty „to jest podgląd"
 - [ ] **1.0.2.3** Formularz importu (single) — helper, sukces, błędy po polsku
 - [ ] **1.0.2.4** Import hurtowy — te same reguły co single; **bez** suchego „wymaga wyboru gracza" w tabeli
-- [ ] **1.0.2.5** Empty states, loadery, 404
+- [x] **1.0.2.5** Empty states, loadery, 404 — **404/500 screens ✅** (`not-found` / `error` / `global-error` + auto-redirect `/`); empty states / loadery nadal ⏳
 - [ ] **1.0.2.6** `/login` + onboarding — pierwsze wrażenie po rejestracji
 - [ ] **1.0.2.7** Spójność PL: „mecz/meczów", „lotek", nazwy KPI
 
@@ -1798,7 +1798,7 @@ npm run dev -- --hostname 0.0.0.0
 2. **MSG-403 / 433** — user dziś widzi surowe błędy techniczne (tmid) — priorytet fix w **1.0.2.3–4**.
 3. **MSG-169** — bulk `wymaga wyboru gracza` zamiast modala — UX fix w **1.0.2.4** + **1.1.3.5**.
 4. **MSG-132** — „Odrzuć" powinien być destructive (czerwony) — **1.0.2.x**.
-5. Brak własnego `not-found.tsx` — Next.js default 404 (framework, nie w repo).
+5. Własne `not-found.tsx` / `error.tsx` / `global-error.tsx` — humor + auto-redirect na `/` (v1.2.0+).
 
 ---
 

@@ -34,10 +34,13 @@ yarn-error.log*
 .env*
 !.env.example
 
-# prywatne notatki Piotra (nie commitować)
+# prywatne notatki Piotra / lokalne probe (nie commitować)
 .dev/notatnik*.md
 .dev/private/
 .dev/*.json
+.dev/*.js
+.dev/*.html
+.dev/import-*.ts
 
 # vercel
 .vercel
