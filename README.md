@@ -97,7 +97,9 @@ customers (
 
 **Wyświetlanie:** UI skleja `first_name` + `nickname` + `last_name` przez `formatCustomerDisplayName()` w `lib/customer.ts`. **Bez kolumny `display_name` w DB** (usunięta — migracja `20260721210000_drop_customer_display_name.sql`).
 
-**Detekcja N01:** wzorce z `known_nicknames` rekordu customer (nie hardcoded).
+**Detekcja N01:** `autoDetectPatterns()` w `lib/customer.ts` — **zawsze** `lastName` + `nickname` (+ opcjonalne `known_nicknames`). Pseudonimy N01 **nie** są wymagane do zamknięcia gate’u 1.1.9.
+
+**Share token:** nowe mecze → 16 hex (~64 bit) z `computeShareToken()`; starsze w DB mogą mieć krótsze tokeny (8 znaków).
 
 ```sql
 -- Mecze
@@ -119,7 +121,7 @@ matches (
   raw_payload     jsonb,                         -- cały JSON z N01 (źródło prawdy)
   snapshot_path   text NOT NULL,                 -- ścieżka w Storage
   html_snapshot_path text,
-  share_token     text UNIQUE,                   -- 8 znaków, deterministyczny
+  share_token     text UNIQUE,                   -- nowe: 16 hex; legacy: 8 znaków
   created_at      timestamptz DEFAULT now(),
   updated_at      timestamptz DEFAULT now(),
   UNIQUE(customer_id, n01_tmid)
@@ -245,7 +247,7 @@ Zweryfikowane 1:1 z `testdane.xlsx` w Lovable.
 
 ## Detekcja gracza
 
-**STRICT MODE** (wzorce z `known_nicknames` customer: `Grotkowski`, `Groteł`, `Grotel`):
+**STRICT MODE** (wzorce z `autoDetectPatterns`: nazwisko + nick główny + `known_nicknames`, np. `Grotkowski`, `Groteł`, `Grotel`):
 
 1. **Auto-detect (**`auto`**):** dokładnie **jeden** gracz pasuje do wzorca → zapis bez pytania.
 2. **Ambiguous (**`ambiguous`**):** **obaj** pasują (np. `Groteł` vs `Piotr Grotkowski`) → modal wyboru.
@@ -359,7 +361,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + 1.1.10) · ✅ **1.1.7** · otwarte **1.1.8**, **1.1.11–12** |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + 1.1.10) · ✅ **1.1.7** · ✅ **1.1.3.8** · otwarte **1.1.8**, **1.1.11–12** |
 | **1.2.x**   | Milestone snapshot (profil UX + audyt + delete) | ✅ **v1.2.0** — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
@@ -655,28 +657,33 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.1.8.4** Podgląd ingest / snapshot access log
   - [ ] **1.1.8.5** Ochrona route — tylko `role = superadmin`
 - [x] **1.1.9** **Profil tożsamości** (domknięcie danych po Google — **nie** dokumenty prawne)
-  - [x] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), pseudonim główny, pseudonimy N01
-  - [x] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser` — `given_name`/`family_name`/`full_name`)
+  - [x] **1.1.9.1** Obowiązkowy formularz po Google: imię, nazwisko (prefill), **pseudonim główny** (wymagany); Pseudonimy N01 **opcjonalne** (potwierdzenie przy pustym polu)
+  - [x] **1.1.9.2** Prefill z Google przy tworzeniu customer (`ensureCustomerForUser` — `given_name`/`family_name`/`full_name`); **nie** prefilluj N01 nickami w pola imię/nazwisko (`isPlaceholderName` / `formNameFields`)
   - [x] **1.1.9.3** Gate na ingest: bez danych → `403 needs_onboarding` + redirect `/onboarding`
   - [x] **1.1.9.4** Edycja tych pól później w profilu (`ProfileIdentityEdit` + wspólny `IdentityForm`)
-- [x] **1.1.10** **Opcjonalne pola profilu dartera** (po 1.1.9 — **nie** blokują importu)
+- [x] **1.1.10** **Opcjonalne pola profilu dartera** (po 1.1.9 — **nie** blokują importu) — **kod ✅** (2026-07-21…26); polish UX w **v1.2.0**
 
 > Panel **1.1.8** = operacyjny (Ty). Premium / CTA upgrade / płatności = **2.0.x** (odłożone).
 
-#### 1.1.10 — zatwierdzony zakres (2026-07-21)
+#### Gate vs soft CTA (agent — czytaj zanim ruszysz profil)
 
-> **Gate obowiązkowy = tylko 1.1.9.** `needsOnboarding` bez zmian (tylko `known_nicknames`).  
-> **Flow:** Login → Krok 1 (1.1.9) → **Krok 2 „O Tobie”** (mocna zachęta + **Pomiń**) → samouczek **1.1.3.8** → `/profile`. Te same pola edytowalne na profilu.  
-> **Zachęta Krok 2:** porównania graczy z tymi samymi lotkami (wkrótce), spersonalizowana komunikacja, punkty gracza (wkrótce — **1.1.12**), i wiele więcej.  
-> **Legacy (np. Groteł):** już po 1.1.9 → **nie gate**; miękki CTA „Uzupełnij profil dartera” na `/profile` (nie modal blokujący).  
-> **DB:** kolumny w **`customers`** (bez nowej tabeli).  
-> **Kolejność wdrożeń:** `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`.
+| Funkcja | Plik | Znaczenie |
+| ------- | ---- | --------- |
+| `needsOnboarding` | `lib/customer.ts` | Gate 1.1.9: **brak nicka** LUB **placeholder** imię/nazwisko → `/onboarding`. **Nie** wymaga `known_nicknames`. |
+| `needsAboutOnboarding` | `lib/customer.ts` | Po 1.1.9, bez `about_completed_at` → Krok 2 `/onboarding/about` (można **Pomiń**). |
+| `needsAboutSoftCta` | `lib/customer.ts` | Soft CTA na `/profile`: **OR** — brakuje **któregokolwiek** z: city, dartBrand, dartWeightBucket, throwingHand, favoritePlayerId. **Wyłączone z checka:** `dartModel`, `knownNicknames`. |
+| `autoDetectPatterns` | `lib/customer.ts` | lastName + nickname + knownNicknames (dedupe, lowercase). |
 
-**Zatwierdzone do zrobienia:** **1.1.10.0**, **.1**, **.4**, **.5**, **.6**, **.10**, **.14**, **.21**, **.22**, **.23.1**, **.23.2**.
+#### 1.1.10 — zatwierdzony zakres (2026-07-21) · wdrożony
+
+> **Gate obowiązkowy = tylko 1.1.9** (`needsOnboarding` — nick + realne imię/nazwisko).  
+> **Flow:** Login → Krok 1 (1.1.9) → **Krok 2 „O Tobie”** (zielony box zachęty + **Pomiń**) → samouczek **1.1.3.8** → `/profile`.  
+> **Legacy (np. Groteł):** już po 1.1.9 → **nie gate**; soft CTA (`needsAboutSoftCta`) na `/profile` — klik → otwiera accordion + **scroll** do formularza.  
+> **DB:** kolumny w **`customers`** (bez nowej tabeli).
 
 ##### UX
 
-- [x] **1.1.10.0** ✅ Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta + **Pomiń**; edycja na `/profile`; soft CTA dla kont legacy bez `about_completed_at`
+- [x] **1.1.10.0** ✅ Ekran **Krok 2 — O Tobie** po zapisie 1.1.9: zachęta + **Pomiń**; edycja na `/profile`; soft CTA (`needsAboutSoftCta` — OR po polach, nie tylko `about_completed_at`)
 
 ##### A. Kontekst lokalny
 
@@ -726,8 +733,8 @@ Pełny stan projektu zamrożony poza `main`:
 ##### G. Ciekawostki (nie formularz)
 
 - [x] **1.1.10.23** ✅ Epic ciekawostek z danych (bez pytań w formularzu)
-  - [x] **1.1.10.23.1** ✅ Top passa wygranych (W) — kafelek z historii meczów
-  - [x] **1.1.10.23.2** ✅ Avg przy Twojej wadze lotek vs inni z tym samym bucketem — **ukryte** do czasu `min_cohort_size` (config, start: **5** osób z `dart_weight_bucket`)
+  - [x] **1.1.10.23.1** ✅ Top passa wygranych (W) — **w siatce stats** (`ProfileStatsBlock`, label **Best winning streak**, sub **Lifetime**; niezależne od filtra 30/90/180/365/all). `data-tour="insight-streak"`. Fetch: `/api/customer/insights` w `ProfileClient`.
+  - [x] **1.1.10.23.2** ✅ Avg przy Twojej wadze lotek vs inni z tym samym bucketem — osobna sekcja `ProfileInsights` (tylko cohort); **ukryte** do `min_cohort_size` (start: **5**)
 
 **Nie zbieramy:** PESEL, telefon, dokładny adres, data urodzenia; live scrape sklepów / PDC przy formularzu.
 
@@ -737,13 +744,13 @@ Pełny stan projektu zamrożony poza `main`:
 city                   text          -- 1.1.10.1 (whitelist)
 dart_brand             text          -- 1.1.10.4 (id słownika lub 'other')
 dart_brand_other       text          -- gdy Inne
-dart_model             text          -- 1.1.10.5
+dart_model             text          -- 1.1.10.5 (NIE w needsAboutSoftCta)
 dart_weight_bucket     text          -- 1.1.10.6 ('14-' … '28+')
 throwing_hand          text          -- 1.1.10.10 ('L' | 'R')
 favorite_player_id     text          -- 1.1.10.14
 profile_stats_visible  boolean NOT NULL DEFAULT true   -- 1.1.10.21
 newsletter_opt_in      boolean NOT NULL DEFAULT false  -- 1.1.10.22
-about_completed_at     timestamptz   -- null = nie uzupełniono / pominięto → soft CTA
+about_completed_at     timestamptz   -- Krok 2 zapis/Pomiń; soft CTA = needsAboutSoftCta (pola), nie tylko ta kolumna
 tour_completed_at      timestamptz   -- 1.1.3.8 — auto-tour tylko raz
 ```
 
@@ -765,11 +772,61 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
 
 ### 1.2.0 — Milestone ✅ WYDANY (2026-07-26)
 
-> Snapshot po **1.1.7** (delete match), audycie **1.0.1.1–3** i polishu profilu (soft CTA + scroll, streak w siatce stats, karty zamiast „Ostatnie 5”, edycja About/identity).  
+> Snapshot po **1.1.7**, audycie **1.0.1.1–3** i polishu profilu / onboarding copy.  
 > Premium + płatności nadal w **[2.0.x](#20x--premium--płatności--)**.
 
 - Branch: `[backup/v1.2.0](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v1.2.0)`
 - Tag: `v1.2.0-backup`
+- Commit bazowy: `9b23402` (feature branch `cursor/delete-match-1.1.7`)
+
+#### Co weszło w v1.2.0 (dla agenta)
+
+**1.1.7 — Usuwanie meczu**
+- `DELETE /api/matches/[id]` — auth + ownership; cascade DB + Storage + ingest_snapshots
+- UI: `match-delete-dialog.tsx` (triple-check: potwierdź → summary → wpisz `usuwam`)
+- `ProfileMatchCard` + optimistic remove w `profile-client.tsx`
+- `matchId` na `N01Match`; `deleteMatch()` w `lib/matches.ts`
+- Undo toast (**1.1.7.4**) — **pominięte**
+
+**1.0.1.1–3 — Audyt (kod)**
+- `lib/rate-limit.ts` — ingest (user+IP), `/m/*` (IP)
+- `lib/security-headers.ts` + middleware / `next.config.ts`
+- `lib/match-client.ts` — `toClientMatch` / `toClientMatches` strip `snapshotPath`, `htmlSnapshotPath`, `rawPayload`
+- Share: nowe tokeny 16 hex; `snapshot_access_log` na `/m/[shareToken]`
+- `dev-upsert` zablokowany w production
+- `.dev/backup-*.json` **wyjęte z gita** (PII) + `.gitignore` `.dev/*.json`
+
+**Profil — layout UX**
+- `ProfileShell` — wspólny stan accordion edycji + soft CTA
+- Soft CTA u góry (`ProfileSoftCta`): klik → `setEditOpen(true)` + **smooth scroll** do `ProfileIdentityEdit`
+- Panel edycji: najpierw **AboutForm** (zielony box zachęty jak na Kroku 2) + „Zapisz profil”; identity pod **„Zmień dane identyfikacyjne”** (domyślnie zwinięte); submit identity: **„Zapisz dane identyfikacyjne”**
+- Usunięty kompaktowy `profile-recent-matches.tsx` — lista **5** kart `ProfileMatchCard` tuż pod wykresem formy + „Więcej spotkań” (paginacja)
+- Best winning streak w dolnej siatce stats (obok Checkout); sub **Lifetime**; weight cohort zostaje w `ProfileInsights`
+
+**Tożsamość / About — logika i copy**
+- `needsOnboarding` = nick + nie-placeholder imię/nazwisko (nie pusty `knownNicknames`)
+- `needsAboutSoftCta` = OR po city/brand/weight/hand/favorite (bez modelu i N01 nicków)
+- `autoDetectPatterns` zawsze lastName + nickname + knownNicknames
+- Identity: placeholdery bez prefillu N01; Pseudonimy N01 opcjonalne z confirmation przy pustym
+- About: copy newsletter/helperów; submit edit = „Zapisz profil”
+
+#### Layout `/profile` (kolejność sekcji)
+
+```text
+nav → ProfileHeader → Soft CTA (opcjonalnie)
+→ ProfileClient:
+    Add match → Stats (+ streak Lifetime) → Insights cohort (opcjonalnie)
+    → Form chart → Ostatnie mecze (5 kart + więcej)
+    → Top lists → H2H → Activity → Hours → Checkout dist
+→ ProfileIdentityEdit (accordion na dole)
+```
+
+#### Otwarte po v1.2.0
+
+- **1.0.1.4–6** deploy / domena / prawo
+- **1.0.2.x** copy review
+- **1.1.8** admin · **1.1.11** usuwanie konta · **1.1.12** punkty
+- **1.3.x** testy · **2.0.x** premium (⏸️)
 
 ---
 
@@ -838,7 +895,7 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
 | **1.1.9.3** | ✅ | Gate na ingest bez danych → błąd + formularz |
 | **1.1.9.4** | ✅ | Edycja pól tożsamości w profilu |
-| **1.1.10.0** | ✅ | Krok 2 „O Tobie” + Pomiń + edycja `/profile` + soft CTA legacy |
+| **1.1.10.0** | ✅ | Krok 2 „O Tobie” + Pomiń + edycja `/profile` + soft CTA (`needsAboutSoftCta`) |
 | **1.1.10.1** | ✅ | Miasto — autocomplete PL (≥3 litery) |
 | **1.1.10.2–3** | ❌ | Klub, federacja — odrzucone |
 | **1.1.10.4** | ✅ | Marka lotek (+ Inne) |
@@ -851,8 +908,9 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
 | **1.1.10.15–20** | ❌ | turniej / bohater / od kiedy / poziom / częst. / Discord — odrzucone |
 | **1.1.10.21** | ✅ | Widoczność społeczności (zawsze on w UI; premium toggle później, bez copy) |
 | **1.1.10.22** | ✅ | Newsletter opt-in (zachęta, zero spamu) |
-| **1.1.10.23.1** | ✅ | Ciekawostka: top passa W |
+| **1.1.10.23.1** | ✅ | Best winning streak w siatce stats (Lifetime; nie zależy od zakresu czasu) |
 | **1.1.10.23.2** | ✅ | Ciekawostka: avg vs cohort wagi (ukryte do min N=5) |
+| **v1.2.0** | ✅ | Milestone backup — delete + audit + polish profilu (`backup/v1.2.0`) |
 | **1.1.11** | ⏳ | Usuwanie konta (copy na dole profilu; RODO) |
 | **1.1.12** | ⏳ | Punkty gracza (szkielet; stawki TBD) |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
@@ -866,7 +924,7 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
 
 ## Audyt bezpieczeństwa i prywatności (RODO)
 
-> **Cel docelowy:** aplikacja na tyle solidna, żeby prawnik RODO w UE nie kręcił nosem, a integrator płatności (PayNow/PayU) nie odrzucił ze względu na oczywiste dziury. **Stan 1.0.0:** fundament OK, pełny audyt = **1.0.1.x** + **1.1.x**.
+> **Cel docelowy:** aplikacja na tyle solidna, żeby prawnik RODO w UE nie kręcił nosem, a integrator płatności (PayNow/PayU) nie odrzucił ze względu na oczywiste dziury. **Stan v1.2.0:** audyt kodu **1.0.1.1–3 ✅**; deploy/domena/prawo **1.0.1.4–6 ⏳**; auth+RLS **1.1.x ✅**.
 
 ### Co chronimy
 
@@ -938,12 +996,16 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 - **Rejestr czynności:** dokument wewnętrzny (administrator = Ty) — **1.0.1.6.5**
 - **Demo:** wyłącznie zanonimizowane dane — nigdy profil usera
 
-### Warstwa 4 — Input i API (plan 1.3.7)
+### Warstwa 4 — Input i API (stan po **1.0.1.3** / v1.2.0)
 
 - Pole „Dodaj mecz" **nie jest** polem dowolnym — tylko URL N01
-- Server-side walidacja (klient można ominąć)
-- Rate limiting na ingest — ochrona przed spamem i obciążeniem N01/DB
+- Rate limit: `lib/rate-limit.ts` na `/api/ingest` (user + IP) i lookup `/m/*` (IP)
+- Security headers: `lib/security-headers.ts` (middleware + `next.config.ts`)
+- Client JSON meczów: zawsze przez `toClientMatch` — **bez** ścieżek Storage i `rawPayload`
+- Share access: zapis do `snapshot_access_log` (hit/miss)
+- `dev-upsert` — **403** w production
 - Brak `eval`, brak zapisu surowego HTML usera do DB bez parsowania
+- Dalszy hardening whitelist URL: **1.3.7**
 
 ### Warstwa 5 — Infrastruktura (DDoS, skalowanie)
 
@@ -959,10 +1021,10 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 ### Checklist „gotowość pod płatności"
 
 - [x] Auth + RLS (**1.1.1–1.1.6** / v1.1.0)
-- [ ] Audyt prod (**1.0.1.1–3** ✅ kod · **1.0.1.4–5** deploy/domena ⏳)
+- [x] Audyt prod kod (**1.0.1.1–3** ✅ v1.2.0) · deploy/domena (**1.0.1.4–5** ⏳)
 - [ ] Dokumenty prawne (**1.0.1.6** — polityka, regulamin, cookies, DPA)
 - [x] Usuwanie meczów (**1.1.7**); usuwanie konta (**1.1.11** ⏳)
-- [x] Profil tożsamości domknięty (**1.1.9**)
+- [x] Profil tożsamości domknięty (**1.1.9**) + About (**1.1.10**)
 - [ ] Hardening importu (**1.3.7**)
 - [ ] HTTPS everywhere (Vercel domyślnie)
 - [ ] Logi i backup (**1.3.5**, **1.1.8**)
@@ -1015,7 +1077,7 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 7. **Noindex na profilach/share** — prywatne dane, bez Google (`/profile`, `/m/`*).
 8. **Demo publiczne pod** `/demo/`* — zanonimizowany dataset w Supabase (`DEMO_CUSTOMER_ID`) + statyczny snapshot KPI (`demo-profile-snapshot.json`) + `demo/demo-persona.ts`; indexowalny; **nigdy** dane Piotra Grotkowskiego w demo.
 9. **Vercel jako hosting** — zero config, free tier, custom domain.
-10. **Detekcja gracza STRICT** — wzorce z `known_nicknames` customer, reszta → pytaj lub odrzuć.
+10. **Detekcja gracza STRICT** — `autoDetectPatterns()` = lastName + nickname + knownNicknames; reszta → pytaj lub odrzuć.
 11. **Customer name split** — `first_name`, `last_name`, `nickname` w DB; wyświetlanie w TS (`formatCustomerDisplayName`). Kolumna `display_name` usunięta.
 
 ---
@@ -1124,25 +1186,27 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.1.1 Auth + tożsamość ✅ | backlog otwarty (rosnąco po ID)
+### v1.2.0 ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
 | --------------- | ----------------------------------------------------------- |
 | **1.0.0**       | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup`      |
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
-| **1.0.1.1–6**   | ⏳→ częściowo ✅ **1.0.1.1–3** kod · **1.0.1.4–6** deploy/prawo |
+| **1.0.1.1–6**   | częściowo ✅ **1.0.1.1–3** kod · **1.0.1.4–6** deploy/prawo ⏳ |
 | **1.0.2.x**     | ⏳ Copy (Twoje teksty)                                       |
-| **v1.1.0**      | ✅ WYDANY — Auth roadmap 1.1.1–1.1.6 · tag `v1.1.0` |
-| **v1.1.1**      | ✅ WYDANY — **1.1.9** tożsamość + docs **1.1.10** + premium→2.0 · `backup/v1.1.1`, tag `v1.1.1-backup` |
-| **1.1.3.8**     | ⏳ Samouczek                                                 |
+| **v1.1.0**      | ✅ WYDANY — Auth 1.1.1–1.1.6 · tag `v1.1.0` |
+| **v1.1.1**      | ✅ WYDANY — **1.1.9** + docs **1.1.10** · `backup/v1.1.1` |
+| **1.1.3.8**     | ✅ Samouczek (demo + auto po koncie) |
 | **1.1.7**       | ✅ Usuwanie meczu (bez undo)                                  |
 | **1.1.8**       | ⏳ Panel admina                                              |
-| **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
-| **1.1.10**      | ⏳ Zakres zatwierdzony — wdrożenia rosnąco (.0→.23.2); kod po „lecimy z X” |
+| **1.1.9**       | ✅ Profil tożsamości (gate = nick + real name) |
+| **1.1.10**      | ✅ Kod wdrożony (+ polish w v1.2.0) |
+| **v1.2.0**      | ✅ WYDANY — `backup/v1.2.0`, tag `v1.2.0-backup` |
+| **1.1.11–12**   | ⏳ Usuwanie konta · punkty gracza |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
-| **2.0.x**       | ⏸️ Premium + płatności (odłożone — start bez tego)      |
-| Backup lokalny  | `.dev/backup-2026-07-12-v1.0.json` (51 meczów + KPI)        |
+| **2.0.x**       | ⏸️ Premium + płatności (odłożone) |
+| Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
 
 
 ### Co wchodzi w 1.0.0
@@ -1157,23 +1221,17 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ### Plan otwartych — punkt po punkcie (rosnąco po ID)
 
-1. **0.3.14–17** — analityka turniejowa (❌ anulowane)
-2. **1.0.1.1** — audyt robots / indeksacja
-3. **1.0.1.2** — audyt wycieków
-4. **1.0.1.3** — audyt API / ataki
-5. **1.0.1.4** — deploy Vercel
-6. **1.0.1.5** — custom domain
-7. **1.0.1.6** — polityka prywatności, regulamin, cookies, linki, DPA
-8. **1.0.2.1–7** — copy UI (po Twoich tekstach)
-9. **1.1.3.2** — testy detekcji → **1.3.2**
-10. **1.1.3.8** — samouczek po onboardingu
-11. **1.1.7** — usuwanie meczu
-12. **1.1.8** — panel admina
-13. **1.1.9.1–4** — profil tożsamości ✅ (2026-07-21)
-14. **1.1.10** — opcjonalne „O Tobie” (**zakres zatwierdzony**). Kolejność kodu: `.0` → `.1` → `.4` → `.5` → `.6` → `.10` → `.14` → `.21` → `.22` → `.23.1` → `.23.2`
-15. **1.3.x** — testy + CI + perf + hardening
-16. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
-17. **5.0.x** — pełne wydanie + Apple (⏸️)
+1. **1.0.1.4** — deploy Vercel
+2. **1.0.1.5** — custom domain
+3. **1.0.1.6** — polityka prywatności, regulamin, cookies, linki, DPA
+4. **1.0.2.1–7** — copy UI (po Twoich tekstach)
+5. **1.1.3.2** — testy detekcji → **1.3.2**
+6. **1.1.8** — panel admina
+7. **1.1.11** — usuwanie konta
+8. **1.1.12** — punkty gracza (stawki TBD)
+9. **1.3.x** — testy + CI + perf + hardening
+10. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
+11. **5.0.x** — pełne wydanie + Apple (⏸️)
 
 Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
@@ -1185,31 +1243,59 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **0.x**     | Bootstrap → demo             | ✅ w 1.0.0     |
 | **1.0.0**   | Release milestone            | ✅ WYDANY      |
 | **1.0.1**   | Feedback + copy inventory    | ✅ WYDANY      |
-| **1.0.1.x** | Prod + prawo (**1.0.1.6**)   | ⏳             |
+| **1.0.1.x** | Prod + prawo (**1.0.1.6**)   | ⏳ (1–3 ✅)    |
 | **1.0.2**   | Copy UI                      | ⏳             |
 | **1.1.0**   | Auth core (Google + RLS)     | ✅ WYDANY      |
 | **1.1.1**   | Tożsamość + roadmap 1.1.10   | ✅ WYDANY · `backup/v1.1.1` |
-| **1.1.3.8** | Samouczek                    | ⏳             |
+| **1.1.3.8** | Samouczek                    | ✅             |
 | **1.1.7**   | Usuwanie meczu               | ✅             |
 | **1.1.8**   | Admin                        | ⏳             |
 | **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
-| **1.1.10**  | Opcjonalne pola dartera      | ⏳ zakres OK   |
-| **1.2**     | *(→ **2.0.x**)*              | —             |
+| **1.1.10**  | Opcjonalne pola dartera      | ✅             |
+| **1.2.0**   | Milestone (audit + UX)       | ✅ WYDANY · `backup/v1.2.0` |
 | **1.3**     | Testy + perf                 | ⏳             |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
 
-### Pliki kluczowe (Auth v1.1.0 + 1.1.9)
+### Pliki kluczowe (Auth + tożsamość + About)
 
 ```
-lib/auth.ts                                   ← ensureCustomerForUser, nameFromGoogleMetadata, requireAuth*
-lib/customer.ts                               ← sync / needsOnboarding / updateCustomerProfile
-components/identity-form.tsx                  ← wspólny formularz (onboarding + edycja profilu)
+lib/auth.ts                                   ← ensureCustomerForUser, requireAuth*
+lib/customer.ts                               ← needsOnboarding / needsAboutOnboarding / needsAboutSoftCta / autoDetectPatterns
+lib/identity-suggest.ts                       ← formNameFields, isPlaceholderName
+components/identity-form.tsx                  ← Krok 1 + „Zmień dane identyfikacyjne”
+components/about-form.tsx                     ← Krok 2 + About w profilu (showEncouragement)
 app/onboarding/page.tsx                       ← obowiązkowy formularz po Google
-app/profile/profile-identity-edit.tsx         ← edycja tożsamości na /profile
-app/api/ingest/route.ts                       ← gate 403 needs_onboarding
+app/onboarding/about/page.tsx                 ← Krok 2 O Tobie
+app/profile/page.tsx                          ← ProfileShell + needsAboutSoftCta
+app/profile/profile-shell.tsx                 ← soft CTA + scroll do edycji
+app/profile/profile-soft-cta.tsx
+app/profile/profile-identity-edit.tsx         ← About na górze; identity zwinięte
+app/api/ingest/route.ts                       ← gate 403 needs_onboarding + toClientMatch
 app/api/customer/route.ts                     ← PATCH profilu
+app/api/customer/insights/route.ts            ← maxWinStreak + weightCohort
+```
+
+### Pliki kluczowe (v1.2.0 — delete / audit / lista meczów)
+
+```
+app/api/matches/[id]/route.ts                 ← DELETE match (ownership)
+app/profile/match-delete-dialog.tsx           ← triple-check usuwania
+app/profile/profile-match-card.tsx            ← delete + share + expand
+app/profile/profile-client.tsx                ← 5 kart, insights fetch, optimistic delete
+app/profile/profile-stats-block.tsx           ← Best winning streak (Lifetime)
+app/profile/profile-insights.tsx              ← tylko weight cohort
+lib/matches.ts                                ← deleteMatch
+lib/match-client.ts                           ← strip snapshot paths / rawPayload
+lib/rate-limit.ts
+lib/security-headers.ts
+middleware.ts / next.config.ts                ← headers + robots
+```
+
+### Pliki kluczowe (Auth v1.1.0 — OAuth)
+
+```
 lib/request-origin.ts / lib/app-origin.ts     ← origin LAN vs localhost
 lib/auth-redirect-*.ts                        ← cookies origin/next po OAuth
 lib/supabase/server.ts / middleware.ts        ← SSR cookies + gate
@@ -1218,10 +1304,9 @@ app/auth/callback/route.ts                    ← exchange code → session cook
 app/auth/signout/route.ts
 app/login/*                                   ← przycisk Google
 supabase/migrations/20260715210000_auth_rls_per_user.sql
-middleware.ts                                 ← protect + /?code= → callback
 ```
 
-### Pliki kluczowe (1.0.0)
+### Pliki kluczowe (1.0.0 demo)
 
 ```
 demo/demo-persona.ts                          ← postać demo (podmiana osoby)
@@ -1236,40 +1321,39 @@ scripts/snapshot-demo.ts                      ← npm run snapshot:demo
 supabase/migrations/20260713220000_demo_customer.sql
 app/demo/profile/page.tsx                     ← profil publiczny index
 app/demo/m/[shareToken]/page.tsx              ← mecze demo index
-app/page.tsx / app/login/page.tsx             ← landing + auth placeholder
+app/page.tsx / app/login/page.tsx             ← landing + auth
 app/robots.ts / app/sitemap.ts                ← SEO
-middleware.ts                                 ← X-Robots-Tag na /profile, /m, /api
 components/demo-banner.tsx
 ```
 
-### Pliki kluczowe (profil prywatny — 0.0.x–0.3.x)
+### Pliki kluczowe (profil prywatny — stats)
 
 ```
-.dev/backup-2026-07-12-v1.0.json            ← backup DB milestone (51 meczów + KPI snapshot)
-lib/matches.ts                              ← getMyMatches N+1 (batch loading cofnięty)
-lib/stats.ts                                ← bestLegAvg, computeHourStats, normalizeName
-app/profile/profile-form-chart.tsx          ← tooltip po indeksie, oppName, W/L
-app/profile/profile-activity.tsx            ← poziome słupki (dni tygodnia)
-app/profile/profile-activity-hours.tsx      ← poziome słupki (godziny)
-app/profile/profile-match-card.tsx          ← kolory 100+/120+/140+/170+/180
-app/profile/profile-stats-block.tsx         ← BEST LEG AVG, 3-DART AVG, LEGS WIN RATE
-app/m/[shareToken]/match-view.tsx           ← kolory 120+/170+ w Details
+lib/stats.ts                                ← bestLegAvg, computeHourStats, normalizeName, streaks
+app/profile/profile-form-chart.tsx
+app/profile/profile-activity.tsx
+app/profile/profile-activity-hours.tsx
+app/profile/profile-stats-block.tsx         ← BEST LEG AVG, streak Lifetime
+app/m/[shareToken]/match-view.tsx
+app/m/[shareToken]/page.tsx                 ← snapshot_access_log + toClientMatch
 ```
 
 ### Prompt na nowy czat
 
 ```
 Projekt: Dart Profile Tracker (Cursor_DartStats)
-README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
+README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff" + sekcja **1.2.0**.
 
-Stan: **v1.1.1 WYDANY** (Auth v1.1.0 + tożsamość 1.1.9 + docs 1.1.10).
-Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.
-Backlog rosnąco po ID — nie zgaduj kolejności implementacji; pytaj przed startem.
-1.1.9 = profil tożsamości ✅.
-1.1.10 = opcjonalne „O Tobie” — zakres zatwierdzony; kolejność: .0 .1 .4 .5 .6 .10 .14 .21 .22 .23.1 .23.2.
-Legacy (Groteł): soft CTA, nie gate. Kod 1.1.10 dopiero po „lecimy z kolejnymi X”.
-1.0.1.6 = dokumenty prawne.
-2.0.x = premium / płatności — **odłożone**, start bez tego.
+Stan: **v1.2.0 WYDANY** (delete match 1.1.7, audyt 1.0.1.1–3, polish profilu).
+Backup: `backup/v1.2.0`, tag `v1.2.0-backup`.
+Backlog rosnąco po ID — nie zgaduj kolejności; pytaj przed startem.
+
+Gate: needsOnboarding = nick + real name (nie knownNicknames).
+Soft CTA: needsAboutSoftCta = OR city/brand/weight/hand/favorite (bez model / N01 nicks).
+Streak = Lifetime w siatce stats; lista meczów = 5× ProfileMatchCard (nie recent-matches).
+Edycja profilu: About na górze, identity pod „Zmień dane identyfikacyjne”.
+Nie commitować `.dev/*.json` (PII).
+1.0.1.6 = dokumenty prawne. 2.0.x = premium — odłożone.
 Auth działa na Mac + iPhone (LAN).
 ```
 
@@ -1281,7 +1365,6 @@ npm run dev -- --hostname 0.0.0.0
 # Supabase Site URL na czas testów LAN = http://192.168.100.11:3000
 # allowedDevOrigins w next.config.ts — zaktualizuj IP jeśli sieć się zmieni
 ```
-
 ---
 
 ## Inwentaryzacja copy klienta
@@ -1489,6 +1572,7 @@ npm run dev -- --hostname 0.0.0.0
 | MSG-226 | `Best leg avg` | [ ] do review |
 | MSG-227 | `Checkout` | [ ] do review |
 | MSG-228 | Brak danych | `—` | [ ] do review |
+| MSG-229 | `Best winning streak` + sub `Lifetime` | [x] v1.2.0 |
 
 ### Wykres formy — `app/profile/profile-form-chart.tsx`
 
@@ -1504,13 +1588,27 @@ npm run dev -- --hostname 0.0.0.0
 | MSG-237 | Legenda | `First 9` | [ ] do review |
 | MSG-238 | Legenda | `Śr. ogólna: {overallAvg}` | [ ] do review |
 
-### Ostatnie 5 — `app/profile/profile-recent-matches.tsx`
+### Ostatnie mecze (karty) — `app/profile/profile-client.tsx` + `profile-match-card.tsx`
+
+> **v1.2.0:** usunięto `profile-recent-matches.tsx` (kompaktowa lista W/L). Domyślnie **5** kart + „Więcej spotkań”.
 
 | ID | Tekst | Review |
 |----|-------|--------|
-| MSG-240 | `Ostatnie 5 meczów` | [ ] do review |
-| MSG-241 | `{wins}W · {losses}L` | [ ] do review |
-| MSG-242 | Badge | `W` / `L` / `–` | [ ] do review |
+| MSG-240 | Header | `Ostatnie mecze` | [x] v1.2.0 |
+| MSG-241 | Empty | `Brak meczów w tym zakresie` | [ ] do review |
+| MSG-242 | CTA | `Więcej spotkań ({n})` | [ ] do review |
+| MSG-243 | ~~`Ostatnie 5 meczów`~~ | usunięte z UI | [x] obsolete |
+
+### Soft CTA / edycja profilu — `profile-soft-cta.tsx` + `profile-identity-edit.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-244 | Soft CTA body | `Zdobądź dodatkowe punkty i dostęp do dodatkowych statystyk i porównań.` | [x] v1.2.0 |
+| MSG-245 | Soft CTA button | `Uzupełnij swój profil →` | [x] v1.2.0 |
+| MSG-246 | Accordion | `Edytuj dane profilu` | [x] v1.2.0 |
+| MSG-247 | Nested | `Zmień dane identyfikacyjne` | [x] v1.2.0 |
+| MSG-248 | Identity submit | `Zapisz dane identyfikacyjne` | [x] v1.2.0 |
+| MSG-249 | About submit (edit) | `Zapisz profil` | [x] v1.2.0 |
 
 ### Top listy — `app/profile/profile-top-lists.tsx`
 
@@ -1573,6 +1671,7 @@ npm run dev -- --hostname 0.0.0.0
 | MSG-302 | Link | `Rzut po rzucie →` | [ ] do review |
 | MSG-303 | Share idle | `Udostępnij mecz` | [ ] do review |
 | MSG-304 | Share copied | `Skopiowano` | [ ] do review |
+| MSG-305 | Delete | `Usuń mecz` + dialog triple-check (`usuwam`) | [x] v1.2.0 / 1.1.7 |
 
 ### Widok meczu — `app/m/[shareToken]/match-view.tsx`
 
@@ -1666,6 +1765,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v1.2.0** | 2026-07-26 | **Milestone backup.** **1.1.7** delete match (API+UI+triple-check). Audyt **1.0.1.1–3** (rate limit, CSP, `toClientMatch`, share 16 hex, access log, dev-upsert prod block, `.dev/*.json` out of git). Profil UX: soft CTA scroll, About-first edit + identity accordion, streak Lifetime w stats, 5× match cards (kill recent-matches). Gate/soft CTA: `needsOnboarding` / `needsAboutSoftCta` OR. Branch `backup/v1.2.0`, tag `v1.2.0-backup`. |
 | **1.1.10** | 2026-07-21 | **Krok 2 „O Tobie”** + pola .1/.4–.6/.10/.14/.21/.22 + insighty .23.1–.23.2 (cohort N=5). Samouczek **1.1.3.8** (demo + po koncie). Docs: **1.1.11** usuwanie konta, **1.1.12** punkty (stawki TBD). Migracja `20260721220000_customer_about_fields.sql`. |
 | **docs**   | 2026-07-21 | **Drop `customers.display_name`.** Wyświetlanie tylko z `first_name` / `nickname` / `last_name` + `formatCustomerDisplayName()`. Migracja `20260721210000_drop_customer_display_name.sql`. |
 | **1.1.1**   | 2026-07-21 | **Release v1.1.1.** Profil tożsamości **1.1.9.1–4**, premium→**2.0.x**, **1.1.10** zakres zatwierdzony (docs). Branch `backup/v1.1.1`, tag `v1.1.1-backup`. Package `1.1.1`. |
