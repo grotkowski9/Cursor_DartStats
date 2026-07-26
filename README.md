@@ -3,8 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.1.1 WYDANY** — Auth **1.1.0** + profil tożsamości **1.1.9.1–4 ✅** + roadmapa **1.1.10** (zakres zatwierdzony, kod później).  
-> Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.  
+> **Status:** **v1.2.0 WYDANY** — Auth **1.1.x** + usuwanie meczów (**1.1.7**) + audyt (**1.0.1.1–3**) + polish profilu (CTA, streak w siatce, karty meczów).  
+> Backup: `backup/v1.2.0`, tag `v1.2.0-backup`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -359,8 +359,8 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.1**   | Feedback — inwentaryzacja copy                 | ✅ **wydany** |
 | **1.0.1.x** | Prod, audyt, deploy, dokumenty prawne          | ⏳ |
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
-| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + docs 1.1.10) · otwarte **1.1.3.8**, **1.1.7–1.1.8**, **1.1.10** kod |
-| **1.2.x**   | *(wolne — premium przeniesione do **2.0.x**)*  | — |
+| **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + 1.1.10) · ✅ **1.1.7** · otwarte **1.1.8**, **1.1.11–12** |
+| **1.2.x**   | Milestone snapshot (profil UX + audyt + delete) | ✅ **v1.2.0** — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.3.x**   | Testy + hardening + perf                       | ⏳ |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
 | **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
@@ -544,20 +544,22 @@ Pełny stan projektu zamrożony poza `main`:
 
 > Domknięcie na produkcji + checklist pod RODO i przyszłą bramkę płatności.
 
-- [ ] **1.0.1.1** **Audyt prod — robots & indeksacja**
-  - [ ] `/profile`, `/m/*`, `/api/*` — noindex na żywym URL (nagłówki + meta)
-  - [ ] `/demo/*`, `/` — indexowalne; brak PII w HTML demo
-  - [ ] Search Console: sitemap, brak przypadkowych URL-i usera
-- [ ] **1.0.1.2** **Audyt prod — wyciek danych**
-  - [ ] Demo ≠ dane Piotra Grotkowskiego (osobny customer, snapshot)
-  - [ ] Share linki prywatne — brak listowania tokenów
-  - [ ] `.env` / klucze service_role tylko na serwerze
-  - [ ] Supabase Storage private + signed URL TTL
-- [ ] **1.0.1.3** **Audyt prod — API i ataki**
-  - [ ] Rate limit na `/api/ingest` (anty-spam, anty-DDoS warstwa app)
-  - [ ] Brak SQL injection (parametryzowane zapytania — audit)
-  - [ ] CSP / security headers (middleware)
-  - [ ] Logi dostępu do snapshotów (już jest — weryfikacja)
+- [x] **1.0.1.1** **Audyt prod — robots & indeksacja** *(kod 2026-07-26)*
+  - [x] `/profile`, `/m/*`, `/api/*`, `/auth/` — noindex (meta + `X-Robots-Tag` na wszystkich odpowiedziach middleware)
+  - [x] `/demo/*`, `/` — indexowalne; demo bez PII Piotra
+  - [ ] Search Console: sitemap, brak przypadkowych URL-i usera *(ops — po deployu)*
+- [x] **1.0.1.2** **Audyt prod — wyciek danych** *(kod 2026-07-26)*
+  - [x] Demo ≠ dane Piotra Grotkowskiego (osobny customer, snapshot)
+  - [x] Share linki prywatne — brak listowania tokenów; nowe tokeny 16 hex (~64 bit)
+  - [x] `.env` / klucze service_role tylko na serwerze
+  - [x] Supabase Storage private; ścieżki snapshotów **nie** wychodzą do klienta (`toClientMatch`)
+  - [x] `.dev/backup-*.json` z PII — wyjęte z gita + `.gitignore`
+- [x] **1.0.1.3** **Audyt prod — API i ataki** *(kod 2026-07-26)*
+  - [x] Rate limit na `/api/ingest` (per user + IP) oraz lookup `/m/*` (per IP)
+  - [x] Brak SQL injection (parametryzowane zapytania — audit OK)
+  - [x] CSP / security headers (middleware)
+  - [x] Logi dostępu do share (`snapshot_access_log` na hit/miss)
+  - [x] `dev-upsert` zablokowany w production
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
 - [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (2.0.3)**
@@ -567,7 +569,7 @@ Pełny stan projektu zamrożony poza `main`:
   - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
   - [ ] **1.0.1.6.5** (wewnętrzne, nie w app) DPA Supabase + Vercel, rejestr czynności
 
-**Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7**), usuwanie konta (**1.1.11**), audyt pentest light.
+**Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7** ✅), usuwanie konta (**1.1.11**), audyt pentest light.
 
 ---
 
@@ -617,7 +619,8 @@ Pełny stan projektu zamrożony poza `main`:
 ### 1.1.x — Auth + Multi-user + Admin + profil tożsamości
 
 > **v1.1.0 (2026-07-15):** wydany core auth **1.1.1–1.1.6**.  
-> **v1.1.1 (2026-07-21):** **1.1.9.1–4 ✅** + premium→**2.0.x** + **1.1.10** zakres zatwierdzony (docs). Otwarte kod: **1.1.3.8**, **1.1.7**, **1.1.8**, **1.1.10.x**. Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.
+> **v1.1.1 (2026-07-21):** **1.1.9.1–4 ✅** + premium→**2.0.x** + **1.1.10** zakres zatwierdzony (docs). Otwarte: **1.1.8**, **1.1.11**. ✅ **1.1.7** (2026-07-26). Backup: `backup/v1.1.1`, tag `v1.1.1-backup`.  
+> **v1.2.0 (2026-07-26):** snapshot — delete match, audyt, polish profilu. Backup: `backup/v1.2.0`, tag `v1.2.0-backup`.
 
 - [x] **1.1.1** Supabase Auth (**Google** login) — `/login`, `/api/auth/google`, `/auth/callback`, `/auth/signout`, `@supabase/ssr`
   - OAuth start po stronie serwera (PKCE cookies); callback zapisuje sesję na redirect
@@ -639,11 +642,11 @@ Pełny stan projektu zamrożony poza `main`:
 - [x] **1.1.4** Usunięcie runtime `DEFAULT_CUSTOMER_ID` — API wymaga sesji; seed → `SEED_CUSTOMER_ID`
 - [x] **1.1.5** Middleware — `/profile`, `/onboarding`, `/api/*` tylko zalogowany (+ noindex); `/?code=` → `/auth/callback`
 - [x] **1.1.6** RLS per user — migracja `20260715210000_auth_rls_per_user.sql` (zastosowana na Supabase)
-- [ ] **1.1.7** Usuwanie meczu przez usera
-  - [ ] **1.1.7.1** Przycisk / akcja „Usuń mecz" na karcie meczu w profilu
-  - [ ] **1.1.7.2** Triple-check: potwierdź → podsumowanie → wpisz `usuwam`
-  - [ ] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS
-  - [ ] **1.1.7.4** Undo toast (nice-to-have)
+- [x] **1.1.7** Usuwanie meczu przez usera
+  - [x] **1.1.7.1** Przycisk / akcja „Usuń mecz" na karcie meczu w profilu
+  - [x] **1.1.7.2** Triple-check: potwierdź → podsumowanie → wpisz `usuwam`
+  - [x] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS (ownership w API; DB cascade legs/visits/share_links; Storage + ingest_snapshots)
+  - [ ] **1.1.7.4** Undo toast (nice-to-have — pominięte)
   - Usuwanie **konta** ≠ ten task → **1.1.11**
 - [ ] **1.1.8** Panel admina superadmin (`/admin`)
   - [ ] **1.1.8.1** Lista userów (customers)
@@ -760,9 +763,13 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
 
 ---
 
-### 1.2.x — *(przeniesione)*
+### 1.2.0 — Milestone ✅ WYDANY (2026-07-26)
 
-> **Premium + płatności** przeniesione do **[2.0.x](#20x--premium--płatności--)**. Startujemy **bez** freemium, bramki i CTA premium.
+> Snapshot po **1.1.7** (delete match), audycie **1.0.1.1–3** i polishu profilu (soft CTA + scroll, streak w siatce stats, karty zamiast „Ostatnie 5”, edycja About/identity).  
+> Premium + płatności nadal w **[2.0.x](#20x--premium--płatności--)**.
+
+- Branch: `[backup/v1.2.0](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v1.2.0)`
+- Tag: `v1.2.0-backup`
 
 ---
 
@@ -816,16 +823,16 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
 | ID | Status | Zadanie |
 | -- | ------ | ------- |
 | **0.3.14–17** | ❌ | Analityka turniejowa — **anulowane** (2026-07-21) |
-| **1.0.1.1** | ⏳ | Audyt prod — robots & indeksacja |
-| **1.0.1.2** | ⏳ | Audyt prod — wyciek danych |
-| **1.0.1.3** | ⏳ | Audyt prod — API i ataki |
+| **1.0.1.1** | ✅ | Audyt prod — robots & indeksacja (kod; Search Console = ops) |
+| **1.0.1.2** | ✅ | Audyt prod — wyciek danych (kod) |
+| **1.0.1.3** | ✅ | Audyt prod — API i ataki (rate limit, CSP, access log) |
 | **1.0.1.4** | ⏳ | Deploy Vercel + env |
 | **1.0.1.5** | ⏳ | Custom domain |
 | **1.0.1.6** | ⏳ | Dokumenty prawne: polityka, regulamin, cookies, linki, DPA |
 | **1.0.2.1–7** | ⏳ | Copy klienta (Twoje teksty → fix) |
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
 | **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
-| **1.1.7** | ⏳ | Usuwanie meczu (UI + API + triple-check) |
+| **1.1.7** | ✅ | Usuwanie meczu (UI + API + triple-check; bez undo) |
 | **1.1.8** | ⏳ | Panel admina superadmin |
 | **1.1.9.1** | ✅ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
@@ -952,9 +959,9 @@ Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` 
 ### Checklist „gotowość pod płatności"
 
 - [x] Auth + RLS (**1.1.1–1.1.6** / v1.1.0)
-- [ ] Audyt prod (**1.0.1.1–5**)
+- [ ] Audyt prod (**1.0.1.1–3** ✅ kod · **1.0.1.4–5** deploy/domena ⏳)
 - [ ] Dokumenty prawne (**1.0.1.6** — polityka, regulamin, cookies, DPA)
-- [ ] Usuwanie meczów (**1.1.7**); usuwanie konta (**1.1.11**)
+- [x] Usuwanie meczów (**1.1.7**); usuwanie konta (**1.1.11** ⏳)
 - [x] Profil tożsamości domknięty (**1.1.9**)
 - [ ] Hardening importu (**1.3.7**)
 - [ ] HTTPS everywhere (Vercel domyślnie)
@@ -1124,12 +1131,12 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | --------------- | ----------------------------------------------------------- |
 | **1.0.0**       | ✅ WYDANY — branch `backup/v1.0.0`, tag `v1.0.0-backup`      |
 | **1.0.1**       | ✅ WYDANY — inwentaryzacja copy (~245 MSG)                   |
-| **1.0.1.1–6**   | ⏳ Audyt, deploy, domena, **dokumenty prawne**               |
+| **1.0.1.1–6**   | ⏳→ częściowo ✅ **1.0.1.1–3** kod · **1.0.1.4–6** deploy/prawo |
 | **1.0.2.x**     | ⏳ Copy (Twoje teksty)                                       |
 | **v1.1.0**      | ✅ WYDANY — Auth roadmap 1.1.1–1.1.6 · tag `v1.1.0` |
 | **v1.1.1**      | ✅ WYDANY — **1.1.9** tożsamość + docs **1.1.10** + premium→2.0 · `backup/v1.1.1`, tag `v1.1.1-backup` |
 | **1.1.3.8**     | ⏳ Samouczek                                                 |
-| **1.1.7**       | ⏳ Usuwanie meczu                                            |
+| **1.1.7**       | ✅ Usuwanie meczu (bez undo)                                  |
 | **1.1.8**       | ⏳ Panel admina                                              |
 | **1.1.9**       | ✅ Profil tożsamości (formularz, prefill, gate, edycja) |
 | **1.1.10**      | ⏳ Zakres zatwierdzony — wdrożenia rosnąco (.0→.23.2); kod po „lecimy z X” |
@@ -1183,7 +1190,7 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.0**   | Auth core (Google + RLS)     | ✅ WYDANY      |
 | **1.1.1**   | Tożsamość + roadmap 1.1.10   | ✅ WYDANY · `backup/v1.1.1` |
 | **1.1.3.8** | Samouczek                    | ⏳             |
-| **1.1.7**   | Usuwanie meczu               | ⏳             |
+| **1.1.7**   | Usuwanie meczu               | ✅             |
 | **1.1.8**   | Admin                        | ⏳             |
 | **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
 | **1.1.10**  | Opcjonalne pola dartera      | ⏳ zakres OK   |

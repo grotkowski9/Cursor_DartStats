@@ -34,7 +34,7 @@ export default async function OnboardingAboutPage() {
     <OnboardingShell
       stepLabel="Krok 2"
       title="O Tobie"
-      subtitle="Opcjonalnie — ale warto. Pomiń możesz zawsze; wrócisz do tego w profilu."
+      subtitle="Dodatkowe informacje = dodatkowe statystyki i porównania!"
     >
       <nav className="-mt-2">
         <Link

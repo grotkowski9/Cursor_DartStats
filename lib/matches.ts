@@ -65,6 +65,7 @@ function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow[]): N0
       : null;
 
   return {
+    matchId: match.match_id,
     tmid: match.n01_tmid,
     ttype: match.match_type as "league" | "tournament",
     title: match.title,
@@ -357,4 +358,61 @@ export async function getMyMatchSummaries(
     playerLegsWon: r.player_legs_won,
     opponentLegsWon: r.opponent_legs_won,
   }));
+}
+
+const MATCH_ID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export type DeleteMatchResult =
+  | { ok: true }
+  | { ok: false; reason: "not_found" | "forbidden" | "invalid_id" };
+
+/**
+ * Hard-delete a match owned by customerId.
+ * Cascades legs/visits/share_links; removes ingest_snapshots rows + Storage files.
+ */
+export async function deleteMatch(
+  matchId: string,
+  customerId: string,
+): Promise<DeleteMatchResult> {
+  if (!MATCH_ID_RE.test(matchId)) return { ok: false, reason: "invalid_id" };
+
+  const supabase = getSupabaseAdmin();
+  const { data: match, error: loadErr } = await supabase
+    .from("matches")
+    .select("match_id, customer_id, snapshot_path, html_snapshot_path")
+    .eq("match_id", matchId)
+    .maybeSingle();
+
+  if (loadErr) throw new Error(`deleteMatch load: ${loadErr.message}`);
+  if (!match) return { ok: false, reason: "not_found" };
+  if (match.customer_id !== customerId) return { ok: false, reason: "forbidden" };
+
+  const storagePaths = [match.snapshot_path, match.html_snapshot_path].filter(
+    (p): p is string => Boolean(p),
+  );
+  if (storagePaths.length) {
+    const { error: storErr } = await supabase.storage
+      .from("dart-snapshots")
+      .remove(storagePaths);
+    if (storErr) {
+      // Non-fatal: DB row still must go; orphan files are acceptable vs blocking delete
+      console.warn(`deleteMatch storage: ${storErr.message}`);
+    }
+  }
+
+  const { error: snapErr } = await supabase
+    .from("ingest_snapshots")
+    .delete()
+    .eq("match_id", matchId);
+  if (snapErr) throw new Error(`deleteMatch snapshots: ${snapErr.message}`);
+
+  const { error: delErr } = await supabase
+    .from("matches")
+    .delete()
+    .eq("match_id", matchId)
+    .eq("customer_id", customerId);
+  if (delErr) throw new Error(`deleteMatch: ${delErr.message}`);
+
+  return { ok: true };
 }

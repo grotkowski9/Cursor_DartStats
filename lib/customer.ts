@@ -1,5 +1,8 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { isPlaceholderName } from "@/lib/identity-suggest";
 import type { Database, Tables } from "@/types/database";
+
+export { isPlaceholderName } from "@/lib/identity-suggest";
 
 export type ThrowingHand = "L" | "R";
 
@@ -233,11 +236,12 @@ export async function updateCustomerProfile(
 }
 
 /**
- * Profil tożsamości niekompletny (1.1.9): brak wzorców N01.
- * Imię/nazwisko są wymagane w formularzu; gate ingest/profil opiera się o known_nicknames.
+ * Profil tożsamości niekompletny (1.1.9): brak nicka albo placeholdery zamiast imienia/nazwiska.
+ * Nazwisko + nick zawsze idą do auto-detect; Pseudonimy N01 są opcjonalnym uzupełnieniem.
  */
 export function needsOnboarding(customer: CustomerProfile): boolean {
-  return customer.knownNicknames.filter((n) => n.trim()).length === 0;
+  if (!customer.nickname?.trim()) return true;
+  return isPlaceholderName(customer.firstName, customer.lastName);
 }
 
 /** Krok 2 „O Tobie” jeszcze nie zaliczony (ani zapis, ani Pomiń). */
@@ -245,27 +249,28 @@ export function needsAboutOnboarding(customer: CustomerProfile): boolean {
   return !needsOnboarding(customer) && !customer.aboutCompletedAt;
 }
 
-/** Soft CTA na profilu — brak uzupełnionych pól opcjonalnych. */
+/** Soft CTA na profilu — brakuje choć jednego pola opcjonalnego „O Tobie” (bez modelu lotek i pseudonimów N01). */
 export function needsAboutSoftCta(customer: CustomerProfile): boolean {
   return (
-    !customer.city &&
-    !customer.dartBrand &&
-    !customer.dartModel &&
-    !customer.dartWeightBucket &&
-    !customer.throwingHand &&
+    !customer.city ||
+    !customer.dartBrand ||
+    !customer.dartWeightBucket ||
+    !customer.throwingHand ||
     !customer.favoritePlayerId
   );
 }
 
-/** Patterns for N01 auto-detect (lowercase). Falls back to nickname + last_name. */
+/**
+ * Patterns for N01 auto-detect (lowercase).
+ * Always includes last name + main nickname; merges optional Pseudonimy N01.
+ */
 export function autoDetectPatterns(customer: CustomerProfile): string[] {
-  const fromDb = customer.knownNicknames
-    .map((n) => n.toLowerCase().trim())
-    .filter(Boolean);
-  if (fromDb.length > 0) return fromDb;
-
-  const extras = [customer.lastName, customer.nickname]
+  const last =
+    isPlaceholderName(customer.firstName, customer.lastName)
+      ? null
+      : customer.lastName;
+  const patterns = [...customer.knownNicknames, last, customer.nickname]
     .map((n) => n?.toLowerCase().trim())
     .filter((n): n is string => Boolean(n));
-  return [...new Set(extras)];
+  return [...new Set(patterns)];
 }

@@ -36,9 +36,9 @@ export function IdentityForm({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedOk, setSavedOk] = useState(false);
+  const [emptyNicknamesPrompt, setEmptyNicknamesPrompt] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function saveProfile(skipEmptyNicknamesCheck = false) {
     setSaving(true);
     setError(null);
     setSavedOk(false);
@@ -47,11 +47,22 @@ export function IdentityForm({
       if (!nick) {
         throw new Error("Podaj pseudonim główny.");
       }
+      if (!firstName.trim() || !lastName.trim()) {
+        throw new Error("Podaj imię i nazwisko.");
+      }
 
       const nicknames = knownNicknames
         .split(/[,;\n]/)
         .map((n) => n.trim())
         .filter(Boolean);
+
+      if (nicknames.length === 0 && !skipEmptyNicknamesCheck) {
+        setEmptyNicknamesPrompt(true);
+        setSaving(false);
+        return;
+      }
+
+      setEmptyNicknamesPrompt(false);
 
       const res = await fetch("/api/customer", {
         method: "PATCH",
@@ -82,9 +93,14 @@ export function IdentityForm({
     }
   }
 
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    void saveProfile(emptyNicknamesPrompt);
+  }
+
   const label =
     submitLabel ??
-    (mode === "onboarding" ? "Zapisz i przejdź dalej" : "Zapisz dane tożsamości");
+    (mode === "onboarding" ? "Zapisz i przejdź dalej" : "Zapisz dane identyfikacyjne");
 
   const form = (
     <form
@@ -100,7 +116,8 @@ export function IdentityForm({
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           autoComplete="given-name"
-          className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
+          placeholder="np. Antoni"
+          className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm placeholder:text-muted-foreground/50 focus:border-accent-from focus:outline-none"
         />
       </label>
 
@@ -113,7 +130,8 @@ export function IdentityForm({
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           autoComplete="family-name"
-          className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
+          placeholder="np. Kowalski"
+          className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm placeholder:text-muted-foreground/50 focus:border-accent-from focus:outline-none"
         />
       </label>
 
@@ -125,34 +143,44 @@ export function IdentityForm({
           required
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
-          placeholder="np. Groteł"
-          className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
+          placeholder="np. Łysy"
+          className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm placeholder:text-muted-foreground/50 focus:border-accent-from focus:outline-none"
         />
         <span className="block text-[11px] text-muted-foreground">
-          Twój główny nick w aplikacji — wyświetlamy jako Imię „pseudonim” Nazwisko.
+          Twój główny pseudonim.
         </span>
       </label>
 
       <label className="block space-y-1.5">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Pseudonimy N01 (oddziel przecinkiem)
+          Jak Cię najczęściej zapisują w meczach N01?
         </span>
         <textarea
-          required
           value={knownNicknames}
-          onChange={(e) => setKnownNicknames(e.target.value)}
+          onChange={(e) => {
+            setKnownNicknames(e.target.value);
+            if (emptyNicknamesPrompt) setEmptyNicknamesPrompt(false);
+          }}
           rows={3}
-          placeholder="Grotkowski, Groteł, Piotr Grotkowski"
-          className="w-full resize-y rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm focus:border-accent-from focus:outline-none"
+          placeholder="np. Antoni Kowalski, A. Kowalski, Łysy, Łysy /Kraków"
+          className="w-full resize-y rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm placeholder:text-muted-foreground/50 focus:border-accent-from focus:outline-none"
         />
         <span className="block text-[11px] leading-relaxed text-muted-foreground">
-          Spokojnie — wypisz po przecinku wszystkie nazwy, pod jakimi zwykle jesteś zapisywany w
-          meczach N01. Spacje wewnątrz nazwy są OK (np.{" "}
-          <span className="text-foreground/80">Piotr Grotkowski</span> = jeden wzorzec). Rozdzielamy
-          tylko przecinkiem / średnikiem / nową linią. Jak nie będziemy pewni przy imporcie —
-          dopytamy.
+          Wypisz po przecinku wszystkie nazwy, pod jakimi zwykle jesteś zapisywany w meczach N01.
+          Potrzebujemy tego do automatycznego przypisania wyników do Twojego konta. Spokojnie —
+          jak nie będziemy pewni przy imporcie, dopytamy.
         </span>
       </label>
+
+      {emptyNicknamesPrompt ? (
+        <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 px-3 py-3">
+          <p className="text-[11px] leading-relaxed text-muted-foreground">
+            Zostawiłeś puste pole pod dodatkowe pseudonimy pomocne w automatycznym rozpoznawaniu
+            zawodnika. Czy na pewno w meczach N01 nie zapisują Cię inaczej niż z nazwiska i/lub
+            pseudonimu głównego?
+          </p>
+        </div>
+      ) : null}
 
       {error && (
         <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">

@@ -74,12 +74,6 @@ export async function PATCH(request: Request) {
     const nicknames = (body.knownNicknames ?? auth.customer.knownNicknames)
       .map((n) => n.trim())
       .filter(Boolean);
-    if (nicknames.length === 0) {
-      return NextResponse.json(
-        { error: "Podaj co najmniej jeden wzorzec N01 (np. nazwisko)." },
-        { status: 400 },
-      );
-    }
     const firstName = body.firstName ?? auth.customer.firstName;
     const lastName = body.lastName ?? auth.customer.lastName;
     if (!firstName?.trim() || !lastName?.trim()) {
@@ -90,10 +84,13 @@ export async function PATCH(request: Request) {
     if (!nickname?.trim()) {
       return NextResponse.json({ error: "Podaj pseudonim główny." }, { status: 400 });
     }
+    // Pseudonimy N01 opcjonalne — nazwisko + nick zawsze w auto-detect
     patch.firstName = firstName;
     patch.lastName = lastName;
     patch.nickname = nickname;
-    patch.knownNicknames = nicknames;
+    if (body.knownNicknames !== undefined) {
+      patch.knownNicknames = nicknames;
+    }
   }
 
   if (body.city !== undefined) {

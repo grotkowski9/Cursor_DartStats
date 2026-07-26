@@ -37,6 +37,7 @@ yarn-error.log*
 # prywatne notatki Piotra (nie commitować)
 .dev/notatnik*.md
 .dev/private/
+.dev/*.json
 
 # vercel
 .vercel

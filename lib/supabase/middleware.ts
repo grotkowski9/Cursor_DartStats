@@ -1,25 +1,27 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { applySecurityHeaders } from "@/lib/security-headers";
 
-const NOINDEX_PREFIXES = ["/profile", "/onboarding", "/m/", "/api/"];
+const NOINDEX_PREFIXES = ["/profile", "/onboarding", "/m/", "/api/", "/auth/"];
 
-function applyNoindex(response: NextResponse, pathname: string) {
+function finalize(response: NextResponse, pathname: string): NextResponse {
   const isPrivate = NOINDEX_PREFIXES.some(
     (p) => pathname === p.replace(/\/$/, "") || pathname.startsWith(p),
   );
   if (isPrivate) {
     response.headers.set("X-Robots-Tag", "noindex, nofollow");
   }
-  return response;
+  return applySecurityHeaders(response);
 }
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+  const pathname = request.nextUrl.pathname;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) {
-    return applyNoindex(supabaseResponse, request.nextUrl.pathname);
+    return finalize(supabaseResponse, pathname);
   }
 
   const supabase = createServerClient(url, key, {
@@ -41,7 +43,6 @@ export async function updateSession(request: NextRequest) {
 
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
-  const pathname = request.nextUrl.pathname;
 
   const isAuthApi =
     pathname.startsWith("/api/") &&
@@ -54,12 +55,15 @@ export async function updateSession(request: NextRequest) {
 
   if ((isProtectedPage || isAuthApi) && !user) {
     if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ error: "Wymagane logowanie" }, { status: 401 });
+      return finalize(
+        NextResponse.json({ error: "Wymagane logowanie" }, { status: 401 }),
+        pathname,
+      );
     }
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
+    return finalize(NextResponse.redirect(loginUrl), pathname);
   }
 
   if (pathname === "/login" && user) {
@@ -67,12 +71,8 @@ export async function updateSession(request: NextRequest) {
     const dest = request.nextUrl.clone();
     dest.pathname = next.startsWith("/") ? next : "/profile";
     dest.search = "";
-    return NextResponse.redirect(dest);
+    return finalize(NextResponse.redirect(dest), pathname);
   }
 
-  if (pathname === "/auth/callback") {
-    return applyNoindex(supabaseResponse, pathname);
-  }
-
-  return applyNoindex(supabaseResponse, pathname);
+  return finalize(supabaseResponse, pathname);
 }

@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { requireAuthCustomerApi } from "@/lib/auth";
 import { needsOnboarding } from "@/lib/customer";
 import { ingestAndSave } from "@/lib/matches";
+import { toClientMatch } from "@/lib/match-client";
+import { rateLimit } from "@/lib/rate-limit";
+import type { N01Match } from "@/lib/n01-parser";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +18,23 @@ type IngestBody = {
 export async function POST(request: Request) {
   const auth = await requireAuthCustomerApi();
   if (!auth.ok) return auth.response;
+
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+  const rlUser = rateLimit(`ingest:user:${auth.customer.customerId}`, {
+    limit: 20,
+    windowMs: 60_000,
+  });
+  const rlIp = rateLimit(`ingest:ip:${ip}`, { limit: 40, windowMs: 60_000 });
+  if (!rlUser.ok || !rlIp.ok) {
+    const retry = Math.max(rlUser.retryAfterSec, rlIp.retryAfterSec);
+    return NextResponse.json(
+      { error: "Za dużo importów — spróbuj za chwilę." },
+      { status: 429, headers: { "Retry-After": String(retry) } },
+    );
+  }
 
   if (needsOnboarding(auth.customer)) {
     return NextResponse.json(
@@ -50,6 +70,12 @@ export async function POST(request: Request) {
       action: body.action,
       customerId: auth.customer.customerId,
     });
+    if (result.status === "saved") {
+      return NextResponse.json({
+        ...result,
+        match: toClientMatch(result.match as N01Match),
+      });
+    }
     return NextResponse.json(result);
   } catch (e) {
     const message = e instanceof Error ? e.message : "Import nieudany";

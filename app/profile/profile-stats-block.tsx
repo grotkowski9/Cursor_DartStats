@@ -15,9 +15,11 @@ type Props = {
   range: TimeRange;
   onRange: (r: TimeRange) => void;
   loading: boolean;
+  /** Top win streak — rendered in compact stats grid when > 0 */
+  maxWinStreak?: number | null;
 };
 
-export function ProfileStatsBlock({ stats, range, onRange, loading }: Props) {
+export function ProfileStatsBlock({ stats, range, onRange, loading, maxWinStreak }: Props) {
   return (
     <section>
       <div className="glass-tile p-5">
@@ -85,7 +87,7 @@ export function ProfileStatsBlock({ stats, range, onRange, loading }: Props) {
               <BucketPill label="170+" value={stats.buckets.s170} accent="violet" />
               <BucketPill label="180" value={stats.buckets.s180} accent="signal" />
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-5">
+            <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-6">
               <Stat label="High finish" value={stats.highFinish?.toString() ?? "—"} compact />
               <Stat label="100+ Finish" value={stats.finishes100.toString()} compact />
               <Stat label="Best leg" value={stats.bestLegDarts?.toString() ?? "—"} compact />
@@ -104,6 +106,15 @@ export function ProfileStatsBlock({ stats, range, onRange, loading }: Props) {
                 }
                 compact
               />
+              {maxWinStreak != null && maxWinStreak > 0 ? (
+                <Stat
+                  label="Best winning streak"
+                  value={String(maxWinStreak)}
+                  sub="Lifetime"
+                  compact
+                  tourId="insight-streak"
+                />
+              ) : null}
             </div>
           </>
         )}
@@ -118,15 +129,18 @@ function Stat({
   sub,
   big,
   compact,
+  tourId,
 }: {
   label: string;
   value: string;
   sub?: string;
   big?: boolean;
   compact?: boolean;
+  tourId?: string;
 }) {
   return (
     <div
+      data-tour={tourId}
       className={`rounded-xl border border-white/10 bg-white/[0.05] backdrop-blur-xl ${
         compact ? "p-2" : "p-3"
       }`}

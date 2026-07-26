@@ -31,6 +31,8 @@ export type N01Player = {
 };
 
 export type N01Match = {
+  /** DB id when loaded from Supabase — absent on fresh parse / demo snapshot */
+  matchId?: string;
   tmid: string;
   ttype: "league" | "tournament";
   title: string;
@@ -90,7 +92,8 @@ function parseVisits(raw: N01VisitRaw[]): N01Visit[] {
 
 export async function computeShareToken(customerId: string, tmid: string): Promise<string> {
   const shareHash = await sha256Hex(`${customerId}:${tmid}`);
-  return BigInt(`0x${shareHash.slice(0, 12)}`).toString(36).slice(0, 8);
+  // 16 hex chars ≈ 64 bits — older matches may still use 8-char base36 tokens
+  return shareHash.slice(0, 16);
 }
 
 export async function fetchN01Payload(url: string): Promise<{ payload: Record<string, unknown>; jsonText: string; htmlText: string | null; tmid: string; ttype: "league" | "tournament" }> {

@@ -4,6 +4,9 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 export const dynamic = "force-dynamic";
 
 function allowed(): boolean {
+  if (process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production") {
+    return false;
+  }
   return (
     process.env.NODE_ENV === "development" ||
     process.env.ALLOW_DEV_TEST_LOGIN === "true"
@@ -62,10 +65,10 @@ export async function POST(request: Request) {
 
   const admin = getSupabaseAdmin();
   const meta = {
-    full_name: "Test User",
-    name: "Test User",
-    given_name: "Test",
-    family_name: "User",
+    full_name: "",
+    name: "",
+    given_name: "",
+    family_name: "",
   };
 
   let userId = await findUserIdByEmail(email);

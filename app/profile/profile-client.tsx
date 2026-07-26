@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Inbox, Loader2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
+import type { WeightCohortInsight } from "@/lib/insights";
 import {
   computePlayerStats,
   computeTopCheckouts,
   computeTopThrows,
-  computeLast5,
   filterByRange,
   type TimeRange,
 } from "@/lib/stats";
@@ -19,12 +19,11 @@ import ProfileCheckoutDistribution from "./profile-checkout-distribution";
 import { ProfileFormChart } from "./profile-form-chart";
 import { ProfileHeadToHead } from "./profile-head-to-head";
 import { ProfileMatchCard } from "./profile-match-card";
-import { ProfileRecentMatches } from "./profile-recent-matches";
 import { ProfileStatsBlock } from "./profile-stats-block";
 import { ProfileTopLists } from "./profile-top-lists";
 import { ProfileInsights } from "./profile-insights";
 
-const INITIAL_SHOW = 3;
+const INITIAL_SHOW = 5;
 const PAGE_SIZE = 10;
 
 type Props = {
@@ -58,6 +57,8 @@ export function ProfileClient({
   const [range, setRange] = useState<TimeRange>("all");
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
+  const [maxWinStreak, setMaxWinStreak] = useState<number | null>(null);
+  const [weightCohort, setWeightCohort] = useState<WeightCohortInsight | null>(null);
 
   const loadMatches = useCallback(async () => {
     setLoading(true);
@@ -78,6 +79,29 @@ export function ProfileClient({
     void loadMatches();
   }, [loadMatches, demoMode, demoSnapshot, initialMatches]);
 
+  useEffect(() => {
+    if (!showInsights || demoMode) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const res = await fetch("/api/customer/insights");
+        if (!res.ok) return;
+        const json = (await res.json()) as {
+          maxWinStreak?: number;
+          weightCohort?: WeightCohortInsight | null;
+        };
+        if (cancelled) return;
+        setMaxWinStreak(json.maxWinStreak ?? 0);
+        setWeightCohort(json.weightCohort ?? null);
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showInsights, demoMode]);
+
   const rangeData = liveDemoSnapshot?.byRange[range];
 
   const filtered = useMemo(
@@ -96,10 +120,6 @@ export function ProfileClient({
     () => (liveDemoSnapshot ? rangeData!.topCheckouts : computeTopCheckouts(filtered, 10)),
     [liveDemoSnapshot, rangeData, filtered],
   );
-  const recent = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.recent : computeLast5(filtered)),
-    [liveDemoSnapshot, rangeData, filtered],
-  );
 
   const sortedMatches = useMemo(
     () => filtered.slice().sort((a, b) => b.startTime - a.startTime),
@@ -115,6 +135,16 @@ export function ProfileClient({
     setShowMore(true);
     setPage(0);
   }
+
+  function handleMatchDeleted(match: N01Match) {
+    setMatches((prev) =>
+      prev.filter((m) =>
+        match.matchId ? m.matchId !== match.matchId : m.tmid !== match.tmid,
+      ),
+    );
+  }
+
+  const allowDelete = !demoMode && !demoSnapshot;
 
   return (
     <div className="flex flex-col gap-6">
@@ -132,10 +162,13 @@ export function ProfileClient({
           range={range}
           onRange={setRange}
           loading={loading}
+          maxWinStreak={showInsights && !demoMode ? maxWinStreak : null}
         />
       </div>
 
-      {showInsights && !demoMode ? <ProfileInsights /> : null}
+      {showInsights && !demoMode ? (
+        <ProfileInsights weightCohort={weightCohort} />
+      ) : null}
 
       {/* Form chart */}
       {!loading && filtered.length >= 2 && (
@@ -146,38 +179,6 @@ export function ProfileClient({
         />
       )}
 
-      <ProfileRecentMatches items={recent} matchPathPrefix={matchPathPrefix} />
-
-      <ProfileTopLists throws={topThrows} checkouts={topCheckouts} />
-
-      {/* Head-to-head */}
-      {!loading && filtered.length > 0 && (
-        <ProfileHeadToHead
-          matches={demoSnapshot ? undefined : filtered}
-          opponents={rangeData?.opponents}
-          h2hByOpponent={rangeData?.h2hByOpponent}
-        />
-      )}
-
-      {!loading && filtered.length > 0 && (
-        <ProfileActivity matches={demoSnapshot ? undefined : filtered} dayStats={rangeData?.dayStats} />
-      )}
-
-      {!loading && filtered.length > 0 && (
-        <ProfileActivityHours
-          matches={demoSnapshot ? undefined : filtered}
-          hourStats={rangeData?.hourStats}
-        />
-      )}
-
-      {!loading && filtered.length > 0 && (
-        <ProfileCheckoutDistribution
-          matches={demoSnapshot ? undefined : filtered}
-          checkoutBuckets={rangeData?.checkoutBuckets}
-        />
-      )}
-
-      {/* Match list */}
       <section className="flex flex-col gap-3" data-tour="match-list">
         <h2 className="px-1 text-sm font-semibold uppercase tracking-widest">Ostatnie mecze</h2>
 
@@ -198,20 +199,20 @@ export function ProfileClient({
           </div>
         ) : (
           <>
-            {/* Initial 3 matches */}
             <div className="flex flex-col gap-2">
               {firstPageMatches.map((m) => (
                 <ProfileMatchCard
-                  key={m.tmid}
+                  key={m.matchId ?? m.tmid}
                   match={m}
                   myDisplayName={myDisplayName}
                   matchPathPrefix={matchPathPrefix}
                   initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
+                  canDelete={allowDelete}
+                  onDeleted={() => handleMatchDeleted(m)}
                 />
               ))}
             </div>
 
-            {/* "Więcej spotkań" button */}
             {extraMatches.length > 0 && !showMore && (
               <button
                 type="button"
@@ -222,17 +223,18 @@ export function ProfileClient({
               </button>
             )}
 
-            {/* Paginated list */}
             {showMore && extraMatches.length > 0 && (
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   {pageMatches.map((m) => (
                     <ProfileMatchCard
-                      key={m.tmid}
+                      key={m.matchId ?? m.tmid}
                       match={m}
                       myDisplayName={myDisplayName}
                       matchPathPrefix={matchPathPrefix}
                       initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
+                      canDelete={allowDelete}
+                      onDeleted={() => handleMatchDeleted(m)}
                     />
                   ))}
                 </div>
@@ -275,6 +277,35 @@ export function ProfileClient({
           </>
         )}
       </section>
+
+      <ProfileTopLists throws={topThrows} checkouts={topCheckouts} />
+
+      {/* Head-to-head */}
+      {!loading && filtered.length > 0 && (
+        <ProfileHeadToHead
+          matches={demoSnapshot ? undefined : filtered}
+          opponents={rangeData?.opponents}
+          h2hByOpponent={rangeData?.h2hByOpponent}
+        />
+      )}
+
+      {!loading && filtered.length > 0 && (
+        <ProfileActivity matches={demoSnapshot ? undefined : filtered} dayStats={rangeData?.dayStats} />
+      )}
+
+      {!loading && filtered.length > 0 && (
+        <ProfileActivityHours
+          matches={demoSnapshot ? undefined : filtered}
+          hourStats={rangeData?.hourStats}
+        />
+      )}
+
+      {!loading && filtered.length > 0 && (
+        <ProfileCheckoutDistribution
+          matches={demoSnapshot ? undefined : filtered}
+          checkoutBuckets={rangeData?.checkoutBuckets}
+        />
+      )}
     </div>
   );
 }

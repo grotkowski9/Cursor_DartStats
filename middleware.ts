@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { applySecurityHeaders } from "@/lib/security-headers";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
@@ -7,7 +8,7 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/" && searchParams.has("code")) {
     const dest = request.nextUrl.clone();
     dest.pathname = "/auth/callback";
-    return NextResponse.redirect(dest);
+    return applySecurityHeaders(NextResponse.redirect(dest));
   }
   return updateSession(request);
 }

@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ChevronUp, Share2 } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Share2, Trash2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
 import { getMatchShareUrl } from "@/lib/share-url";
+import { MatchDeleteDialog } from "./match-delete-dialog";
 
 type Props = {
   match: N01Match;
@@ -15,6 +16,9 @@ type Props = {
   /** Path prefix for match detail links, default `/m/` */
   matchPathPrefix?: string;
   initialMatchStats?: MatchStats;
+  /** Show delete action (live profile only — not demo) */
+  canDelete?: boolean;
+  onDeleted?: () => void;
 };
 
 export function ProfileMatchCard({
@@ -23,6 +27,8 @@ export function ProfileMatchCard({
   myDisplayName,
   matchPathPrefix = "/m/",
   initialMatchStats,
+  canDelete = false,
+  onDeleted,
 }: Props) {
   const stats = useMemo(
     () => initialMatchStats ?? computeMatchStats(match),
@@ -30,6 +36,7 @@ export function ProfileMatchCard({
   );
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const date = new Date(match.startTime * 1000).toLocaleString("pl-PL", {
     dateStyle: "short",
@@ -150,30 +157,57 @@ export function ProfileMatchCard({
             />
           </div>
 
-          <div className="mt-4 flex items-center justify-between gap-2">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
             <Link
               href={`${matchPathPrefix}${match.shareToken}`}
               className="text-xs font-medium text-primary/90 underline-offset-4 hover:text-primary hover:underline"
             >
               Rzut po rzucie →
             </Link>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                void copyShareLink();
-              }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent-from/50 hover:bg-accent-from/10"
-            >
-              {copied ? (
-                <Check className="h-3.5 w-3.5 text-emerald-400" />
-              ) : (
-                <Share2 className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-2">
+              {canDelete && match.matchId && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-red-500/35 bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-200 transition-colors hover:border-red-500/55 hover:bg-red-500/20"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Usuń mecz
+                </button>
               )}
-              {copied ? "Skopiowano" : "Udostępnij mecz"}
-            </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void copyShareLink();
+                }}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent-from/50 hover:bg-accent-from/10"
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-emerald-400" />
+                ) : (
+                  <Share2 className="h-3.5 w-3.5" />
+                )}
+                {copied ? "Skopiowano" : "Udostępnij mecz"}
+              </button>
+            </div>
           </div>
         </div>
+      )}
+
+      {deleteOpen && (
+        <MatchDeleteDialog
+          match={match}
+          myDisplayName={myDisplayName}
+          onClose={() => setDeleteOpen(false)}
+          onDeleted={() => {
+            setDeleteOpen(false);
+            onDeleted?.();
+          }}
+        />
       )}
     </article>
   );

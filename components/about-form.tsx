@@ -113,27 +113,34 @@ export function AboutForm({
   const formInner = (
     <>
       {showEncouragement ? (
-        <div className="mb-4 space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
-          <p className="text-sm font-semibold leading-snug text-foreground">
-            Uzupełnij „O Tobie” — odblokujesz więcej z profilu.
+        <div className="space-y-2.5 rounded-xl border border-emerald-600/25 bg-emerald-600/[0.07] p-4">
+          <p className="text-[11px] font-medium leading-relaxed text-emerald-100/80">
+            Uzupełnij poniższe dane. Naprawdę warto!
           </p>
-          <ul className="space-y-2 text-sm text-muted-foreground">
+          <ul className="space-y-1.5 text-[11px] leading-relaxed text-muted-foreground">
             <li>
-              ● Statystyki porównujące graczy z{" "}
-              <strong className="font-medium text-foreground">tymi samymi lotkami</strong>{" "}
-              (wkrótce)
+              <span className="text-emerald-500" aria-hidden>
+                ●{" "}
+              </span>
+              <strong className="font-medium text-emerald-100/70">Statystyki</strong> porównujące
+              graczy z tymi samymi lotkami (wkrótce)
             </li>
             <li>
-              ●{" "}
-              <strong className="font-medium text-foreground">
-                Spersonalizowana, dedykowana komunikacja
-              </strong>
+              <span className="text-emerald-500" aria-hidden>
+                ●{" "}
+              </span>
+              <strong className="font-medium text-emerald-100/70">
+                Spersonalizowana komunikacja
+              </strong>{" "}
+              dopasowana do Ciebie
             </li>
             <li>
-              ● <strong className="font-medium text-foreground">Punkty gracza wkrótce</strong> —
-              uzupełnione pola dadzą dodatkowe punkty
+              <span className="text-emerald-500" aria-hidden>
+                ●{" "}
+              </span>
+              <strong className="font-medium text-emerald-100/70">Dodatkowe punkty</strong>, które
+              otrzymasz za uzupełnione pola (wkrótce)
             </li>
-            <li>● I wiele więcej</li>
           </ul>
         </div>
       ) : null}
@@ -145,12 +152,6 @@ export function AboutForm({
         }}
         className="space-y-4"
       >
-        {mode === "edit" ? (
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            O Tobie (opcjonalne)
-          </p>
-        ) : null}
-
         <label className="block space-y-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Miasto / gmina
@@ -253,6 +254,10 @@ export function AboutForm({
               </option>
             ))}
           </select>
+          <span className="block text-[11px] text-muted-foreground">
+            Już wkrótce osobne statystyki pokazujące, jak radzą sobie inni gracze rzucający taką
+            samą wagą.
+          </span>
         </label>
 
         <fieldset className="space-y-1.5">
@@ -280,6 +285,10 @@ export function AboutForm({
               </button>
             ))}
           </div>
+          <span className="block text-[11px] text-muted-foreground">
+            Już wkrótce osobne statystyki pokazujące, jak radzą sobie inni gracze rzucający tą samą
+            ręką.
+          </span>
         </fieldset>
 
         <div className="block space-y-1.5">
@@ -333,12 +342,20 @@ export function AboutForm({
               </button>
             </div>
           )}
+          <span className="block text-[11px] text-muted-foreground">
+            Już wkrótce porównania popularności i formy. Zobaczysz, jak wypadasz wśród graczy z tym
+            samym ulubioncem.
+          </span>
         </div>
 
         <label className="flex cursor-not-allowed items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3 opacity-90">
           <input type="checkbox" checked readOnly disabled className="mt-0.5" />
           <span className="text-sm text-muted-foreground">
-            Dane widoczne do porównań społecznościowych (zawsze włączone).
+            Twoje statystyki biorą udział w porównaniach z innymi graczami.{" "}
+            <span className="block text-[11px] leading-relaxed">
+              Spokojnie — nie udostępniamy Twoich prywatnych danych. Jedynie analityka
+              społecznościowa.
+            </span>
           </span>
         </label>
 
@@ -350,8 +367,11 @@ export function AboutForm({
             className="mt-0.5"
           />
           <span className="text-sm text-muted-foreground">
-            Newsletter / tipy — czasem konkret, np. wynik Twojego ulubionego zawodnika. Bez
-            spamu.
+            Zgoda marketingowa na mailowy newsletter.{" "}
+            <span className="block text-[11px] leading-relaxed">
+              O Twoim ulubionym zawodniku, tipy, oferty promocyjne powiązane z dartem. Sam
+              konkret, zero spamu. Maks. raz na dwa tygodnie.
+            </span>
           </span>
         </label>
 
@@ -372,7 +392,7 @@ export function AboutForm({
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-from to-accent-to px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50"
         >
           {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-          {mode === "onboarding" ? "Zapisz i kontynuuj" : "Zapisz „O Tobie”"}
+          {mode === "onboarding" ? "Zapisz i kontynuuj" : "Zapisz profil"}
         </button>
 
         {mode === "onboarding" ? (
@@ -390,7 +410,7 @@ export function AboutForm({
   );
 
   if (embedded) {
-    return <div className="space-y-4 border-t border-white/10 pt-5">{formInner}</div>;
+    return <div className="space-y-4">{formInner}</div>;
   }
 
   return <div className="glass-tile space-y-4 p-5">{formInner}</div>;

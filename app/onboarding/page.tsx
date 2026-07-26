@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { requireAuthCustomer } from "@/lib/auth";
-import { suggestKnownNicknames } from "@/lib/identity-suggest";
+import { formNameFields } from "@/lib/identity-suggest";
 import { siteDocumentTitle } from "@/lib/page-metadata";
 import { IdentityForm } from "@/components/identity-form";
 import { OnboardingShell } from "@/components/onboarding-shell";
@@ -18,17 +18,12 @@ export const metadata: Metadata = {
 export default async function OnboardingPage() {
   const { customer } = await requireAuthCustomer({ allowIncompleteOnboarding: true });
 
-  const initial = {
-    firstName: customer.firstName === "Gracz" ? "" : customer.firstName,
-    lastName: customer.lastName === "Dart" ? "" : customer.lastName,
-    nickname: customer.nickname ?? "",
-    knownNicknames: suggestKnownNicknames({
-      firstName: customer.firstName,
-      lastName: customer.lastName,
-      nickname: customer.nickname,
-      knownNicknames: customer.knownNicknames,
-    }),
-  };
+  const initial = formNameFields({
+    firstName: customer.firstName,
+    lastName: customer.lastName,
+    nickname: customer.nickname,
+    knownNicknames: customer.knownNicknames,
+  });
 
   return (
     <OnboardingShell
