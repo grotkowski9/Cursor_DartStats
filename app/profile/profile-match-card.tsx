@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ChevronUp, Share2, Trash2 } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Pencil, Share2, Trash2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
 import { getMatchShareUrl } from "@/lib/share-url";
 import { MatchDeleteDialog } from "./match-delete-dialog";
+import { MatchEditDialog } from "./match-edit-dialog";
 
 type Props = {
   match: N01Match;
@@ -19,6 +20,9 @@ type Props = {
   /** Show delete action (live profile only — not demo) */
   canDelete?: boolean;
   onDeleted?: () => void;
+  /** Show edit action (live profile only — not demo) */
+  canEdit?: boolean;
+  onUpdated?: (match: N01Match) => void;
 };
 
 export function ProfileMatchCard({
@@ -29,6 +33,8 @@ export function ProfileMatchCard({
   initialMatchStats,
   canDelete = false,
   onDeleted,
+  canEdit = false,
+  onUpdated,
 }: Props) {
   const stats = useMemo(
     () => initialMatchStats ?? computeMatchStats(match),
@@ -37,6 +43,7 @@ export function ProfileMatchCard({
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   const date = new Date(match.startTime * 1000).toLocaleString("pl-PL", {
     dateStyle: "short",
@@ -165,6 +172,19 @@ export function ProfileMatchCard({
               Rzut po rzucie →
             </Link>
             <div className="flex items-center gap-2">
+              {canEdit && match.matchId && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent-from/50 hover:bg-accent-from/10"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  Edytuj mecz
+                </button>
+              )}
               {canDelete && match.matchId && (
                 <button
                   type="button"
@@ -206,6 +226,18 @@ export function ProfileMatchCard({
           onDeleted={() => {
             setDeleteOpen(false);
             onDeleted?.();
+          }}
+        />
+      )}
+
+      {editOpen && (
+        <MatchEditDialog
+          match={match}
+          myDisplayName={myDisplayName}
+          onClose={() => setEditOpen(false)}
+          onSaved={(updated) => {
+            setEditOpen(false);
+            onUpdated?.(updated);
           }}
         />
       )}

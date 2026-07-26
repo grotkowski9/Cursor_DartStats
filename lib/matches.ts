@@ -416,3 +416,87 @@ export async function deleteMatch(
 
   return { ok: true };
 }
+
+export type UpdateMatchEditPatch = {
+  /** Which N01 slot is "me" after edit */
+  playerIndex?: 0 | 1;
+  /** Rename players by absolute slot 0/1 (not relative to me) */
+  playerNames?: { 0?: string; 1?: string };
+};
+
+export type UpdateMatchEditResult =
+  | { ok: true; match: N01Match }
+  | { ok: false; reason: "not_found" | "forbidden" | "invalid_id" | "invalid_patch" };
+
+/**
+ * Edit match identity: swap "me" side and/or rename player names.
+ * Does not rewrite legs/visits — only matches row denormalized fields + players JSON.
+ */
+export async function updateMatchEdit(
+  matchId: string,
+  customerId: string,
+  patch: UpdateMatchEditPatch,
+): Promise<UpdateMatchEditResult> {
+  if (!MATCH_ID_RE.test(matchId)) return { ok: false, reason: "invalid_id" };
+
+  const hasIndex = patch.playerIndex === 0 || patch.playerIndex === 1;
+  const name0 = patch.playerNames?.[0]?.trim();
+  const name1 = patch.playerNames?.[1]?.trim();
+  const hasNames = Boolean(name0 || name1);
+  if (!hasIndex && !hasNames) return { ok: false, reason: "invalid_patch" };
+  if (name0 !== undefined && name0.length === 0) return { ok: false, reason: "invalid_patch" };
+  if (name1 !== undefined && name1.length === 0) return { ok: false, reason: "invalid_patch" };
+
+  const supabase = getSupabaseAdmin();
+  const { data: row, error: loadErr } = await supabase
+    .from("matches")
+    .select("match_id, customer_id")
+    .eq("match_id", matchId)
+    .maybeSingle();
+
+  if (loadErr) throw new Error(`updateMatchEdit load: ${loadErr.message}`);
+  if (!row) return { ok: false, reason: "not_found" };
+  if (row.customer_id !== customerId) return { ok: false, reason: "forbidden" };
+
+  const current = await loadMatchById(matchId);
+  if (!current || current.playerIndex === null) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  const players = current.players.map((p) => ({ ...p })) as [N01Player, N01Player];
+  if (name0) players[0] = { ...players[0], name: name0 };
+  if (name1) players[1] = { ...players[1], name: name1 };
+
+  const nextIndex = hasIndex ? patch.playerIndex! : current.playerIndex;
+  players[0] = { ...players[0], isMe: nextIndex === 0 };
+  players[1] = { ...players[1], isMe: nextIndex === 1 };
+
+  const updated: N01Match = {
+    ...current,
+    players,
+    playerIndex: nextIndex,
+  };
+
+  const stats = computeMatchStats(updated);
+  const oppIdx = nextIndex === 0 ? 1 : 0;
+
+  const { error: updErr } = await supabase
+    .from("matches")
+    .update({
+      player_index: nextIndex,
+      opponent_name: opponentName(players, nextIndex),
+      player_legs_won: players[nextIndex].winLegs,
+      opponent_legs_won: players[oppIdx].winLegs,
+      player_average: stats.me.average,
+      player_first9: stats.me.first9,
+      player_checkout_pct: stats.me.checkoutRate,
+      players: players as Json,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("match_id", matchId)
+    .eq("customer_id", customerId);
+
+  if (updErr) throw new Error(`updateMatchEdit: ${updErr.message}`);
+
+  return { ok: true, match: updated };
+}

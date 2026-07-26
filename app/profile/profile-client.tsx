@@ -144,6 +144,20 @@ export function ProfileClient({
     );
   }
 
+  function handleMatchUpdated(updated: N01Match) {
+    setMatches((prev) =>
+      prev.map((m) =>
+        updated.matchId
+          ? m.matchId === updated.matchId
+            ? updated
+            : m
+          : m.tmid === updated.tmid
+            ? updated
+            : m,
+      ),
+    );
+  }
+
   const allowDelete = !demoMode && !demoSnapshot;
 
   return (
@@ -209,6 +223,8 @@ export function ProfileClient({
                   initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
                   canDelete={allowDelete}
                   onDeleted={() => handleMatchDeleted(m)}
+                  canEdit={allowDelete}
+                  onUpdated={handleMatchUpdated}
                 />
               ))}
             </div>
@@ -235,6 +251,8 @@ export function ProfileClient({
                       initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
                       canDelete={allowDelete}
                       onDeleted={() => handleMatchDeleted(m)}
+                      canEdit={allowDelete}
+                      onUpdated={handleMatchUpdated}
                     />
                   ))}
                 </div>

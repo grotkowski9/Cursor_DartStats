@@ -650,6 +650,11 @@ Pełny stan projektu zamrożony poza `main`:
   - [x] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS (ownership w API; DB cascade legs/visits/share_links; Storage + ingest_snapshots)
   - [ ] **1.1.7.4** Undo toast (nice-to-have — pominięte)
   - Usuwanie **konta** ≠ ten task → **1.1.11**
+- [x] **1.1.13** **Edycja meczu** (2026-07-26)
+  - [x] **1.1.13.1** Przycisk „Edytuj mecz” na karcie (obok Usuń)
+  - [x] **1.1.13.2** Dialog 3 kroki: na pewno? → co zmienić (strony / nazwa przeciwnika) → potwierdź diff
+  - [x] **1.1.13.3** API `PATCH /api/matches/[id]` — `playerIndex` + rename opponent; bez przepisywania legs/visits
+  - [x] **1.1.13.4** UI podmienia mecz w liście (H2H / stats po refresh zakresu)
 - [ ] **1.1.8** Panel admina superadmin (`/admin`)
   - [ ] **1.1.8.1** Lista userów (customers)
   - [ ] **1.1.8.2** Podgląd / usuwanie meczów dowolnego usera
@@ -890,6 +895,7 @@ nav → ProfileHeader → Soft CTA (opcjonalnie)
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
 | **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
 | **1.1.7** | ✅ | Usuwanie meczu (UI + API + triple-check; bez undo) |
+| **1.1.13** | ✅ | Edycja meczu (swap stron + rename przeciwnika; 3 kroki) |
 | **1.1.8** | ⏳ | Panel admina superadmin |
 | **1.1.9.1** | ✅ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
@@ -1199,6 +1205,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **v1.1.1**      | ✅ WYDANY — **1.1.9** + docs **1.1.10** · `backup/v1.1.1` |
 | **1.1.3.8**     | ✅ Samouczek (demo + auto po koncie) |
 | **1.1.7**       | ✅ Usuwanie meczu (bez undo)                                  |
+| **1.1.13**      | ✅ Edycja meczu (swap + rename przeciwnika)                   |
 | **1.1.8**       | ⏳ Panel admina                                              |
 | **1.1.9**       | ✅ Profil tożsamości (gate = nick + real name) |
 | **1.1.10**      | ✅ Kod wdrożony (+ polish w v1.2.0) |
@@ -1280,13 +1287,14 @@ app/api/customer/insights/route.ts            ← maxWinStreak + weightCohort
 ### Pliki kluczowe (v1.2.0 — delete / audit / lista meczów)
 
 ```
-app/api/matches/[id]/route.ts                 ← DELETE match (ownership)
+app/api/matches/[id]/route.ts                 ← DELETE + PATCH match (ownership)
 app/profile/match-delete-dialog.tsx           ← triple-check usuwania
-app/profile/profile-match-card.tsx            ← delete + share + expand
-app/profile/profile-client.tsx                ← 5 kart, insights fetch, optimistic delete
+app/profile/match-edit-dialog.tsx             ← 3 kroki: intent → strony/nazwa opp → potwierdź
+app/profile/profile-match-card.tsx            ← edit + delete + share + expand
+app/profile/profile-client.tsx                ← 5 kart, insights fetch, delete/update
 app/profile/profile-stats-block.tsx           ← Best winning streak (Lifetime)
 app/profile/profile-insights.tsx              ← tylko weight cohort
-lib/matches.ts                                ← deleteMatch
+lib/matches.ts                                ← deleteMatch + updateMatchEdit
 lib/match-client.ts                           ← strip snapshot paths / rawPayload
 lib/rate-limit.ts
 lib/security-headers.ts
