@@ -3,8 +3,8 @@
 **Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.2.0 WYDANY** — Auth **1.1.x** + usuwanie meczów (**1.1.7**) + audyt (**1.0.1.1–3**) + polish profilu (CTA, streak w siatce, karty meczów).  
-> Backup: `backup/v1.2.0`, tag `v1.2.0-backup`.  
+> **Status:** **v1.2.0+** — Auth **1.1.x** + delete (**1.1.7**) + **edycja meczu (1.1.13)** + audyt (**1.0.1.1–3**) + polish profilu.  
+> Backup milestone: `backup/v1.2.0`, tag `v1.2.0-backup` (bez 1.1.13). Edycja meczu = na `main` po backupie.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -650,11 +650,6 @@ Pełny stan projektu zamrożony poza `main`:
   - [x] **1.1.7.3** API `DELETE /api/matches/[id]` + cascade + RLS (ownership w API; DB cascade legs/visits/share_links; Storage + ingest_snapshots)
   - [ ] **1.1.7.4** Undo toast (nice-to-have — pominięte)
   - Usuwanie **konta** ≠ ten task → **1.1.11**
-- [x] **1.1.13** **Edycja meczu** (2026-07-26)
-  - [x] **1.1.13.1** Przycisk „Edytuj mecz” na karcie (obok Usuń)
-  - [x] **1.1.13.2** Dialog 3 kroki: na pewno? → co zmienić (strony / nazwa przeciwnika) → potwierdź diff
-  - [x] **1.1.13.3** API `PATCH /api/matches/[id]` — `playerIndex` + rename opponent; bez przepisywania legs/visits
-  - [x] **1.1.13.4** UI podmienia mecz w liście (H2H / stats po refresh zakresu)
 - [ ] **1.1.8** Panel admina superadmin (`/admin`)
   - [ ] **1.1.8.1** Lista userów (customers)
   - [ ] **1.1.8.2** Podgląd / usuwanie meczów dowolnego usera
@@ -773,6 +768,22 @@ Ref JSON: `data/pl-cities.json`, `data/dart-brands.json`, `data/favorite-players
   - Na Kroku 2 copy może **zapowiadać** punkty („wkrótce”) bez przyznawania
   - Status: ⏳ docs only — implementacja później
 
+- [x] **1.1.13** **Edycja meczu** ✅ (2026-07-26, po v1.2.0)
+  - [x] **1.1.13.1** Przycisk „Edytuj mecz” na karcie (żółty/amber; mniejszy; w jednym rzędzie z Rzut/Share/Usuń)
+  - [x] **1.1.13.2** Dialog 3 kroki (`match-edit-dialog.tsx`):
+    1. Na pewno edytować?
+    2. Co zmienić? — checkboxy **Zmiana stron** i/lub **Zmiana nazwy przeciwnika** (+ formularze)
+    3. Potwierdź diff (było → będzie) → Zapisz
+  - [x] **1.1.13.3** API `PATCH /api/matches/[id]` + `updateMatchEdit()` — **zapis do DB** (`player_index`, `players` JSON, `opponent_name`, denorm KPI). **Bez** przepisywania legs/visits (sloty 0/1 w wizytach zostają).
+  - [x] **1.1.13.4** Po sukcesie: odpowiedź `{ match }` → `ProfileClient` podmienia wpis w state (bez full reload). Persist = tak; „lokalnie” = tylko UI state.
+  - Poza zakresem: bulk rename przeciwnika we wszystkich meczach; zmiana wyniku/wizyt/daty; edit w demo
+
+**Akcje na karcie meczu (kolejność / kolory):**
+- **Rzut po rzucie** — niebieski (`accent-from`, jak 100+), ikona strzałki z przodu
+- **Udostępnij mecz** — fiolet (`accent-to`, jak 140+)
+- **Edytuj mecz** — yellow/amber, mniejszy
+- **Usuń mecz** — czerwony, mniejszy
+
 ---
 
 ### 1.2.0 — Milestone ✅ WYDANY (2026-07-26)
@@ -832,6 +843,12 @@ nav → ProfileHeader → Soft CTA (opcjonalnie)
 - **1.0.2.x** copy review
 - **1.1.8** admin · **1.1.11** usuwanie konta · **1.1.12** punkty
 - **1.3.x** testy · **2.0.x** premium (⏸️)
+
+#### Po v1.2.0 na main (ten sam dzień) — **1.1.13**
+
+> Kod na `main` po merge v1.2.0. Backup tag `v1.2.0-backup` **nie** zawiera jeszcze edycji meczu — stan docs/kodu edycji = HEAD `main` / branch roboczy.
+
+Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 ---
 
@@ -895,7 +912,6 @@ nav → ProfileHeader → Soft CTA (opcjonalnie)
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
 | **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
 | **1.1.7** | ✅ | Usuwanie meczu (UI + API + triple-check; bez undo) |
-| **1.1.13** | ✅ | Edycja meczu (swap stron + rename przeciwnika; 3 kroki) |
 | **1.1.8** | ⏳ | Panel admina superadmin |
 | **1.1.9.1** | ✅ | Formularz obowiązkowy po Google (imię, nazwisko, nick, pseudonimy N01) |
 | **1.1.9.2** | ✅ | Prefill z Google przy tworzeniu customer |
@@ -919,6 +935,7 @@ nav → ProfileHeader → Soft CTA (opcjonalnie)
 | **v1.2.0** | ✅ | Milestone backup — delete + audit + polish profilu (`backup/v1.2.0`) |
 | **1.1.11** | ⏳ | Usuwanie konta (copy na dole profilu; RODO) |
 | **1.1.12** | ⏳ | Punkty gracza (szkielet; stawki TBD) |
+| **1.1.13** | ✅ | Edycja meczu (swap + rename; PATCH do DB; 3 kroki) |
 | **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
@@ -1192,7 +1209,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.2.0 ✅ | backlog otwarty (rosnąco po ID)
+### v1.2.0+ ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -1205,12 +1222,12 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **v1.1.1**      | ✅ WYDANY — **1.1.9** + docs **1.1.10** · `backup/v1.1.1` |
 | **1.1.3.8**     | ✅ Samouczek (demo + auto po koncie) |
 | **1.1.7**       | ✅ Usuwanie meczu (bez undo)                                  |
-| **1.1.13**      | ✅ Edycja meczu (swap + rename przeciwnika)                   |
 | **1.1.8**       | ⏳ Panel admina                                              |
 | **1.1.9**       | ✅ Profil tożsamości (gate = nick + real name) |
 | **1.1.10**      | ✅ Kod wdrożony (+ polish w v1.2.0) |
-| **v1.2.0**      | ✅ WYDANY — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.1.11–12**   | ⏳ Usuwanie konta · punkty gracza |
+| **1.1.13**      | ✅ Edycja meczu (po v1.2.0 na main) |
+| **v1.2.0**      | ✅ WYDANY — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.3.x**       | ⏳ Testy + hardening                                         |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone) |
 | Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
@@ -1259,6 +1276,7 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.8**   | Admin                        | ⏳             |
 | **1.1.9**   | Profil tożsamości (1.1.9.1–4) | ✅             |
 | **1.1.10**  | Opcjonalne pola dartera      | ✅             |
+| **1.1.13**  | Edycja meczu (swap+rename)   | ✅ (po v1.2.0)  |
 | **1.2.0**   | Milestone (audit + UX)       | ✅ WYDANY · `backup/v1.2.0` |
 | **1.3**     | Testy + perf                 | ⏳             |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
@@ -1352,14 +1370,15 @@ app/m/[shareToken]/page.tsx                 ← snapshot_access_log + toClientMa
 Projekt: Dart Profile Tracker (Cursor_DartStats)
 README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff" + sekcja **1.2.0**.
 
-Stan: **v1.2.0 WYDANY** (delete match 1.1.7, audyt 1.0.1.1–3, polish profilu).
-Backup: `backup/v1.2.0`, tag `v1.2.0-backup`.
+Stan: **v1.2.0+** na main (delete **1.1.7**, edycja meczu **1.1.13**, audyt **1.0.1.1–3**, polish profilu).
+Backup milestone: `backup/v1.2.0` / `v1.2.0-backup` (sprzed 1.1.13).
 Backlog rosnąco po ID — nie zgaduj kolejności; pytaj przed startem.
 
 Gate: needsOnboarding = nick + real name (nie knownNicknames).
 Soft CTA: needsAboutSoftCta = OR city/brand/weight/hand/favorite (bez model / N01 nicks).
-Streak = Lifetime w siatce stats; lista meczów = 5× ProfileMatchCard (nie recent-matches).
-Edycja profilu: About na górze, identity pod „Zmień dane identyfikacyjne”.
+Streak = Lifetime w siatce stats; lista meczów = 5× ProfileMatchCard.
+Edycja meczu: PATCH zapisuje DB; UI podmienia state z odpowiedzi. Nie przepisywać legs/visits.
+Karty: Rzut (niebieski) · Share (fiolet) · Edytuj (żółty mały) · Usuń (czerwony mały).
 Nie commitować `.dev/*.json` (PII).
 1.0.1.6 = dokumenty prawne. 2.0.x = premium — odłożone.
 Auth działa na Mac + iPhone (LAN).
@@ -1680,6 +1699,21 @@ npm run dev -- --hostname 0.0.0.0
 | MSG-303 | Share idle | `Udostępnij mecz` | [ ] do review |
 | MSG-304 | Share copied | `Skopiowano` | [ ] do review |
 | MSG-305 | Delete | `Usuń mecz` + dialog triple-check (`usuwam`) | [x] v1.2.0 / 1.1.7 |
+| MSG-306 | Edit btn | `Edytuj mecz` (amber, mały) | [x] 1.1.13 |
+| MSG-307 | Throws btn | `Rzut po rzucie` (accent-from) | [x] 1.1.13 |
+| MSG-308 | Share btn | `Udostępnij mecz` / `Skopiowano` (accent-to) | [x] 1.1.13 |
+
+### Edycja meczu — `app/profile/match-edit-dialog.tsx`
+
+| ID | Tekst | Review |
+|----|-------|--------|
+| MSG-309 | Krok 1 title | `Na pewno edytować ten mecz?` | [x] 1.1.13 |
+| MSG-310a | Krok 1 body | `Możesz poprawić błędne przypisanie strony albo nazwę przeciwnika.` | [x] 1.1.13 |
+| MSG-311a | Krok 2 title | `Co chcesz zmienić?` | [x] 1.1.13 |
+| MSG-312a | Opt sides | `Zmiana stron` + opis z `-` | [x] 1.1.13 |
+| MSG-313a | Opt rename | `Zmiana nazwy przeciwnika` + zdanie o H2H | [x] 1.1.13 |
+| MSG-314a | Krok 3 title | `Potwierdź wprowadzone zmiany` | [x] 1.1.13 |
+| MSG-315a | Submit | `Zapisz zmiany` | [x] 1.1.13 |
 
 ### Widok meczu — `app/m/[shareToken]/match-view.tsx`
 
@@ -1773,6 +1807,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.1.13** | 2026-07-26 | **Edycja meczu.** Dialog 3 kroki (strony / nazwa opp). `PATCH /api/matches/[id]` + `updateMatchEdit` (DB persist; bez rewrite legs). Przyciski karty: Rzut niebieski, Share fiolet, Edytuj amber mały, Usuń czerwony mały. Docs agent: „lokalnie” = UI state po odpowiedzi API, nie pomijanie DB. |
 | **v1.2.0** | 2026-07-26 | **Milestone backup.** **1.1.7** delete match (API+UI+triple-check). Audyt **1.0.1.1–3** (rate limit, CSP, `toClientMatch`, share 16 hex, access log, dev-upsert prod block, `.dev/*.json` out of git). Profil UX: soft CTA scroll, About-first edit + identity accordion, streak Lifetime w stats, 5× match cards (kill recent-matches). Gate/soft CTA: `needsOnboarding` / `needsAboutSoftCta` OR. Branch `backup/v1.2.0`, tag `v1.2.0-backup`. |
 | **1.1.10** | 2026-07-21 | **Krok 2 „O Tobie”** + pola .1/.4–.6/.10/.14/.21/.22 + insighty .23.1–.23.2 (cohort N=5). Samouczek **1.1.3.8** (demo + po koncie). Docs: **1.1.11** usuwanie konta, **1.1.12** punkty (stawki TBD). Migracja `20260721220000_customer_about_fields.sql`. |
 | **docs**   | 2026-07-21 | **Drop `customers.display_name`.** Wyświetlanie tylko z `first_name` / `nickname` / `last_name` + `formatCustomerDisplayName()`. Migracja `20260721210000_drop_customer_display_name.sql`. |

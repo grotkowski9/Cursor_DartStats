@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ChevronUp, Pencil, Share2, Trash2 } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, ChevronUp, Pencil, Share2, Trash2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
 import { getMatchShareUrl } from "@/lib/share-url";
@@ -164,56 +164,56 @@ export function ProfileMatchCard({
             />
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="mt-4 flex flex-wrap items-center gap-1.5">
             <Link
               href={`${matchPathPrefix}${match.shareToken}`}
-              className="text-xs font-medium text-primary/90 underline-offset-4 hover:text-primary hover:underline"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 rounded-md border border-accent-from/40 bg-accent-from/10 px-2 py-1 text-[10px] font-medium text-accent-from transition-colors hover:border-accent-from/60 hover:bg-accent-from/20"
             >
-              Rzut po rzucie →
+              <ArrowRight className="h-3 w-3" />
+              Rzut po rzucie
             </Link>
-            <div className="flex items-center gap-2">
-              {canEdit && match.matchId && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditOpen(true);
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent-from/50 hover:bg-accent-from/10"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                  Edytuj mecz
-                </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                void copyShareLink();
+              }}
+              className="inline-flex items-center gap-1 rounded-md border border-accent-to/40 bg-accent-to/10 px-2 py-1 text-[10px] font-medium text-accent-to transition-colors hover:border-accent-to/60 hover:bg-accent-to/20"
+            >
+              {copied ? (
+                <Check className="h-3 w-3 text-emerald-400" />
+              ) : (
+                <Share2 className="h-3 w-3" />
               )}
-              {canDelete && match.matchId && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDeleteOpen(true);
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-red-500/35 bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-200 transition-colors hover:border-red-500/55 hover:bg-red-500/20"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  Usuń mecz
-                </button>
-              )}
+              {copied ? "Skopiowano" : "Udostępnij mecz"}
+            </button>
+            {canEdit && match.matchId ? (
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  void copyShareLink();
+                  setEditOpen(true);
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-accent-from/50 hover:bg-accent-from/10"
+                className="inline-flex items-center gap-1 rounded-md border border-amber-400/40 bg-amber-400/10 px-1.5 py-0.5 text-[9px] font-medium text-amber-200 transition-colors hover:border-amber-400/60 hover:bg-amber-400/20"
               >
-                {copied ? (
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
-                ) : (
-                  <Share2 className="h-3.5 w-3.5" />
-                )}
-                {copied ? "Skopiowano" : "Udostępnij mecz"}
+                <Pencil className="h-2.5 w-2.5" />
+                Edytuj mecz
               </button>
-            </div>
+            ) : null}
+            {canDelete && match.matchId ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteOpen(true);
+                }}
+                className="inline-flex items-center gap-1 rounded-md border border-red-500/35 bg-red-500/10 px-1.5 py-0.5 text-[9px] font-medium text-red-200 transition-colors hover:border-red-500/55 hover:bg-red-500/20"
+              >
+                <Trash2 className="h-2.5 w-2.5" />
+                Usuń mecz
+              </button>
+            ) : null}
           </div>
         </div>
       )}

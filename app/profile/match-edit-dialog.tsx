@@ -123,8 +123,7 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
           {step === 1 && (
             <div className="space-y-3 text-muted-foreground">
               <p>
-                Możesz poprawić błędne przypisanie strony (statystyki na Twoim koncie) albo nazwę
-                przeciwnika (lepsze head-to-head przy różnych zapisach w turniejach).
+                Możesz poprawić błędne przypisanie strony albo nazwę przeciwnika.
               </p>
               <p className="text-xs">
                 Mecz, wynik i link share zostają. Zmienia się tylko perspektywa / nazwa w Twoim
@@ -153,7 +152,7 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
                 <span>
                   <span className="block text-sm font-medium text-foreground">Zmiana stron</span>
                   <span className="mt-0.5 block text-[11px] text-muted-foreground">
-                    Błędnie przypisało statystyki do Twojego konta — jesteś zawodnikiem po drugiej
+                    Błędnie przypisało statystyki do Twojego konta - jesteś zawodnikiem po drugiej
                     stronie.
                   </span>
                 </span>
@@ -207,7 +206,8 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
                     Zmiana nazwy przeciwnika
                   </span>
                   <span className="mt-0.5 block text-[11px] text-muted-foreground">
-                    Ta sama osoba zapisana inaczej w różnych turniejach — ujednolić pod H2H.
+                    Ta sama osoba zapisana inaczej w różnych turniejach. Pomoże to np. w poprawnych
+                    statystykach Head-to-Head.
                   </span>
                 </span>
               </label>
