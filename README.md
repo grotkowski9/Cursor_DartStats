@@ -3,8 +3,8 @@
 **Sylveon Dart Profile** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.2.0+** — Auth **1.1.x** + delete (**1.1.7**) + **edycja meczu (1.1.13)** + audyt (**1.0.1.1–3**) + polish profilu.  
-> Backup milestone: `backup/v1.2.0`, tag `v1.2.0-backup` (bez 1.1.13). Edycja meczu = na `main` po backupie.  
+> **Status:** **v1.3.2** na `main` · dev **v1.4.0** na `cursor/v1.4.x`.  
+> Backup milestone: `backup/v1.3.0`, tag `v1.3.2`. Wcześniej: `backup/v1.2.0`, tag `v1.2.0-backup`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -363,7 +363,8 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.0.2.x** | Copy / teksty UI (fix po Twojej akceptacji)   | ⏳ |
 | **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + 1.1.10) · ✅ **1.1.7** · ✅ **1.1.3.8** · otwarte **1.1.8**, **1.1.11–12** |
 | **1.2.x**   | Milestone snapshot (profil UX + audyt + delete) | ✅ **v1.2.0** — `backup/v1.2.0`, tag `v1.2.0-backup` |
-| **1.3.x**   | Testy + hardening + perf                       | ⏳ |
+| **1.3.x**   | Testy + hardening + perf                       | ✅ **v1.3.2** — `backup/v1.3.0`, tag `v1.3.2` |
+| **1.4.x**   | Bieżący dev (po release 1.3)                   | ⏳ `cursor/v1.4.x`, `package.json` **1.4.0** |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
 | **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
 
@@ -846,23 +847,34 @@ nav → ProfileHeader → Soft CTA (opcjonalnie)
 
 #### Po v1.2.0 na main (ten sam dzień) — **1.1.13**
 
-> Kod na `main` po merge v1.2.0. Backup tag `v1.2.0-backup` **nie** zawiera jeszcze edycji meczu — stan docs/kodu edycji = HEAD `main` / branch roboczy.
+> Kod na `main` = **v1.3.2** (+ bump `1.4.0` tylko na gałęzi `cursor/v1.4.x`). Backup tag `v1.2.0-backup` **nie** zawiera edycji meczu — edycja = od v1.1.13 na `main`.
 
 Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 ---
 
-### 1.3.x — Testy + Hardening + Perf ⏳
+### 1.3.x — Testy + Hardening + Perf ✅ (v1.3.2)
 
-- [ ] **1.3.1** Vitest — golden samples parsera N01
-- [ ] **1.3.2** Vitest — golden samples stats
-- [ ] **1.3.3** Playwright (ingest → profil → share → mecz)
-- [ ] **1.3.4** CI na PR (`typecheck && test`)
+- [x] **1.3.1** Vitest — golden samples parsera N01 (`tests/n01-parser.test.ts`)
+- [x] **1.3.2** Vitest — stats + bulk assemble (`tests/stats.test.ts`, `tests/matches-assemble.test.ts`)
+- [ ] **1.3.3** Playwright w CI (`tests/e2e/smoke.spec.ts` lokalnie; nie w workflow)
+- [x] **1.3.4** CI na PR (`typecheck`, `lint`, `test`, secret scan — `.github/workflows/ci.yml`)
 - [ ] **1.3.5** Backup DB — procedura + harmonogram
-- [ ] **1.3.6** Perf: paginacja Supabase (fix limit 1000; było 0.3.18)
+- [x] **1.3.6** Perf: bulk `getMyMatches` + paginacja Supabase (fix limit 1000) · `GET /api/profile/bootstrap` (~37× vs N+1)
 - [ ] **1.3.7** **Hardening pola importu meczów** (single + bulk):
   - [x] Demo: walidacja client (`lib/n01-url.ts`) — URL vs N01, komunikaty UX
   - [ ] Server-side whitelist + rate limit (prod)
+
+**Wydane w 1.3.x** (tag `v1.3.2`, backup `backup/v1.3.0`): rebrand **Sylveon Dart Profile** · `/login` Google-only · `/logintest` ukryty (email dev, noindex) · landing refresh · demo pełne insights (streak + kohorta) · footer warunkowy · `SiteFooter` na `/profile`.
+
+---
+
+### 1.4.x — Bieżący dev ⏳
+
+> Branch: **`cursor/v1.4.x`** · `package.json` **1.4.0** · bazuje na `main` po v1.3.2.
+
+- Otwarte z backlogu: **1.0.1.4–6** (deploy, domena, prawo) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
+- Nowe featury 1.4 — doprecyzuj w czacie przed implementacją
 
 ---
 
@@ -936,7 +948,15 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.1.11** | ⏳ | Usuwanie konta (copy na dole profilu; RODO) |
 | **1.1.12** | ⏳ | Punkty gracza (szkielet; stawki TBD) |
 | **1.1.13** | ✅ | Edycja meczu (swap + rename; PATCH do DB; 3 kroki) |
-| **1.3.1–7** | ⏳ | Testy + CI + backup + perf + hardening importu |
+| **1.3.1** | ✅ | Vitest parser N01 |
+| **1.3.2** | ✅ | Vitest stats + `matches-assemble` (bulk vs sequential) |
+| **1.3.3** | ⏳ | Playwright smoke lokalnie; nie w CI |
+| **1.3.4** | ✅ | CI: typecheck, lint, test, secret scan |
+| **1.3.5** | ⏳ | Backup DB — procedura + harmonogram |
+| **1.3.6** | ✅ | Perf bulk load + `/api/profile/bootstrap` + paginacja visits |
+| **1.3.7** | ⏳ | Hardening importu server-side (client demo ✅) |
+| **v1.3.2** | ✅ | Release `main` — landing, demo insights, footer, login split, rebrand |
+| **1.4.x** | ⏳ | Dev na `cursor/v1.4.x` (`package.json` 1.4.0) |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
@@ -1127,7 +1147,7 @@ Na telefonie: `http://192.168.100.11:3000/login` (nie `localhost` — na telefon
 
 **Logowanie Google z iPhone (dev):** w Supabase ustaw **Site URL** na `http://192.168.100.11:3000` oraz Redirect URL `…/auth/callback` dla tego hosta. Potem wróć Site URL na `localhost` gdy testujesz tylko na Macu — albo trzymaj IP jako Site URL w trakcie testów LAN.
 
-**Uwaga:** pierwsze ładowanie meczów trwa ~12 s (51 meczów). Poczekaj — spinner „Ładuję mecze…" zniknie dopiero po pobraniu danych.
+**Uwaga:** pierwsze ładowanie profilu po optymalizacji **1.3.6** — jeden fetch bootstrap (~sub-sekunda dla typowego konta; wcześniej dual N+1 ~30 s przy dużej liczbie visitów). Spinner „Ładuję mecze…" znika po `GET /api/profile/bootstrap`.
 
 W `.env.local` potrzebne:
 
@@ -1209,7 +1229,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.2.0+ ✅ | backlog otwarty (rosnąco po ID)
+### v1.3.2 na `main` · v1.4.0 dev na `cursor/v1.4.x` ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -1228,9 +1248,23 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **1.1.11–12**   | ⏳ Usuwanie konta · punkty gracza |
 | **1.1.13**      | ✅ Edycja meczu (po v1.2.0 na main) |
 | **v1.2.0**      | ✅ WYDANY — `backup/v1.2.0`, tag `v1.2.0-backup` |
-| **1.3.x**       | ⏳ Testy + hardening                                         |
+| **v1.3.0**      | ✅ Testy Vitest + CI + security hardening · tag `v1.3.0` |
+| **v1.3.2**      | ✅ WYDANY na `main` — perf bootstrap, rebrand, login split, landing, demo insights, footer · `backup/v1.3.0`, tag `v1.3.2` |
+| **1.4.x**       | ⏳ Dev — branch `cursor/v1.4.x`, `package.json` **1.4.0** |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone) |
 | Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
+
+
+### Gałęzie i tagi (2026-08-02)
+
+
+| Cel | Wskaźnik |
+| --- | -------- |
+| Produkcja / release | `main` @ v1.3.2 + bump 1.4.0 commit na gałęzi dev |
+| Dev bieżący | `cursor/v1.4.x` |
+| Linia 1.3 zamknięta | `cursor/v1.3.x` @ `0d1bbdf` |
+| Rollback 1.3 | `git checkout backup/v1.3.0` lub tag `v1.3.2` |
+| Rollback przed perf | tag `v1.3.0-pre-perf` (przed bulk bootstrap) |
 
 
 ### Co wchodzi w 1.0.0
@@ -1249,13 +1283,14 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 2. **1.0.1.5** — custom domain
 3. **1.0.1.6** — polityka prywatności, regulamin, cookies, linki, DPA
 4. **1.0.2.1–7** — copy UI (po Twoich tekstach)
-5. **1.1.3.2** — testy detekcji → **1.3.2**
+5. **1.1.3.2** — testy detekcji (część w Vitest; pełny golden → 1.4)
 6. **1.1.8** — panel admina
 7. **1.1.11** — usuwanie konta
 8. **1.1.12** — punkty gracza (stawki TBD)
-9. **1.3.x** — testy + CI + perf + hardening
-10. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
-11. **5.0.x** — pełne wydanie + Apple (⏸️)
+9. **1.3.3**, **1.3.5**, **1.3.7** — Playwright CI, backup DB, hardening importu server
+10. **1.4.x** — nowe featury na `cursor/v1.4.x`
+11. **2.0.x** — freemium + płatności + CTA premium *(⏸️ odłożone)*
+12. **5.0.x** — pełne wydanie + Apple (⏸️)
 
 Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 
@@ -1278,7 +1313,8 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.10**  | Opcjonalne pola dartera      | ✅             |
 | **1.1.13**  | Edycja meczu (swap+rename)   | ✅ (po v1.2.0)  |
 | **1.2.0**   | Milestone (audit + UX)       | ✅ WYDANY · `backup/v1.2.0` |
-| **1.3**     | Testy + perf                 | ⏳             |
+| **1.3**     | Testy + perf + polish        | ✅ WYDANY · `backup/v1.3.0`, tag `v1.3.2` |
+| **1.4**     | Bieżący dev                  | ⏳ `cursor/v1.4.x` |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
@@ -1337,19 +1373,24 @@ supabase/migrations/20260715210000_auth_rls_per_user.sql
 ```
 demo/demo-persona.ts                          ← postać demo (podmiana osoby)
 demo/demo-profile-snapshot.json               ← statyczne KPI + mecze (commit)
-lib/demo.ts / lib/demo-snapshot.ts            ← loader + refresh dat
+demo/demo-insights.ts                         ← kohorta demo (fallback snapshot)
+lib/demo.ts / lib/demo-snapshot.ts            ← loader + refresh dat + insights
 lib/demo-dates.ts / lib/demo-import.ts        ← offsety dat + anonimizacja
-lib/page-metadata.ts                          ← jeden tytuł: Twoje statystyki darta | DPT
+lib/page-metadata.ts                          ← jeden tytuł: Twoje statystyki darta | SDP
 lib/n01-url.ts                                ← walidacja URL N01 (demo + przyszły server)
 lib/share-url.ts                              ← link do udostępnienia meczu
+lib/matches.ts                                ← bulk getMyMatches + paginacja
+app/api/profile/bootstrap/route.ts            ← jeden fetch profilu (mecze + insights)
 scripts/seed-demo-matches.ts                  ← npm run seed:demo / repolish:demo
-scripts/snapshot-demo.ts                      ← npm run snapshot:demo
+scripts/snapshot-demo.ts                      ← npm run snapshot:demo (+ maxWinStreak, kohorta)
 supabase/migrations/20260713220000_demo_customer.sql
-app/demo/profile/page.tsx                     ← profil publiczny index
+app/demo/profile/page.tsx                     ← profil publiczny index (+ showInsights)
 app/demo/m/[shareToken]/page.tsx              ← mecze demo index
-app/page.tsx / app/login/page.tsx             ← landing + auth
-app/robots.ts / app/sitemap.ts                ← SEO
+app/page.tsx / app/login/page.tsx             ← landing + auth Google-only
+app/logintest/page.tsx                        ← email/password dev (noindex, nie w sitemap)
+app/robots.ts / app/sitemap.ts                ← SEO (+ disallow /logintest)
 components/demo-banner.tsx
+components/site-footer.tsx                    ← nav warunkowy (sesja)
 ```
 
 ### Pliki kluczowe (profil prywatny — stats)
@@ -1368,11 +1409,16 @@ app/m/[shareToken]/page.tsx                 ← snapshot_access_log + toClientMa
 
 ```
 Projekt: Sylveon Dart Profile (Cursor_DartStats)
-README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff" + sekcja **1.2.0**.
+README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
 
-Stan: **v1.2.0+** na main (delete **1.1.7**, edycja meczu **1.1.13**, audyt **1.0.1.1–3**, polish profilu).
-Backup milestone: `backup/v1.2.0` / `v1.2.0-backup` (sprzed 1.1.13).
+Stan: **v1.3.2** na `main` · dev **v1.4.0** na `cursor/v1.4.x`.
+Backup: `backup/v1.3.0`, tag `v1.3.2` (wcześniej `backup/v1.2.0`).
 Backlog rosnąco po ID — nie zgaduj kolejności; pytaj przed startem.
+
+Profil: jeden fetch `GET /api/profile/bootstrap` (bulk mecze + insights).
+Login public: `/login` Google-only. Dev email: `/logintest` (noindex).
+Demo: pełne statystyki (streak + kohorta) ze snapshotu; `npm run snapshot:demo`.
+Footer: nav warunkowy (gość vs zalogowany); `SiteFooter` też na `/profile`.
 
 Gate: needsOnboarding = nick + real name (nie knownNicknames).
 Soft CTA: needsAboutSoftCta = OR city/brand/weight/hand/favorite (bez model / N01 nicks).
@@ -1396,7 +1442,7 @@ npm run dev -- --hostname 0.0.0.0
 
 ## Inwentaryzacja copy klienta
 
-> **Wersja:** 1.0.1 · **Data:** 2026-07-14 · **~245 pozycji MSG**  
+> **Wersja:** 1.4.0 (sync docs) · **Data:** 2026-08-02 · **~245 pozycji MSG**  
 > **Cel:** każdy komunikat widoczny dla usera — do przejrzenia i zatwierdzenia przed **1.0.2.x**.  
 > **Legenda:** `[ ] do review` → Ty podajesz docelowy tekst (lub ✓ zostawiamy).  
 > **Uwaga:** nazwy graczy, tytuły meczów, daty i liczby to dane dynamiczne — nie są tu wymienione.
@@ -1413,53 +1459,59 @@ npm run dev -- --hostname 0.0.0.0
 
 | ID | Kontekst | Tekst | Review |
 |----|----------|-------|--------|
-| MSG-010 | Hero H1 | `Sylveon` + `Dart Profile` | [ ] do review |
-| MSG-011 | Hero subtitle | `Importuj mecze z N01, zobacz jak grasz naprawdę — średnie, checkout, forma, head-to-head. Prywatny profil, publiczne demo do obejrzenia przed rejestracją.` | [ ] do review |
-| MSG-012 | CTA primary | `Zobacz profil demo` | [ ] do review |
-| MSG-013 | CTA secondary | `Zaloguj się / Zarejestruj` | [ ] do review |
-| MSG-014 | Demo note | `Demo: przykładowy profil gracza · {matchCount} spotkań` | [ ] do review |
-| MSG-015 | Hero tile | `Meczów w demo` | [ ] do review |
-| MSG-016 | Hero tile | `Start score` | [ ] do review |
-| MSG-017 | Hero tile | `Import linkiem` | [ ] do review |
-| MSG-018 | Hero tile | `vs przeciwnicy` | [ ] do review |
+| MSG-010 | Hero H1 | `Sylveon` + `Dart Profile` (gradienty) | [ ] do review |
+| MSG-011 | Hero lead | `Twój dart. W liczbach.` + akapity (import N01, średnie, H2H, turnieje) | [ ] do review |
+| MSG-012 | CTA primary | `Zaloguj się / Zarejestruj` → `/login` | [ ] do review |
+| MSG-013 | CTA secondary | `Zobacz profil demo` | [ ] do review |
+| MSG-014 | ~~Hero tiles~~ | wyłączone w UI (kod zakomentowany) | n/a |
+| MSG-015–018 | ~~Hero tiles~~ | wyłączone | n/a |
 | MSG-019 | Features heading | `Co dostajesz` | [ ] do review |
 | MSG-020 | Features sub | `Od linku N01 do profilu gracza` | [ ] do review |
-| MSG-021 | Feature | `Import z N01` | [ ] do review |
-| MSG-022 | Feature body | `Wklejasz link z n01darts.com — legi, lotki, checkouty. Bez ręcznego przepisywania po turnieju.` | [ ] do review |
+| MSG-021 | Feature | `Koniec z Excelem` | [ ] do review |
+| MSG-022 | Feature body | `Żadnego Excela, żadnego N01 po każdym turnieju…` | [ ] do review |
 | MSG-023 | Feature | `Analityka na serio` | [ ] do review |
-| MSG-024 | Feature body | `Średnia ważona, first 9, forma, aktywność po dniach i godzinach, histogram checkoutów.` | [ ] do review |
-| MSG-025 | Feature | `H2H i top listy` | [ ] do review |
-| MSG-026 | Feature body | `Kto cię bije, kogo bijesz, najlepsze rzuty i finish — z meczów, nie z pamięci.` | [ ] do review |
-| MSG-027 | Feature | `Share meczu` | [ ] do review |
-| MSG-028 | Feature body | `Link do meczu z rzutem po rzucie. Profil zostaje prywatny (noindex).` | [ ] do review |
-| MSG-029 | Demo block heading | `{matchCount} spotkań demo — bez konta` | [ ] do review |
-| MSG-030 | Demo block body | `Pełna analityka na` + `przykładowym profilu demo` + `: statystyki, wykres formy, H2H i mecze z widokiem rzut po rzucie.` | [ ] do review |
+| MSG-024 | Feature body | `Średnie, H2H, wykresy formy, podejść i zamknięć…` | [ ] do review |
+| MSG-025 | Feature | `Head-to-head` | [ ] do review |
+| MSG-026 | Feature body | `Różne turnieje, ale ten sam przeciwnik?…` | [ ] do review |
+| MSG-027–028 | ~~Share meczu~~ | usunięte z landing (4. kafelek) | n/a |
+| MSG-029 | Demo block H2 | `Zobacz jak wygląda` + `przykładowy` + `profil` | [ ] do review |
+| MSG-030 | Demo block body | `Nadal nie chcesz założyć konta? Sprawdź profil demo…` | [ ] do review |
 | MSG-031 | Demo CTA | `Otwórz profil demo` | [ ] do review |
 | MSG-032 | Demo link | `Przykładowy mecz` | [ ] do review |
-| MSG-033 | Footer note | `Masz już dostęp?` + `/profile` + `(prywatny)` | [ ] do review |
+| MSG-033 | ~~Footer note~~ | usunięte (`Masz już dostęp? /profile`) | n/a |
 
-### Login — `app/login/page.tsx` *(zaktualizowane w 1.1.0)*
+### Login — `app/login/page.tsx` *(Google-only od v1.3.2)*
 
 | ID | Kontekst | Tekst | Review |
 |----|----------|-------|--------|
 | MSG-040 | Nav | `Strona główna` | [ ] do review |
-| MSG-041 | H1 | `Konto gracza` | [ ] do review |
-| MSG-042 | Intro | `Zaloguj się przez Google, zaimportuj mecze z N01…` + link demo | [ ] do review |
-| MSG-043 | CTA demo | `Zobacz profil demo` | [ ] do review |
+| MSG-041 | H1 | `Wejdź do świata` + `Sylveon` + `Dart` | [ ] do review |
+| MSG-042 | Intro | `Zaloguj się przez Google…` + link `Otwórz profil demo` | [ ] do review |
+| MSG-043 | ~~CTA demo button~~ | usunięty (link w paragrafie) | n/a |
 | MSG-044 | CTA Google | `Zaloguj się przez Google` | [ ] do review |
 | MSG-045 | Błąd auth | `Logowanie nieudane. Zamknij kartę…` | [ ] do review |
-| MSG-046 | ~~Zarejestruj~~ | usunięte (rejestracja = Google) | n/a |
+| MSG-046 | ~~Zarejestruj~~ | rejestracja = ten sam `/login` (Google) | n/a |
 | MSG-047 | ~~dev footer~~ | usunięte | n/a |
 
-### Footer — `components/site-footer.tsx`
+### Login dev — `app/logintest/page.tsx` *(noindex, nie w prod flow)*
 
-| ID | Tekst | Review |
-|----|-------|--------|
-| MSG-050 | `Sylveon Dart Profile` | [ ] do review |
-| MSG-051 | `Profil demo` | [ ] do review |
-| MSG-052 | `Logowanie` | [ ] do review |
-| MSG-053 | `Mój profil` | [ ] do review |
-| MSG-054 | `© {year}` + `Sylveon Company` | [ ] do review |
+| ID | Kontekst | Tekst | Review |
+|----|----------|-------|--------|
+| MSG-048 | Nagłówek | `Logowanie testowe` / email+password | [ ] do review |
+
+### Footer — `components/site-footer.tsx` *(warunkowy od v1.3.2)*
+
+| ID | Kontekst | Tekst | Review |
+|----|----------|-------|--------|
+| MSG-050 | Link → `/` | `Sylveon Dart Profile` | [ ] do review |
+| MSG-051a | Gość | `Strona główna` | [ ] do review |
+| MSG-051b | Gość | `Profil demo` | [ ] do review |
+| MSG-051c | Gość | `Rejestracja` → `/login` | [ ] do review |
+| MSG-051d | Gość | `Logowanie` → `/login` | [ ] do review |
+| MSG-052a | Zalogowany | `Strona główna` | [ ] do review |
+| MSG-052b | Zalogowany | `Mój profil` | [ ] do review |
+| MSG-052c | Zalogowany | `Wyloguj` (POST `/auth/signout`) | [ ] do review |
+| MSG-054 | Copyright | `© {year}` + `Sylveon Company` | [ ] do review |
 
 ### Demo banner — `components/demo-banner.tsx`
 
@@ -1807,6 +1859,9 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.4.0**  | 2026-08-02 | **Start linii dev.** Branch `cursor/v1.4.x`, `package.json` **1.4.0** po release v1.3.2 na `main`. README sync.                                                                                                                                                                                                    |
+| **v1.3.2** | 2026-08-02 | **Release na `main`.** Perf: bulk `getMyMatches` + `GET /api/profile/bootstrap`, paginacja visits (fix limit 1000). Rebrand Sylveon Dart Profile. `/login` Google-only; `/logintest` dev email (noindex). Landing refresh (3 kafelki, hero). Demo: pełne statystyki (streak + kohorta ze snapshotu). Footer auth-aware + `SiteFooter` na `/profile`. Tagi `backup/v1.3.0`, `v1.3.2`. |
+| **v1.3.0** | 2026-08-02 | **Testy + CI + security.** Vitest (parser, stats, security, player-detect), GitHub Actions CI, pre-prod hardening. Tag `v1.3.0`. Tag rollback perf: `v1.3.0-pre-perf`.                                                                                                                                            |
 | **1.1.13** | 2026-07-26 | **Edycja meczu.** Dialog 3 kroki (strony / nazwa opp). `PATCH /api/matches/[id]` + `updateMatchEdit` (DB persist; bez rewrite legs). Przyciski karty: Rzut niebieski, Share fiolet, Edytuj amber mały, Usuń czerwony mały. Docs agent: „lokalnie” = UI state po odpowiedzi API, nie pomijanie DB. |
 | **v1.2.0** | 2026-07-26 | **Milestone backup.** **1.1.7** delete match (API+UI+triple-check). Audyt **1.0.1.1–3** (rate limit, CSP, `toClientMatch`, share 16 hex, access log, dev-upsert prod block, `.dev/*.json` out of git). Profil UX: soft CTA scroll, About-first edit + identity accordion, streak Lifetime w stats, 5× match cards (kill recent-matches). Gate/soft CTA: `needsOnboarding` / `needsAboutSoftCta` OR. Branch `backup/v1.2.0`, tag `v1.2.0-backup`. |
 | **1.1.10** | 2026-07-21 | **Krok 2 „O Tobie”** + pola .1/.4–.6/.10/.14/.21/.22 + insighty .23.1–.23.2 (cohort N=5). Samouczek **1.1.3.8** (demo + po koncie). Docs: **1.1.11** usuwanie konta, **1.1.12** punkty (stawki TBD). Migracja `20260721220000_customer_about_fields.sql`. |
