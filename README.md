@@ -3,8 +3,8 @@
 **Sylveon Dart Profile** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.3.2** na `main` · dev **v1.4.0** na `cursor/v1.4.x`.  
-> Backup milestone: `backup/v1.3.0`, tag `v1.3.2`. Wcześniej: `backup/v1.2.0`, tag `v1.2.0-backup`.  
+> **Status:** **v1.4.0** na `main` · dev **`cursor/v1.4.x`** (ta sama linia, kolejne commity).  
+> Backup milestone: `backup/v1.3.0`, tag `v1.3.2`. Bieżący release: tag **`v1.4.0`**. Wcześniej: `backup/v1.2.0`, tag `v1.2.0-backup`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
 
 ---
@@ -364,7 +364,7 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + 1.1.10) · ✅ **1.1.7** · ✅ **1.1.3.8** · otwarte **1.1.8**, **1.1.11–12** |
 | **1.2.x**   | Milestone snapshot (profil UX + audyt + delete) | ✅ **v1.2.0** — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.3.x**   | Testy + hardening + perf                       | ✅ **v1.3.2** — `backup/v1.3.0`, tag `v1.3.2` |
-| **1.4.x**   | Bieżący dev (po release 1.3)                   | ⏳ `cursor/v1.4.x`, `package.json` **1.4.0** |
+| **1.4.x**   | Prod polish + deploy track                   | ✅ **v1.4.0** na `main` — favicon Sylveon, landing kafelki, docs OAuth |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
 | **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
 
@@ -566,7 +566,7 @@ Pełny stan projektu zamrożony poza `main`:
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
 - [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (2.0.3)**
-  - [ ] **1.0.1.6.1** Polityka prywatności — strona `/privacy` (administrator, cele, podmioty: Supabase/Vercel/Google, prawa RODO)
+  - [ ] **1.0.1.6.1** **Polityka prywatności — strona `/privacy`** (administrator, cele, podmioty: Supabase/Vercel/Google, prawa RODO) — **🔴 konieczne teraz:** Google OAuth Consent Screen / Branding wymaga publicznego URL polityki + strony głównej (bez tego nie skończysz konfiguracji logowania Google w GCP)
   - [ ] **1.0.1.6.2** Regulamin serwisu — strona `/terms`
   - [ ] **1.0.1.6.3** Cookies / informacja o plikach (sesja Auth) — strona lub sekcja; banner tylko jeśli faktycznie potrzebny
   - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
@@ -847,7 +847,7 @@ nav → ProfileHeader → Soft CTA (opcjonalnie)
 
 #### Po v1.2.0 na main (ten sam dzień) — **1.1.13**
 
-> Kod na `main` = **v1.3.2** (+ bump `1.4.0` tylko na gałęzi `cursor/v1.4.x`). Backup tag `v1.2.0-backup` **nie** zawiera edycji meczu — edycja = od v1.1.13 na `main`.
+> Kod na `main` = **v1.4.0**. Backup tag `v1.2.0-backup` **nie** zawiera edycji meczu — edycja = od v1.1.13 na `main`.
 
 Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
@@ -869,11 +869,13 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 ---
 
-### 1.4.x — Bieżący dev ⏳
+### 1.4.x — v1.4.0 na `main` ✅
 
-> Branch: **`cursor/v1.4.x`** · `package.json` **1.4.0** · bazuje na `main` po v1.3.2.
+> Branch: **`cursor/v1.4.x`** = dev · **`main`** = produkcja · `package.json` **1.4.0** · tag **`v1.4.0`**.
 
-- Otwarte z backlogu: **1.0.1.4–6** (deploy, domena, prawo) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
+**Wydane w v1.4.0:** favicon set Sylveon (`sylveoncompany.pl`) · landing „Co dostajesz” — 3 kafelki w kolumnie · README: `/privacy` blokuje Google OAuth Branding · prod URL: `sylveon-dart-profile.vercel.app` (bez `dart.` w DNS).
+
+- Otwarte z backlogu: **1.0.1.4–6** (deploy, domena, prawo — **1.0.1.6.1 `/privacy` blokuje Google OAuth Branding**) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
 - Nowe featury 1.4 — doprecyzuj w czacie przed implementacją
 
 ---
@@ -919,7 +921,8 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.0.1.3** | ✅ | Audyt prod — API i ataki (rate limit, CSP, access log) |
 | **1.0.1.4** | ⏳ | Deploy Vercel + env |
 | **1.0.1.5** | ⏳ | Custom domain |
-| **1.0.1.6** | ⏳ | Dokumenty prawne: polityka, regulamin, cookies, linki, DPA |
+| **1.0.1.6** | ⏳ | Dokumenty prawne: polityka, regulamin, cookies, linki, DPA — **najpierw `/privacy` (blokuje Google OAuth Branding w GCP)** |
+| **1.0.1.6.1** | ⏳ | Polityka prywatności `/privacy` — **konieczne dla Google Consent Screen** (homepage + privacy policy URL) |
 | **1.0.2.1–7** | ⏳ | Copy klienta (Twoje teksty → fix) |
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
 | **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
@@ -956,7 +959,8 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.3.6** | ✅ | Perf bulk load + `/api/profile/bootstrap` + paginacja visits |
 | **1.3.7** | ⏳ | Hardening importu server-side (client demo ✅) |
 | **v1.3.2** | ✅ | Release `main` — landing, demo insights, footer, login split, rebrand |
-| **1.4.x** | ⏳ | Dev na `cursor/v1.4.x` (`package.json` 1.4.0) |
+| **v1.4.0** | ✅ | Release `main` — favicon Sylveon, landing kafelki pionowo, docs Google OAuth/`/privacy` |
+| **1.4.x** | ⏳ | Kolejne commity na `cursor/v1.4.x` → merge `main` |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
@@ -1026,6 +1030,7 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
      `http://<IP-Maca>:3000/auth/callback`  
      (+ prod URL po deployu)
 4. **`.env.local`:** `OWNER_EMAIL=` Twój Gmail → link do seed 51 meczów; `NEXT_PUBLIC_SITE_URL=http://localhost:3000` (dev)
+5. **Google Cloud → Auth Platform → Branding** (OAuth consent screen): nazwa aplikacji, logo, **strona główna** (`https://sylveon-dart-profile.vercel.app` lub docelowa domena), **link do polityki prywatności** (`https://…/privacy`) — **wymagane przez Google**; realizacja strony → **1.0.1.6.1** (bez `/privacy` branding nie przejdzie weryfikacji)
 
 Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
@@ -1229,7 +1234,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.3.2 na `main` · v1.4.0 dev na `cursor/v1.4.x` ✅ | backlog otwarty (rosnąco po ID)
+### v1.4.0 na `main` · dev `cursor/v1.4.x` ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -1250,7 +1255,8 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **v1.2.0**      | ✅ WYDANY — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **v1.3.0**      | ✅ Testy Vitest + CI + security hardening · tag `v1.3.0` |
 | **v1.3.2**      | ✅ WYDANY na `main` — perf bootstrap, rebrand, login split, landing, demo insights, footer · `backup/v1.3.0`, tag `v1.3.2` |
-| **1.4.x**       | ⏳ Dev — branch `cursor/v1.4.x`, `package.json` **1.4.0** |
+| **v1.4.0**      | ✅ WYDANY na `main` — favicon Sylveon, landing kafelki pionowo, docs OAuth/`/privacy` · tag `v1.4.0` |
+| **1.4.x**       | ⏳ Kolejne featury — `cursor/v1.4.x` → merge `main` |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone) |
 | Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
 
@@ -1260,9 +1266,10 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 | Cel | Wskaźnik |
 | --- | -------- |
-| Produkcja / release | `main` @ v1.3.2 + bump 1.4.0 commit na gałęzi dev |
-| Dev bieżący | `cursor/v1.4.x` |
+| Produkcja / release | `main` @ **v1.4.0** (tag `v1.4.0`) |
+| Dev bieżący | `cursor/v1.4.x` (sync z `main` po release) |
 | Linia 1.3 zamknięta | `cursor/v1.3.x` @ `0d1bbdf` |
+| Rollback 1.4 | tag `v1.4.0` lub `git checkout` poprzedni commit na `main` |
 | Rollback 1.3 | `git checkout backup/v1.3.0` lub tag `v1.3.2` |
 | Rollback przed perf | tag `v1.3.0-pre-perf` (przed bulk bootstrap) |
 
@@ -1281,7 +1288,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 1. **1.0.1.4** — deploy Vercel
 2. **1.0.1.5** — custom domain
-3. **1.0.1.6** — polityka prywatności, regulamin, cookies, linki, DPA
+3. **1.0.1.6** — **najpierw polityka prywatności `/privacy`** (Google OAuth wymaga URL w GCP Branding), potem regulamin, cookies, linki, DPA
 4. **1.0.2.1–7** — copy UI (po Twoich tekstach)
 5. **1.1.3.2** — testy detekcji (część w Vitest; pełny golden → 1.4)
 6. **1.1.8** — panel admina
@@ -1314,7 +1321,7 @@ Pełna tabela: [Backlog otwarty](#backlog-otwarty--rosnąco-po-id).
 | **1.1.13**  | Edycja meczu (swap+rename)   | ✅ (po v1.2.0)  |
 | **1.2.0**   | Milestone (audit + UX)       | ✅ WYDANY · `backup/v1.2.0` |
 | **1.3**     | Testy + perf + polish        | ✅ WYDANY · `backup/v1.3.0`, tag `v1.3.2` |
-| **1.4**     | Bieżący dev                  | ⏳ `cursor/v1.4.x` |
+| **1.4**     | Prod polish + deploy track   | ✅ WYDANY · tag `v1.4.0` |
 | **2.0**     | Premium + płatności          | ⏸️ odłożone   |
 | **5.x**     | Pełne wydanie + Apple login  | ⏸️ odłożone   |
 
@@ -1411,8 +1418,8 @@ app/m/[shareToken]/page.tsx                 ← snapshot_access_log + toClientMa
 Projekt: Sylveon Dart Profile (Cursor_DartStats)
 README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff".
 
-Stan: **v1.3.2** na `main` · dev **v1.4.0** na `cursor/v1.4.x`.
-Backup: `backup/v1.3.0`, tag `v1.3.2` (wcześniej `backup/v1.2.0`).
+Stan: **v1.4.0** na `main` · dev **`cursor/v1.4.x`** (kolejne commity).
+Backup: `backup/v1.3.0`, tag `v1.3.2` · release tag **`v1.4.0`**.
 Backlog rosnąco po ID — nie zgaduj kolejności; pytaj przed startem.
 
 Profil: jeden fetch `GET /api/profile/bootstrap` (bulk mecze + insights).
@@ -1860,7 +1867,8 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1.4.0**  | 2026-08-02 | **Start linii dev.** Branch `cursor/v1.4.x`, `package.json` **1.4.0** po release v1.3.2 na `main`. README sync.                                                                                                                                                                                                    |
+| **v1.4.0** | 2026-08-02 | **Release na `main`.** Favicon set Sylveon (z `sylveoncompany.pl`). Landing: sekcja „Co dostajesz” — 3 kafelki w kolumnie. README: `/privacy` konieczne dla Google OAuth Branding; prod na `sylveon-dart-profile.vercel.app`. Tag `v1.4.0`. |
+| **1.4.0**  | 2026-08-02 | *(wcześniej)* Start linii — bump `package.json` 1.4.0, branch `cursor/v1.4.x` po v1.3.2. |
 | **v1.3.2** | 2026-08-02 | **Release na `main`.** Perf: bulk `getMyMatches` + `GET /api/profile/bootstrap`, paginacja visits (fix limit 1000). Rebrand Sylveon Dart Profile. `/login` Google-only; `/logintest` dev email (noindex). Landing refresh (3 kafelki, hero). Demo: pełne statystyki (streak + kohorta ze snapshotu). Footer auth-aware + `SiteFooter` na `/profile`. Tagi `backup/v1.3.0`, `v1.3.2`. |
 | **v1.3.0** | 2026-08-02 | **Testy + CI + security.** Vitest (parser, stats, security, player-detect), GitHub Actions CI, pre-prod hardening. Tag `v1.3.0`. Tag rollback perf: `v1.3.0-pre-perf`.                                                                                                                                            |
 | **1.1.13** | 2026-07-26 | **Edycja meczu.** Dialog 3 kroki (strony / nazwa opp). `PATCH /api/matches/[id]` + `updateMatchEdit` (DB persist; bez rewrite legs). Przyciski karty: Rzut niebieski, Share fiolet, Edytuj amber mały, Usuń czerwony mały. Docs agent: „lokalnie” = UI state po odpowiedzi API, nie pomijanie DB. |

@@ -141,7 +141,7 @@ export default function HomePage() {
               Co dostajesz
             </h2>
             <p className="mt-2 text-2xl font-bold">Od linku N01 do profilu gracza</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="mt-6 grid gap-4">
               {FEATURES.map(({ icon: Icon, title, text }) => (
                 <article key={title} className="glass-tile p-5">
                   <Icon className="mb-3 h-5 w-5 text-accent-from" aria-hidden />
