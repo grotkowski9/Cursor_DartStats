@@ -14,9 +14,6 @@ config({ path: ".env.local" });
 import { SEED_CUSTOMER_ID } from "../lib/constants";
 import { ingestAndSave } from "../lib/matches";
 
-const DEFAULT_CSV =
-  "/Users/grotkowskipiotr/Downloads/matches-export-2026-07-11_19-01-26.csv";
-
 type CsvRow = {
   tmid: string;
   ttype: string;
@@ -104,7 +101,13 @@ function parseRows(csvPath: string): CsvRow[] {
 async function main() {
   const args = process.argv.slice(2);
   const overwrite = args.includes("--overwrite");
-  const csvPath = args.find((a) => !a.startsWith("--")) ?? DEFAULT_CSV;
+  const csvPath = args.find((a) => !a.startsWith("--"));
+  if (!csvPath) {
+    console.error(
+      "Usage: npx tsx scripts/import-csv-matches.ts <path-to.csv> [--overwrite]",
+    );
+    process.exit(1);
+  }
 
   const rows = parseRows(csvPath);
   console.log(`CSV: ${rows.length} unique matches`);

@@ -46,7 +46,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
 
   const raw = body as {
     playerIndex?: unknown;
-    playerNames?: { "0"?: unknown; "1"?: unknown; 0?: unknown; 1?: unknown };
+    playerNames?: Partial<Record<"0" | "1", unknown>>;
   };
 
   const patch: {
@@ -60,8 +60,8 @@ export async function PATCH(request: Request, ctx: Ctx) {
     return NextResponse.json({ error: "Nieprawidłowy playerIndex" }, { status: 400 });
   }
 
-  const n0 = raw.playerNames?.["0"] ?? raw.playerNames?.[0];
-  const n1 = raw.playerNames?.["1"] ?? raw.playerNames?.[1];
+  const n0 = raw.playerNames?.["0"];
+  const n1 = raw.playerNames?.["1"];
   if (n0 !== undefined || n1 !== undefined) {
     patch.playerNames = {};
     if (typeof n0 === "string") patch.playerNames[0] = n0;

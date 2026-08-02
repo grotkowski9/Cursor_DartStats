@@ -3,6 +3,7 @@ import { requireAuthCustomerApi } from "@/lib/auth";
 import { needsOnboarding } from "@/lib/customer";
 import { ingestAndSave } from "@/lib/matches";
 import { toClientMatch } from "@/lib/match-client";
+import { checkN01MatchUrl, N01_ONLY_MESSAGE } from "@/lib/n01-url";
 import { rateLimit } from "@/lib/rate-limit";
 import type { N01Match } from "@/lib/n01-parser";
 
@@ -62,9 +63,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Podaj URL meczu z n01darts.com" }, { status: 400 });
   }
 
+  const urlCheck = checkN01MatchUrl(body.url);
+  if (!urlCheck.ok) {
+    return NextResponse.json(
+      {
+        error:
+          urlCheck.kind === "empty"
+            ? "Podaj URL meczu z n01darts.com"
+            : N01_ONLY_MESSAGE,
+      },
+      { status: 400 },
+    );
+  }
+
   try {
     const result = await ingestAndSave({
-      url: body.url.trim(),
+      url: urlCheck.url,
       overwrite: body.overwrite,
       playerIndex: body.playerIndex,
       action: body.action,

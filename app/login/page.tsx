@@ -6,6 +6,7 @@ import { getSiteUrl } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
 import { LoginGoogleButton } from "./login-google-button";
 import { LoginPasswordForm } from "./login-password-form";
+import { safeInternalPath } from "@/lib/safe-path";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
@@ -20,7 +21,7 @@ type Props = {
 
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
-  const next = params.next?.startsWith("/") ? params.next : "/profile";
+  const next = safeInternalPath(params.next, "/profile");
   const authError = params.error === "auth";
   const allowDevUpsert =
     process.env.NODE_ENV === "development" ||

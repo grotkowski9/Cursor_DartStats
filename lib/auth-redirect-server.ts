@@ -4,6 +4,7 @@ import {
   AUTH_NEXT_COOKIE,
   AUTH_ORIGIN_COOKIE,
 } from "@/lib/auth-redirect-cookies";
+import { safeInternalPath } from "@/lib/safe-path";
 
 function fixBrokenHost(origin: string): string | null {
   try {
@@ -52,13 +53,12 @@ export async function resolvePostAuthNext(
 ): Promise<string> {
   const url = new URL(request.url);
   const fromQuery = url.searchParams.get("next");
-  if (fromQuery?.startsWith("/")) return fromQuery;
+  if (fromQuery) return safeInternalPath(fromQuery, fallback);
 
   const cookieStore = await cookies();
   const fromCookie = cookieStore.get(AUTH_NEXT_COOKIE)?.value;
   if (fromCookie) {
-    const decoded = decodeURIComponent(fromCookie);
-    if (decoded.startsWith("/")) return decoded;
+    return safeInternalPath(decodeURIComponent(fromCookie), fallback);
   }
 
   return fallback;

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main, cursor/v1.3.x]
+  pull_request:
+    branches: [main, cursor/v1.3.x]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Secret scan (tracked files)
+        run: |
+          if git grep -nE 'sb_secret_[A-Za-z0-9]{20,}|SUPABASE_SERVICE_ROLE_KEY=sb_secret_[^y]' -- ':!.env.example' ':!package-lock.json' ':!SECURITY_RELEASE.md'; then
+            echo "Possible secret in tracked files"
+            exit 1
+          fi
+          echo "Secret scan OK"
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests
+        run: npm test

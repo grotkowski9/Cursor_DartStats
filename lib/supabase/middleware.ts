@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { applySecurityHeaders } from "@/lib/security-headers";
+import { safeInternalPath } from "@/lib/safe-path";
 
 const NOINDEX_PREFIXES = ["/profile", "/onboarding", "/m/", "/api/", "/auth/"];
 
@@ -69,7 +70,7 @@ export async function updateSession(request: NextRequest) {
   if (pathname === "/login" && user) {
     const next = request.nextUrl.searchParams.get("next") || "/profile";
     const dest = request.nextUrl.clone();
-    dest.pathname = next.startsWith("/") ? next : "/profile";
+    dest.pathname = safeInternalPath(next, "/profile");
     dest.search = "";
     return finalize(NextResponse.redirect(dest), pathname);
   }

@@ -7,13 +7,14 @@ import {
   AUTH_ORIGIN_COOKIE,
   AUTH_COOKIE_MAX_AGE_SEC,
 } from "@/lib/auth-redirect-cookies";
+import { safeInternalPath } from "@/lib/safe-path";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   const origin = getRequestOrigin(request);
   const nextParam = request.nextUrl.searchParams.get("next");
-  const next = nextParam?.startsWith("/") ? nextParam : "/profile";
+  const next = safeInternalPath(nextParam, "/profile");
   const redirectTo = `${origin}/auth/callback`;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=auth`);
   }
 
-  let response = NextResponse.redirect(`${origin}/login?error=auth`);
+  const response = NextResponse.redirect(`${origin}/login?error=auth`);
 
   const supabase = createServerClient<Database>(url, key, {
     cookies: {

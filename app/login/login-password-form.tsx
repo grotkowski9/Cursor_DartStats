@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { safeInternalPath } from "@/lib/safe-path";
 
 type Props = {
   next?: string;
@@ -53,7 +54,7 @@ export function LoginPasswordForm({
         );
       }
 
-      let dest = next.startsWith("/") ? next : "/profile";
+      let dest = safeInternalPath(next, "/profile");
       try {
         const res = await fetch("/api/customer");
         if (res.ok) {

@@ -20,8 +20,8 @@ export const DEMO_CUSTOMER_ID =
  */
 export const AUTO_DETECT_PATTERNS = [] as const;
 
-/** @deprecated Prefer formatCustomerDisplayName(customer) */
-export const PLAYER_DISPLAY_NAME = 'Piotr „Groteł" Grotkowski';
+/** @deprecated Prefer formatCustomerDisplayName(customer) — do not hardcode a real person. */
+export const PLAYER_DISPLAY_NAME = 'Demo „Player" User';
 
 export const N01_API =
   "https://tk2-228-23746.vs.sakura.ne.jp/n01/tournament/n01_user_t.php?cmd=match_view&sid=";
