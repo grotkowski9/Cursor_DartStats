@@ -1539,9 +1539,10 @@ npm run dev -- --hostname 0.0.0.0
 
 | ID | Tekst | Review |
 |----|-------|--------|
-| MSG-090 | `Strona główna` | [ ] do review |
-| MSG-091 | Fallback greeting | `Witaj,` | [ ] do review |
-| MSG-092 | Fallback H1 | `Profil zawodnika` | [ ] do review |
+| MSG-090 | Nav | `Strona główna` | [ ] do review |
+| MSG-091 | Nav | `Wyloguj` | [ ] do review |
+| MSG-092 | Footer | `SiteFooter` (nav warunkowy jak landing) | n/a |
+| MSG-093 | Greeting | `Witaj,` (`profile-header`) | [ ] do review |
 
 ### Profile header — `app/profile/profile-header.tsx`
 
