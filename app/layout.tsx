@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   title: siteDocumentTitle(),
   description:
     "Panel statystyk darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją.",
+  icons: {
+    icon: [
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: {
     title: SITE_OG_TITLE,
     description:
