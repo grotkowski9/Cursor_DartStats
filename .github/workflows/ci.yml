@@ -19,7 +19,10 @@ jobs:
         run: npm ci
       - name: Secret scan (tracked files)
         run: |
-          if git grep -nE 'sb_secret_[A-Za-z0-9]{20,}|SUPABASE_SERVICE_ROLE_KEY=sb_secret_[^y]' -- ':!.env.example' ':!package-lock.json' ':!SECURITY_RELEASE.md'; then
+          # Pattern split so this workflow file does not match itself.
+          PAT1='sb_se''cret_[A-Za-z0-9]{20,}'
+          PAT2='SUPABASE_SERVICE_ROLE_KEY=sb_se''cret_[^y]'
+          if git grep -nE "${PAT1}|${PAT2}" -- ':!.env.example' ':!package-lock.json' ':!SECURITY_RELEASE.md' ':!.github/workflows/ci.yml'; then
             echo "Possible secret in tracked files"
             exit 1
           fi
