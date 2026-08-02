@@ -1,0 +1,17 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # ~co 5 dni (1, 6, 11, 16, 21, 26) — max okno 7 dni na Free tier
+    - cron: "0 9 1,6,11,16,21,26 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        run: |
+          curl -sf "${{ secrets.SUPABASE_URL }}/rest/v1/customers?select=customer_id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}"
