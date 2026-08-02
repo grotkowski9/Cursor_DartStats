@@ -2,6 +2,7 @@ import type { N01Match } from "@/lib/n01-parser";
 import type { CustomerProfile } from "@/lib/customer";
 import { DEMO_PERSONA, demoShareToken, type DemoPersona } from "@/demo/demo-persona";
 import { refreshDemoSnapshotDates, type DemoProfileSnapshot } from "@/lib/demo-snapshot";
+import { computeMaxWinStreak } from "@/lib/insights";
 import { applyDemoDates } from "@/lib/demo-dates";
 import demoSnapshotJson from "@/demo/demo-profile-snapshot.json";
 
@@ -24,7 +25,7 @@ export function personaToCustomer(persona: DemoPersona = DEMO_PERSONA): Customer
     dartBrand: null,
     dartBrandOther: null,
     dartModel: null,
-    dartWeightBucket: null,
+    dartWeightBucket: persona.dartWeightBucket,
     throwingHand: null,
     favoritePlayerId: null,
     profileStatsVisible: true,
@@ -36,7 +37,13 @@ export function personaToCustomer(persona: DemoPersona = DEMO_PERSONA): Customer
 
 /** Statyczny snapshot — staty z JSON, daty względem „teraz”. */
 export function getDemoSnapshot(): DemoProfileSnapshot {
-  return refreshDemoSnapshotDates(demoSnapshot);
+  const refreshed = refreshDemoSnapshotDates(demoSnapshot);
+  return {
+    ...refreshed,
+    maxWinStreak:
+      refreshed.maxWinStreak ?? computeMaxWinStreak(refreshed.matches),
+    weightCohort: refreshed.weightCohort ?? null,
+  };
 }
 
 export function getDemoMatches(): N01Match[] {

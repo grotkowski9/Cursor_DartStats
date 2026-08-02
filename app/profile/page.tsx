@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft, LogOut } from "lucide-react";
+import { SiteFooter } from "@/components/site-footer";
 import { requireAuthCustomer } from "@/lib/auth";
 import { needsAboutSoftCta } from "@/lib/customer";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
@@ -24,7 +25,8 @@ export default async function ProfilePage() {
   const { customer } = await requireAuthCustomer();
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-background px-4 py-8 text-foreground md:py-12">
+    <>
+      <main className="relative min-h-screen overflow-hidden bg-background px-4 py-8 text-foreground md:py-12">
       <div className="bg-grid absolute inset-0 z-0 opacity-15" aria-hidden />
       <div
         className="absolute left-1/2 top-[-10%] z-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-br from-accent-from/35 to-accent-to/35 blur-[120px]"
@@ -61,5 +63,7 @@ export default async function ProfilePage() {
         />
       </div>
     </main>
+    <SiteFooter />
+    </>
   );
 }

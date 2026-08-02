@@ -45,8 +45,13 @@ export default async function LoginPage({ searchParams }: Props) {
             <Target className="h-7 w-7" aria-hidden />
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Konto gracza
+          <h1 className="text-3xl font-bold leading-[1.08] tracking-tight md:text-4xl">
+            Wejdź do świata
+            <br />
+            <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
+              Sylveon
+            </span>{" "}
+            <span className="text-accent-gradient">Dart</span>
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym
@@ -64,15 +69,8 @@ export default async function LoginPage({ searchParams }: Props) {
             </p>
           )}
 
-          <div className="mt-10 flex flex-col gap-6">
+          <div className="mt-10">
             <LoginGoogleButton next={next} />
-
-            <Link
-              href="/demo/profile"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-foreground transition hover:bg-white/10"
-            >
-              Zobacz profil demo
-            </Link>
           </div>
         </div>
       </main>

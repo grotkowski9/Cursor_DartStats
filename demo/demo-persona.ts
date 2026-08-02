@@ -10,6 +10,8 @@ export type DemoPersona = {
   n01Name: string;
   knownNicknames: string[];
   tagline: string;
+  /** Waga lotek — musi być zgodna z DEMO_CUSTOMER_ID w bazie (snapshot kohorty) */
+  dartWeightBucket: string;
 };
 
 export const DEMO_PERSONA: DemoPersona = {
@@ -19,6 +21,7 @@ export const DEMO_PERSONA: DemoPersona = {
   n01Name: "KOWALSKI Antoni / Robot",
   knownNicknames: ["Kowalski", "Robot", "Antoni", "KOWALSKI"],
   tagline: "Twój Sylveon Dart Profile — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.",
+  dartWeightBucket: "23",
 };
 
 /** Share tokens for demo matches — demo001, demo002, … */

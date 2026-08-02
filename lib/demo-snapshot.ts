@@ -1,5 +1,6 @@
 import type { N01Match } from "@/lib/n01-parser";
 import { applyDemoDates } from "@/lib/demo-dates";
+import { computeMaxWinStreak, type WeightCohortInsight } from "@/lib/insights";
 import {
   computeCheckoutDistribution,
   computeDayStats,
@@ -51,6 +52,10 @@ export type DemoProfileSnapshot = {
   matches: N01Match[];
   matchStatsByToken: Record<string, MatchStats>;
   byRange: Record<TimeRange, DemoRangeSnapshot>;
+  /** Lifetime best consecutive match wins — z meczów demo */
+  maxWinStreak: number;
+  /** Avg vs kohorta wagi — z seed/snapshot (DB przy generowaniu) */
+  weightCohort: WeightCohortInsight | null;
 };
 
 function buildOpponents(matches: N01Match[]): { name: string; count: number }[] {
@@ -158,6 +163,29 @@ export function buildDemoProfileSnapshot(matches: N01Match[]): DemoProfileSnapsh
     matches: sorted,
     matchStatsByToken,
     byRange,
+    maxWinStreak: computeMaxWinStreak(sorted),
+    weightCohort: null,
+  };
+}
+
+export function withDemoInsights(
+  snapshot: DemoProfileSnapshot,
+  weightCohort: WeightCohortInsight | null,
+): DemoProfileSnapshot {
+  const myAverage =
+    snapshot.byRange.all.playerStats.matches > 0
+      ? snapshot.byRange.all.playerStats.average
+      : null;
+
+  const cohort =
+    weightCohort && myAverage != null
+      ? { ...weightCohort, myAverage }
+      : weightCohort;
+
+  return {
+    ...snapshot,
+    maxWinStreak: computeMaxWinStreak(snapshot.matches),
+    weightCohort: cohort,
   };
 }
 

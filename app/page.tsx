@@ -3,18 +3,14 @@ import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
-  Import,
-  Share2,
+  Link2,
   Target,
   Trophy,
 } from "lucide-react";
 import { LandingJsonLd } from "@/components/landing-json-ld";
 import { SiteFooter } from "@/components/site-footer";
-import { getDemoSnapshot } from "@/lib/demo";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
-
-const matchCount = getDemoSnapshot().matchCount;
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
@@ -42,34 +38,31 @@ export const metadata: Metadata = {
 
 const FEATURES = [
   {
-    icon: Import,
-    title: "Import z N01",
-    text: "Wklejasz link z n01darts.com — legi, lotki, checkouty. Bez ręcznego przepisywania po turnieju.",
+    icon: Link2,
+    title: "Koniec z Excelem",
+    text: "Żadnego Excela, żadnego N01 po każdym turnieju. Wklejasz link, a legi, lotki i checkouty lądują w profilu. Dane o meczu masz od teraz w jednym miejscu. Na swoim koncie.",
   },
   {
     icon: BarChart3,
     title: "Analityka na serio",
-    text: "Średnia ważona, first 9, forma, aktywność po dniach i godzinach, histogram checkoutów.",
+    text: "Średnie, H2H, wykresy formy, podejść i zamknięć. Aktywność i forma wg. dni i godzin, rozkład checkoutów i wiele więcej.",
   },
   {
     icon: Trophy,
-    title: "H2H i top listy",
-    text: "Kto cię bije, kogo bijesz, najlepsze rzuty i finish — z meczów, nie z pamięci.",
-  },
-  {
-    icon: Share2,
-    title: "Share meczu",
-    text: "Link do meczu z rzutem po rzucie. Profil zostaje prywatny (noindex).",
+    title: "Head-to-head",
+    text: "Różne turnieje, ale ten sam przeciwnik? Żaden problem. Porównasz statystyki dotychczasowych spotkań między wami.",
   },
 ] as const;
 
 export default function HomePage() {
-  const heroStats = [
-    { value: String(matchCount), label: "Meczów w demo" },
-    { value: "501", label: "Start score" },
-    { value: "N01", label: "Import linkiem" },
-    { value: "H2H", label: "vs przeciwnicy" },
+  /* Hero highlight tiles — wyłączone na landing, kod zostaje do ewentualnego powrotu
+  const heroHighlights = [
+    { value: "Top zamknięć", label: "najczęstsze finish" },
+    { value: "Top podejść", label: "najczęstsze rzuty" },
+    { value: "Forma", label: "wykres po meczach" },
+    { value: "Turnieje", label: "jeden profil gracza" },
   ] as const;
+  */
 
   return (
     <>
@@ -81,8 +74,8 @@ export default function HomePage() {
           aria-hidden
         />
 
-        <section className="relative z-10 mx-auto max-w-4xl px-6 pb-20 pt-16 md:pt-24">
-          <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
+        <section className="relative z-10 mx-auto max-w-4xl px-6 pb-8 pt-12 md:pt-16">
+          <div>
             <div className="max-w-xl">
               <div className="relative mb-8 inline-flex dartboard-ring">
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
@@ -96,35 +89,40 @@ export default function HomePage() {
                 </span>{" "}
                 <span className="text-accent-gradient">{SITE_NAME_SHORT}</span>
               </h1>
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                Importuj mecze z N01, zobacz jak grasz naprawdę — średnie, checkout,
-                forma, head-to-head. Prywatny profil, publiczne demo do obejrzenia
-                przed rejestracją.
+              <p className="mt-6 leading-relaxed text-muted-foreground">
+                <span className="text-lg font-semibold text-foreground/90">
+                  Twój dart. W liczbach.
+                </span>
+                <br />
+                <span className="text-base">
+                  Importuj mecze z N01 i zobacz jak grasz naprawdę.
+                  <br />
+                  Średnie, checkouty, forma, H2H i wiele wykresów.
+                  <br />
+                  Różne turnieje — jeden profil gracza.
+                </span>
               </p>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Link
-                  href="/demo/profile"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/25 transition hover:shadow-accent-to/45"
-                >
-                  Zobacz profil demo
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-                </Link>
+              <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold transition hover:border-accent-from/40 hover:bg-accent-from/5"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/25 transition hover:shadow-accent-to/45"
                 >
                   Zaloguj się / Zarejestruj
                 </Link>
+                <Link
+                  href="/demo/profile"
+                  className="group inline-flex items-center justify-center gap-1.5 self-center rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-semibold text-muted-foreground transition hover:border-accent-from/40 hover:bg-accent-from/5 hover:text-foreground sm:self-auto"
+                >
+                  Zobacz profil demo
+                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                </Link>
               </div>
-
-              <p className="mt-6 text-xs text-muted-foreground">
-                Demo: przykładowy profil gracza · {matchCount} spotkań
-              </p>
             </div>
 
+            {/* Hero highlight tiles — wyłączone na landing
             <div className="grid shrink-0 grid-cols-2 gap-3 lg:w-72">
-              {heroStats.map((s) => (
+              {heroHighlights.map((s) => (
                 <article key={s.label} className="glass-tile flex flex-col items-center px-3 py-5 text-center">
                   <span className="text-2xl font-bold text-accent-gradient">{s.value}</span>
                   <span className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -133,16 +131,17 @@ export default function HomePage() {
                 </article>
               ))}
             </div>
+            */}
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-white/10 bg-black/10 px-6 py-16">
+        <section className="relative z-10 border-t border-white/10 bg-black/10 px-6 pt-8 pb-6">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-sm font-semibold uppercase tracking-widest text-primary/80">
               Co dostajesz
             </h2>
             <p className="mt-2 text-2xl font-bold">Od linku N01 do profilu gracza</p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {FEATURES.map(({ icon: Icon, title, text }) => (
                 <article key={title} className="glass-tile p-5">
                   <Icon className="mb-3 h-5 w-5 text-accent-from" aria-hidden />
@@ -154,17 +153,20 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="relative z-10 px-6 py-16">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-accent-from/25 bg-gradient-to-br from-accent-from/10 via-transparent to-accent-to/10 p-8 md:p-12">
-            <h2 className="text-2xl font-bold md:text-3xl">
-              {matchCount} spotkań demo — bez konta
+        <section className="relative z-10 border-t border-white/10 px-6 py-6">
+          <div className="mx-auto max-w-4xl rounded-3xl border border-accent-from/25 bg-gradient-to-br from-accent-from/10 via-transparent to-accent-to/10 p-6 md:p-8">
+            <h2 className="text-2xl font-bold leading-snug md:text-3xl">
+              Zobacz jak wygląda{" "}
+              <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
+                przykładowy
+              </span>{" "}
+              <span className="text-accent-gradient">profil</span>
             </h2>
             <p className="mt-3 max-w-2xl text-muted-foreground">
-              Pełna analityka na{" "}
-              <strong className="text-foreground">przykładowym profilu demo</strong>
-              : statystyki, wykres formy, H2H i mecze z widokiem rzut po rzucie.
+              Nadal nie chcesz założyć konta? Sprawdź profil demo. Zobacz statystyki, wykres
+              formy, H2H i widok rzut po rzucie. Wszystko tak, jak na Twoim koncie.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/demo/profile"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md"
@@ -180,16 +182,6 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-        </section>
-
-        <section className="relative z-10 px-6 pb-8">
-          <p className="mx-auto max-w-4xl text-center text-xs text-muted-foreground/70">
-            Masz już dostęp?{" "}
-            <Link href="/profile" className="hover:text-primary hover:underline">
-              /profile
-            </Link>{" "}
-            (prywatny)
-          </p>
         </section>
       </main>
       <SiteFooter />

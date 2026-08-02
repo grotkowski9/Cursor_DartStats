@@ -63,8 +63,12 @@ export function ProfileClient({
   const [range, setRange] = useState<TimeRange>("all");
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
-  const [maxWinStreak, setMaxWinStreak] = useState<number | null>(null);
-  const [weightCohort, setWeightCohort] = useState<WeightCohortInsight | null>(null);
+  const [maxWinStreak, setMaxWinStreak] = useState<number | null>(
+    showInsights && demoSnapshot ? demoSnapshot.maxWinStreak : null,
+  );
+  const [weightCohort, setWeightCohort] = useState<WeightCohortInsight | null>(
+    showInsights && demoSnapshot ? demoSnapshot.weightCohort : null,
+  );
 
   const loadProfile = useCallback(async () => {
     setLoading(true);
@@ -200,13 +204,11 @@ export function ProfileClient({
           range={range}
           onRange={setRange}
           loading={loading}
-          maxWinStreak={showInsights && !demoMode ? maxWinStreak : null}
+          maxWinStreak={showInsights ? maxWinStreak : null}
         />
       </div>
 
-      {showInsights && !demoMode ? (
-        <ProfileInsights weightCohort={weightCohort} />
-      ) : null}
+      {showInsights ? <ProfileInsights weightCohort={weightCohort} /> : null}
 
       {/* Form chart */}
       {!loading && filtered.length >= 2 && (

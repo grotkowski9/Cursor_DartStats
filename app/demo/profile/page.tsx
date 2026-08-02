@@ -102,6 +102,7 @@ export default async function DemoProfilePage({ searchParams }: Props) {
             demoSnapshot={demoSnapshot}
             matchPathPrefix="/demo/m/"
             myDisplayName={`${customer.lastName} ${customer.firstName}`.trim()}
+            showInsights
           />
         </div>
       </main>
