@@ -34,6 +34,11 @@ test("ingest without auth returns 401", async ({ request }) => {
   expect(res.status()).toBe(401);
 });
 
+test("profile bootstrap without auth returns 401", async ({ request }) => {
+  const res = await request.get("/api/profile/bootstrap");
+  expect(res.status()).toBe(401);
+});
+
 test("match delete without auth returns 401", async ({ request }) => {
   const res = await request.delete(
     "/api/matches/00000000-0000-4000-8000-000000000001",

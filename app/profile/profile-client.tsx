@@ -5,10 +5,16 @@ import { ChevronLeft, ChevronRight, Inbox, Loader2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import type { WeightCohortInsight } from "@/lib/insights";
 import {
+  computeCheckoutDistribution,
+  computeDayStats,
+  computeFormSeries,
+  computeHourStats,
+  computeMatchStats,
   computePlayerStats,
   computeTopCheckouts,
   computeTopThrows,
   filterByRange,
+  type MatchStats,
   type TimeRange,
 } from "@/lib/stats";
 import { refreshDemoSnapshotDates, type DemoProfileSnapshot } from "@/lib/demo-snapshot";
@@ -60,47 +66,35 @@ export function ProfileClient({
   const [maxWinStreak, setMaxWinStreak] = useState<number | null>(null);
   const [weightCohort, setWeightCohort] = useState<WeightCohortInsight | null>(null);
 
-  const loadMatches = useCallback(async () => {
+  const loadProfile = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/matches/full");
-      const data = (await res.json()) as { matches?: N01Match[]; error?: string };
+      const res = await fetch("/api/profile/bootstrap");
+      const data = (await res.json()) as {
+        matches?: N01Match[];
+        maxWinStreak?: number;
+        weightCohort?: WeightCohortInsight | null;
+        error?: string;
+      };
       if (!res.ok) throw new Error(data.error ?? "Błąd pobierania");
       setMatches(data.matches ?? []);
+      if (showInsights) {
+        setMaxWinStreak(data.maxWinStreak ?? 0);
+        setWeightCohort(data.weightCohort ?? null);
+      }
     } catch {
       setMatches([]);
+      setMaxWinStreak(null);
+      setWeightCohort(null);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showInsights]);
 
   useEffect(() => {
     if (demoMode || demoSnapshot || initialMatches) return;
-    void loadMatches();
-  }, [loadMatches, demoMode, demoSnapshot, initialMatches]);
-
-  useEffect(() => {
-    if (!showInsights || demoMode) return;
-    let cancelled = false;
-    void (async () => {
-      try {
-        const res = await fetch("/api/customer/insights");
-        if (!res.ok) return;
-        const json = (await res.json()) as {
-          maxWinStreak?: number;
-          weightCohort?: WeightCohortInsight | null;
-        };
-        if (cancelled) return;
-        setMaxWinStreak(json.maxWinStreak ?? 0);
-        setWeightCohort(json.weightCohort ?? null);
-      } catch {
-        /* ignore */
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [showInsights, demoMode]);
+    void loadProfile();
+  }, [loadProfile, demoMode, demoSnapshot, initialMatches]);
 
   const rangeData = liveDemoSnapshot?.byRange[range];
 
@@ -108,6 +102,17 @@ export function ProfileClient({
     () => (liveDemoSnapshot ? (rangeData?.matches ?? []) : filterByRange(matches, range)),
     [liveDemoSnapshot, rangeData, matches, range],
   );
+
+  /** One pass of computeMatchStats per filtered match — cards reuse this. */
+  const matchStatsByToken = useMemo(() => {
+    if (liveDemoSnapshot) return liveDemoSnapshot.matchStatsByToken;
+    const map: Record<string, MatchStats> = {};
+    for (const m of filtered) {
+      map[m.shareToken] = computeMatchStats(m);
+    }
+    return map;
+  }, [liveDemoSnapshot, filtered]);
+
   const playerStats = useMemo(
     () => (liveDemoSnapshot ? rangeData!.playerStats : computePlayerStats(filtered)),
     [liveDemoSnapshot, rangeData, filtered],
@@ -118,6 +123,25 @@ export function ProfileClient({
   );
   const topCheckouts = useMemo(
     () => (liveDemoSnapshot ? rangeData!.topCheckouts : computeTopCheckouts(filtered, 10)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const formSeries = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.formSeries : computeFormSeries(filtered)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const dayStats = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.dayStats : computeDayStats(filtered)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const hourStats = useMemo(
+    () => (liveDemoSnapshot ? rangeData!.hourStats : computeHourStats(filtered)),
+    [liveDemoSnapshot, rangeData, filtered],
+  );
+  const checkoutBuckets = useMemo(
+    () =>
+      liveDemoSnapshot
+        ? rangeData!.checkoutBuckets
+        : computeCheckoutDistribution(filtered),
     [liveDemoSnapshot, rangeData, filtered],
   );
 
@@ -166,7 +190,7 @@ export function ProfileClient({
         {demoMode ? (
           <ProfileAddMatch demoMode loginHref="/login" onMatchesChanged={() => {}} />
         ) : (
-          <ProfileAddMatch onMatchesChanged={() => void loadMatches()} />
+          <ProfileAddMatch onMatchesChanged={() => void loadProfile()} />
         )}
       </div>
 
@@ -187,8 +211,7 @@ export function ProfileClient({
       {/* Form chart */}
       {!loading && filtered.length >= 2 && (
         <ProfileFormChart
-          matches={demoSnapshot ? undefined : filtered}
-          formSeries={rangeData?.formSeries}
+          formSeries={formSeries}
           overallAverage={playerStats.average}
         />
       )}
@@ -220,7 +243,7 @@ export function ProfileClient({
                   match={m}
                   myDisplayName={myDisplayName}
                   matchPathPrefix={matchPathPrefix}
-                  initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
+                  initialMatchStats={matchStatsByToken[m.shareToken]}
                   canDelete={allowDelete}
                   onDeleted={() => handleMatchDeleted(m)}
                   canEdit={allowDelete}
@@ -248,7 +271,7 @@ export function ProfileClient({
                       match={m}
                       myDisplayName={myDisplayName}
                       matchPathPrefix={matchPathPrefix}
-                      initialMatchStats={demoSnapshot?.matchStatsByToken[m.shareToken]}
+                      initialMatchStats={matchStatsByToken[m.shareToken]}
                       canDelete={allowDelete}
                       onDeleted={() => handleMatchDeleted(m)}
                       canEdit={allowDelete}
@@ -308,21 +331,15 @@ export function ProfileClient({
       )}
 
       {!loading && filtered.length > 0 && (
-        <ProfileActivity matches={demoSnapshot ? undefined : filtered} dayStats={rangeData?.dayStats} />
+        <ProfileActivity dayStats={dayStats} />
       )}
 
       {!loading && filtered.length > 0 && (
-        <ProfileActivityHours
-          matches={demoSnapshot ? undefined : filtered}
-          hourStats={rangeData?.hourStats}
-        />
+        <ProfileActivityHours hourStats={hourStats} />
       )}
 
       {!loading && filtered.length > 0 && (
-        <ProfileCheckoutDistribution
-          matches={demoSnapshot ? undefined : filtered}
-          checkoutBuckets={rangeData?.checkoutBuckets}
-        />
+        <ProfileCheckoutDistribution checkoutBuckets={checkoutBuckets} />
       )}
     </div>
   );

@@ -27,8 +27,15 @@ function opponentName(players: [N01Player, N01Player], playerIndex: 0 | 1 | null
   return null;
 }
 
-function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow[]): N01Match {
-  const buckets = new Map<string, N01Visit[]>();
+/** Chunk size for PostgREST `.in(...)` — keeps URL under proxy limits. */
+const IN_CHUNK = 100;
+/** PostgREST / Supabase default max rows per response — must paginate past this. */
+const PAGE_SIZE = 1000;
+
+export function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow[]): N01Match {
+  // Sort within each leg+player so checkout/last-visit stats stay correct
+  // even when bulk queries return visits out of order.
+  const buckets = new Map<string, VisitRow[]>();
   for (const v of visits) {
     const key = `${v.leg_id}:${v.player_index}`;
     let arr = buckets.get(key);
@@ -36,15 +43,26 @@ function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow[]): N0
       arr = [];
       buckets.set(key, arr);
     }
-    arr.push({
-      score: v.raw_score,
-      left: v.left_after,
-      actualScore: v.actual_score,
-      darts: v.darts_thrown,
-      isCheckout: v.is_checkout,
-      isBust: v.is_bust,
-      isSetup: v.is_setup,
-    });
+    arr.push(v);
+  }
+  for (const arr of buckets.values()) {
+    arr.sort((a, b) => a.visit_number - b.visit_number);
+  }
+
+  const n01Buckets = new Map<string, N01Visit[]>();
+  for (const [key, arr] of buckets) {
+    n01Buckets.set(
+      key,
+      arr.map((v) => ({
+        score: v.raw_score,
+        left: v.left_after,
+        actualScore: v.actual_score,
+        darts: v.darts_thrown,
+        isCheckout: v.is_checkout,
+        isBust: v.is_bust,
+        isSetup: v.is_setup,
+      })),
+    );
   }
 
   const sortedLegs = legs.slice().sort((a, b) => a.leg_number - b.leg_number);
@@ -53,8 +71,8 @@ function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow[]): N0
     winner: l.winner_index,
     first: l.first_player,
     visits: [
-      buckets.get(`${l.leg_id}:0`) ?? [],
-      buckets.get(`${l.leg_id}:1`) ?? [],
+      n01Buckets.get(`${l.leg_id}:0`) ?? [],
+      n01Buckets.get(`${l.leg_id}:1`) ?? [],
     ] as [N01Visit[], N01Visit[]],
   }));
 
@@ -79,6 +97,93 @@ function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow[]): N0
     playerIndex,
     shareToken: match.share_token,
   };
+}
+
+/**
+ * Assemble N01Match[] from flat DB rows (bulk load path).
+ * Same output as loading each match via rowsToN01Match independently.
+ * Matches keep the order of the `matches` array (caller orders by start_time).
+ */
+export function assembleMatchesFromRows(
+  matches: MatchRow[],
+  legs: LegRow[],
+  visits: VisitRow[],
+): N01Match[] {
+  const legsByMatch = new Map<string, LegRow[]>();
+  for (const leg of legs) {
+    const arr = legsByMatch.get(leg.match_id) ?? [];
+    arr.push(leg);
+    legsByMatch.set(leg.match_id, arr);
+  }
+
+  const visitsByLeg = new Map<string, VisitRow[]>();
+  for (const v of visits) {
+    const arr = visitsByLeg.get(v.leg_id) ?? [];
+    arr.push(v);
+    visitsByLeg.set(v.leg_id, arr);
+  }
+
+  return matches.map((match) => {
+    const matchLegs = legsByMatch.get(match.match_id) ?? [];
+    const matchVisits: VisitRow[] = [];
+    for (const leg of matchLegs) {
+      const vs = visitsByLeg.get(leg.leg_id);
+      if (vs?.length) matchVisits.push(...vs);
+    }
+    return rowsToN01Match(match, matchLegs, matchVisits);
+  });
+}
+
+/** Paginate past PostgREST max-rows so bulk loads never silently truncate. */
+async function fetchLegsByMatchIds(matchIds: string[]): Promise<LegRow[]> {
+  if (!matchIds.length) return [];
+  const supabase = getSupabaseAdmin();
+  const out: LegRow[] = [];
+
+  for (let i = 0; i < matchIds.length; i += IN_CHUNK) {
+    const chunk = matchIds.slice(i, i + IN_CHUNK);
+    let from = 0;
+    for (;;) {
+      const { data, error } = await supabase
+        .from("legs")
+        .select("*")
+        .in("match_id", chunk)
+        .order("leg_id")
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(`getMyMatches legs: ${error.message}`);
+      if (!data?.length) break;
+      out.push(...data);
+      if (data.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+    }
+  }
+  return out;
+}
+
+async function fetchVisitsByLegIds(legIds: string[]): Promise<VisitRow[]> {
+  if (!legIds.length) return [];
+  const supabase = getSupabaseAdmin();
+  const out: VisitRow[] = [];
+
+  for (let i = 0; i < legIds.length; i += IN_CHUNK) {
+    const chunk = legIds.slice(i, i + IN_CHUNK);
+    let from = 0;
+    for (;;) {
+      // Order by visit_id (PK) for stable pagination across pages.
+      const { data, error } = await supabase
+        .from("visits")
+        .select("*")
+        .in("leg_id", chunk)
+        .order("visit_id")
+        .range(from, from + PAGE_SIZE - 1);
+      if (error) throw new Error(`getMyMatches visits: ${error.message}`);
+      if (!data?.length) break;
+      out.push(...data);
+      if (data.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+    }
+  }
+  return out;
 }
 
 async function loadMatchById(matchId: string): Promise<N01Match | null> {
@@ -209,22 +314,24 @@ export async function saveMatch(
   return { matchId: matchRow.match_id };
 }
 
+/**
+ * Load all matches for a customer with legs + visits in ~3 queries (chunked).
+ * Replaces the previous N+1 loop (1 + 3N). Same N01Match shape / stats.
+ */
 export async function getMyMatches(customerId: string): Promise<N01Match[]> {
   const supabase = getSupabaseAdmin();
   const { data: matches, error } = await supabase
     .from("matches")
-    .select("match_id")
+    .select("*")
     .eq("customer_id", customerId)
     .order("start_time", { ascending: false });
   if (error) throw new Error(`getMyMatches: ${error.message}`);
   if (!matches?.length) return [];
 
-  const out: N01Match[] = [];
-  for (const row of matches) {
-    const m = await loadMatchById(row.match_id);
-    if (m) out.push(m);
-  }
-  return out;
+  const matchIds = matches.map((m) => m.match_id);
+  const legs = await fetchLegsByMatchIds(matchIds);
+  const visits = await fetchVisitsByLegIds(legs.map((l) => l.leg_id));
+  return assembleMatchesFromRows(matches, legs, visits);
 }
 
 export async function getMatchByShareToken(shareToken: string): Promise<N01Match | null> {
