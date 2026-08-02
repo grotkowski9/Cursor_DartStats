@@ -96,7 +96,6 @@ export default function HomePage() {
                 <br />
                 <span className="text-base">
                   Importuj mecze z N01 i zobacz jak grasz naprawdę.
-                  <br />
                   Średnie, checkouty, forma, H2H i wiele wykresów.
                   <br />
                   Różne turnieje — jeden profil gracza.
