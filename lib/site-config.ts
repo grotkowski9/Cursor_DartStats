@@ -14,7 +14,8 @@ export const SITE_ALTERNATES = [
 export const SYLVEON_URL = "https://sylveoncompany.pl";
 export const SYLVEON_DART_SECTION = `${SYLVEON_URL}/#dart`;
 
-export const SITE_NAME = "Dart Profile Tracker";
+export const SITE_NAME = "Sylveon Dart Profile";
 export const SITE_NAME_SHORT = "Dart Profile";
+export const SITE_BRAND = "Sylveon";
 
 export const DEFAULT_OG_IMAGE = "/og-dart-profile.png";

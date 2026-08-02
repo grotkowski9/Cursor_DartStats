@@ -12,7 +12,7 @@ import { LandingJsonLd } from "@/components/landing-json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { getDemoSnapshot } from "@/lib/demo";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
-import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
+import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
 
 const matchCount = getDemoSnapshot().matchCount;
 
@@ -91,8 +91,10 @@ export default function HomePage() {
               </div>
 
               <h1 className="text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl lg:text-[3.25rem]">
-                Dart{" "}
-                <span className="text-accent-gradient">Profile</span> Tracker
+                <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
+                  {SITE_BRAND}
+                </span>{" "}
+                <span className="text-accent-gradient">{SITE_NAME_SHORT}</span>
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 Importuj mecze z N01, zobacz jak grasz naprawdę — średnie, checkout,

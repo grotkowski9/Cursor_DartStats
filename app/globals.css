@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Dart Profile Tracker — Sylveon Lift (W2) */
+/* Sylveon Dart Profile — Sylveon Lift (W2) */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -19,6 +19,8 @@
   --color-border: var(--border);
   --color-accent-from: var(--accent-from);
   --color-accent-to: var(--accent-to);
+  --color-sylveon-from: var(--sylveon-from);
+  --color-sylveon-to: var(--sylveon-to);
   --color-signal: var(--signal);
 
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -35,6 +37,9 @@
 
   --accent-from: oklch(0.8 0.14 250);
   --accent-to: oklch(0.66 0.22 285);
+  /* Sylveon ribbon — soft pink → lilac (distinct from dart accent) */
+  --sylveon-from: oklch(0.82 0.14 355);
+  --sylveon-to: oklch(0.72 0.16 310);
   --signal: oklch(0.88 0.15 205);
 
   --primary: oklch(0.8 0.14 250);

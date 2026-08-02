@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Target } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
-import { getSiteUrl } from "@/lib/site-config";
+import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
 import { LoginGoogleButton } from "./login-google-button";
 import { LoginPasswordForm } from "./login-password-form";
@@ -10,7 +10,7 @@ import { safeInternalPath } from "@/lib/safe-path";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
-  description: "Zaloguj się do Dart Profile Tracker przez Google i śledź swoje statystyki darta.",
+  description: `Zaloguj się do ${SITE_NAME} przez Google i śledź swoje statystyki darta.`,
   robots: { index: true, follow: true },
   alternates: { canonical: `${getSiteUrl()}/login` },
 };

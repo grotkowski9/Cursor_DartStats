@@ -1,6 +1,6 @@
 # Cursor_DartStats
 
-**Dart Profile Tracker** — prywatny panel statystyk darta, budowany w Next.js 16.
+**Sylveon Dart Profile** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
 > **Status:** **v1.2.0+** — Auth **1.1.x** + delete (**1.1.7**) + **edycja meczu (1.1.13)** + audyt (**1.0.1.1–3**) + polish profilu.  
@@ -974,7 +974,7 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 **Reguła (od main po 1.0.0):** każda podstrona ma identyczny tytuł:
 
 ```text
-Twoje statystyki darta | Dart Profile Tracker
+Twoje statystyki darta | Sylveon Dart Profile
 ```
 
 - **Bez imion/nazwisk** w `<title>`, OpenGraph ani JSON-LD na `/` (wyciek SEO).
@@ -1367,7 +1367,7 @@ app/m/[shareToken]/page.tsx                 ← snapshot_access_log + toClientMa
 ### Prompt na nowy czat
 
 ```
-Projekt: Dart Profile Tracker (Cursor_DartStats)
+Projekt: Sylveon Dart Profile (Cursor_DartStats)
 README = źródło prawdy — „Backlog otwarty" + „Stan na koniec czatu + handoff" + sekcja **1.2.0**.
 
 Stan: **v1.2.0+** na main (delete **1.1.7**, edycja meczu **1.1.13**, audyt **1.0.1.1–3**, polish profilu).
@@ -1405,15 +1405,15 @@ npm run dev -- --hostname 0.0.0.0
 
 | ID | Plik / kontekst | Kiedy | Tekst | Review |
 |----|-----------------|-------|-------|--------|
-| MSG-001 | `lib/page-metadata.ts` — `<title>` | Każda strona | `Twoje statystyki darta \| Dart Profile Tracker` | [ ] do review |
-| MSG-002 | `lib/site-config.ts` | Footer, OG, JSON-LD | `Dart Profile Tracker` | [ ] do review |
-| MSG-003 | `lib/site-config.ts` — OG alt | Share preview | `Dart Profile Tracker — statystyki darta z N01` | [ ] do review |
+| MSG-001 | `lib/page-metadata.ts` — `<title>` | Każda strona | `Twoje statystyki darta \| Sylveon Dart Profile` | [ ] do review |
+| MSG-002 | `lib/site-config.ts` | Footer, OG, JSON-LD | `Sylveon Dart Profile` | [ ] do review |
+| MSG-003 | `lib/site-config.ts` — OG alt | Share preview | `Sylveon Dart Profile — statystyki darta z N01` | [ ] do review |
 
 ### Landing — `app/page.tsx`
 
 | ID | Kontekst | Tekst | Review |
 |----|----------|-------|--------|
-| MSG-010 | Hero H1 | `Dart` + `Profile` + ` Tracker` | [ ] do review |
+| MSG-010 | Hero H1 | `Sylveon` + `Dart Profile` | [ ] do review |
 | MSG-011 | Hero subtitle | `Importuj mecze z N01, zobacz jak grasz naprawdę — średnie, checkout, forma, head-to-head. Prywatny profil, publiczne demo do obejrzenia przed rejestracją.` | [ ] do review |
 | MSG-012 | CTA primary | `Zobacz profil demo` | [ ] do review |
 | MSG-013 | CTA secondary | `Zaloguj się / Zarejestruj` | [ ] do review |
@@ -1455,7 +1455,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | ID | Tekst | Review |
 |----|-------|--------|
-| MSG-050 | `Dart Profile Tracker` | [ ] do review |
+| MSG-050 | `Sylveon Dart Profile` | [ ] do review |
 | MSG-051 | `Profil demo` | [ ] do review |
 | MSG-052 | `Logowanie` | [ ] do review |
 | MSG-053 | `Mój profil` | [ ] do review |
@@ -1474,7 +1474,7 @@ npm run dev -- --hostname 0.0.0.0
 |----|-------|--------|
 | MSG-070 | `Strona główna` | [ ] do review |
 | MSG-071 | `Załóż konto →` | [ ] do review |
-| MSG-072 | Tagline (`demo-persona.ts`) | `Twój Dart Profile Tracker — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.` | [ ] do review |
+| MSG-072 | Tagline (`demo-persona.ts`) | `Twój Sylveon Dart Profile — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.` | [ ] do review |
 
 ### Demo match — `app/demo/m/[shareToken]/page.tsx`
 
@@ -1747,7 +1747,7 @@ npm run dev -- --hostname 0.0.0.0
 | ID | Tekst | Review |
 |----|-------|--------|
 | MSG-340 | Tagline | `Statystyki darta · import N01` | [ ] do review |
-| MSG-341 | Title | `Dart Profile Tracker` | [ ] do review |
+| MSG-341 | Title | `Sylveon Dart Profile` | [ ] do review |
 | MSG-342 | Subtitle | `Import N01 · forma · H2H · checkout` | [ ] do review |
 | MSG-343 | Stat labels | `MECZÓW DEMO`, `START`, `IMPORT` | [ ] do review |
 | MSG-344 | Domain | `dart.sylveoncompany.pl` | [ ] do review |

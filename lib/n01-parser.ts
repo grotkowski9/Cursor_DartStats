@@ -117,7 +117,7 @@ export async function fetchN01Payload(url: string): Promise<{ payload: Record<st
 
   let htmlText: string | null = null;
   try {
-    const htmlRes = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 DartTracker" } });
+    const htmlRes = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 SylveonDartProfile" } });
     if (htmlRes.ok) htmlText = await htmlRes.text();
   } catch {
     htmlText = null;

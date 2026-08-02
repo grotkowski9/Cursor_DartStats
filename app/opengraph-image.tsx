@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME } from "@/lib/site-config";
+import { SITE_BRAND, SITE_NAME, SITE_NAME_SHORT } from "@/lib/site-config";
 
 export const alt = `${SITE_NAME} — statystyki darta z N01`;
 export const size = { width: 1200, height: 630 };
@@ -74,13 +74,38 @@ export default function OgImage() {
               <div
                 style={{
                   display: "flex",
-                  fontSize: 52,
-                  fontWeight: 800,
-                  color: "white",
-                  letterSpacing: "-0.02em",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
+                  gap: 14,
                 }}
               >
-                Dart Profile Tracker
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: 52,
+                    fontWeight: 800,
+                    letterSpacing: "-0.02em",
+                    background: "linear-gradient(90deg, #f9a8d4, #c084fc)",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  {SITE_BRAND}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: 52,
+                    fontWeight: 800,
+                    letterSpacing: "-0.02em",
+                    background: "linear-gradient(90deg, #93b4ff, #6366f1)",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  {SITE_NAME_SHORT}
+                </div>
               </div>
               <div style={{ display: "flex", fontSize: 22, color: "rgba(255,255,255,0.65)" }}>
                 Import N01 · forma · H2H · checkout

@@ -18,7 +18,7 @@ export const DEMO_PERSONA: DemoPersona = {
   nickname: "Robot",
   n01Name: "KOWALSKI Antoni / Robot",
   knownNicknames: ["Kowalski", "Robot", "Antoni", "KOWALSKI"],
-  tagline: "Twój Dart Profile Tracker — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.",
+  tagline: "Twój Sylveon Dart Profile — Wszystkie Twoje statystyki z turniejów lokalnych w jednym miejscu.",
 };
 
 /** Share tokens for demo matches — demo001, demo002, … */
