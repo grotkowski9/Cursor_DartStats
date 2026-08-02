@@ -17,6 +17,20 @@ test("login page loads", async ({ page }) => {
   expect(res?.ok()).toBeTruthy();
 });
 
+test("logintest page loads and is noindex", async ({ page, request }) => {
+  const res = await page.goto("/logintest");
+  expect(res?.ok()).toBeTruthy();
+  const headers = (await request.get("/logintest")).headers();
+  expect(headers["x-robots-tag"] ?? "").toMatch(/noindex/i);
+});
+
+test("robots.txt disallows logintest", async ({ request }) => {
+  const res = await request.get("/robots.txt");
+  expect(res.ok()).toBeTruthy();
+  const body = await res.text();
+  expect(body).toContain("Disallow: /logintest");
+});
+
 test("profile without session redirects to login", async ({ page }) => {
   await page.goto("/profile");
   await expect(page).toHaveURL(/\/login/);

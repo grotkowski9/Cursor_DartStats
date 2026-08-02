@@ -21,6 +21,7 @@ export const config = {
     "/onboarding",
     "/onboarding/:path*",
     "/login",
+    "/logintest",
     "/auth/callback",
     "/m/:path*",
     "/api/:path*",

@@ -2,26 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Target } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
-import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
-import { LoginGoogleButton } from "./login-google-button";
+import { LoginPasswordForm } from "@/app/login/login-password-form";
 import { safeInternalPath } from "@/lib/safe-path";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
-  description: `Zaloguj się do ${SITE_NAME} przez Google i śledź swoje statystyki darta.`,
-  robots: { index: true, follow: true },
-  alternates: { canonical: `${getSiteUrl()}/login` },
+  description: "Ukryte logowanie testowe (e-mail / hasło).",
+  robots: { index: false, follow: false, nocache: true },
 };
 
 type Props = {
   searchParams: Promise<{ next?: string; error?: string }>;
 };
 
-export default async function LoginPage({ searchParams }: Props) {
+export default async function LoginTestPage({ searchParams }: Props) {
   const params = await searchParams;
   const next = safeInternalPath(params.next, "/profile");
-  const authError = params.error === "auth";
+  const allowDevUpsert =
+    process.env.NODE_ENV === "development" ||
+    process.env.ALLOW_DEV_TEST_LOGIN === "true";
 
   return (
     <>
@@ -34,11 +34,11 @@ export default async function LoginPage({ searchParams }: Props) {
 
         <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-16">
           <Link
-            href="/"
+            href="/login"
             className="mb-10 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Strona główna
+            Logowanie Google
           </Link>
 
           <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
@@ -46,33 +46,19 @@ export default async function LoginPage({ searchParams }: Props) {
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Konto gracza
+            Logowanie testowe
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym
-            profilu. Chcesz najpierw zobaczyć jak to wygląda?{" "}
-            <Link href="/demo/profile" className="text-primary hover:underline">
-              Otwórz profil demo
+            E-mail i hasło — tylko do testów. Strona nieindeksowana. Publiczne logowanie:
+            Google na{" "}
+            <Link href="/login" className="text-primary hover:underline">
+              /login
             </Link>
             .
           </p>
 
-          {authError && (
-            <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
-              Logowanie nieudane. Zamknij kartę, otwórz logowanie od nowa i spróbuj jeszcze raz
-              (nie odświeżaj strony po powrocie z Google). Sprawdź też Redirect URLs w Supabase.
-            </p>
-          )}
-
           <div className="mt-10 flex flex-col gap-6">
-            <LoginGoogleButton next={next} />
-
-            <Link
-              href="/demo/profile"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-foreground transition hover:bg-white/10"
-            >
-              Zobacz profil demo
-            </Link>
+            <LoginPasswordForm next={next} allowDevUpsert={allowDevUpsert} />
           </div>
         </div>
       </main>

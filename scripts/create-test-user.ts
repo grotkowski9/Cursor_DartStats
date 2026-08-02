@@ -161,14 +161,15 @@ async function main() {
 
   console.log(`
 ────────────────────────────────────────
-Zaloguj na:  ${site}/login
+Zaloguj na:  ${site}/logintest  (ukryte, noindex — nie /login)
 
 E-mail:  ${email}
 Hasło:   ${password}
 
 1) Supabase → Authentication → Providers → Email = ON
-2) Otwórz /login → wpisz e-mail i hasło
+2) Otwórz /logintest → wpisz e-mail i hasło
 3) Nowe konto → /onboarding
+4) Publiczne logowanie (Google): ${site}/login
 
 Reset hasła później:
   npm run auth:test-user -- ${email} --reset-password

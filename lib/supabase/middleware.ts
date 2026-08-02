@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { safeInternalPath } from "@/lib/safe-path";
 
-const NOINDEX_PREFIXES = ["/profile", "/onboarding", "/m/", "/api/", "/auth/"];
+const NOINDEX_PREFIXES = ["/profile", "/onboarding", "/m/", "/api/", "/auth/", "/logintest"];
 
 function finalize(response: NextResponse, pathname: string): NextResponse {
   const isPrivate = NOINDEX_PREFIXES.some(
@@ -67,7 +67,7 @@ export async function updateSession(request: NextRequest) {
     return finalize(NextResponse.redirect(loginUrl), pathname);
   }
 
-  if (pathname === "/login" && user) {
+  if ((pathname === "/login" || pathname === "/logintest") && user) {
     const next = request.nextUrl.searchParams.get("next") || "/profile";
     const dest = request.nextUrl.clone();
     dest.pathname = safeInternalPath(next, "/profile");
