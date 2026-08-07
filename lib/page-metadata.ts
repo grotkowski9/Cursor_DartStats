@@ -5,7 +5,7 @@ import { SITE_NAME } from "@/lib/site-config";
 export const SITE_DOCUMENT_TITLE = "Twoje statystyki darta";
 
 export function siteDocumentTitle(): Metadata["title"] {
-  return { absolute: `${SITE_DOCUMENT_TITLE} | ${SITE_NAME}` };
+  return { absolute: `${SITE_NAME} | ${SITE_DOCUMENT_TITLE}` };
 }
 
-export const SITE_OG_TITLE = SITE_DOCUMENT_TITLE;
+export const SITE_OG_TITLE = `${SITE_NAME} | ${SITE_DOCUMENT_TITLE}`;
