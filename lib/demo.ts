@@ -65,7 +65,7 @@ export function getDemoShareTokens(): string[] {
 }
 
 export function getDemoSitemapPaths(): string[] {
-  const paths = ["/", "/app-info", "/privacy", "/demo/profile", "/login"];
+  const paths = ["/", "/demo/profile", "/login"];
   for (const token of demoSnapshot.shareTokens) {
     paths.push(`/demo/m/${token}`);
   }

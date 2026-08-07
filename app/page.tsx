@@ -10,19 +10,18 @@ import {
 import { LandingJsonLd } from "@/components/landing-json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
-import { getSiteUrl, SITE_BRAND, SITE_NAME, SITE_NAME_SHORT } from "@/lib/site-config";
+import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
   description:
-    "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją.",
+    "Importuj mecze z n01darts.com, śledź średnie, checkout, formę i H2H. Demo profil z 10 meczami — zobacz przed rejestracją.",
   robots: { index: true, follow: true },
   alternates: { canonical: getSiteUrl() },
   openGraph: {
     title: SITE_OG_TITLE,
-    siteName: SITE_NAME,
     description:
-      "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil, wykres formy i H2H.",
+      "Statystyki darta z N01 — wykres formy, H2H, checkout. Zobacz demo przed rejestracją.",
     url: getSiteUrl(),
     type: "website",
     locale: "pl_PL",
@@ -84,23 +83,23 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-foreground md:text-5xl lg:text-[3.25rem]">
-                {SITE_NAME}
+              <h1 className="text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl lg:text-[3.25rem]">
+                <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
+                  {SITE_BRAND}
+                </span>{" "}
+                <span className="text-accent-gradient">{SITE_NAME_SHORT}</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-                {SITE_NAME} to aplikacja internetowa dla graczy darta. Umożliwia założenie konta,
-                import meczów z N01 oraz budowanie osobistego profilu ze statystykami, wykresami
-                formy i porównaniami head-to-head.
-              </p>
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-                Logowanie przez Google służy wyłącznie do założenia i obsługi konta w{" "}
-                {SITE_NAME}. Otrzymujemy od Google adres e-mail oraz podstawowe dane profilu (imię
-                i zdjęcie, jeśli je udostępnisz), które wykorzystujemy do identyfikacji konta i
-                personalizacji profilu gracza. Szczegóły w{" "}
-                <Link href="/privacy" className="text-primary underline-offset-2 hover:underline">
-                  polityce prywatności
-                </Link>
-                .
+              <p className="mt-6 leading-relaxed text-muted-foreground">
+                <span className="text-lg font-semibold text-foreground/90">
+                  Twój dart. W liczbach.
+                </span>
+                <br />
+                <span className="text-base">
+                  Importuj mecze z N01 i zobacz jak grasz naprawdę.
+                  Średnie, checkouty, forma, H2H i wiele wykresów.
+                  <br />
+                  Różne turnieje — jeden profil gracza.
+                </span>
               </p>
 
               <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
@@ -184,12 +183,6 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <section className="relative z-10 border-t border-white/10 bg-black/10 px-6 py-5">
-        <p className="mx-auto max-w-4xl text-center text-sm leading-relaxed text-muted-foreground">
-          <strong className="font-medium text-foreground/85">{SITE_NAME}</strong> — aplikacja do
-          statystyk darta (import N01, profil gracza, wykresy).
-        </p>
-      </section>
       <SiteFooter />
     </>
   );
