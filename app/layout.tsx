@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -39,7 +40,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl" className={`dark ${inter.variable}`}>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
