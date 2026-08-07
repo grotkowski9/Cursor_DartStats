@@ -566,10 +566,10 @@ Pełny stan projektu zamrożony poza `main`:
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
 - [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (2.0.3)**
-  - [x] **1.0.1.6.1** **Polityka prywatności — strona `/privacy`** (treść wspólna z Sylveon Company; alias `/polityka-prywatnosci`; linki w stopce + na landing) — **Google OAuth Branding:** Homepage `https://dart.sylveoncompany.pl` · Privacy Policy `https://dart.sylveoncompany.pl/privacy` (ta sama domena, bez redirectu na sylveoncompany.pl)
+  - [x] **1.0.1.6.1** **Polityka prywatności — strona `/privacy`** (treść wspólna z Sylveon Company; alias `/polityka-prywatnosci`; link w stopce) — **Google OAuth Branding:** Homepage `https://dart.sylveoncompany.pl` · Privacy Policy `https://dart.sylveoncompany.pl/privacy` (ta sama domena, bez redirectu na sylveoncompany.pl)
   - [ ] **1.0.1.6.2** Regulamin serwisu — strona `/terms`
   - [ ] **1.0.1.6.3** Cookies / informacja o plikach (sesja Auth) — strona lub sekcja; banner tylko jeśli faktycznie potrzebny
-  - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
+  - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding — **częściowo ✅:** `/privacy` w `SiteFooter` (wszystkie strony z stopką); landing: widoczna linia opisu appki nad stopką (wymóg Google Branding)
   - [ ] **1.0.1.6.5** (wewnętrzne, nie w app) DPA Supabase + Vercel, rejestr czynności
 
 **Checklist przed bramką płatności (2.0.x):** Auth + RLS (**1.1.x**), audyt (**1.0.1.1–5**), dokumenty prawne (**1.0.1.6**), usuwanie meczów (**1.1.7** ✅), usuwanie konta (**1.1.11**), audyt pentest light.
@@ -873,9 +873,9 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 > Branch: **`cursor/v1.4.x`** = dev · **`main`** = produkcja · `package.json` **1.4.0** · tag **`v1.4.0`**.
 
-**Wydane w v1.4.0:** favicon set Sylveon (`sylveoncompany.pl`) · landing „Co dostajesz” — 3 kafelki w kolumnie · README: `/privacy` blokuje Google OAuth Branding · prod URL: `sylveon-dart-profile.vercel.app` (bez `dart.` w DNS).
+**Wydane w v1.4.0:** favicon set Sylveon (`sylveoncompany.pl`) · landing „Co dostajesz” — 3 kafelki w kolumnie · README: `/privacy` + Google OAuth Branding · prod: **`https://dart.sylveoncompany.pl`**
 
-- Otwarte z backlogu: **1.0.1.4–6** (deploy, domena, prawo — **1.0.1.6.1 `/privacy` blokuje Google OAuth Branding**) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
+- Otwarte z backlogu: **1.0.1.4–6** (deploy env, domena ✅ prod, prawo — **1.0.1.6.1** ✅, **1.0.1.6.4** częściowo) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
 - Nowe featury 1.4 — doprecyzuj w czacie przed implementacją
 
 ---
@@ -923,6 +923,7 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.0.1.5** | ⏳ | Custom domain |
 | **1.0.1.6** | ⏳ | Dokumenty prawne: regulamin, cookies, DPA — **`/privacy` ✅ (1.0.1.6.1)** |
 | **1.0.1.6.1** | ✅ | Polityka prywatności `/privacy` (+ alias `/polityka-prywatnosci`) — GCP Branding: homepage + privacy na `dart.sylveoncompany.pl` |
+| **1.0.1.6.4** | ⏳ | Linki prawne — `/privacy` w stopce ✅; landing: linia opisu appki nad stopką (Google Branding) ✅ |
 | **1.0.2.1–7** | ⏳ | Copy klienta (Twoje teksty → fix) |
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
 | **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
@@ -1023,14 +1024,15 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
    `https://<project-ref>.supabase.co/auth/v1/callback`
 2. **Supabase** → Authentication → Providers → Google (Client ID/Secret)
 3. **Supabase** → URL Configuration:
+   - **Site URL (prod):** `https://dart.sylveoncompany.pl`
    - **Site URL (dev Mac):** `http://localhost:3000`
    - **Site URL (test iPhone w LAN):** `http://<IP-Maca>:3000` — inaczej Safari wraca na `localhost` (= telefon) i „brak odpowiedzi"
    - **Redirect URLs:**  
+     `https://dart.sylveoncompany.pl/auth/callback`  
      `http://localhost:3000/auth/callback`  
-     `http://<IP-Maca>:3000/auth/callback`  
-     (+ prod URL po deployu)
-4. **`.env.local`:** `OWNER_EMAIL=` Twój Gmail → link do seed 51 meczów; `NEXT_PUBLIC_SITE_URL=http://localhost:3000` (dev)
-5. **Google Cloud → Auth Platform → Branding** (OAuth consent screen): nazwa aplikacji, logo, **strona główna** (`https://dart.sylveoncompany.pl`), **link do polityki prywatności** (`https://dart.sylveoncompany.pl/privacy`) — **wymagane przez Google**; obie URL-e muszą być na **tej samej domenie** (bez redirectu na sylveoncompany.pl). Strona w app: **`/privacy`** (**1.0.1.6.1** ✅), alias `/polityka-prywatnosci`.
+     `http://<IP-Maca>:3000/auth/callback`
+4. **`.env.local` / Vercel Production:** `NEXT_PUBLIC_SITE_URL=https://dart.sylveoncompany.pl` (prod) lub `http://localhost:3000` (dev); `OWNER_EMAIL=` Twój Gmail → seed 51 meczów
+5. **Google Cloud → Auth Platform → Branding** (OAuth consent screen): nazwa aplikacji **`Sylveon Dart Profile`**, logo, **strona główna** (`https://dart.sylveoncompany.pl`), **polityka prywatności** (`https://dart.sylveoncompany.pl/privacy`) — ta sama domena, bez redirectu na sylveoncompany.pl. Na homepage musi być widoczna **nazwa appki + opis celu** (linia nad stopką). Odbiorcy: **Zewnętrzni**, stan **W produkcji**. Redirect URI w GCP = tylko `https://<ref>.supabase.co/auth/v1/callback` (nie `/auth/callback` na Dart).
 
 Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
@@ -1867,6 +1869,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.4.x**  | 2026-08-07 | **`/privacy`** na prod (`dart.sylveoncompany.pl`); link w stopce; linia opisu appki nad stopką (Google OAuth Branding). Supabase Site URL + redirect prod. Vercel Analytics + Speed Insights w `layout`. README: GCP Branding checklist. |
 | **v1.4.0** | 2026-08-02 | **Release na `main`.** Favicon set Sylveon (z `sylveoncompany.pl`). Landing: sekcja „Co dostajesz” — 3 kafelki w kolumnie. README: `/privacy` konieczne dla Google OAuth Branding; prod na `sylveon-dart-profile.vercel.app`. Tag `v1.4.0`. |
 | **1.4.0**  | 2026-08-02 | *(wcześniej)* Start linii — bump `package.json` 1.4.0, branch `cursor/v1.4.x` po v1.3.2. |
 | **v1.3.2** | 2026-08-02 | **Release na `main`.** Perf: bulk `getMyMatches` + `GET /api/profile/bootstrap`, paginacja visits (fix limit 1000). Rebrand Sylveon Dart Profile. `/login` Google-only; `/logintest` dev email (noindex). Landing refresh (3 kafelki, hero). Demo: pełne statystyki (streak + kohorta ze snapshotu). Footer auth-aware + `SiteFooter` na `/profile`. Tagi `backup/v1.3.0`, `v1.3.2`. |

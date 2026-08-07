@@ -10,7 +10,7 @@ import {
 import { LandingJsonLd } from "@/components/landing-json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
-import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
+import { getSiteUrl, SITE_BRAND, SITE_NAME, SITE_NAME_SHORT } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
@@ -183,6 +183,12 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+      <section className="relative z-10 border-t border-white/10 bg-black/10 px-6 py-5">
+        <p className="mx-auto max-w-4xl text-center text-sm leading-relaxed text-muted-foreground">
+          <strong className="font-medium text-foreground/85">{SITE_NAME}</strong> — aplikacja do
+          statystyk darta (import N01, profil gracza, wykresy).
+        </p>
+      </section>
       <SiteFooter />
     </>
   );
