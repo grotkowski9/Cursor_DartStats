@@ -29,6 +29,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Zezwól na podgląd dev z telefonu w tej samej sieci Wi-Fi
   allowedDevOrigins: ["192.168.100.11"],
+  async rewrites() {
+    // Alias lokalny — ta sama treść co /privacy (bez redirectu na sylveoncompany.pl)
+    return [{ source: "/polityka-prywatnosci", destination: "/privacy" }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
