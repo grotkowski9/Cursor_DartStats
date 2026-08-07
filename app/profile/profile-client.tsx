@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Inbox, Loader2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
-import type { WeightCohortInsight } from "@/lib/insights";
 import {
   computeCheckoutDistribution,
   computeDayStats,
@@ -27,7 +26,6 @@ import { ProfileHeadToHead } from "./profile-head-to-head";
 import { ProfileMatchCard } from "./profile-match-card";
 import { ProfileStatsBlock } from "./profile-stats-block";
 import { ProfileTopLists } from "./profile-top-lists";
-import { ProfileInsights } from "./profile-insights";
 
 const INITIAL_SHOW = 5;
 const PAGE_SIZE = 10;
@@ -66,9 +64,6 @@ export function ProfileClient({
   const [maxWinStreak, setMaxWinStreak] = useState<number | null>(
     showInsights && demoSnapshot ? demoSnapshot.maxWinStreak : null,
   );
-  const [weightCohort, setWeightCohort] = useState<WeightCohortInsight | null>(
-    showInsights && demoSnapshot ? demoSnapshot.weightCohort : null,
-  );
 
   const loadProfile = useCallback(async () => {
     setLoading(true);
@@ -77,19 +72,16 @@ export function ProfileClient({
       const data = (await res.json()) as {
         matches?: N01Match[];
         maxWinStreak?: number;
-        weightCohort?: WeightCohortInsight | null;
         error?: string;
       };
       if (!res.ok) throw new Error(data.error ?? "Błąd pobierania");
       setMatches(data.matches ?? []);
       if (showInsights) {
         setMaxWinStreak(data.maxWinStreak ?? 0);
-        setWeightCohort(data.weightCohort ?? null);
       }
     } catch {
       setMatches([]);
       setMaxWinStreak(null);
-      setWeightCohort(null);
     } finally {
       setLoading(false);
     }
@@ -207,8 +199,6 @@ export function ProfileClient({
           maxWinStreak={showInsights ? maxWinStreak : null}
         />
       </div>
-
-      {showInsights ? <ProfileInsights weightCohort={weightCohort} /> : null}
 
       {/* Form chart */}
       {!loading && filtered.length >= 2 && (
