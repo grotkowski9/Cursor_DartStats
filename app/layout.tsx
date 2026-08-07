@@ -4,6 +4,7 @@ import "./globals.css";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
