@@ -74,9 +74,9 @@ export default function HomePage() {
           aria-hidden
         />
 
-        <section className="relative z-10 mx-auto max-w-4xl px-6 pb-8 pt-12 md:pt-16">
-          <div>
-              <div className="relative mb-8 inline-flex dartboard-ring">
+        <section className="relative z-10 px-6 pb-8 pt-12 md:pt-16">
+          <div className="mx-auto max-w-4xl">
+            <div className="relative mb-8 inline-flex dartboard-ring">
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
                   <Target className="h-8 w-8" aria-hidden />
                 </div>
