@@ -20,7 +20,6 @@ export const metadata: Metadata = {
   alternates: { canonical: getSiteUrl() },
   openGraph: {
     title: SITE_OG_TITLE,
-    siteName: SITE_NAME,
     description:
       "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil, wykres formy i H2H.",
     url: getSiteUrl(),
@@ -84,23 +83,29 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-foreground md:text-5xl lg:text-[3.25rem]">
-                {SITE_NAME}
+              <h1 className="text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl lg:text-[3.25rem]">
+                <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
+                  {SITE_BRAND}
+                </span>
+                <span className="text-accent-gradient"> {SITE_NAME_SHORT}</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-                {SITE_NAME} to aplikacja internetowa dla graczy darta. Umożliwia założenie konta,
-                import meczów z N01 oraz budowanie osobistego profilu ze statystykami, wykresami
-                formy i porównaniami head-to-head.
-              </p>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-                Logowanie przez Google służy wyłącznie do założenia i obsługi konta w{" "}
-                {SITE_NAME}. Otrzymujemy od Google adres e-mail oraz podstawowe dane profilu (imię
-                i zdjęcie, jeśli je udostępnisz), które wykorzystujemy do identyfikacji konta i
-                personalizacji profilu gracza. Szczegóły w{" "}
-                <Link href="/privacy" className="text-primary underline-offset-2 hover:underline">
-                  polityce prywatności
-                </Link>
-                .
+                <strong className="font-semibold text-foreground">{SITE_NAME}</strong> to aplikacja
+                internetowa dla graczy darta. Umożliwia założenie konta, import meczów z N01 oraz
+                budowanie osobistego profilu ze statystykami, wykresami formy i porównaniami
+                head-to-head.
+              </p>
+              <p className="mt-6 leading-relaxed text-muted-foreground">
+                <span className="text-lg font-semibold text-foreground/90">
+                  Twój dart. W liczbach.
+                </span>
+                <br />
+                <span className="text-base">
+                  Importuj mecze z N01 i zobacz jak grasz naprawdę.
+                  Średnie, checkouty, forma, H2H i wiele wykresów.
+                  <br />
+                  Różne turnieje — jeden profil gracza.
+                </span>
               </p>
 
               <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
