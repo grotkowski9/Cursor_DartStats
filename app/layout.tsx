@@ -14,8 +14,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: siteDocumentTitle(),
+  applicationName: SITE_NAME,
   description:
-    "Panel statystyk darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją.",
+    "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją.",
   icons: {
     icon: [
       { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: SITE_OG_TITLE,
     description:
-      "Importuj mecze z n01 i analizuj swoją grę — średnie, checkout, forma, aktywność.",
+      "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil gracza, wykres formy i H2H.",
     type: "website",
     locale: "pl_PL",
     siteName: SITE_NAME,

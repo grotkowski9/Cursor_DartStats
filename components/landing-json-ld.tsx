@@ -11,7 +11,7 @@ export function LandingJsonLd() {
     applicationCategory: "SportsApplication",
     operatingSystem: "Web",
     description:
-      "Panel statystyk darta — import meczów z N01, profil gracza, wykres formy, H2H i checkout.",
+      "Sylveon Dart Profile — aplikacja do statystyk darta: import meczów z N01, profil gracza, wykres formy, H2H i checkout.",
     offers: {
       "@type": "Offer",
       price: "0",

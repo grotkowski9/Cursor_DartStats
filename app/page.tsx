@@ -15,13 +15,13 @@ import { getSiteUrl, SITE_BRAND, SITE_NAME, SITE_NAME_SHORT } from "@/lib/site-c
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
   description:
-    "Importuj mecze z n01darts.com, śledź średnie, checkout, formę i H2H. Demo profil z 10 meczami — zobacz przed rejestracją.",
+    "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil gracza, wykres formy i H2H. Demo profil przed rejestracją.",
   robots: { index: true, follow: true },
   alternates: { canonical: getSiteUrl() },
   openGraph: {
     title: SITE_OG_TITLE,
     description:
-      "Statystyki darta z N01 — wykres formy, H2H, checkout. Zobacz demo przed rejestracją.",
+      "Sylveon Dart Profile to aplikacja internetowa dla graczy darta — import meczów z N01, profil, wykres formy i H2H.",
     url: getSiteUrl(),
     type: "website",
     locale: "pl_PL",
@@ -86,9 +86,15 @@ export default function HomePage() {
               <h1 className="text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl lg:text-[3.25rem]">
                 <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
                   {SITE_BRAND}
-                </span>{" "}
-                <span className="text-accent-gradient">{SITE_NAME_SHORT}</span>
+                </span>
+                <span className="text-accent-gradient"> {SITE_NAME_SHORT}</span>
               </h1>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+                <strong className="font-semibold text-foreground">{SITE_NAME}</strong> to aplikacja
+                internetowa dla graczy darta. Umożliwia założenie konta, import meczów z N01 oraz
+                budowanie osobistego profilu ze statystykami, wykresami formy i porównaniami
+                head-to-head.
+              </p>
               <p className="mt-6 leading-relaxed text-muted-foreground">
                 <span className="text-lg font-semibold text-foreground/90">
                   Twój dart. W liczbach.
