@@ -76,7 +76,6 @@ export default function HomePage() {
 
         <section className="relative z-10 mx-auto max-w-4xl px-6 pb-8 pt-12 md:pt-16">
           <div>
-            <div className="max-w-xl">
               <div className="relative mb-8 inline-flex dartboard-ring">
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
                   <Target className="h-8 w-8" aria-hidden />
@@ -117,7 +116,6 @@ export default function HomePage() {
                   <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
                 </Link>
               </div>
-            </div>
 
             {/* Hero highlight tiles — wyłączone na landing
             <div className="grid shrink-0 grid-cols-2 gap-3 lg:w-72">

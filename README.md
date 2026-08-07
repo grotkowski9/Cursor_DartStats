@@ -547,10 +547,11 @@ Pełny stan projektu zamrożony poza `main`:
 
 > Domknięcie na produkcji + checklist pod RODO i przyszłą bramkę płatności.
 
-- [x] **1.0.1.1** **Audyt prod — robots & indeksacja** *(kod 2026-07-26)*
+- [x] **1.0.1.1** **Audyt prod — robots & indeksacja** *(kod 2026-07-26; sitemap rozszerzony 2026-08-08)*
   - [x] `/profile`, `/m/*`, `/api/*`, `/auth/` — noindex (meta + `X-Robots-Tag` na wszystkich odpowiedziach middleware)
-  - [x] `/demo/*`, `/` — indexowalne; demo bez PII Piotra
-  - [ ] Search Console: sitemap, brak przypadkowych URL-i usera *(ops — po deployu)*
+  - [x] `/demo/*`, `/`, `/login`, `/privacy` — indexowalne; demo bez PII Piotra
+  - [x] `sitemap.xml` — publiczne URL-e: `/`, `/login`, `/privacy`, `/demo/profile`, `/demo/m/demo001–010` (`lib/sitemap-paths.ts`)
+  - [ ] Search Console: property + submit `https://dart.sylveoncompany.pl/sitemap.xml` *(ops — po deployu)*
 - [x] **1.0.1.2** **Audyt prod — wyciek danych** *(kod 2026-07-26)*
   - [x] Demo ≠ dane Piotra Grotkowskiego (osobny customer, snapshot)
   - [x] Share linki prywatne — brak listowania tokenów; nowe tokeny 16 hex (~64 bit)
@@ -875,6 +876,8 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 **Wydane w v1.4.0:** favicon set Sylveon (`sylveoncompany.pl`) · landing „Co dostajesz” — 3 kafelki w kolumnie · README: `/privacy` + Google OAuth Branding · prod: **`https://dart.sylveoncompany.pl`**
 
+**Po v1.4.0 (1.4.x na `main`):** sitemap — `/privacy` + centralna lista publicznych URL (`lib/sitemap-paths.ts`) · landing — wyrównanie hero z sekcjami (`max-w-4xl`) · `<title>` / `og:title` — `Sylveon Dart Profile | Twoje statystyki darta` (Google OAuth Branding)
+
 - Otwarte z backlogu: **1.0.1.4–6** (deploy env, domena ✅ prod, prawo — **1.0.1.6.1** ✅, **1.0.1.6.4** częściowo) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
 - Nowe featury 1.4 — doprecyzuj w czacie przed implementacją
 
@@ -989,7 +992,7 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | ----- | -------- | --------- |
 | `/profile`, `/m/*` | **noindex, nofollow** | `metadata.robots` + middleware `X-Robots-Tag` |
 | `/api/*` | **noindex** | middleware |
-| `/demo/*`, `/`, `/login` | **index** (marketing) | brak noindex |
+| `/demo/*`, `/`, `/login`, `/privacy` | **index** (marketing / prawo) | brak noindex |
 | Demo | Brak PII | snapshot + `DEMO_CUSTOMER_ID` |
 
 **Weryfikacja prod:** curl/Google Search Console — upewnić się, że Google **nie** indeksuje profilu Piotra.
@@ -999,7 +1002,7 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 **Reguła (od main po 1.0.0):** każda podstrona ma identyczny tytuł:
 
 ```text
-Twoje statystyki darta | Sylveon Dart Profile
+Sylveon Dart Profile | Twoje statystyki darta
 ```
 
 - **Bez imion/nazwisk** w `<title>`, OpenGraph ani JSON-LD na `/` (wyciek SEO).
@@ -1398,6 +1401,7 @@ app/demo/m/[shareToken]/page.tsx              ← mecze demo index
 app/page.tsx / app/login/page.tsx             ← landing + auth Google-only
 app/logintest/page.tsx                        ← email/password dev (noindex, nie w sitemap)
 app/robots.ts / app/sitemap.ts                ← SEO (+ disallow /logintest)
+lib/sitemap-paths.ts                          ← publiczne URL-e do sitemap (bez aliasów rewrite)
 components/demo-banner.tsx
 components/site-footer.tsx                    ← nav warunkowy (sesja)
 ```
@@ -1869,6 +1873,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1.4.x**  | 2026-08-08 | Sitemap: `/privacy` + `lib/sitemap-paths.ts` (14 publicznych URL). `robots.txt` allow `/privacy`. Landing: wyrównanie hero z sekcjami poniżej. `<title>`/`og:title`: `Sylveon Dart Profile | Twoje statystyki darta`. |
 | **1.4.x**  | 2026-08-07 | **`/privacy`** na prod (`dart.sylveoncompany.pl`); link w stopce; linia opisu appki nad stopką (Google OAuth Branding). Supabase Site URL + redirect prod. Vercel Analytics + Speed Insights w `layout`. README: GCP Branding checklist. |
 | **v1.4.0** | 2026-08-02 | **Release na `main`.** Favicon set Sylveon (z `sylveoncompany.pl`). Landing: sekcja „Co dostajesz” — 3 kafelki w kolumnie. README: `/privacy` konieczne dla Google OAuth Branding; prod na `sylveon-dart-profile.vercel.app`. Tag `v1.4.0`. |
 | **1.4.0**  | 2026-08-02 | *(wcześniej)* Start linii — bump `package.json` 1.4.0, branch `cursor/v1.4.x` po v1.3.2. |

@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { getDemoSitemapPaths } from "@/lib/demo";
 import { getSiteUrl } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
@@ -7,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/demo/", "/login"],
+        allow: ["/", "/demo/", "/login", "/privacy"],
         disallow: ["/profile", "/onboarding", "/m/", "/api/", "/admin", "/auth/", "/logintest"],
       },
     ],
