@@ -566,7 +566,7 @@ Pełny stan projektu zamrożony poza `main`:
 - [ ] **1.0.1.4** Deploy Vercel + env (`NEXT_PUBLIC_SITE_URL`, Supabase)
 - [ ] **1.0.1.5** Custom domain (np. `dart.sylveoncompany.pl` — zmienna env, nie hardcode)
 - [ ] **1.0.1.6** **Dokumenty prawne / RODO (publiczne)** — **przed płatnościami (2.0.3)**
-  - [ ] **1.0.1.6.1** **Polityka prywatności — strona `/privacy`** (administrator, cele, podmioty: Supabase/Vercel/Google, prawa RODO) — **🔴 konieczne teraz:** Google OAuth Consent Screen / Branding wymaga publicznego URL polityki + strony głównej (bez tego nie skończysz konfiguracji logowania Google w GCP)
+  - [x] **1.0.1.6.1** **Polityka prywatności — strona `/privacy`** (treść wspólna z Sylveon Company; alias `/polityka-prywatnosci`; linki w stopce + na landing) — **Google OAuth Branding:** Homepage `https://dart.sylveoncompany.pl` · Privacy Policy `https://dart.sylveoncompany.pl/privacy` (ta sama domena, bez redirectu na sylveoncompany.pl)
   - [ ] **1.0.1.6.2** Regulamin serwisu — strona `/terms`
   - [ ] **1.0.1.6.3** Cookies / informacja o plikach (sesja Auth) — strona lub sekcja; banner tylko jeśli faktycznie potrzebny
   - [ ] **1.0.1.6.4** Linki w stopce / login / onboarding
@@ -921,8 +921,8 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.0.1.3** | ✅ | Audyt prod — API i ataki (rate limit, CSP, access log) |
 | **1.0.1.4** | ⏳ | Deploy Vercel + env |
 | **1.0.1.5** | ⏳ | Custom domain |
-| **1.0.1.6** | ⏳ | Dokumenty prawne: polityka, regulamin, cookies, linki, DPA — **najpierw `/privacy` (blokuje Google OAuth Branding w GCP)** |
-| **1.0.1.6.1** | ⏳ | Polityka prywatności `/privacy` — **konieczne dla Google Consent Screen** (homepage + privacy policy URL) |
+| **1.0.1.6** | ⏳ | Dokumenty prawne: regulamin, cookies, DPA — **`/privacy` ✅ (1.0.1.6.1)** |
+| **1.0.1.6.1** | ✅ | Polityka prywatności `/privacy` (+ alias `/polityka-prywatnosci`) — GCP Branding: homepage + privacy na `dart.sylveoncompany.pl` |
 | **1.0.2.1–7** | ⏳ | Copy klienta (Twoje teksty → fix) |
 | **1.1.3.2** | ⏳ | Testy auto-detect → Vitest (**1.3.2**) |
 | **1.1.3.8** | ✅ | Samouczek: `/demo/profile` + auto po nowym koncie (skip ok) |
@@ -1030,7 +1030,7 @@ Różnicowanie stron: `description`, `robots`, `canonical` — nie `<title>`.
      `http://<IP-Maca>:3000/auth/callback`  
      (+ prod URL po deployu)
 4. **`.env.local`:** `OWNER_EMAIL=` Twój Gmail → link do seed 51 meczów; `NEXT_PUBLIC_SITE_URL=http://localhost:3000` (dev)
-5. **Google Cloud → Auth Platform → Branding** (OAuth consent screen): nazwa aplikacji, logo, **strona główna** (`https://sylveon-dart-profile.vercel.app` lub docelowa domena), **link do polityki prywatności** (`https://…/privacy`) — **wymagane przez Google**; realizacja strony → **1.0.1.6.1** (bez `/privacy` branding nie przejdzie weryfikacji)
+5. **Google Cloud → Auth Platform → Branding** (OAuth consent screen): nazwa aplikacji, logo, **strona główna** (`https://dart.sylveoncompany.pl`), **link do polityki prywatności** (`https://dart.sylveoncompany.pl/privacy`) — **wymagane przez Google**; obie URL-e muszą być na **tej samej domenie** (bez redirectu na sylveoncompany.pl). Strona w app: **`/privacy`** (**1.0.1.6.1** ✅), alias `/polityka-prywatnosci`.
 
 Flow w app: `/login` → `GET /api/auth/google` → Google → `/auth/callback` (exchange + cookies sesji) → `/profile` lub `/onboarding`.
 
@@ -1288,7 +1288,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 1. **1.0.1.4** — deploy Vercel
 2. **1.0.1.5** — custom domain
-3. **1.0.1.6** — **najpierw polityka prywatności `/privacy`** (Google OAuth wymaga URL w GCP Branding), potem regulamin, cookies, linki, DPA
+3. **1.0.1.6** — polityka prywatności `/privacy` ✅ (**1.0.1.6.1**); dalej regulamin, cookies, linki, DPA
 4. **1.0.2.1–7** — copy UI (po Twoich tekstach)
 5. **1.1.3.2** — testy detekcji (część w Vitest; pełny golden → 1.4)
 6. **1.1.8** — panel admina
