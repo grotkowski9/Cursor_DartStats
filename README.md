@@ -3,11 +3,12 @@
 **Sylveon Dart Profile** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v2.0-firstPROD** na `main` (pierwszy release produkcyjny + polish landingu).  
-> Backup: branch **`backup/v2.0-firstPROD`**, tag **`v2.0-firstPROD`**.  
+> **Status:** **v2.0.1** na `main` (login gate + polish CTA/login).  
+> Backup: branch **`backup/v2.0.1`**, tag **`v2.0.1`**.  
+> Rollback do firstPROD: branch **`backup/v2.0-firstPROD`**, tag **`v2.0-firstPROD`**.  
 > Poprzednie: tag `v1.4.0`, `backup/v1.3.0` / `v1.3.2`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.  
-> **Uwaga:** linia feature **2.0.x** (premium/płatności) nadal ⏸️ — `v2.0-firstPROD` to milestone prod, nie freemium.
+> **Uwaga:** linia feature **2.0.x** (premium/płatności) nadal ⏸️ — milestone prod ≠ freemium.
 
 ---
 
@@ -367,7 +368,8 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.2.x**   | Milestone snapshot (profil UX + audyt + delete) | ✅ **v1.2.0** — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.3.x**   | Testy + hardening + perf                       | ✅ **v1.3.2** — `backup/v1.3.0`, tag `v1.3.2` |
 | **1.4.x**   | Prod polish + deploy track                   | ✅ **v1.4.0** — favicon, landing, OAuth docs |
-| **v2.0-firstPROD** | Pierwszy release produkcyjny (nie freemium) | ✅ **`main`** · `backup/v2.0-firstPROD` · tag `v2.0-firstPROD` |
+| **v2.0-firstPROD** | Pierwszy release produkcyjny (nie freemium) | ✅ `backup/v2.0-firstPROD` · tag `v2.0-firstPROD` (rollback) |
+| **v2.0.1**  | Login gate + polish CTA/login                  | ✅ **`main`** · `backup/v2.0.1` · tag `v2.0.1` |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
 | **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
 
@@ -916,15 +918,22 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 ---
 
-### v2.0.1 — Login gate (hasło na `/login`) ⏳
+### v2.0.1 — Login gate (hasło na `/login`) ✅ (2026-08-09)
 
-> Branch: **`cursor/v2.0.1`**. URL `/login` bez zmian. OAuth Google bez zmian.
+> Na **`main`**. Branch: [`backup/v2.0.1`](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v2.0.1) · tag **`v2.0.1`** · `package.json` **2.0.1**  
+> Rollback: [`backup/v2.0-firstPROD`](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v2.0-firstPROD) / tag **`v2.0-firstPROD`**.  
+> URL `/login` bez zmian. OAuth Google bez zmian.
 
 **Jak działa**
 - Flaga w Supabase `app_settings.login_gate_enabled` (`true`/`false`) — włącz/wyłącz **bez redeploy**
 - Hasło: env `LOGIN_GATE_PASSWORD` (Vercel / `.env.local`) — ustaw raz
 - Po poprawnym haśle: cookie unlock **30 dni**, potem znowu formularz
 - Domyślnie seed: `false` (open)
+
+**UI (v2.0.1)**
+- Wspólny CTA `AccentGlowCta` — landing + Google login: accent fill + violet łuna, neon paski LR przy hover
+- `BrandLogoMark` — glow za tile (`isolate`)
+- Gate unlock: ten sam glow/neon co CTA
 
 #### 1) Vercel — hasło (raz)
 
@@ -1059,7 +1068,8 @@ UPDATE app_settings SET value = 'false' WHERE key = 'login_gate_enabled';
 | **v1.3.2** | ✅ | Release `main` — landing, demo insights, footer, login split, rebrand |
 | **v1.4.0** | ✅ | Release `main` — favicon Sylveon, landing kafelki pionowo, docs Google OAuth/`/privacy` |
 | **v2.0-firstPROD** | ✅ | Pierwszy PROD + landing polish — 501-only, footer SEO/legal, BrandLogoMark, product-card demo · tag `v2.0-firstPROD` |
-| **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
+| **v2.0.1** | ✅ | Login gate (`app_settings`) + CTA/login polish · `backup/v2.0.1`, tag `v2.0.1` |
+| **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(numeracja feature ≠ tag v2.0.1 login gate)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
 
@@ -1333,7 +1343,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v2.0-firstPROD na `main` ✅ | backlog otwarty (rosnąco po ID)
+### v2.0.1 na `main` ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -1355,8 +1365,9 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **v1.3.0**      | ✅ Testy Vitest + CI + security hardening · tag `v1.3.0` |
 | **v1.3.2**      | ✅ WYDANY na `main` — perf bootstrap, rebrand, login split, landing, demo insights, footer · `backup/v1.3.0`, tag `v1.3.2` |
 | **v1.4.0**      | ✅ WYDANY na `main` — favicon Sylveon, landing kafelki pionowo, docs OAuth/`/privacy` · tag `v1.4.0` |
-| **v2.0-firstPROD** | ✅ WYDANY na `main` — 501-only, footer SEO/legal, BrandLogoMark, landing polish · `backup/v2.0-firstPROD`, tag `v2.0-firstPROD` |
-| **2.0.x**       | ⏸️ Premium + płatności (odłożone; ≠ tag firstPROD) |
+| **v2.0-firstPROD** | ✅ Snapshot firstPROD — `backup/v2.0-firstPROD`, tag `v2.0-firstPROD` (rollback) |
+| **v2.0.1**      | ✅ WYDANY na `main` — login gate + CTA/login polish · `backup/v2.0.1`, tag `v2.0.1` |
+| **2.0.x**       | ⏸️ Premium + płatności (odłożone; ≠ tag v2.0.1 login gate) |
 | Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
 
 
@@ -1365,9 +1376,10 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 | Cel | Wskaźnik |
 | --- | -------- |
-| Produkcja / firstPROD | `main` @ **v2.0-firstPROD** (tag `v2.0-firstPROD`) |
+| Produkcja | `main` @ **v2.0.1** (tag `v2.0.1`) |
+| Backup v2.0.1 | branch `backup/v2.0.1` |
+| Rollback v2.0.1 → firstPROD | `git checkout backup/v2.0-firstPROD` lub tag `v2.0-firstPROD` |
 | Backup firstPROD | branch `backup/v2.0-firstPROD` |
-| Rollback firstPROD | `git checkout backup/v2.0-firstPROD` lub tag `v2.0-firstPROD` |
 | Rollback 1.4 | tag `v1.4.0` |
 | Rollback 1.3 | `git checkout backup/v1.3.0` lub tag `v1.3.2` |
 | Rollback przed perf | tag `v1.3.0-pre-perf` (przed bulk bootstrap) |
@@ -1967,7 +1979,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **v2.0.1** | 2026-08-09 | **Login gate** na `cursor/v2.0.1`: `/login` za hasłem gdy `app_settings.login_gate_enabled=true`. Toggle w Supabase (klik/SQL) bez redeploy. `LOGIN_GATE_PASSWORD` w Vercel. Cookie unlock **30 dni**. OAuth bez zmian. |
+| **v2.0.1** | 2026-08-09 | **Release na `main`.** Login gate: `/login` za hasłem gdy `app_settings.login_gate_enabled=true`. Toggle Supabase bez redeploy. `LOGIN_GATE_PASSWORD` w Vercel. Cookie unlock **30 dni**. UI: `AccentGlowCta` + neon paski LR (landing + Google), BrandLogoMark isolate. Branch `backup/v2.0.1`, tag `v2.0.1`. Rollback: `backup/v2.0-firstPROD`. |
 | **v2.0-firstPROD** | 2026-08-09 | **Landing polish na `main` + backup.** Meta/JSON-LD profil-first. Hero + product-card demo (Sylveon). Separator accent + łuna. 3 kroki: lewy pasek Sylveon, hover glow jak CTA. Footer `n01darts.pl` → `/`. README sync. |
 | **v2.0-firstPROD** | 2026-08-09 | **Pierwszy PROD na `main`.** Mecze tylko 501 (ingest + migracja CHECK). Stopka: SEO 2×2 + disclaimer N01/Nakka + domeny. Landing: CTA glow + `BrandLogoMark` (także 404/500). `package.json` 2.0.0. Branch `backup/v2.0-firstPROD`, tag `v2.0-firstPROD`. |
 | **1.4.x**  | 2026-08-08 | Sitemap: `/privacy` + `lib/sitemap-paths.ts` (14 publicznych URL). `robots.txt` allow `/privacy`. Landing: wyrównanie hero z sekcjami poniżej. `<title>`/`og:title`: `Sylveon Dart Profile | Twoje statystyki darta`. |

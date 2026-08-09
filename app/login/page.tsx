@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Target } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { BrandLogoMark } from "@/components/brand-logo-mark";
 import { SiteFooter } from "@/components/site-footer";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
@@ -28,24 +29,24 @@ export default async function LoginPage({ searchParams }: Props) {
 
   return (
     <>
-      <main className="relative flex min-h-screen flex-col overflow-hidden bg-background text-foreground">
+      <main className="relative flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
         <div className="bg-grid absolute inset-0 z-0 opacity-15" aria-hidden />
         <div
-          className="absolute left-1/2 top-[-15%] z-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-gradient-to-br from-accent-from/30 to-accent-to/30 blur-[120px]"
+          className="pointer-events-none absolute left-1/2 top-[-25%] z-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-br from-accent-from/20 to-accent-to/20 blur-[120px]"
           aria-hidden
         />
 
         <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-16">
           <Link
             href="/"
-            className="mb-10 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-primary"
+            className="mb-8 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Strona główna
           </Link>
 
-          <div className="mb-8 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
-            <Target className="h-7 w-7" aria-hidden />
+          <div className="relative mb-8 overflow-visible py-8">
+            <BrandLogoMark className="mb-0" />
           </div>
 
           <h1 className="text-3xl font-bold leading-[1.08] tracking-tight md:text-4xl">
@@ -65,12 +66,6 @@ export default async function LoginPage({ searchParams }: Props) {
                 hasło? Podaj je tutaj:
               </p>
               <LoginGateForm />
-              <p className="mt-6 text-center text-xs text-muted-foreground">
-                Chcesz najpierw zobaczyć demo?{" "}
-                <Link href="/demo/profile" className="text-primary hover:underline">
-                  Otwórz profil demo
-                </Link>
-              </p>
             </>
           ) : (
             <>

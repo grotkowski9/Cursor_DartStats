@@ -154,3 +154,34 @@
     box-shadow: 0 14px 34px -8px rgba(255, 126, 182, 0.7);
   }
 }
+
+/* Neon violet stripe — sweeps left ← right (to the right) */
+@keyframes neon-stripe-lr {
+  0% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@utility neon-stripe-lr {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 35%,
+    #a78bfa 45%,
+    #e9d5ff 50%,
+    #8b5cf6 55%,
+    transparent 65%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  box-shadow:
+    0 0 8px 1px rgba(167, 139, 250, 0.9),
+    0 0 16px 2px rgba(139, 92, 246, 0.55);
+}
+
+@utility neon-stripe-lr-run {
+  animation: neon-stripe-lr 1.1s linear infinite;
+}
