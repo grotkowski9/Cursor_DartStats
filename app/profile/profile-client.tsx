@@ -146,13 +146,19 @@ export function ProfileClient({
     [filtered],
   );
 
-  const firstPageMatches = sortedMatches.slice(0, INITIAL_SHOW);
-  const extraMatches = sortedMatches.slice(INITIAL_SHOW);
-  const totalPages = Math.ceil(extraMatches.length / PAGE_SIZE);
-  const pageMatches = extraMatches.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const previewMatches = sortedMatches.slice(0, INITIAL_SHOW);
+  const hiddenCount = Math.max(0, sortedMatches.length - INITIAL_SHOW);
+  const totalPages = Math.max(1, Math.ceil(sortedMatches.length / PAGE_SIZE));
+  const pageMatches = sortedMatches.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   function handleShowMore() {
     setShowMore(true);
+    setPage(0);
+  }
+
+  function handleRange(next: TimeRange) {
+    setRange(next);
+    setShowMore(false);
     setPage(0);
   }
 
@@ -194,7 +200,7 @@ export function ProfileClient({
         <ProfileStatsBlock
           stats={playerStats}
           range={range}
-          onRange={setRange}
+          onRange={handleRange}
           loading={loading}
           maxWinStreak={showInsights ? maxWinStreak : null}
         />
@@ -228,33 +234,35 @@ export function ProfileClient({
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-2">
-              {firstPageMatches.map((m) => (
-                <ProfileMatchCard
-                  key={m.matchId ?? m.tmid}
-                  match={m}
-                  myDisplayName={myDisplayName}
-                  matchPathPrefix={matchPathPrefix}
-                  initialMatchStats={matchStatsByToken[m.shareToken]}
-                  canDelete={allowDelete}
-                  onDeleted={() => handleMatchDeleted(m)}
-                  canEdit={allowDelete}
-                  onUpdated={handleMatchUpdated}
-                />
-              ))}
-            </div>
+            {!showMore ? (
+              <>
+                <div className="flex flex-col gap-2">
+                  {previewMatches.map((m) => (
+                    <ProfileMatchCard
+                      key={m.matchId ?? m.tmid}
+                      match={m}
+                      myDisplayName={myDisplayName}
+                      matchPathPrefix={matchPathPrefix}
+                      initialMatchStats={matchStatsByToken[m.shareToken]}
+                      canDelete={allowDelete}
+                      onDeleted={() => handleMatchDeleted(m)}
+                      canEdit={allowDelete}
+                      onUpdated={handleMatchUpdated}
+                    />
+                  ))}
+                </div>
 
-            {extraMatches.length > 0 && !showMore && (
-              <button
-                type="button"
-                onClick={handleShowMore}
-                className="mt-1 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-accent-from/30 hover:bg-accent-from/5 hover:text-foreground"
-              >
-                Więcej spotkań ({extraMatches.length})
-              </button>
-            )}
-
-            {showMore && extraMatches.length > 0 && (
+                {hiddenCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleShowMore}
+                    className="mt-1 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-accent-from/30 hover:bg-accent-from/5 hover:text-foreground"
+                  >
+                    Więcej spotkań ({hiddenCount})
+                  </button>
+                )}
+              </>
+            ) : (
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   {pageMatches.map((m) => (
@@ -300,7 +308,10 @@ export function ProfileClient({
 
                 <button
                   type="button"
-                  onClick={() => setShowMore(false)}
+                  onClick={() => {
+                    setShowMore(false);
+                    setPage(0);
+                  }}
                   className="mt-1 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Zwiń listę
