@@ -76,7 +76,7 @@ export default function HomePage() {
         />
 
         <section className="relative z-10 px-6 pb-8 pt-12 md:pt-16">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-[720px]">
             <BrandLogoMark />
 
               <h1 className="text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl lg:text-[3.25rem]">
@@ -125,8 +125,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        <div className="relative z-10 mx-auto w-full max-w-4xl px-6" aria-hidden>
-          <div className="relative">
+        <div className="relative z-10 px-6" aria-hidden>
+          <div className="relative mx-auto max-w-[720px]">
             <div
               className="relative z-10 h-px w-full"
               style={{
@@ -145,7 +145,7 @@ export default function HomePage() {
         </div>
 
         <section className="relative z-10 bg-black/10 px-6 pt-8 pb-6">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-[720px]">
             <h2 className="text-sm font-semibold uppercase tracking-widest text-primary/80">
               Co dostajesz
             </h2>
