@@ -1,4 +1,8 @@
-import { TMID_REGEX } from "@/lib/constants";
+import {
+  SUPPORTED_START_SCORE,
+  TMID_REGEX,
+  unsupportedStartScoreMessage,
+} from "@/lib/constants";
 import { autoDetectPatterns, getCustomerById } from "@/lib/customer";
 import {
   parseAndBackupN01,
@@ -218,6 +222,9 @@ export async function saveMatch(
   m: N01Match,
   customerId: string,
 ): Promise<{ matchId: string }> {
+  if (m.startScore !== SUPPORTED_START_SCORE) {
+    throw new Error(unsupportedStartScoreMessage(m.startScore));
+  }
   if (m.playerIndex !== 0 && m.playerIndex !== 1) {
     throw new Error("Nie można zapisać meczu bez potwierdzonej tożsamości gracza");
   }
@@ -356,6 +363,11 @@ export type IngestResult =
       url: string;
     }
   | { status: "duplicate"; shareToken: string; tmid: string }
+  | {
+      status: "unsupported_start_score";
+      startScore: number;
+      message: string;
+    }
   | { status: "rejected" };
 
 function validateTmid(url: string): string {
@@ -402,6 +414,14 @@ export async function ingestAndSave(opts: {
     }
     if (/404|not found/i.test(msg)) throw new Error("N01 nie zna tego meczu (404).");
     throw new Error(`Import z N01 nieudany: ${msg}`);
+  }
+
+  if (parsed.startScore !== SUPPORTED_START_SCORE) {
+    return {
+      status: "unsupported_start_score",
+      startScore: parsed.startScore,
+      message: unsupportedStartScoreMessage(parsed.startScore),
+    };
   }
 
   const customer = await getCustomerById(customerId);

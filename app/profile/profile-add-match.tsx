@@ -140,6 +140,7 @@ export function ProfileAddMatch({
         players?: [string, string];
         reason?: "ambiguous" | "none";
         shareToken?: string;
+        message?: string;
         match?: { title?: string };
       };
 
@@ -166,6 +167,16 @@ export function ProfileAddMatch({
         setDuplicate({ shareToken: data.shareToken, url: opts.ingestUrl });
         setIdentity(null);
         return "duplicate";
+      }
+
+      if (data.status === "unsupported_start_score") {
+        setIdentity(null);
+        setDuplicate(null);
+        setError(
+          data.message ??
+            "Na razie obsługujemy tylko mecze 501 — inne formaty (np. 301) zaburzałyby statystyki.",
+        );
+        return "unsupported_start_score";
       }
 
       if (data.status === "rejected") {
@@ -220,6 +231,8 @@ export function ProfileAddMatch({
         shareToken?: string;
         players?: [string, string];
         reason?: "ambiguous" | "none";
+        message?: string;
+        startScore?: number;
       };
 
       if (res.status === 403 && data.code === "needs_onboarding") {
@@ -228,6 +241,14 @@ export function ProfileAddMatch({
       }
 
       if (!res.ok) throw new Error(data.error ?? "Import nieudany");
+
+      if (data.status === "unsupported_start_score") {
+        return {
+          url: ingestUrl,
+          status: "error",
+          message: `start ${data.startScore ?? "≠501"} — tylko 501`,
+        };
+      }
 
       if (data.status === "duplicate" && !forceOverwrite) {
         if (dupPolicyRef.current === "skip") {
@@ -239,8 +260,19 @@ export function ProfileAddMatch({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url: ingestUrl, overwrite: true }),
           });
-          const data2 = (await res2.json()) as { status?: string; error?: string };
+          const data2 = (await res2.json()) as {
+            status?: string;
+            error?: string;
+            message?: string;
+          };
           if (!res2.ok) throw new Error(data2.error ?? "Nadpisanie nieudane");
+          if (data2.status === "unsupported_start_score") {
+            return {
+              url: ingestUrl,
+              status: "error",
+              message: "tylko mecze 501",
+            };
+          }
           return { url: ingestUrl, status: "ok", message: "nadpisano" };
         }
         const decision = await new Promise<DupDecision>((resolve) => {
@@ -259,8 +291,19 @@ export function ProfileAddMatch({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url: ingestUrl, overwrite: true }),
         });
-        const data2 = (await res2.json()) as { status?: string; error?: string };
+        const data2 = (await res2.json()) as {
+          status?: string;
+          error?: string;
+          message?: string;
+        };
         if (!res2.ok) throw new Error(data2.error ?? "Nadpisanie nieudane");
+        if (data2.status === "unsupported_start_score") {
+          return {
+            url: ingestUrl,
+            status: "error",
+            message: "tylko mecze 501",
+          };
+        }
         return { url: ingestUrl, status: "ok", message: "nadpisano" };
       }
 
@@ -293,8 +336,19 @@ export function ProfileAddMatch({
             overwrite: forceOverwrite || dupPolicyRef.current === "overwrite",
           }),
         });
-        const data2 = (await res2.json()) as { status?: string; error?: string };
+        const data2 = (await res2.json()) as {
+          status?: string;
+          error?: string;
+          message?: string;
+        };
         if (!res2.ok) throw new Error(data2.error ?? "Import nieudany");
+        if (data2.status === "unsupported_start_score") {
+          return {
+            url: ingestUrl,
+            status: "error",
+            message: "tylko mecze 501",
+          };
+        }
         if (data2.status === "saved") return { url: ingestUrl, status: "ok" };
         return { url: ingestUrl, status: "error", message: data2.status ?? "błąd" };
       }

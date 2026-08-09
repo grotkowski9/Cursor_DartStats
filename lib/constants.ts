@@ -28,6 +28,16 @@ export const N01_API =
 
 export const TMID_REGEX = /^t_[A-Za-z0-9]+(_[A-Za-z0-9]+)+$/;
 
+/** Only 501 matches are supported in stats / ingest for now. */
+export const SUPPORTED_START_SCORE = 501;
+
+export function unsupportedStartScoreMessage(startScore: number): string {
+  return (
+    `Na razie obsługujemy tylko mecze 501 (ten ma start ${startScore}). ` +
+    `Mieszanie 301 z 501 zaburzałoby średnie i checkouty — obsługa innych formatów jest planowana w przyszłości.`
+  );
+}
+
 export const SEED_URLS = [
   "https://n01darts.com/n01/league/n01_view.html?tmid=t_84WD_6808_rr_1_ODeb_WvbB",
   "https://n01darts.com/n01/tournament/n01_view.html?tmid=t_AWMW_0234_t_2_ASmj_P4P5",

@@ -32,6 +32,9 @@ async function main() {
       } else if (result.status === "needs_identity_confirmation") {
         console.log(`! needs identity — run import from /profile and pick player`);
         failed += 1;
+      } else if (result.status === "unsupported_start_score") {
+        console.log(`○ skip (start ${result.startScore})`);
+        skipped += 1;
       } else {
         console.log(`? ${result.status}`);
         failed += 1;
