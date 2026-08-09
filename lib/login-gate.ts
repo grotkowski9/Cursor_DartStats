@@ -4,8 +4,8 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const LOGIN_GATE_COOKIE = "sdp_login_gate";
 export const LOGIN_GATE_SETTING_KEY = "login_gate_enabled";
-/** Unlock cookie TTL — 24 hours. */
-export const LOGIN_GATE_COOKIE_MAX_AGE_SEC = 60 * 60 * 24;
+/** Unlock cookie TTL — 30 days. */
+export const LOGIN_GATE_COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 30;
 
 function loginGatePassword(): string {
   return (process.env.LOGIN_GATE_PASSWORD ?? "").trim();

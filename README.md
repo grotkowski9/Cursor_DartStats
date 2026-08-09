@@ -923,22 +923,55 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 **Jak działa**
 - Flaga w Supabase `app_settings.login_gate_enabled` (`true`/`false`) — włącz/wyłącz **bez redeploy**
 - Hasło: env `LOGIN_GATE_PASSWORD` (Vercel / `.env.local`) — ustaw raz
-- Po poprawnym haśle: cookie unlock **24 h**, potem znowu formularz
+- Po poprawnym haśle: cookie unlock **30 dni**, potem znowu formularz
 - Domyślnie seed: `false` (open)
 
-**Włącz (Supabase Table Editor)**
-1. Table Editor → `app_settings` → wiersz `login_gate_enabled` → `value` = `true`
-2. Odśwież `/login`
+#### 1) Vercel — hasło (raz)
 
-**Albo SQL**
+1. Wejdź na [vercel.com](https://vercel.com) → projekt **Cursor_DartStats** / domena `dart.sylveoncompany.pl`.
+2. **Settings** → **Environment Variables**.
+3. **Add New**:
+   - **Key:** `LOGIN_GATE_PASSWORD`
+   - **Value:** Twoje hasło (np. długie zdanie; nie wrzucaj do gita)
+   - **Environments:** zaznacz **Production** (i **Preview**, jeśli testujesz preview).
+4. **Save**.
+5. **Deployments** → najnowszy (ta gałąź / Production) → **⋯** → **Redeploy**  
+   *(Redeploy tylko przy dodaniu/zmianie hasła — nie przy flipie true/false w Supabase.)*
+
+Lokalnie (opcjonalnie) w `.env.local`:
+```bash
+LOGIN_GATE_PASSWORD=twoje-haslo-dev
+```
+Potem restart `npm run dev`.
+
+#### 2) Supabase — włącz / wyłącz bramę
+
+**Klik (Table Editor)**
+1. [supabase.com](https://supabase.com) → projekt **Cursor_DartStats**.
+2. **Table Editor** → tabela **`app_settings`**.
+3. Wiersz z `key` = `login_gate_enabled`.
+4. Kolumna **`value`**:
+   - **`true`** → `/login` pokazuje formularz hasła (brama ON)
+   - **`false`** → `/login` jak dziś, Google od razu (brama OFF)
+5. Zapisz. Odśwież `https://dart.sylveoncompany.pl/login` — działa od razu, **bez** redeploy Vercel.
+
+**SQL (SQL Editor)**
 ```sql
-UPDATE app_settings SET value = 'true' WHERE key = 'login_gate_enabled';  -- włącz
-UPDATE app_settings SET value = 'false' WHERE key = 'login_gate_enabled'; -- wyłącz
+-- WŁĄCZ bramę
+UPDATE app_settings SET value = 'true' WHERE key = 'login_gate_enabled';
+
+-- WYŁĄCZ bramę (open)
+UPDATE app_settings SET value = 'false' WHERE key = 'login_gate_enabled';
 ```
 
-**Hasło (Vercel, raz)**
-1. Settings → Environment Variables → `LOGIN_GATE_PASSWORD`
-2. Redeploy tylko gdy zmieniasz hasło
+#### 3) Szybki checklist
+
+| Chcę | Gdzie | Co |
+|------|--------|-----|
+| Ustawić hasło | Vercel env | `LOGIN_GATE_PASSWORD` + redeploy |
+| Zamknąć `/login` | Supabase | `login_gate_enabled` = `true` |
+| Otworzyć `/login` | Supabase | `login_gate_enabled` = `false` |
+| Po odblokowaniu | przeglądarka | cookie ~**30 dni**, potem znowu hasło |
 
 **Kod:** `lib/login-gate.ts`, `POST /api/auth/login-gate`, migracja `20260809214500_app_settings_login_gate.sql`
 
@@ -1934,7 +1967,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **v2.0.1** | 2026-08-09 | **Login gate** na `cursor/v2.0.1`: `/login` za hasłem gdy `app_settings.login_gate_enabled=true`. Toggle w Supabase (klik/SQL) bez redeploy. `LOGIN_GATE_PASSWORD` w Vercel. Cookie unlock 24 h. OAuth bez zmian. |
+| **v2.0.1** | 2026-08-09 | **Login gate** na `cursor/v2.0.1`: `/login` za hasłem gdy `app_settings.login_gate_enabled=true`. Toggle w Supabase (klik/SQL) bez redeploy. `LOGIN_GATE_PASSWORD` w Vercel. Cookie unlock **30 dni**. OAuth bez zmian. |
 | **v2.0-firstPROD** | 2026-08-09 | **Landing polish na `main` + backup.** Meta/JSON-LD profil-first. Hero + product-card demo (Sylveon). Separator accent + łuna. 3 kroki: lewy pasek Sylveon, hover glow jak CTA. Footer `n01darts.pl` → `/`. README sync. |
 | **v2.0-firstPROD** | 2026-08-09 | **Pierwszy PROD na `main`.** Mecze tylko 501 (ingest + migracja CHECK). Stopka: SEO 2×2 + disclaimer N01/Nakka + domeny. Landing: CTA glow + `BrandLogoMark` (także 404/500). `package.json` 2.0.0. Branch `backup/v2.0-firstPROD`, tag `v2.0-firstPROD`. |
 | **1.4.x**  | 2026-08-08 | Sitemap: `/privacy` + `lib/sitemap-paths.ts` (14 publicznych URL). `robots.txt` allow `/privacy`. Landing: wyrównanie hero z sekcjami poniżej. `<title>`/`og:title`: `Sylveon Dart Profile | Twoje statystyki darta`. |
