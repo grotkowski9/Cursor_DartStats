@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight, Check, ChevronDown, ChevronUp, Pencil, Share2, Trash2 } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
-import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
+import { computeMatchStats, matchMeLabel, normalizeName, type MatchStats } from "@/lib/stats";
 import { getMatchShareUrl } from "@/lib/share-url";
 import { MatchDeleteDialog } from "./match-delete-dialog";
 import { MatchEditDialog } from "./match-edit-dialog";
@@ -50,7 +50,7 @@ export function ProfileMatchCard({
     dateStyle: "short",
     timeStyle: "short",
   });
-  const myName = myDisplayName ?? normalizeName(stats.me.name);
+  const myName = matchMeLabel(stats.me.name, myDisplayName);
   const oppName = normalizeName(stats.opp.name);
 
   async function copyShareLink() {

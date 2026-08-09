@@ -3,7 +3,7 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { Loader2, Pencil, X } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
-import { computeMatchStats, normalizeName } from "@/lib/stats";
+import { computeMatchStats, matchMeLabel, normalizeName } from "@/lib/stats";
 import { MatchActionDialogShell } from "./match-action-dialog-shell";
 
 type Props = {
@@ -34,7 +34,7 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
   const effectiveMe = changeSides ? playerIndex : currentMe;
   const effectiveOppIdx = (effectiveMe === 0 ? 1 : 0) as 0 | 1;
   const effectiveOppName = normalizeName(match.players[effectiveOppIdx]?.name ?? "");
-  const myLabel = myDisplayName ?? normalizeName(stats.me.name);
+  const myLabel = matchMeLabel(stats.me.name, myDisplayName);
 
   useEffect(() => {
     setOppNameDraft(effectiveOppName);
@@ -63,8 +63,9 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
       setEditMode(null);
       return;
     }
+    // Keep current side until user explicitly picks "Kim jesteś?" — do not auto-flip.
     if (mode === "sides") {
-      setPlayerIndex(currentMe === 0 ? 1 : 0);
+      setPlayerIndex(currentMe);
     }
     setEditMode(mode);
   }
@@ -143,7 +144,8 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
         {step === 2 && (
           <div className="space-y-4">
             <p className="text-xs text-muted-foreground">
-              Wybierz jedno: zmiana stron albo nazwa przeciwnika.
+              Wybierz jedno: zmiana stron albo nazwa przeciwnika. Przy zmianie stron wskaż, kim
+              jesteś (slot N01) — bez wyboru nic się nie zapisze.
             </p>
 
             <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 has-[:checked]:border-accent-from/40 has-[:checked]:bg-accent-from/5">

@@ -3,7 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import { Loader2, Trash2, X } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
-import { computeMatchStats, normalizeName } from "@/lib/stats";
+import { computeMatchStats, matchMeLabel, normalizeName } from "@/lib/stats";
 import { MatchActionDialogShell } from "./match-action-dialog-shell";
 
 const CONFIRM_WORD = "usuwam";
@@ -23,7 +23,7 @@ export function MatchDeleteDialog({ match, myDisplayName, onClose, onDeleted }: 
   const [error, setError] = useState<string | null>(null);
 
   const stats = computeMatchStats(match);
-  const myName = myDisplayName ?? normalizeName(stats.me.name);
+  const myName = matchMeLabel(stats.me.name, myDisplayName);
   const oppName = normalizeName(stats.opp.name);
   const date = new Date(match.startTime * 1000).toLocaleString("pl-PL", {
     dateStyle: "medium",

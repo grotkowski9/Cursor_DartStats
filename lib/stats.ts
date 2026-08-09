@@ -360,6 +360,32 @@ export function normalizeName(raw: string): string {
   return normalized.join(" ");
 }
 
+/**
+ * Profile legal name only when it still matches the N01 "me" slot.
+ * After side-swap to the opponent's slot, show the N01 name (avoid Grotkowski vs Grotkowski).
+ */
+export function matchMeLabel(meN01Name: string, myDisplayName?: string): string {
+  const n01 = normalizeName(meN01Name);
+  const display = myDisplayName?.trim();
+  if (!display) return n01;
+  if (namesLikelySamePerson(n01, display)) return display;
+  return n01;
+}
+
+function nameTokens(raw: string): string[] {
+  return stripDiacritics(raw)
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((t) => t.length >= 3);
+}
+
+function namesLikelySamePerson(a: string, b: string): boolean {
+  const ta = nameTokens(a);
+  const tb = nameTokens(b);
+  if (!ta.length || !tb.length) return false;
+  return ta.some((x) => tb.some((y) => x === y || x.includes(y) || y.includes(x)));
+}
+
 /** Polish declension: 1 → lotka, 2/3/4 → lotki (not 12-14), rest → lotek */
 export function dartWord(n: number): string {
   if (n === 1) return "lotka";
