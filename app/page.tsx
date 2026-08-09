@@ -190,13 +190,15 @@ export default function HomePage() {
         <section className="relative z-10 border-t border-white/10 px-6 py-[clamp(28px,5vw,48px)]">
           <div className="product-link">
             <p className="product-link-eyebrow">Profil demo</p>
-            <h2 className="mt-4 text-[clamp(1.5rem,4vw,2.25rem)] font-bold leading-snug tracking-tight">
-              Zobacz jak wygląda{" "}
-              <span className="bg-gradient-to-r from-[#ff7eb6] to-[#c084fc] bg-clip-text text-transparent">
-                przykładowy
-              </span>{" "}
-              <span className="bg-gradient-to-r from-[#7dd3fc] to-[#a78bfa] bg-clip-text text-transparent">
-                profil
+            <h2 className="mt-4 text-[clamp(1.35rem,3.1vw,1.85rem)] font-bold leading-snug tracking-tight">
+              <span className="whitespace-nowrap">Zobacz jak wygląda</span>{" "}
+              <span className="whitespace-nowrap">
+                <span className="bg-gradient-to-r from-[#ff7eb6] to-[#c084fc] bg-clip-text text-transparent">
+                  przykładowy
+                </span>{" "}
+                <span className="bg-gradient-to-r from-[#7dd3fc] to-[#a78bfa] bg-clip-text text-transparent">
+                  profil
+                </span>
               </span>
             </h2>
             <p className="mx-auto mt-3 max-w-[540px] text-left text-xs leading-relaxed text-muted-foreground">
