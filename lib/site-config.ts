@@ -14,7 +14,7 @@ export const SITE_ALTERNATES = [
 
 export const SITE_PUBLIC_HOSTS = [
   { href: "https://dart.sylveoncompany.pl", label: "dart.sylveoncompany.pl" },
-  { href: "https://n01darts.pl", label: "n01darts.pl" },
+  { href: "/", label: "n01darts.pl" },
 ] as const;
 
 export const SYLVEON_URL = "https://sylveoncompany.pl";

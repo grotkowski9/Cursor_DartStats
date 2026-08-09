@@ -11,7 +11,7 @@ export function LandingJsonLd() {
     applicationCategory: "SportsApplication",
     operatingSystem: "Web",
     description:
-      "Panel statystyk darta — import meczów z N01, profil gracza, wykres formy, H2H i checkout.",
+      "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
     offers: {
       "@type": "Offer",
       price: "0",

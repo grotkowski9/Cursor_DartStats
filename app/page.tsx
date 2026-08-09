@@ -40,7 +40,7 @@ const FEATURES = [
   {
     icon: Link2,
     title: "Koniec z Excelem",
-    text: "Żadnego Excela, żadnego N01 po każdym turnieju. Wklejasz link, a legi, lotki i checkouty lądują w profilu. Dane o meczu masz od teraz w jednym miejscu. Na swoim koncie.",
+    text: "Żadnego ręcznego przepisywania danych po meczach i skomplikowanych formuł. Wklejasz link, a legi, lotki i checkouty lądują w profilu. Dane masz od teraz w jednym miejscu. Na swoim koncie.",
   },
   {
     icon: BarChart3,
@@ -90,10 +90,11 @@ export default function HomePage() {
                 </span>
                 <br />
                 <span className="text-base">
-                  Importuj mecze z N01 i zobacz jak grasz naprawdę.
-                  Średnie, checkouty, forma, H2H i wiele wykresów.
+                  Zobacz jak grasz naprawdę. Wrzucaj swoje mecze z n01, a resztą zajmiemy
+                  się my.
                   <br />
-                  Różne turnieje — jeden profil gracza.
+                  Średnie, checkouty, forma, H2H i wiele wykresów. Różne turnieje - jeden
+                  profil gracza.
                 </span>
               </p>
 
@@ -156,32 +157,34 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-white/10 px-6 py-6">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-accent-from/25 bg-gradient-to-br from-accent-from/10 via-transparent to-accent-to/10 p-6 md:p-8">
-            <h2 className="text-2xl font-bold leading-snug md:text-3xl">
+        <section className="relative z-10 border-t border-white/10 px-6 py-[clamp(28px,5vw,48px)]">
+          <div className="product-link">
+            <p className="product-link-eyebrow">Profil demo</p>
+            <h2 className="mt-4 text-[clamp(1.5rem,4vw,2.25rem)] font-bold leading-snug tracking-tight">
               Zobacz jak wygląda{" "}
-              <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#ff7eb6] to-[#c084fc] bg-clip-text text-transparent">
                 przykładowy
               </span>{" "}
-              <span className="text-accent-gradient">profil</span>
+              <span className="bg-gradient-to-r from-[#7dd3fc] to-[#a78bfa] bg-clip-text text-transparent">
+                profil
+              </span>
             </h2>
-            <p className="mt-3 max-w-2xl text-muted-foreground">
-              Nadal nie chcesz założyć konta? Sprawdź profil demo. Zobacz statystyki, wykres
-              formy, H2H i widok rzut po rzucie. Wszystko tak, jak na Twoim koncie.
+            <p className="mx-auto mt-3 max-w-[540px] text-left text-xs leading-relaxed text-muted-foreground">
+              Nadal nie chcesz założyć konta? Dziwne... ale na pewno jak obczaisz profil
+              demo to zmienisz zdanie! Zobacz statystyki, wykresy i inne bajery. Wszystko
+              takie, jak na Twoim koncie.
             </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/demo/profile"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md"
-              >
-                Otwórz profil demo
-                <ArrowRight className="h-4 w-4" />
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <Link href="/demo/profile" className="btn-sylveon">
+                Przykładowy profil
+                <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
               <Link
                 href="/demo/m/demo001"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium transition hover:border-white/25"
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-[#ff7eb6]/40 hover:text-foreground"
               >
                 Przykładowy mecz
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden />
               </Link>
             </div>
           </div>
