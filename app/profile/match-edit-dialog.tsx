@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { Loader2, Pencil, X } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import { computeMatchStats, normalizeName } from "@/lib/stats";
@@ -82,9 +83,11 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
     }
   }
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-4 sm:items-center"
       role="presentation"
       onClick={() => {
         if (!busy) onClose();
@@ -332,6 +335,7 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
           ) : null}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

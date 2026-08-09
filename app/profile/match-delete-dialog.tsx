@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import { Loader2, Trash2, X } from "lucide-react";
 import type { N01Match } from "@/lib/n01-parser";
 import { computeMatchStats, normalizeName } from "@/lib/stats";
@@ -54,9 +55,11 @@ export function MatchDeleteDialog({ match, myDisplayName, onClose, onDeleted }: 
     }
   }
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-4 sm:items-center"
       role="presentation"
       onClick={() => {
         if (!busy) onClose();
@@ -204,6 +207,7 @@ export function MatchDeleteDialog({ match, myDisplayName, onClose, onDeleted }: 
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
