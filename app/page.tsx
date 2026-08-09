@@ -139,7 +139,26 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="relative z-10 border-t border-white/10 bg-black/10 px-6 pt-8 pb-6">
+        <div className="relative z-10 mx-auto w-full max-w-4xl px-6" aria-hidden>
+          <div className="relative">
+            <div
+              className="relative z-10 h-px w-full"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, transparent 0%, var(--accent-from) 35%, var(--accent-to) 65%, transparent 100%)",
+              }}
+            />
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-12 blur-md"
+              style={{
+                backgroundImage:
+                  "linear-gradient(180deg, color-mix(in oklab, var(--accent-from) 26%, transparent), color-mix(in oklab, var(--accent-to) 10%, transparent), transparent)",
+              }}
+            />
+          </div>
+        </div>
+
+        <section className="relative z-10 bg-black/10 px-6 pt-8 pb-6">
           <div className="mx-auto max-w-4xl">
             <h2 className="text-sm font-semibold uppercase tracking-widest text-primary/80">
               Co dostajesz
@@ -147,10 +166,35 @@ export default function HomePage() {
             <p className="mt-2 text-2xl font-bold">Od linku N01 do profilu gracza</p>
             <div className="mt-6 flex flex-col gap-4">
               {FEATURES.map(({ icon: Icon, title, text }) => (
-                <article key={title} className="glass-tile w-full p-5">
-                  <Icon className="mb-3 h-5 w-5 text-accent-from" aria-hidden />
-                  <h3 className="font-semibold">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+                <article
+                  key={title}
+                  className="glass-tile group relative w-full p-5"
+                >
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 left-0 w-4 rounded-l-[var(--radius)] transition-opacity duration-300 group-hover:opacity-0"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, color-mix(in oklab, var(--sylveon-from) 42%, transparent), color-mix(in oklab, var(--sylveon-to) 16%, transparent), transparent)",
+                    }}
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -inset-2 z-0 rounded-[calc(var(--radius)+0.5rem)] opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-22"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(ellipse at center, color-mix(in oklab, var(--sylveon-from) 55%, var(--accent-from)) 0%, color-mix(in oklab, var(--sylveon-to) 50%, var(--accent-to)) 42%, transparent 70%)",
+                    }}
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 z-0 rounded-[var(--radius)] opacity-0 shadow-[0_0_14px_3px_oklch(0.82_0.12_320_/_0.14),0_0_22px_6px_oklch(0.75_0.12_250_/_0.1)] transition-opacity duration-300 group-hover:opacity-100"
+                  />
+                  <Icon className="relative z-10 mb-3 h-5 w-5 text-accent-from" aria-hidden />
+                  <h3 className="relative z-10 font-semibold">{title}</h3>
+                  <p className="relative z-10 mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {text}
+                  </p>
                 </article>
               ))}
             </div>

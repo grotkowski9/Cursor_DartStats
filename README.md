@@ -3,7 +3,7 @@
 **Sylveon Dart Profile** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v2.0-firstPROD** na `main` (pierwszy release produkcyjny).  
+> **Status:** **v2.0-firstPROD** na `main` (pierwszy release produkcyjny + polish landingu).  
 > Backup: branch **`backup/v2.0-firstPROD`**, tag **`v2.0-firstPROD`**.  
 > Poprzednie: tag `v1.4.0`, `backup/v1.3.0` / `v1.3.2`.  
 > **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.  
@@ -903,6 +903,11 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 **Landing / brand mark**
 - CTA login: accent gradient + delikatny Sylveon glow
 - `BrandLogoMark` — tile + soft Sylveon glow, link `/` — landing + `ErrorScreen` (404/500)
+- Meta / JSON-LD: profil-first description (średnie, checkouty, H2H, najlepsza godzina formy)
+- Hero copy + sekcja demo w stylu product card Sylveon (pink/purple, CTA `btn-sylveon`)
+- Separator przed „Co dostajesz”: pasek accent (Dart Profile) + łuna w dół
+- 3 kroki: lewy pasek Sylveon; hover = soft glow jak CTA login (mix Sylveon + accent)
+- Stopka: etykieta `n01darts.pl` → `/` (main tej aplikacji)
 
 **Prod**
 - Live: `https://dart.sylveoncompany.pl` (oraz alias `n01darts.pl`)
@@ -992,7 +997,7 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.3.7** | ⏳ | Hardening importu server-side (client demo ✅) |
 | **v1.3.2** | ✅ | Release `main` — landing, demo insights, footer, login split, rebrand |
 | **v1.4.0** | ✅ | Release `main` — favicon Sylveon, landing kafelki pionowo, docs Google OAuth/`/privacy` |
-| **v2.0-firstPROD** | ✅ | Pierwszy PROD — 501-only, footer SEO/legal, BrandLogoMark, tag `v2.0-firstPROD` |
+| **v2.0-firstPROD** | ✅ | Pierwszy PROD + landing polish — 501-only, footer SEO/legal, BrandLogoMark, product-card demo · tag `v2.0-firstPROD` |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
@@ -1289,7 +1294,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **v1.3.0**      | ✅ Testy Vitest + CI + security hardening · tag `v1.3.0` |
 | **v1.3.2**      | ✅ WYDANY na `main` — perf bootstrap, rebrand, login split, landing, demo insights, footer · `backup/v1.3.0`, tag `v1.3.2` |
 | **v1.4.0**      | ✅ WYDANY na `main` — favicon Sylveon, landing kafelki pionowo, docs OAuth/`/privacy` · tag `v1.4.0` |
-| **v2.0-firstPROD** | ✅ WYDANY na `main` — 501-only, footer SEO/legal, BrandLogoMark · `backup/v2.0-firstPROD`, tag `v2.0-firstPROD` |
+| **v2.0-firstPROD** | ✅ WYDANY na `main` — 501-only, footer SEO/legal, BrandLogoMark, landing polish · `backup/v2.0-firstPROD`, tag `v2.0-firstPROD` |
 | **2.0.x**       | ⏸️ Premium + płatności (odłożone; ≠ tag firstPROD) |
 | Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
 
@@ -1901,6 +1906,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v2.0-firstPROD** | 2026-08-09 | **Landing polish na `main` + backup.** Meta/JSON-LD profil-first. Hero + product-card demo (Sylveon). Separator accent + łuna. 3 kroki: lewy pasek Sylveon, hover glow jak CTA. Footer `n01darts.pl` → `/`. README sync. |
 | **v2.0-firstPROD** | 2026-08-09 | **Pierwszy PROD na `main`.** Mecze tylko 501 (ingest + migracja CHECK). Stopka: SEO 2×2 + disclaimer N01/Nakka + domeny. Landing: CTA glow + `BrandLogoMark` (także 404/500). `package.json` 2.0.0. Branch `backup/v2.0-firstPROD`, tag `v2.0-firstPROD`. |
 | **1.4.x**  | 2026-08-08 | Sitemap: `/privacy` + `lib/sitemap-paths.ts` (14 publicznych URL). `robots.txt` allow `/privacy`. Landing: wyrównanie hero z sekcjami poniżej. `<title>`/`og:title`: `Sylveon Dart Profile | Twoje statystyki darta`. |
 | **1.4.x**  | 2026-08-07 | **`/privacy`** na prod (`dart.sylveoncompany.pl`); link w stopce; linia opisu appki nad stopką (Google OAuth Branding). Supabase Site URL + redirect prod. Vercel Analytics + Speed Insights w `layout`. README: GCP Branding checklist. |
