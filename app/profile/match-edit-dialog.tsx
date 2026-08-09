@@ -16,8 +16,8 @@ type Props = {
 export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Props) {
   const titleId = useId();
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [changeSides, setChangeSides] = useState(false);
-  const [changeOppName, setChangeOppName] = useState(false);
+  /** Exactly one edit mode — sides XOR opponent name */
+  const [editMode, setEditMode] = useState<"sides" | "oppName" | null>(null);
   const [playerIndex, setPlayerIndex] = useState<0 | 1>(
     match.playerIndex === 0 || match.playerIndex === 1 ? match.playerIndex : 0,
   );
@@ -29,6 +29,8 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
   const slot0 = normalizeName(match.players[0]?.name ?? "Gracz 1");
   const slot1 = normalizeName(match.players[1]?.name ?? "Gracz 2");
   const currentMe = match.playerIndex === 0 || match.playerIndex === 1 ? match.playerIndex : 0;
+  const changeSides = editMode === "sides";
+  const changeOppName = editMode === "oppName";
   const effectiveMe = changeSides ? playerIndex : currentMe;
   const effectiveOppIdx = (effectiveMe === 0 ? 1 : 0) as 0 | 1;
   const effectiveOppName = normalizeName(match.players[effectiveOppIdx]?.name ?? "");
@@ -46,7 +48,7 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
     return () => window.removeEventListener("keydown", onKey);
   }, [busy, onClose]);
 
-  const canGoStep3 = changeSides || changeOppName;
+  const canGoStep3 = editMode !== null;
   const sidesChanged = changeSides && playerIndex !== currentMe;
   const oppNameTrimmed = oppNameDraft.trim();
   const oppNameChanged =
@@ -55,6 +57,17 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
 
   const previewMeSlotName = normalizeName(match.players[effectiveMe]?.name ?? "");
   const previewOppName = changeOppName && oppNameTrimmed ? oppNameTrimmed : effectiveOppName;
+
+  function selectMode(mode: "sides" | "oppName") {
+    if (editMode === mode) {
+      setEditMode(null);
+      return;
+    }
+    if (mode === "sides") {
+      setPlayerIndex(currentMe === 0 ? 1 : 0);
+    }
+    setEditMode(mode);
+  }
 
   async function submitEdit() {
     if (!match.matchId || !hasEffectiveChange || busy) return;
@@ -126,7 +139,8 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
           {step === 1 && (
             <div className="space-y-3 text-muted-foreground">
               <p>
-                Możesz poprawić błędne przypisanie strony albo nazwę przeciwnika.
+                Możesz poprawić błędne przypisanie strony albo nazwę przeciwnika — wybierasz jedną
+                rzecz na edycję.
               </p>
               <p className="text-xs">
                 Mecz, wynik i link share zostają. Zmienia się tylko perspektywa / nazwa w Twoim
@@ -143,13 +157,15 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
 
           {step === 2 && (
             <div className="space-y-4">
-              <p className="text-xs text-muted-foreground">Zaznacz, co chcesz zmienić. Reszta OK.</p>
+              <p className="text-xs text-muted-foreground">
+                Wybierz jedno: zmiana stron albo nazwa przeciwnika.
+              </p>
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 has-[:checked]:border-accent-from/40 has-[:checked]:bg-accent-from/5">
                 <input
                   type="checkbox"
                   checked={changeSides}
-                  onChange={(e) => setChangeSides(e.target.checked)}
+                  onChange={() => selectMode("sides")}
                   className="mt-0.5"
                 />
                 <span>
@@ -197,11 +213,11 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
                 </fieldset>
               ) : null}
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 has-[:checked]:border-accent-from/40 has-[:checked]:bg-accent-from/5">
                 <input
                   type="checkbox"
                   checked={changeOppName}
-                  onChange={(e) => setChangeOppName(e.target.checked)}
+                  onChange={() => selectMode("oppName")}
                   className="mt-0.5"
                 />
                 <span>
