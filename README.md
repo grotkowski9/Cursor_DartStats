@@ -916,6 +916,34 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 ---
 
+### v2.0.1 — Login gate (hasło na `/login`) ⏳
+
+> Branch: **`cursor/v2.0.1`**. URL `/login` bez zmian. OAuth Google bez zmian.
+
+**Jak działa**
+- Flaga w Supabase `app_settings.login_gate_enabled` (`true`/`false`) — włącz/wyłącz **bez redeploy**
+- Hasło: env `LOGIN_GATE_PASSWORD` (Vercel / `.env.local`) — ustaw raz
+- Po poprawnym haśle: cookie unlock **24 h**, potem znowu formularz
+- Domyślnie seed: `false` (open)
+
+**Włącz (Supabase Table Editor)**
+1. Table Editor → `app_settings` → wiersz `login_gate_enabled` → `value` = `true`
+2. Odśwież `/login`
+
+**Albo SQL**
+```sql
+UPDATE app_settings SET value = 'true' WHERE key = 'login_gate_enabled';  -- włącz
+UPDATE app_settings SET value = 'false' WHERE key = 'login_gate_enabled'; -- wyłącz
+```
+
+**Hasło (Vercel, raz)**
+1. Settings → Environment Variables → `LOGIN_GATE_PASSWORD`
+2. Redeploy tylko gdy zmieniasz hasło
+
+**Kod:** `lib/login-gate.ts`, `POST /api/auth/login-gate`, migracja `20260809214500_app_settings_login_gate.sql`
+
+---
+
 ### 2.0.x — Premium + Płatności ⏸️
 
 > **Odłożone.** Numeracja feature **2.0.x** ≠ tag **v2.0-firstPROD** (prod milestone). Startujemy bez premium / płatności / CTA upgrade. Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie. *(Było: **1.2.x** + CTA **1.1.9.5**.)*
@@ -1906,6 +1934,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v2.0.1** | 2026-08-09 | **Login gate** na `cursor/v2.0.1`: `/login` za hasłem gdy `app_settings.login_gate_enabled=true`. Toggle w Supabase (klik/SQL) bez redeploy. `LOGIN_GATE_PASSWORD` w Vercel. Cookie unlock 24 h. OAuth bez zmian. |
 | **v2.0-firstPROD** | 2026-08-09 | **Landing polish na `main` + backup.** Meta/JSON-LD profil-first. Hero + product-card demo (Sylveon). Separator accent + łuna. 3 kroki: lewy pasek Sylveon, hover glow jak CTA. Footer `n01darts.pl` → `/`. README sync. |
 | **v2.0-firstPROD** | 2026-08-09 | **Pierwszy PROD na `main`.** Mecze tylko 501 (ingest + migracja CHECK). Stopka: SEO 2×2 + disclaimer N01/Nakka + domeny. Landing: CTA glow + `BrandLogoMark` (także 404/500). `package.json` 2.0.0. Branch `backup/v2.0-firstPROD`, tag `v2.0-firstPROD`. |
 | **1.4.x**  | 2026-08-08 | Sitemap: `/privacy` + `lib/sitemap-paths.ts` (14 publicznych URL). `robots.txt` allow `/privacy`. Landing: wyrównanie hero z sekcjami poniżej. `<title>`/`og:title`: `Sylveon Dart Profile | Twoje statystyki darta`. |

@@ -4,7 +4,9 @@ import { ArrowLeft, Target } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle } from "@/lib/page-metadata";
+import { shouldShowLoginGate } from "@/lib/login-gate";
 import { LoginGoogleButton } from "./login-google-button";
+import { LoginGateForm } from "./login-gate-form";
 import { safeInternalPath } from "@/lib/safe-path";
 
 export const metadata: Metadata = {
@@ -22,6 +24,7 @@ export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
   const next = safeInternalPath(params.next, "/profile");
   const authError = params.error === "auth";
+  const showGate = await shouldShowLoginGate();
 
   return (
     <>
@@ -53,25 +56,45 @@ export default async function LoginPage({ searchParams }: Props) {
             </span>{" "}
             <span className="text-accent-gradient">Dart</span>
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym
-            profilu. Chcesz najpierw zobaczyć jak to wygląda?{" "}
-            <Link href="/demo/profile" className="text-primary hover:underline">
-              Otwórz profil demo
-            </Link>
-            .
-          </p>
 
-          {authError && (
-            <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
-              Logowanie nieudane. Zamknij kartę, otwórz logowanie od nowa i spróbuj jeszcze raz
-              (nie odświeżaj strony po powrocie z Google). Sprawdź też Redirect URLs w Supabase.
-            </p>
+          {showGate ? (
+            <>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Otwarta rejestracja jest jeszcze zamknięta. Aby utworzyć nowe konto lub wejść na
+                stronę logowania, potrzebujesz na ten moment hasła od administratora. Masz takie
+                hasło? Podaj je tutaj:
+              </p>
+              <LoginGateForm />
+              <p className="mt-6 text-center text-xs text-muted-foreground">
+                Chcesz najpierw zobaczyć demo?{" "}
+                <Link href="/demo/profile" className="text-primary hover:underline">
+                  Otwórz profil demo
+                </Link>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym
+                profilu. Chcesz najpierw zobaczyć jak to wygląda?{" "}
+                <Link href="/demo/profile" className="text-primary hover:underline">
+                  Otwórz profil demo
+                </Link>
+                .
+              </p>
+
+              {authError && (
+                <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+                  Logowanie nieudane. Zamknij kartę, otwórz logowanie od nowa i spróbuj jeszcze raz
+                  (nie odświeżaj strony po powrocie z Google). Sprawdź też Redirect URLs w Supabase.
+                </p>
+              )}
+
+              <div className="mt-10">
+                <LoginGoogleButton next={next} />
+              </div>
+            </>
           )}
-
-          <div className="mt-10">
-            <LoginGoogleButton next={next} />
-          </div>
         </div>
       </main>
       <SiteFooter />
