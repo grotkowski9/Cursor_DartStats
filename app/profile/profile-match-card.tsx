@@ -8,6 +8,7 @@ import { computeMatchStats, normalizeName, type MatchStats } from "@/lib/stats";
 import { getMatchShareUrl } from "@/lib/share-url";
 import { MatchDeleteDialog } from "./match-delete-dialog";
 import { MatchEditDialog } from "./match-edit-dialog";
+import { MATCH_ACTION_DIALOG_MODE } from "@/lib/match-action-dialog-mode";
 
 type Props = {
   match: N01Match;
@@ -64,12 +65,19 @@ export function ProfileMatchCard({
     }
   }
 
+  const actionOpen = deleteOpen || editOpen;
+  const hideKpiForInline =
+    MATCH_ACTION_DIALOG_MODE === "inline" && actionOpen;
+
   return (
     <article className="glass-tile overflow-hidden">
       {/* Compact header — always visible, click to expand */}
       <button
         type="button"
-        onClick={() => setExpanded((e) => !e)}
+        onClick={() => {
+          if (actionOpen) return;
+          setExpanded((e) => !e);
+        }}
         className="flex w-full items-center gap-3 px-4 py-3 text-left"
       >
         {/* Win/Loss badge */}
@@ -128,8 +136,8 @@ export function ProfileMatchCard({
         </div>
       </button>
 
-      {/* Expanded KPI grid */}
-      {expanded && (
+      {/* Expanded KPI grid — hidden while inline edit/delete wizard is open */}
+      {expanded && !hideKpiForInline && (
         <div className="border-t border-white/5 px-4 pb-4 pt-3">
           <div className="grid grid-cols-2 gap-1 text-[11px]">
             <KpiRow label="3-dart" me={stats.me.average.toFixed(2)} opp={stats.opp.average.toFixed(2)} />
@@ -193,6 +201,8 @@ export function ProfileMatchCard({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setDeleteOpen(false);
+                  setExpanded(true);
                   setEditOpen(true);
                 }}
                 className="inline-flex items-center gap-1 rounded-md border border-amber-400/40 bg-amber-400/10 px-1.5 py-0.5 text-[9px] font-medium text-amber-200 transition-colors hover:border-amber-400/60 hover:bg-amber-400/20"
@@ -206,6 +216,8 @@ export function ProfileMatchCard({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setEditOpen(false);
+                  setExpanded(true);
                   setDeleteOpen(true);
                 }}
                 className="inline-flex items-center gap-1 rounded-md border border-red-500/35 bg-red-500/10 px-1.5 py-0.5 text-[9px] font-medium text-red-200 transition-colors hover:border-red-500/55 hover:bg-red-500/20"
