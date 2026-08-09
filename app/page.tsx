@@ -15,13 +15,13 @@ import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
   description:
-    "Importuj mecze z n01darts.com, śledź średnie, checkout, formę i H2H. Demo profil z 10 meczami — zobacz przed rejestracją.",
+    "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
   robots: { index: true, follow: true },
   alternates: { canonical: getSiteUrl() },
   openGraph: {
     title: SITE_OG_TITLE,
     description:
-      "Statystyki darta z N01 — wykres formy, H2H, checkout. Zobacz demo przed rejestracją.",
+      "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
     url: getSiteUrl(),
     type: "website",
     locale: "pl_PL",
