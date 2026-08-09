@@ -3,9 +3,11 @@
 **Sylveon Dart Profile** — prywatny panel statystyk darta, budowany w Next.js 16.
 Docelowo pod `dart.sylveoncompany.pl`.
 
-> **Status:** **v1.4.0** na `main` · dev **`cursor/v1.4.x`** (ta sama linia, kolejne commity).  
-> Backup milestone: `backup/v1.3.0`, tag `v1.3.2`. Bieżący release: tag **`v1.4.0`**. Wcześniej: `backup/v1.2.0`, tag `v1.2.0-backup`.  
-> **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.
+> **Status:** **v2.0-firstPROD** na `main` (pierwszy release produkcyjny).  
+> Backup: branch **`backup/v2.0-firstPROD`**, tag **`v2.0-firstPROD`**.  
+> Poprzednie: tag `v1.4.0`, `backup/v1.3.0` / `v1.3.2`.  
+> **Backlog otwarty** (rosnąco po ID): patrz [Backlog otwarty](#backlog-otwarty--rosnąco-po-id). Przed implementacją — potwierdź zakres.  
+> **Uwaga:** linia feature **2.0.x** (premium/płatności) nadal ⏸️ — `v2.0-firstPROD` to milestone prod, nie freemium.
 
 ---
 
@@ -364,7 +366,8 @@ Efekty: `.glass-tile` (blur + saturate), `.bg-grid`, `.text-accent-gradient`.
 | **1.1.x**   | Auth + multi-user + admin + profil tożsamości  | ✅ **v1.1.0** auth · ✅ **v1.1.1** (1.1.9 + 1.1.10) · ✅ **1.1.7** · ✅ **1.1.3.8** · otwarte **1.1.8**, **1.1.11–12** |
 | **1.2.x**   | Milestone snapshot (profil UX + audyt + delete) | ✅ **v1.2.0** — `backup/v1.2.0`, tag `v1.2.0-backup` |
 | **1.3.x**   | Testy + hardening + perf                       | ✅ **v1.3.2** — `backup/v1.3.0`, tag `v1.3.2` |
-| **1.4.x**   | Prod polish + deploy track                   | ✅ **v1.4.0** na `main` — favicon Sylveon, landing kafelki, docs OAuth |
+| **1.4.x**   | Prod polish + deploy track                   | ✅ **v1.4.0** — favicon, landing, OAuth docs |
+| **v2.0-firstPROD** | Pierwszy release produkcyjny (nie freemium) | ✅ **`main`** · `backup/v2.0-firstPROD` · tag `v2.0-firstPROD` |
 | **2.0.x**   | Premium + płatności                            | ⏸️ odłożone — start bez tego |
 | **5.x**     | Pełne wydanie produktu (odłożone)              | ⏸️ po 1.x / 2.x — m.in. **Apple login** |
 
@@ -870,22 +873,47 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 
 ---
 
-### 1.4.x — v1.4.0 na `main` ✅
+### 1.4.x — v1.4.0 ✅
 
-> Branch: **`cursor/v1.4.x`** = dev · **`main`** = produkcja · `package.json` **1.4.0** · tag **`v1.4.0`**.
+> Tag **`v1.4.0`**. Linia zamknięta w **v2.0-firstPROD**.
 
 **Wydane w v1.4.0:** favicon set Sylveon (`sylveoncompany.pl`) · landing „Co dostajesz” — 3 kafelki w kolumnie · README: `/privacy` + Google OAuth Branding · prod: **`https://dart.sylveoncompany.pl`**
 
-**Po v1.4.0 (1.4.x na `main`):** sitemap — `/privacy` + centralna lista publicznych URL (`lib/sitemap-paths.ts`) · landing — wyrównanie hero z sekcjami (`max-w-4xl`) · `<title>` / `og:title` — `Sylveon Dart Profile | Twoje statystyki darta` (Google OAuth Branding)
+**Po v1.4.0 (przed firstPROD):** sitemap — `/privacy` + centralna lista publicznych URL (`lib/sitemap-paths.ts`) · landing — wyrównanie hero · `<title>` / `og:title` — `Sylveon Dart Profile | Twoje statystyki darta`
 
-- Otwarte z backlogu: **1.0.1.4–6** (deploy env, domena ✅ prod, prawo — **1.0.1.6.1** ✅, **1.0.1.6.4** częściowo) · **1.0.2.x** (copy review) · **1.1.8**, **1.1.11–12** · domknięcie **1.3.3** (Playwright CI), **1.3.5**, **1.3.7**
-- Nowe featury 1.4 — doprecyzuj w czacie przed implementacją
+---
+
+### v2.0-firstPROD — Pierwszy release produkcyjny ✅ (2026-08-09)
+
+> Snapshot **pierwszego PROD** na `main`. To **nie** jest freemium (**2.0.x** nadal ⏸️).  
+> Branch: [`backup/v2.0-firstPROD`](https://github.com/grotkowski9/Cursor_DartStats/tree/backup/v2.0-firstPROD) · tag **`v2.0-firstPROD`** · `package.json` **2.0.0**
+
+#### Co weszło (dla agenta)
+
+**501-only matches**
+- Ingest odrzuca mecze ze `startScore ≠ 501` (`unsupported_start_score` + komunikat PL)
+- Migracja `20260809154500_reject_non_501_matches.sql` — delete non-501 + CHECK `start_score = 501`
+- UI single/bulk + skrypty seed/import CSV
+
+**Stopka + SEO + legal**
+- Domeny: `dart.sylveoncompany.pl` · `n01darts.pl` w jednym wierszu z brandem (gradient Sylveon / accent)
+- 4 sekcje (2×2): średnie/checkouty · import N01/H2H · forma/postępy · informacja prawna (disclaimer N01/Nakka)
+- Polityka prywatności pod nav
+
+**Landing / brand mark**
+- CTA login: accent gradient + delikatny Sylveon glow
+- `BrandLogoMark` — tile + soft Sylveon glow, link `/` — landing + `ErrorScreen` (404/500)
+
+**Prod**
+- Live: `https://dart.sylveoncompany.pl` (oraz alias `n01darts.pl`)
+
+- Otwarte z backlogu: **1.0.1.4–6** (prawo — regulamin/cookies) · **1.0.2.x** · **1.1.8**, **1.1.11–12** · **1.3.3**, **1.3.5**, **1.3.7**
 
 ---
 
 ### 2.0.x — Premium + Płatności ⏸️
 
-> **Odłożone.** Startujemy bez premium / płatności / CTA upgrade. Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie. *(Było: **1.2.x** + CTA **1.1.9.5**.)*
+> **Odłożone.** Numeracja feature **2.0.x** ≠ tag **v2.0-firstPROD** (prod milestone). Startujemy bez premium / płatności / CTA upgrade. Limity **konfigurowalne** — jeden plik/plan w DB, bez magic numbers w kodzie. *(Było: **1.2.x** + CTA **1.1.9.5**.)*
 
 - [ ] **2.0.1** Model freemium — `lib/plan-limits.ts` (lub tabela `plan_tiers`):
   - `freeMaxMatches` — domyślnie 3, **zmienialne bez deployu**
@@ -964,7 +992,7 @@ Zob. checklistę **1.1.13** wyżej (swap + rename, PATCH, UI).
 | **1.3.7** | ⏳ | Hardening importu server-side (client demo ✅) |
 | **v1.3.2** | ✅ | Release `main` — landing, demo insights, footer, login split, rebrand |
 | **v1.4.0** | ✅ | Release `main` — favicon Sylveon, landing kafelki pionowo, docs Google OAuth/`/privacy` |
-| **1.4.x** | ⏳ | Kolejne commity na `cursor/v1.4.x` → merge `main` |
+| **v2.0-firstPROD** | ✅ | Pierwszy PROD — 501-only, footer SEO/legal, BrandLogoMark, tag `v2.0-firstPROD` |
 | **2.0.1–6** | ⏸️ | Freemium + płatności + role premium + CTA upgrade *(było 1.2.x + 1.1.9.5)* |
 | **5.0.0** | ⏸️ | Milestone pełnego wydania |
 | **5.0.1** | ⏸️ | Logowanie Apple |
@@ -1239,7 +1267,7 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 
 ## Stan na koniec czatu + handoff
 
-### v1.4.0 na `main` · dev `cursor/v1.4.x` ✅ | backlog otwarty (rosnąco po ID)
+### v2.0-firstPROD na `main` ✅ | backlog otwarty (rosnąco po ID)
 
 
 | Element         | Status                                                      |
@@ -1261,20 +1289,20 @@ Stan: **51 meczów** zaimportowanych (2026-07-11).
 | **v1.3.0**      | ✅ Testy Vitest + CI + security hardening · tag `v1.3.0` |
 | **v1.3.2**      | ✅ WYDANY na `main` — perf bootstrap, rebrand, login split, landing, demo insights, footer · `backup/v1.3.0`, tag `v1.3.2` |
 | **v1.4.0**      | ✅ WYDANY na `main` — favicon Sylveon, landing kafelki pionowo, docs OAuth/`/privacy` · tag `v1.4.0` |
-| **1.4.x**       | ⏳ Kolejne featury — `cursor/v1.4.x` → merge `main` |
-| **2.0.x**       | ⏸️ Premium + płatności (odłożone) |
+| **v2.0-firstPROD** | ✅ WYDANY na `main` — 501-only, footer SEO/legal, BrandLogoMark · `backup/v2.0-firstPROD`, tag `v2.0-firstPROD` |
+| **2.0.x**       | ⏸️ Premium + płatności (odłożone; ≠ tag firstPROD) |
 | Backup DB lokalny | `.dev/*.json` **gitignore** (PII) — nie commitować |
 
 
-### Gałęzie i tagi (2026-08-02)
+### Gałęzie i tagi (2026-08-09)
 
 
 | Cel | Wskaźnik |
 | --- | -------- |
-| Produkcja / release | `main` @ **v1.4.0** (tag `v1.4.0`) |
-| Dev bieżący | `cursor/v1.4.x` (sync z `main` po release) |
-| Linia 1.3 zamknięta | `cursor/v1.3.x` @ `0d1bbdf` |
-| Rollback 1.4 | tag `v1.4.0` lub `git checkout` poprzedni commit na `main` |
+| Produkcja / firstPROD | `main` @ **v2.0-firstPROD** (tag `v2.0-firstPROD`) |
+| Backup firstPROD | branch `backup/v2.0-firstPROD` |
+| Rollback firstPROD | `git checkout backup/v2.0-firstPROD` lub tag `v2.0-firstPROD` |
+| Rollback 1.4 | tag `v1.4.0` |
 | Rollback 1.3 | `git checkout backup/v1.3.0` lub tag `v1.3.2` |
 | Rollback przed perf | tag `v1.3.0-pre-perf` (przed bulk bootstrap) |
 
@@ -1873,6 +1901,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v2.0-firstPROD** | 2026-08-09 | **Pierwszy PROD na `main`.** Mecze tylko 501 (ingest + migracja CHECK). Stopka: SEO 2×2 + disclaimer N01/Nakka + domeny. Landing: CTA glow + `BrandLogoMark` (także 404/500). `package.json` 2.0.0. Branch `backup/v2.0-firstPROD`, tag `v2.0-firstPROD`. |
 | **1.4.x**  | 2026-08-08 | Sitemap: `/privacy` + `lib/sitemap-paths.ts` (14 publicznych URL). `robots.txt` allow `/privacy`. Landing: wyrównanie hero z sekcjami poniżej. `<title>`/`og:title`: `Sylveon Dart Profile | Twoje statystyki darta`. |
 | **1.4.x**  | 2026-08-07 | **`/privacy`** na prod (`dart.sylveoncompany.pl`); link w stopce; linia opisu appki nad stopką (Google OAuth Branding). Supabase Site URL + redirect prod. Vercel Analytics + Speed Insights w `layout`. README: GCP Branding checklist. |
 | **v1.4.0** | 2026-08-02 | **Release na `main`.** Favicon set Sylveon (z `sylveoncompany.pl`). Landing: sekcja „Co dostajesz” — 3 kafelki w kolumnie. README: `/privacy` konieczne dla Google OAuth Branding; prod na `sylveon-dart-profile.vercel.app`. Tag `v1.4.0`. |

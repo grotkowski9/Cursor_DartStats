@@ -4,10 +4,10 @@ import {
   ArrowRight,
   BarChart3,
   Link2,
-  Target,
   Trophy,
 } from "lucide-react";
 import { LandingJsonLd } from "@/components/landing-json-ld";
+import { BrandLogoMark } from "@/components/brand-logo-mark";
 import { SiteFooter } from "@/components/site-footer";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
@@ -76,11 +76,7 @@ export default function HomePage() {
 
         <section className="relative z-10 px-6 pb-8 pt-12 md:pt-16">
           <div className="mx-auto max-w-4xl">
-            <div className="relative mb-8 inline-flex dartboard-ring">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
-                  <Target className="h-8 w-8" aria-hidden />
-                </div>
-              </div>
+            <BrandLogoMark />
 
               <h1 className="text-4xl font-bold leading-[1.08] tracking-tight md:text-5xl lg:text-[3.25rem]">
                 <span className="bg-gradient-to-r from-sylveon-from to-sylveon-to bg-clip-text text-transparent">
@@ -102,12 +98,22 @@ export default function HomePage() {
               </p>
 
               <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/25 transition hover:shadow-accent-to/45"
-                >
-                  Zaloguj się / Zarejestruj
-                </Link>
+                <div className="relative inline-flex w-full sm:w-auto">
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -inset-2 rounded-full bg-[radial-gradient(ellipse_at_center,var(--sylveon-from)_0%,var(--sylveon-to)_45%,transparent_70%)] opacity-45 blur-xl"
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-full shadow-[0_0_16px_4px_oklch(0.82_0.14_355_/_0.28),0_0_28px_8px_oklch(0.72_0.16_310_/_0.18)]"
+                  />
+                  <Link
+                    href="/login"
+                    className="relative inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent-from to-accent-to px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-accent-to/25 transition hover:shadow-accent-to/45"
+                  >
+                    Zaloguj się / Zarejestruj
+                  </Link>
+                </div>
                 <Link
                   href="/demo/profile"
                   className="group inline-flex items-center justify-center gap-1.5 self-center rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-semibold text-muted-foreground transition hover:border-accent-from/40 hover:bg-accent-from/5 hover:text-foreground sm:self-auto"

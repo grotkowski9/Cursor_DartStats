@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Target } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { BrandLogoMark } from "@/components/brand-logo-mark";
 
 type Props = {
   code?: string;
@@ -46,11 +47,7 @@ export function ErrorScreen({
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-        <div className="relative mb-8 inline-flex dartboard-ring">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-card/60 text-primary backdrop-blur-xl">
-            <Target className="h-8 w-8" aria-hidden />
-          </div>
-        </div>
+        <BrandLogoMark />
 
         <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-signal">
           Error {code}
