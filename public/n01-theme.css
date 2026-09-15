@@ -1,17 +1,27 @@
-/* n01darts custom league highlights */
+/* n01darts CUSTOM CSS DIAGNOSTIC — use only for testing */
 
-/* EKSTRAKLASA — three bottom rows */
-tr.lg_player[subtitle="Ekstraklasa"]:nth-last-of-type(1) > td,
-tr.lg_player[subtitle="Ekstraklasa"]:nth-last-of-type(2) > td,
-tr.lg_player[subtitle="Ekstraklasa"]:nth-last-of-type(3) > td {
-    background: #ffd6d6 !important;
-    color: #b00000 !important;
+/* If you see this badge, the external CSS file is definitely loaded. */
+body::before {
+    content: "CUSTOM CSS LOADED" !important;
+    position: fixed !important;
+    z-index: 2147483647 !important;
+    top: 8px !important;
+    right: 8px !important;
+    padding: 8px 12px !important;
+    background: #ff00cc !important;
+    color: #ffffff !important;
+    border: 3px solid #000000 !important;
+    font: 700 14px/1.2 Arial, sans-serif !important;
 }
 
-/* 1 Liga — three top rows */
-tr.lg_player[subtitle="1 Liga"]:nth-of-type(1) > td,
-tr.lg_player[subtitle="1 Liga"]:nth-of-type(2) > td,
-tr.lg_player[subtitle="1 Liga"]:nth-of-type(3) > td {
-    background: #d9f5df !important;
-    color: #146b2e !important;
+/* If Ekstraklasa rows get a magenta outline, the attributes/classes match too. */
+tr.lg_player[subtitle="Ekstraklasa"] > td {
+    outline: 2px solid #ff00cc !important;
+    outline-offset: -2px !important;
+}
+
+/* If 1 Liga rows get a cyan outline, that selector matches too. */
+tr.lg_player[subtitle="1 Liga"] > td {
+    outline: 2px solid #00c8ff !important;
+    outline-offset: -2px !important;
 }
