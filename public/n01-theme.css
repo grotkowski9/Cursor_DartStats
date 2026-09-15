@@ -1,27 +1,27 @@
-/* n01darts CUSTOM CSS DIAGNOSTIC — use only for testing */
+/*
+ * n01darts custom theme — dynamic standings
+ * Ekstraklasa: current bottom 3 red
+ * 1 Liga: current top 3 green
+ *
+ * IMPORTANT: this relies on n01 keeping league rows in current displayed ranking order.
+ */
 
-/* If you see this badge, the external CSS file is definitely loaded. */
-body::before {
-    content: "CUSTOM CSS LOADED" !important;
-    position: fixed !important;
-    z-index: 2147483647 !important;
-    top: 8px !important;
-    right: 8px !important;
-    padding: 8px 12px !important;
-    background: #ff00cc !important;
-    color: #ffffff !important;
-    border: 3px solid #000000 !important;
-    font: 700 14px/1.2 Arial, sans-serif !important;
+/* EKSTRAKLASA — last 3 matching player rows among siblings */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]) > td {
+    background: #ffd6d6 !important;
+    color: #b00000 !important;
 }
 
-/* If Ekstraklasa rows get a magenta outline, the attributes/classes match too. */
-tr.lg_player[subtitle="Ekstraklasa"] > td {
-    outline: 2px solid #ff00cc !important;
-    outline-offset: -2px !important;
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]) > td * {
+    color: #b00000 !important;
 }
 
-/* If 1 Liga rows get a cyan outline, that selector matches too. */
-tr.lg_player[subtitle="1 Liga"] > td {
-    outline: 2px solid #00c8ff !important;
-    outline-offset: -2px !important;
+/* 1 LIGA — first 3 matching player rows among siblings */
+tr.lg_player[subtitle="1 Liga"]:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"]) > td {
+    background: #d9f5df !important;
+    color: #146b2e !important;
+}
+
+tr.lg_player[subtitle="1 Liga"]:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"]) > td * {
+    color: #146b2e !important;
 }
