@@ -1,17 +1,13 @@
 /*
- * n01darts custom theme — STS v2
+ * n01darts custom theme — GLASS DARK MODE
  * Dynamic standings:
  * - Ekstraklasa: 1st gold, 2nd silver, 3rd bronze, bottom 3 muted red
  * - 1. Liga / 1 Liga: top 3 green
  * - Larger, bold league titles
- * - STS-style blue/orange background
+ * - Dark glassmorphism background
  */
 
 :root {
-    --sts-blue-dark: #ff4b00;
-    --sts-blue: #006fe6;
-    --sts-orange: #002a8f;
-
     --gold-bg-1: #f4dc72;
     --gold-bg-2: #d5ad2f;
     --gold-text: #5a4300;
@@ -27,35 +23,94 @@
     --green-bg: #d7eadb;
     --green-text: #245d34;
 
-    /* muted / "sad" relegation red */
     --red-bg: #e6c8cb;
     --red-text: #7a2931;
 }
 
 /* =========================
-   PAGE BACKGROUND — STS
+   GLASS DARK MODE BACKGROUND
    ========================= */
 
 html {
     min-height: 100%;
-    background: var(--sts-blue-dark) !important;
+    background: #0b0f17 !important;
 }
 
 body {
     min-height: 100vh;
+    color: #eef2f7 !important;
     background:
-        linear-gradient(
-            98deg,
-            var(--sts-blue-dark) 0%,
-            var(--sts-blue) 60%,
-            var(--sts-orange) 60.25%,
-            #ff5a00 100%
-        ) fixed !important;
+        radial-gradient(circle at 18% 18%, rgba(84, 110, 255, 0.18) 0%, rgba(84, 110, 255, 0) 31%),
+        radial-gradient(circle at 83% 16%, rgba(0, 214, 201, 0.12) 0%, rgba(0, 214, 201, 0) 28%),
+        radial-gradient(circle at 72% 78%, rgba(143, 82, 255, 0.15) 0%, rgba(143, 82, 255, 0) 32%),
+        linear-gradient(145deg, #090d14 0%, #111827 48%, #080b11 100%) fixed !important;
+}
+
+/* soft glow layer */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        linear-gradient(115deg, rgba(255,255,255,0.035), transparent 30%, rgba(255,255,255,0.018) 60%, transparent);
+}
+
+/* =========================
+   GLASS PANELS / TABLES
+   ========================= */
+
+.lg_group,
+.lg_g,
+.lg_table,
+table {
+    background: rgba(18, 24, 35, 0.72) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(16px) saturate(125%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(125%) !important;
+}
+
+/* Generic cells stay readable in dark mode.
+   Ranking highlight rules below override these backgrounds. */
+table th {
+    background: rgba(255, 255, 255, 0.10) !important;
+    color: #f7f9fc !important;
+    border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+table td {
+    background: rgba(255, 255, 255, 0.055) !important;
+    color: #e9edf3 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* subtle alternating rows */
+tr.lg_player:nth-child(even) > td {
+    background: rgba(255, 255, 255, 0.075) !important;
+}
+
+/* hover */
+tr.lg_player:hover > td {
+    filter: brightness(1.08);
+}
+
+/* links / secondary text */
+a {
+    color: #a9c7ff !important;
+}
+
+.lg_player .t_avg,
+.lg_player .t_join,
+.lg_player small {
+    color: #9ea8b8 !important;
 }
 
 /* =========================
    LEAGUE TITLES
-   actual n01 class: .lg_g_title
    ========================= */
 
 div.lg_g_title,
@@ -63,10 +118,10 @@ div.lg_g_title,
     font-size: 24px !important;
     line-height: 1.15 !important;
     font-weight: 800 !important;
-    letter-spacing: 0.2px !important;
-    padding: 7px 0 9px !important;
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.32) !important;
+    letter-spacing: 0.3px !important;
+    padding: 8px 0 10px !important;
+    color: #f4f7fb !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
 }
 
 /* =========================
@@ -123,7 +178,6 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 
 /* =========================
    EKSTRAKLASA — BOTTOM 3
-   muted red
    ========================= */
 
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
@@ -141,8 +195,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
 
 /* =========================
    1. LIGA — TOP 3 GREEN
-   Supports BOTH subtitle="1 Liga"
-   and subtitle="1. Liga"
+   supports subtitle="1 Liga" and "1. Liga"
    ========================= */
 
 tr.lg_player:nth-child(
@@ -168,4 +221,90 @@ tr.lg_player:nth-child(
 )[subtitle="1. Liga"] > td * {
     color: var(--green-text) !important;
     font-weight: 700 !important;
+}
+
+
+/* =========================================================
+   HIGHLIGHTED ROWS — remove visible column gaps/seams
+   Makes podium / promotion / relegation rows look continuous.
+   ========================================================= */
+
+/* No vertical seams inside highlighted rows */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td,
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td,
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"] > td,
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"] > td {
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+
+/* Keep a clean outer edge on the row */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td:first-child,
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td:first-child,
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"] > td:first-child,
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"] > td:first-child {
+    border-left: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td:last-child,
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td:last-child,
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"] > td:last-child,
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"] > td:last-child {
+    border-right: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Avoid actual spacing between table cells */
+table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+}
+
+/* Podium: use one flat tone per row instead of restarting
+   a gradient inside every individual cell. */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    1 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td {
+    background: #e2c453 !important;
+}
+
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    2 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td {
+    background: #d3d7dc !important;
+}
+
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    3 of tr.lg_player[subtitle="Ekstraklasa"]
+) > td {
+    background: #c99060 !important;
 }
