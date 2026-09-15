@@ -1,12 +1,27 @@
-/*
- * n01darts custom theme — dynamic standings
- * Ekstraklasa: current bottom 3 red
- * 1 Liga: current top 3 green
- *
- * IMPORTANT: this relies on n01 keeping league rows in current displayed ranking order.
- */
+:root {
+    --sts-blue-dark: #00239c;
+    --sts-blue: #0070e1;
+    --sts-orange: #ff4100;
+}
 
-/* EKSTRAKLASA — last 3 matching player rows among siblings */
+/* STS BACKGROUND */
+html {
+    background: var(--sts-blue-dark) !important;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        linear-gradient(
+            98deg,
+            var(--sts-blue-dark) 0%,
+            var(--sts-blue) 57%,
+            var(--sts-orange) 57.3%,
+            #ff6a00 100%
+        ) fixed !important;
+}
+
+/* EKSTRAKLASA — BOTTOM 3 RED */
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]) > td {
     background: #ffd6d6 !important;
     color: #b00000 !important;
@@ -16,12 +31,67 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitl
     color: #b00000 !important;
 }
 
-/* 1 LIGA — first 3 matching player rows among siblings */
+/* EKSTRAKLASA — 1. GOLD */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(1 of tr.lg_player[subtitle="Ekstraklasa"]) > td {
+    background: linear-gradient(90deg, #fff3ad 0%, #e2bd43 100%) !important;
+    color: #5b4300 !important;
+    font-weight: 700 !important;
+}
+
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(1 of tr.lg_player[subtitle="Ekstraklasa"]) > td * {
+    color: #5b4300 !important;
+    font-weight: 700 !important;
+}
+
+/* EKSTRAKLASA — 2. SILVER */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(2 of tr.lg_player[subtitle="Ekstraklasa"]) > td {
+    background: linear-gradient(90deg, #f5f6f7 0%, #c8cdd3 100%) !important;
+    color: #3e4650 !important;
+    font-weight: 700 !important;
+}
+
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(2 of tr.lg_player[subtitle="Ekstraklasa"]) > td * {
+    color: #3e4650 !important;
+    font-weight: 700 !important;
+}
+
+/* EKSTRAKLASA — 3. BRONZE */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(3 of tr.lg_player[subtitle="Ekstraklasa"]) > td {
+    background: linear-gradient(90deg, #f3d0b2 0%, #c88750 100%) !important;
+    color: #663412 !important;
+    font-weight: 700 !important;
+}
+
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(3 of tr.lg_player[subtitle="Ekstraklasa"]) > td * {
+    color: #663412 !important;
+    font-weight: 700 !important;
+}
+
+/* 1 LIGA — TOP 3 GREEN */
 tr.lg_player[subtitle="1 Liga"]:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"]) > td {
     background: #d9f5df !important;
     color: #146b2e !important;
+    font-weight: 700 !important;
 }
 
 tr.lg_player[subtitle="1 Liga"]:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"]) > td * {
     color: #146b2e !important;
+    font-weight: 700 !important;
+}
+
+/* NAGŁÓWKI LIG */
+.lg_title,
+.lg_subtitle,
+.lg_group_title,
+.lg_div_title,
+.league_title,
+.league_subtitle,
+.division_title,
+.t_subtitle,
+[class~="subtitle"],
+table:has(tr.lg_player[subtitle="Ekstraklasa"]) > caption,
+table:has(tr.lg_player[subtitle="1 Liga"]) > caption {
+    font-size: 26px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
 }
