@@ -1,16 +1,17 @@
-/* n01darts custom theme
-   Ekstraklasa: 3 ostatnie miejsca czerwone
-   1 Liga: 3 pierwsze miejsca zielone
-*/
+/* n01darts custom league highlights */
 
-/* EKSTRAKLASA — 3 ostatnie miejsca */
-tr:nth-last-child(-n+3 of .lg_player[subtitle="Ekstraklasa"]) > td {
-    background-color: #ffd6d6 !important;
+/* EKSTRAKLASA — three bottom rows */
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-of-type(1) > td,
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-of-type(2) > td,
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-of-type(3) > td {
+    background: #ffd6d6 !important;
     color: #b00000 !important;
 }
 
-/* 1 LIGA — 3 pierwsze miejsca */
-tr:nth-child(-n+3 of .lg_player[subtitle="1 Liga"]) > td {
-    background-color: #d9f5df !important;
+/* 1 Liga — three top rows */
+tr.lg_player[subtitle="1 Liga"]:nth-of-type(1) > td,
+tr.lg_player[subtitle="1 Liga"]:nth-of-type(2) > td,
+tr.lg_player[subtitle="1 Liga"]:nth-of-type(3) > td {
+    background: #d9f5df !important;
     color: #146b2e !important;
 }
