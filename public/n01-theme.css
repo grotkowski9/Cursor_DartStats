@@ -407,3 +407,165 @@ tr.lg_player:hover > td::after {
     box-shadow: none !important;
     opacity: 0 !important;
 }
+
+
+/* =========================================================
+   v15 — ACTIVE ROW: SUBTLE DISTINCTION
+   Only while NOT hovered. Rank cell remains controlled
+   separately by the standings colors below.
+   ========================================================= */
+
+/* Slight cool glass tint for the active/playable row */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td:not(:last-child) {
+    background: rgba(92, 119, 165, 0.13) !important;
+    background-color: rgba(92, 119, 165, 0.13) !important;
+    background-image: none !important;
+    color: #edf2fa !important;
+    -webkit-text-fill-color: #edf2fa !important;
+    box-shadow:
+        inset 0 1px 0 rgba(160, 188, 235, 0.07),
+        inset 0 -1px 0 rgba(160, 188, 235, 0.05) !important;
+}
+
+/* Small accent only at the left edge of the active row */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td.lg_name:first-child {
+    box-shadow:
+        inset 3px 0 0 rgba(135, 171, 235, 0.62),
+        inset 0 1px 0 rgba(160, 188, 235, 0.07),
+        inset 0 -1px 0 rgba(160, 188, 235, 0.05) !important;
+}
+
+/* Keep text inside active row readable without touching Rank */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td:not(:last-child) * {
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+
+/* =========================================================
+   v15 — HARD FIX FOR COLORED RANK TEXT
+   Explicit text fill prevents logged-in/current-row styles
+   from turning Rank text white/invisible.
+   ========================================================= */
+
+/* EKSTRAKLASA 1 — GOLD */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    1 of tr.lg_player[subtitle="Ekstraklasa"]
+):not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-gold-bg) !important;
+    background-color: var(--n01-gold-bg) !important;
+    background-image: none !important;
+    color: #4d3900 !important;
+    -webkit-text-fill-color: #4d3900 !important;
+}
+
+/* EKSTRAKLASA 2 — SILVER */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    2 of tr.lg_player[subtitle="Ekstraklasa"]
+):not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-silver-bg) !important;
+    background-color: var(--n01-silver-bg) !important;
+    background-image: none !important;
+    color: #303840 !important;
+    -webkit-text-fill-color: #303840 !important;
+}
+
+/* EKSTRAKLASA 3 — BRONZE */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    3 of tr.lg_player[subtitle="Ekstraklasa"]
+):not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-bronze-bg) !important;
+    background-color: var(--n01-bronze-bg) !important;
+    background-image: none !important;
+    color: #4c260e !important;
+    -webkit-text-fill-color: #4c260e !important;
+}
+
+/* EKSTRAKLASA BOTTOM 3 — MUTED RED */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+):not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-red-bg) !important;
+    background-color: var(--n01-red-bg) !important;
+    background-image: none !important;
+    color: #69242b !important;
+    -webkit-text-fill-color: #69242b !important;
+}
+
+/* 1. LIGA TOP 3 — GREEN, NOT BOLD */
+body:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:not(:hover) > td.lg_rank:last-child,
+body:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-green-bg) !important;
+    background-color: var(--n01-green-bg) !important;
+    background-image: none !important;
+    color: #174c29 !important;
+    -webkit-text-fill-color: #174c29 !important;
+    font-weight: 400 !important;
+}
+
+/* If n01 ever inserts a child element into Rank, inherit the same color */
+body:has(tr.lg_player)
+td.lg_rank:last-child > * {
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+/* =========================================================
+   FINAL HOVER REASSERTION
+   Every row, including active lg_match_button, behaves exactly
+   the same on hover. Keep this LAST.
+   ========================================================= */
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_view_button:hover > td,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:hover > td {
+    background: var(--n01-hover-bg) !important;
+    background-color: var(--n01-hover-bg) !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_view_button:hover > td *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:hover > td * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
