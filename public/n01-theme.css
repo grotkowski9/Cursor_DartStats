@@ -325,3 +325,18 @@ body:has(tr.lg_player) tr.lg_player:nth-child(-n+3 of tr.lg_player[subtitle="1 L
 body:has(tr.lg_player) tr.lg_player:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"], tr.lg_player[subtitle="1. Liga"])[subtitle="1. Liga"]:hover > td { background: var(--green-bg) !important; color: var(--green-text) !important; }
 body:has(tr.lg_player) tr.lg_player:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"], tr.lg_player[subtitle="1. Liga"])[subtitle="1 Liga"]:hover > td *,
 body:has(tr.lg_player) tr.lg_player:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"], tr.lg_player[subtitle="1. Liga"])[subtitle="1. Liga"]:hover > td * { color: var(--green-text) !important; }
+
+
+/* =========================================================
+   STATS LINK — MAIN PAGE ONLY
+   ========================================================= */
+
+body:has(tr.lg_player) #title_stats {
+    color: #ffffff !important;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+}
+
+body:has(tr.lg_player) #title_stats:hover {
+    color: #ffffff !important;
+}
