@@ -1,5 +1,6 @@
 /*
- * n01darts custom theme — GLASS DARK MODE v3
+ * n01darts custom theme — GLASS DARK MODE v9
+ * Colored standings apply only to the last/rightmost column (Rank).
  *
  * IMPORTANT:
  * All visual theme changes are scoped to pages containing tr.lg_player,
@@ -93,7 +94,7 @@ body:has(tr.lg_player) table:has(tr.lg_player) td {
     border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-body:has(tr.lg_player) tr.lg_player:nth-child(even) > td {
+body:has(tr.lg_player) tr.lg_player:nth-child(even) > td:last-child {
     background: rgba(255, 255, 255, 0.075) !important;
 }
 
@@ -137,7 +138,7 @@ body:has(tr.lg_player) .lg_g_title {
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     1 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td {
+) > td:last-child {
     background: #e2c453 !important;
     color: var(--gold-text) !important;
     font-weight: 700 !important;
@@ -146,7 +147,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     1 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td * {
+) > td:last-child * {
     color: var(--gold-text) !important;
     font-weight: 700 !important;
 }
@@ -155,7 +156,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     2 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td {
+) > td:last-child {
     background: #d3d7dc !important;
     color: var(--silver-text) !important;
     font-weight: 700 !important;
@@ -164,7 +165,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     2 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td * {
+) > td:last-child * {
     color: var(--silver-text) !important;
     font-weight: 700 !important;
 }
@@ -173,7 +174,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     3 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td {
+) > td:last-child {
     background: #c99060 !important;
     color: var(--bronze-text) !important;
     font-weight: 700 !important;
@@ -182,7 +183,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     3 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td * {
+) > td:last-child * {
     color: var(--bronze-text) !important;
     font-weight: 700 !important;
 }
@@ -194,7 +195,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
     -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td {
+) > td:last-child {
     background: var(--red-bg) !important;
     color: var(--red-text) !important;
 }
@@ -202,7 +203,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
     -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td * {
+) > td:last-child * {
     color: var(--red-text) !important;
 }
 
@@ -309,17 +310,17 @@ tr.lg_player:nth-child(
 
 
 /* Keep semantic highlight colors on hover */
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(1 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td { background: #e2c453 !important; color: var(--gold-text) !important; }
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(1 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td * { color: var(--gold-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(1 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child { background: #e2c453 !important; color: var(--gold-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(1 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child * { color: var(--gold-text) !important; }
 
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(2 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td { background: #d3d7dc !important; color: var(--silver-text) !important; }
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(2 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td * { color: var(--silver-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(2 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child { background: #d3d7dc !important; color: var(--silver-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(2 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child * { color: var(--silver-text) !important; }
 
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td { background: #c99060 !important; color: var(--bronze-text) !important; }
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td * { color: var(--bronze-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child { background: #c99060 !important; color: var(--bronze-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-child(3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child * { color: var(--bronze-text) !important; }
 
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td { background: var(--red-bg) !important; color: var(--red-text) !important; }
-body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td * { color: var(--red-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child { background: var(--red-bg) !important; color: var(--red-text) !important; }
+body:has(tr.lg_player) tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(-n+3 of tr.lg_player[subtitle="Ekstraklasa"]):hover > td:last-child * { color: var(--red-text) !important; }
 
 body:has(tr.lg_player) tr.lg_player:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"], tr.lg_player[subtitle="1. Liga"])[subtitle="1 Liga"]:hover > td,
 body:has(tr.lg_player) tr.lg_player:nth-child(-n+3 of tr.lg_player[subtitle="1 Liga"], tr.lg_player[subtitle="1. Liga"])[subtitle="1. Liga"]:hover > td { background: var(--green-bg) !important; color: var(--green-text) !important; }
@@ -398,7 +399,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     1 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td {
+):hover > td:last-child {
     background: #e2c453 !important;
     background-color: #e2c453 !important;
     background-image: none !important;
@@ -408,7 +409,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     1 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td * {
+):hover > td:last-child * {
     color: var(--gold-text) !important;
 }
 
@@ -417,7 +418,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     2 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td {
+):hover > td:last-child {
     background: #d3d7dc !important;
     background-color: #d3d7dc !important;
     background-image: none !important;
@@ -427,7 +428,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     2 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td * {
+):hover > td:last-child * {
     color: var(--silver-text) !important;
 }
 
@@ -436,7 +437,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     3 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td {
+):hover > td:last-child {
     background: #c99060 !important;
     background-color: #c99060 !important;
     background-image: none !important;
@@ -446,7 +447,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     3 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td * {
+):hover > td:last-child * {
     color: var(--bronze-text) !important;
 }
 
@@ -455,7 +456,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
     -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td {
+):hover > td:last-child {
     background: var(--red-bg) !important;
     background-color: var(--red-bg) !important;
     background-image: none !important;
@@ -465,7 +466,7 @@ body:has(tr.lg_player)
 table:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
     -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
-):hover > td * {
+):hover > td:last-child * {
     color: var(--red-text) !important;
 }
 
@@ -546,4 +547,51 @@ tr.lg_player:nth-child(
         inset 0 0 0 999px rgba(255, 255, 255, 0.055),
         inset 0 1px 0 rgba(255, 255, 255, 0.16),
         inset 0 -1px 0 rgba(0, 0, 0, 0.07) !important;
+}
+
+
+/* =========================================================
+   UNIFIED HOVER — SAME ON EVERY ROW / EVERY CELL
+   Keep Rank colors at rest, but on hover the whole row uses
+   the same dark hover treatment as the preferred v7 behavior.
+   MUST remain at the very end of the file.
+   ========================================================= */
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_view_button:hover > td {
+    background: #263142 !important;
+    background-color: #263142 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_view_button:hover > td * {
+    color: #ffffff !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td::before,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td::after {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
 }
