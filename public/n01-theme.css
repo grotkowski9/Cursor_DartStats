@@ -340,3 +340,165 @@ body:has(tr.lg_player) #title_stats {
 body:has(tr.lg_player) #title_stats:hover {
     color: #ffffff !important;
 }
+
+
+/* =========================================================
+   HARD HOVER OVERRIDE — n01 default hover fix
+   This must stay at the VERY END of the file.
+   ========================================================= */
+
+/* Normal league rows: force a genuinely dark hover */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_view_button:hover > td,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td {
+    background: #263142 !important;
+    background-color: #263142 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Force all row content to remain readable */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_view_button:hover > td *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td * {
+    color: #ffffff !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Remove any n01 pseudo-element hover overlays */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td::before,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td::after {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+}
+
+/* -------------------------
+   Highlighted rows keep their own colors on hover
+   ------------------------- */
+
+/* Ekstraklasa 1st */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    1 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td {
+    background: #e2c453 !important;
+    background-color: #e2c453 !important;
+    background-image: none !important;
+    color: var(--gold-text) !important;
+}
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    1 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td * {
+    color: var(--gold-text) !important;
+}
+
+/* Ekstraklasa 2nd */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    2 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td {
+    background: #d3d7dc !important;
+    background-color: #d3d7dc !important;
+    background-image: none !important;
+    color: var(--silver-text) !important;
+}
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    2 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td * {
+    color: var(--silver-text) !important;
+}
+
+/* Ekstraklasa 3rd */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    3 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td {
+    background: #c99060 !important;
+    background-color: #c99060 !important;
+    background-image: none !important;
+    color: var(--bronze-text) !important;
+}
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    3 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td * {
+    color: var(--bronze-text) !important;
+}
+
+/* Ekstraklasa bottom 3 */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td {
+    background: var(--red-bg) !important;
+    background-color: var(--red-bg) !important;
+    background-image: none !important;
+    color: var(--red-text) !important;
+}
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+):hover > td * {
+    color: var(--red-text) !important;
+}
+
+/* 1. Liga top 3 */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:hover > td,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:hover > td {
+    background: var(--green-bg) !important;
+    background-color: var(--green-bg) !important;
+    background-image: none !important;
+    color: var(--green-text) !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:hover > td *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:hover > td * {
+    color: var(--green-text) !important;
+}
