@@ -327,3 +327,46 @@ tr.lg_player:hover > td::after {
     box-shadow: none !important;
     opacity: 0 !important;
 }
+
+
+/* =========================================================
+   LOGGED-IN PLAYER NAME HIGHLIGHT FIX
+   Keep dynamically highlighted current-user names consistent.
+   ========================================================= */
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player > td.lg_name,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player > td.lg_name .entry_name {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    text-shadow: none !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:not(:hover) > td.lg_name .entry_name {
+    color: #e9edf3 !important;
+    -webkit-text-fill-color: #e9edf3 !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td.lg_name,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:hover > td.lg_name .entry_name {
+    background: var(--n01-hover-bg) !important;
+    background-color: var(--n01-hover-bg) !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    box-shadow: none !important;
+    outline: none !important;
+    text-shadow: none !important;
+}
