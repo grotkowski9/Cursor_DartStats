@@ -168,6 +168,86 @@ body:has(tr.lg_player) #title_stats:hover {
     color: #ffffff !important;
 }
 
+
+/* =========================================================
+   ACTIVE / LOGGED-IN MATCH ROW FIX
+   n01 marks the current playable row with .lg_match_button.
+   Neutralize its built-in highlight so it looks like every
+   other standings row. Rank colors below still apply.
+   ========================================================= */
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    filter: none !important;
+}
+
+/* odd/default row */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td {
+    background: rgba(255, 255, 255, 0.055) !important;
+    background-color: rgba(255, 255, 255, 0.055) !important;
+    background-image: none !important;
+    color: #e9edf3 !important;
+    -webkit-text-fill-color: #e9edf3 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+/* keep normal alternating-row appearance */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:nth-child(even):not(:hover) > td {
+    background: rgba(255, 255, 255, 0.075) !important;
+    background-color: rgba(255, 255, 255, 0.075) !important;
+}
+
+/* kill highlight applied to elements inside the active row */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) .entry_name {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    box-shadow: none !important;
+    outline: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+/* n01 sometimes uses pseudo-elements for clickable/current rows */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover)::before,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover)::after,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td::before,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player.lg_match_button:not(:hover) > td::after {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    opacity: 0 !important;
+}
+
 /* =========================================================
    RANK ONLY — EKSTRAKLASA
    ========================================================= */
@@ -326,47 +406,4 @@ tr.lg_player:hover > td::after {
     background-image: none !important;
     box-shadow: none !important;
     opacity: 0 !important;
-}
-
-
-/* =========================================================
-   LOGGED-IN PLAYER NAME HIGHLIGHT FIX
-   Keep dynamically highlighted current-user names consistent.
-   ========================================================= */
-
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player > td.lg_name,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player > td.lg_name .entry_name {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    text-shadow: none !important;
-}
-
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:not(:hover) > td.lg_name .entry_name {
-    color: #e9edf3 !important;
-    -webkit-text-fill-color: #e9edf3 !important;
-}
-
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td.lg_name,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td.lg_name .entry_name {
-    background: var(--n01-hover-bg) !important;
-    background-color: var(--n01-hover-bg) !important;
-    background-image: none !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    box-shadow: none !important;
-    outline: none !important;
-    text-shadow: none !important;
 }
