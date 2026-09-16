@@ -1,5 +1,5 @@
 /*
- * n01darts custom theme — GLASS DARK MODE v9
+ * n01darts custom theme — GLASS DARK MODE v11
  * Colored standings apply only to the last/rightmost column (Rank).
  *
  * IMPORTANT:
@@ -594,4 +594,101 @@ tr.lg_player:hover > td::after {
     background-image: none !important;
     box-shadow: none !important;
     opacity: 0 !important;
+}
+
+
+/* =========================================================
+   FIX v11 — 1. LIGA: COLOR ONLY RIGHTMOST RANK CELL
+   Earlier 1. Liga rules still targeted > td.
+   These final rules deliberately override them.
+   ========================================================= */
+
+/* TOP 3 in 1. Liga — all NON-rank cells return to normal glass */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:not(:hover) > td:not(:last-child),
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:not(:hover) > td:not(:last-child) {
+    background: rgba(255, 255, 255, 0.055) !important;
+    background-color: rgba(255, 255, 255, 0.055) !important;
+    background-image: none !important;
+    color: #e9edf3 !important;
+    font-weight: 400 !important;
+}
+
+/* Text inside those normal cells must not inherit green */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:not(:hover) > td:not(:last-child) *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:not(:hover) > td:not(:last-child) * {
+    color: #e9edf3 !important;
+    font-weight: 400 !important;
+}
+
+/* Restore the slightly lighter alternating glass row where applicable */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(even):nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:not(:hover) > td:not(:last-child),
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(even):nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:not(:hover) > td:not(:last-child) {
+    background: rgba(255, 255, 255, 0.075) !important;
+    background-color: rgba(255, 255, 255, 0.075) !important;
+}
+
+/* ONLY the rightmost Rank cell is green */
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:not(:hover) > td:last-child,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:not(:hover) > td:last-child {
+    background: var(--green-bg) !important;
+    background-color: var(--green-bg) !important;
+    background-image: none !important;
+    color: var(--green-text) !important;
+    font-weight: 400 !important;
+}
+
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1 Liga"]:not(:hover) > td:last-child *,
+body:has(tr.lg_player)
+table:has(tr.lg_player)
+tr.lg_player:nth-child(
+    -n+3 of tr.lg_player[subtitle="1 Liga"],
+    tr.lg_player[subtitle="1. Liga"]
+)[subtitle="1. Liga"]:not(:hover) > td:last-child * {
+    color: var(--green-text) !important;
+    font-weight: 400 !important;
 }
