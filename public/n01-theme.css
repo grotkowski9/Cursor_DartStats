@@ -569,3 +569,20 @@ tr.lg_player.lg_match_button:hover > td * {
     filter: none !important;
     opacity: 1 !important;
 }
+
+
+/* =========================================================
+   v16 — HIDE ONLY TRULY EMPTY LEAGUE PLACEHOLDER ROWS
+   Keeps real players even when their stats/rank are blank.
+   A row is hidden only when:
+   - the name cell has tpid=""
+   - AND .entry_name is empty
+   ========================================================= */
+
+body:has(tr.lg_player)
+#lg_table_main
+table.lg_table
+tbody.lg_body
+tr.lg_player:has(> td.lg_name[tpid=""] > span.entry_name:empty) {
+    display: none !important;
+}
