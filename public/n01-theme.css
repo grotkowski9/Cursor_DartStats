@@ -1,28 +1,30 @@
 /*
- * n01darts — Glass Dark Mainpage v12 CLEAN
+ * n01darts — DEFAULT GLASS DARK THEME
  *
- * CLEAN REBUILD — no accumulated hover patches.
+ * Canonical stylesheet for the tournament main page.
  *
- * Main page only:
- * - dark glass background / standings tables
- * - larger league titles
- * - Stats link white + larger
- * - ONLY rightmost Rank cell is colored:
- *   Ekstraklasa: 1 gold / 2 silver / 3 bronze / bottom 3 muted red
- *   1. Liga: top 3 green (not bold)
- * - ONE unified hover rule for EVERY player row
+ * League rules:
+ * - Ekstraklasa: positions 1/2/3 = muted gold/silver/bronze, bottom 3 = muted red
+ * - 1. Liga - Grupa 1: top 2 = green
+ * - 1. Liga - Grupa 2: top 2 = green
+ *
+ * Other behavior:
+ * - colors apply only to the rightmost Rank cell
+ * - truly empty placeholder rows are hidden
+ * - active/playable row gets a subtle cool highlight
+ * - one unified dark hover for all rows
  * - match views remain untouched
  */
 
 :root {
-    --n01-gold-bg: #e2c453;
-    --n01-gold-text: #5a4300;
+    --n01-gold-bg: #b8a66a;
+    --n01-gold-text: #312b17;
 
-    --n01-silver-bg: #d3d7dc;
-    --n01-silver-text: #394149;
+    --n01-silver-bg: #aeb5bd;
+    --n01-silver-text: #2d3339;
 
-    --n01-bronze-bg: #c99060;
-    --n01-bronze-text: #5a2e12;
+    --n01-bronze-bg: #9f765a;
+    --n01-bronze-text: #322219;
 
     --n01-green-bg: #d7eadb;
     --n01-green-text: #245d34;
@@ -145,11 +147,11 @@ body:has(tr.lg_player) .lg_player small {
    ========================================================= */
 
 body:has(tr.lg_player) .lg_g_title {
-    font-size: 24px !important;
+    font-size: 20px !important;
     line-height: 1.15 !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.3px !important;
-    padding: 8px 0 10px !important;
+    font-weight: 750 !important;
+    letter-spacing: 0.2px !important;
+    padding: 5px 0 7px !important;
     color: #f4f7fb !important;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
 }
@@ -167,7 +169,6 @@ body:has(tr.lg_player) #title_stats {
 body:has(tr.lg_player) #title_stats:hover {
     color: #ffffff !important;
 }
-
 
 /* =========================================================
    ACTIVE / LOGGED-IN MATCH ROW FIX
@@ -291,7 +292,7 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 /* Bottom 3 — MUTED RED */
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
-    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
 ) > td:last-child {
     background: var(--n01-red-bg) !important;
     background-color: var(--n01-red-bg) !important;
@@ -314,27 +315,26 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
 ) > td:last-child *,
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
-    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
 ) > td:last-child * {
     color: inherit !important;
 }
 
 /* =========================================================
-   RANK ONLY — 1. LIGA TOP 3
-   Handles subtitle="1 Liga" and subtitle="1. Liga"
+   RANK ONLY — 1. LIGA GROUPS, TOP 2
+   Grupa 1 + Grupa 2
    NOT BOLD
+   Only real rows with non-empty tpid count toward TOP 2.
    ========================================================= */
 
 body:has(tr.lg_player)
-tr.lg_player:nth-child(
-    -n+3 of tr.lg_player[subtitle="1 Liga"],
-    tr.lg_player[subtitle="1. Liga"]
-)[subtitle="1 Liga"] > td:last-child,
+tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) > td:last-child,
 body:has(tr.lg_player)
-tr.lg_player:nth-child(
-    -n+3 of tr.lg_player[subtitle="1 Liga"],
-    tr.lg_player[subtitle="1. Liga"]
-)[subtitle="1. Liga"] > td:last-child {
+tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) > td:last-child {
     background: var(--n01-green-bg) !important;
     background-color: var(--n01-green-bg) !important;
     background-image: none !important;
@@ -343,15 +343,13 @@ tr.lg_player:nth-child(
 }
 
 body:has(tr.lg_player)
-tr.lg_player:nth-child(
-    -n+3 of tr.lg_player[subtitle="1 Liga"],
-    tr.lg_player[subtitle="1. Liga"]
-)[subtitle="1 Liga"] > td:last-child *,
+tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) > td:last-child *,
 body:has(tr.lg_player)
-tr.lg_player:nth-child(
-    -n+3 of tr.lg_player[subtitle="1 Liga"],
-    tr.lg_player[subtitle="1. Liga"]
-)[subtitle="1. Liga"] > td:last-child * {
+tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) > td:last-child * {
     color: inherit !important;
     font-weight: 400 !important;
 }
@@ -408,9 +406,8 @@ tr.lg_player:hover > td::after {
     opacity: 0 !important;
 }
 
-
 /* =========================================================
-   v15 — ACTIVE ROW: SUBTLE DISTINCTION
+   ACTIVE ROW — SUBTLE DISTINCTION
    Only while NOT hovered. Rank cell remains controlled
    separately by the standings colors below.
    ========================================================= */
@@ -447,9 +444,8 @@ tr.lg_player.lg_match_button:not(:hover) > td:not(:last-child) * {
     -webkit-text-fill-color: currentColor !important;
 }
 
-
 /* =========================================================
-   v15 — HARD FIX FOR COLORED RANK TEXT
+   COLORED RANK TEXT — READABILITY FIX
    Explicit text fill prevents logged-in/current-row styles
    from turning Rank text white/invisible.
    ========================================================= */
@@ -462,8 +458,8 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     background: var(--n01-gold-bg) !important;
     background-color: var(--n01-gold-bg) !important;
     background-image: none !important;
-    color: #4d3900 !important;
-    -webkit-text-fill-color: #4d3900 !important;
+    color: var(--n01-gold-text) !important;
+    -webkit-text-fill-color: var(--n01-gold-text) !important;
 }
 
 /* EKSTRAKLASA 2 — SILVER */
@@ -474,8 +470,8 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     background: var(--n01-silver-bg) !important;
     background-color: var(--n01-silver-bg) !important;
     background-image: none !important;
-    color: #303840 !important;
-    -webkit-text-fill-color: #303840 !important;
+    color: var(--n01-silver-text) !important;
+    -webkit-text-fill-color: var(--n01-silver-text) !important;
 }
 
 /* EKSTRAKLASA 3 — BRONZE */
@@ -486,14 +482,14 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
     background: var(--n01-bronze-bg) !important;
     background-color: var(--n01-bronze-bg) !important;
     background-image: none !important;
-    color: #4c260e !important;
-    -webkit-text-fill-color: #4c260e !important;
+    color: var(--n01-bronze-text) !important;
+    -webkit-text-fill-color: var(--n01-bronze-text) !important;
 }
 
 /* EKSTRAKLASA BOTTOM 3 — MUTED RED */
 body:has(tr.lg_player)
 tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
-    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
 ):not(:hover) > td.lg_rank:last-child {
     background: var(--n01-red-bg) !important;
     background-color: var(--n01-red-bg) !important;
@@ -502,17 +498,15 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
     -webkit-text-fill-color: #69242b !important;
 }
 
-/* 1. LIGA TOP 3 — GREEN, NOT BOLD */
+/* 1. LIGA GROUPS TOP 2 — GREEN, NOT BOLD */
 body:has(tr.lg_player)
-tr.lg_player:nth-child(
-    -n+3 of tr.lg_player[subtitle="1 Liga"],
-    tr.lg_player[subtitle="1. Liga"]
-)[subtitle="1 Liga"]:not(:hover) > td.lg_rank:last-child,
+tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+):not(:hover) > td.lg_rank:last-child,
 body:has(tr.lg_player)
-tr.lg_player:nth-child(
-    -n+3 of tr.lg_player[subtitle="1 Liga"],
-    tr.lg_player[subtitle="1. Liga"]
-)[subtitle="1. Liga"]:not(:hover) > td.lg_rank:last-child {
+tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+):not(:hover) > td.lg_rank:last-child {
     background: var(--n01-green-bg) !important;
     background-color: var(--n01-green-bg) !important;
     background-image: none !important;
@@ -570,9 +564,8 @@ tr.lg_player.lg_match_button:hover > td * {
     opacity: 1 !important;
 }
 
-
 /* =========================================================
-   v16 — HIDE ONLY TRULY EMPTY LEAGUE PLACEHOLDER ROWS
+   HIDE ONLY TRULY EMPTY LEAGUE PLACEHOLDER ROWS
    Keeps real players even when their stats/rank are blank.
    A row is hidden only when:
    - the name cell has tpid=""
