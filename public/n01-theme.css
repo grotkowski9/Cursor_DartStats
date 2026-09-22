@@ -29,6 +29,9 @@
     --n01-green-bg: #c9e7cf;
     --n01-green-text: #1f5a30;
 
+    --n01-yellow-bg: #ded09a;
+    --n01-yellow-text: #5b4b16;
+
     --n01-red-bg: #d9c8ca;
     --n01-red-text: #6d3035;
 
@@ -520,6 +523,45 @@ body:has(tr.lg_player)
 td.lg_rank:last-child > * {
     color: inherit !important;
     -webkit-text-fill-color: currentColor !important;
+}
+
+
+/* =========================================================
+   PLAYOFF PLACES — MUTED YELLOW
+   Ekstraklasa: 8th
+   1. Liga groups: 3rd
+   Rank cell only.
+   ========================================================= */
+
+/* EKSTRAKLASA — 8th place */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    8 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+):not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-yellow-bg) !important;
+    background-color: var(--n01-yellow-bg) !important;
+    background-image: none !important;
+    color: var(--n01-yellow-text) !important;
+    -webkit-text-fill-color: var(--n01-yellow-text) !important;
+    font-weight: 400 !important;
+}
+
+/* 1. LIGA — GROUP 1, 3rd place */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
+    3 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+):not(:hover) > td.lg_rank:last-child,
+/* 1. LIGA — GROUP 2, 3rd place */
+body:has(tr.lg_player)
+tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
+    3 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+):not(:hover) > td.lg_rank:last-child {
+    background: var(--n01-yellow-bg) !important;
+    background-color: var(--n01-yellow-bg) !important;
+    background-image: none !important;
+    color: var(--n01-yellow-text) !important;
+    -webkit-text-fill-color: var(--n01-yellow-text) !important;
+    font-weight: 400 !important;
 }
 
 /* =========================================================
