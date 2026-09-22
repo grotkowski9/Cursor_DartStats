@@ -1,155 +1,263 @@
 /*
- * n01darts — DEFAULT GLASS DARK THEME
+ * n01darts - DEFAULT GLASS DARK THEME
+ * Full replacement stylesheet for the tournament main page.
  *
- * Canonical stylesheet for the tournament main page.
+ * Ekstraklasa: 1/2/3 muted gold/silver/bronze; bottom 3 muted red;
+ *              8th place lavender (playoff).
+ * 1. Liga - Grupa 1 and 1. Liga - Grupa 2:
+ *              first 2 green; 3rd place lavender (playoff).
  *
- * League rules:
- * - Ekstraklasa: positions 1/2/3 = muted gold/silver/bronze, bottom 3 = muted red
- * - 1. Liga - Grupa 1: top 2 = green
- * - 1. Liga - Grupa 2: top 2 = green
+ * Only Rank cells receive position colors. Their colors and dark text
+ * remain visible on hover. The rest of every row uses the same dark hover.
+ * Position counting follows DOM order and skips unassigned player slots.
+ * No player-specific IDs, names or tpid values are hardcoded.
  *
- * Other behavior:
- * - colors apply only to the rightmost Rank cell
- * - truly empty placeholder rows are hidden
- * - active/playable row gets a subtle cool highlight
- * - one unified dark hover for all rows
- * - match views remain untouched
+ * Includes a scoped dark knockout bracket and a CSS-only display label.
+ * Does not target separate match pages or match-detail tables.
  */
 
 :root {
     --n01-gold-bg: #b8a66a;
     --n01-gold-text: #312b17;
-
     --n01-silver-bg: #aeb5bd;
     --n01-silver-text: #2d3339;
-
     --n01-bronze-bg: #9f765a;
-    --n01-bronze-text: #322219;
-
+    --n01-bronze-text: #1e150f;
     --n01-green-bg: #c9e7cf;
     --n01-green-text: #1f5a30;
-
-    --n01-yellow-bg: #ded09a;
-    --n01-yellow-text: #5b4b16;
-
     --n01-red-bg: #d9c8ca;
     --n01-red-text: #6d3035;
-
+    --n01-playoff-bg: #b7a6d6;
+    --n01-playoff-text: #392950;
     --n01-hover-bg: #263142;
 }
 
 /* =========================================================
-   MAIN PAGE ONLY
+   MAIN PAGE BACKGROUND
+   #lg_table_main is the actual standings container.
    ========================================================= */
 
-html:has(body tr.lg_player) {
+html:has(#lg_table_main) {
     min-height: 100%;
     background: #0b0f17 !important;
 }
 
-body:has(tr.lg_player) {
+body:has(#lg_table_main) {
     min-height: 100vh;
     color: #eef2f7 !important;
     background:
-        radial-gradient(
-            circle at 18% 18%,
-            rgba(84, 110, 255, 0.18) 0%,
-            rgba(84, 110, 255, 0) 31%
-        ),
-        radial-gradient(
-            circle at 83% 16%,
-            rgba(0, 214, 201, 0.12) 0%,
-            rgba(0, 214, 201, 0) 28%
-        ),
-        radial-gradient(
-            circle at 72% 78%,
-            rgba(143, 82, 255, 0.15) 0%,
-            rgba(143, 82, 255, 0) 32%
-        ),
-        linear-gradient(
-            145deg,
-            #090d14 0%,
-            #111827 48%,
-            #080b11 100%
-        ) fixed !important;
+        radial-gradient(circle at 18% 18%, rgba(84, 110, 255, 0.18) 0%, rgba(84, 110, 255, 0) 31%),
+        radial-gradient(circle at 83% 16%, rgba(0, 214, 201, 0.12) 0%, rgba(0, 214, 201, 0) 28%),
+        radial-gradient(circle at 72% 78%, rgba(143, 82, 255, 0.15) 0%, rgba(143, 82, 255, 0) 32%),
+        linear-gradient(145deg, #090d14 0%, #111827 48%, #080b11 100%) fixed !important;
 }
 
-body:has(tr.lg_player)::before {
+body:has(#lg_table_main)::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background:
-        linear-gradient(
-            115deg,
-            rgba(255,255,255,0.035),
-            transparent 30%,
-            rgba(255,255,255,0.018) 60%,
-            transparent
-        );
+    background: linear-gradient(115deg, rgba(255,255,255,0.035), transparent 30%, rgba(255,255,255,0.018) 60%, transparent);
 }
 
 /* =========================================================
-   STANDINGS TABLE ONLY
+   STANDINGS TABLES - NOT EVERY TABLE ON THE PAGE
    ========================================================= */
 
-body:has(tr.lg_player) table:has(tr.lg_player) {
+#lg_table_main table.lg_table {
     background: rgba(18, 24, 35, 0.72) !important;
     border: 1px solid rgba(255, 255, 255, 0.10) !important;
     border-collapse: collapse !important;
     border-spacing: 0 !important;
-    box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.38),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
     backdrop-filter: blur(16px) saturate(125%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(125%) !important;
 }
 
-body:has(tr.lg_player) table:has(tr.lg_player) th {
+#lg_table_main table.lg_table > thead > tr > th {
     background: rgba(255, 255, 255, 0.10) !important;
     color: #f7f9fc !important;
+    -webkit-text-fill-color: currentColor !important;
     border-color: rgba(255, 255, 255, 0.10) !important;
 }
 
-body:has(tr.lg_player) table:has(tr.lg_player) tr.lg_player > td {
-    background: rgba(255, 255, 255, 0.055) !important;
-    color: #e9edf3 !important;
+/* One row state, shared by ordinary and logged-in/playable rows. */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player {
+    --n01-row-bg: rgba(255, 255, 255, 0.055);
+    --n01-row-text: #e9edf3;
+    --n01-name-shadow: none;
+    --n01-rank-bg: initial;
+    --n01-rank-text: initial;
+    --n01-rank-weight: 400;
+    background: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player:nth-child(even) {
+    --n01-row-bg: rgba(255, 255, 255, 0.075);
+}
+
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player.lg_match_button {
+    --n01-row-bg: rgba(92, 119, 165, 0.13);
+    --n01-row-text: #edf2fa;
+    --n01-name-shadow: inset 3px 0 0 rgba(135, 171, 235, 0.62);
+}
+
+/* Hover changes row variables only; the Rank palette stays independent. */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player:hover {
+    --n01-row-bg: var(--n01-hover-bg);
+    --n01-row-text: #ffffff;
+    --n01-name-shadow: none;
+}
+
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player:focus-visible {
+    outline: 2px solid #a8bce0 !important;
+    outline-offset: -2px !important;
+}
+
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td {
+    background: var(--n01-row-bg) !important;
+    color: var(--n01-row-text) !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: 400 !important;
     border-color: rgba(255, 255, 255, 0.08) !important;
-    transition: background-color 120ms ease !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    transition: background-color 120ms ease, box-shadow 120ms ease !important;
 }
 
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:nth-child(even) > td {
-    background: rgba(255, 255, 255, 0.075) !important;
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td.lg_name {
+    box-shadow: var(--n01-name-shadow) !important;
 }
 
-/* Standard visible text in standings rows */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player > td a,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player > td span,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player > td div {
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td * {
     color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: none !important;
+    filter: none !important;
 }
 
-/* Secondary text */
-body:has(tr.lg_player) .lg_player .t_avg,
-body:has(tr.lg_player) .lg_player .t_join,
-body:has(tr.lg_player) .lg_player small {
-    color: #9ea8b8 !important;
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td .entry_name {
+    background: transparent !important;
+    box-shadow: none !important;
+    font-weight: 400 !important;
+    opacity: 1 !important;
+}
+
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td .t_avg,
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td small {
+    color: #a6b0c1 !important;
+}
+
+/* Neutralize cell overlays, but preserve join/status indicators in spans. */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player::before,
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player::after,
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td::before,
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td::after {
+    content: none !important;
 }
 
 /* =========================================================
-   LEAGUE TITLES
+   RANK PALETTES
+   Only assigned rows count; empty slots cannot consume a position.
+   The same rules apply with and without hover, without duplicate patches.
    ========================================================= */
 
-body:has(tr.lg_player) .lg_g_title {
+/* Ekstraklasa - position 1 */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    1 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) {
+    --n01-rank-bg: var(--n01-gold-bg);
+    --n01-rank-text: var(--n01-gold-text);
+    --n01-rank-weight: 700;
+}
+
+/* Ekstraklasa - position 2 */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    2 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) {
+    --n01-rank-bg: var(--n01-silver-bg);
+    --n01-rank-text: var(--n01-silver-text);
+    --n01-rank-weight: 700;
+}
+
+/* Ekstraklasa - position 3 */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) {
+    --n01-rank-bg: var(--n01-bronze-bg);
+    --n01-rank-text: var(--n01-bronze-text);
+    --n01-rank-weight: 700;
+}
+
+/* Ekstraklasa - last 3 assigned players */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) {
+    --n01-rank-bg: var(--n01-red-bg);
+    --n01-rank-text: var(--n01-red-text);
+    --n01-rank-weight: 400;
+}
+
+/* First 2 players in each first-league group - promotion */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+),
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
+    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) {
+    --n01-rank-bg: var(--n01-green-bg);
+    --n01-rank-text: var(--n01-green-text);
+    --n01-rank-weight: 400;
+}
+
+/* Playoff places - lavender, distinct from the gold medal */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
+    8 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+),
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
+    3 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+),
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
+    3 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+) {
+    --n01-rank-bg: var(--n01-playoff-bg);
+    --n01-rank-text: var(--n01-playoff-text);
+    --n01-rank-weight: 400;
+}
+
+/* Single rendering rule for all Rank cells, INCLUDING hover. */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td.lg_rank {
+    background: var(--n01-rank-bg, var(--n01-row-bg)) !important;
+    color: var(--n01-rank-text, var(--n01-row-text)) !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: var(--n01-rank-weight) !important;
+    box-shadow: none !important;
+}
+
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td.lg_rank * {
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    font-weight: inherit !important;
+}
+
+/* Do not hide a real player just because their statistics are still blank. */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player:has(
+    > td.lg_name[tpid=""] > span.entry_name:empty
+) {
+    display: none !important;
+}
+
+/* =========================================================
+   LEAGUE TITLES / STATS
+   ========================================================= */
+
+#lg_table_main .lg_g_title {
     font-size: 20px !important;
     line-height: 1.15 !important;
     font-weight: 750 !important;
@@ -159,476 +267,190 @@ body:has(tr.lg_player) .lg_g_title {
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* =========================================================
-   STATS
-   ========================================================= */
-
-body:has(tr.lg_player) #title_stats {
+body:has(#lg_table_main) #title_stats {
     color: #ffffff !important;
+    -webkit-text-fill-color: currentColor !important;
     font-size: 18px !important;
     font-weight: 400 !important;
 }
 
-body:has(tr.lg_player) #title_stats:hover {
-    color: #ffffff !important;
-}
-
 /* =========================================================
-   ACTIVE / LOGGED-IN MATCH ROW FIX
-   n01 marks the current playable row with .lg_match_button.
-   Neutralize its built-in highlight so it looks like every
-   other standings row. Rank colors below still apply.
+   PLAYOFF BRACKET - ONLY #t_all ON THE STANDINGS MAIN PAGE
+   Preserve n01 widths, positioning, rowspan and connector geometry.
    ========================================================= */
 
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    filter: none !important;
-}
-
-/* odd/default row */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td {
-    background: rgba(255, 255, 255, 0.055) !important;
-    background-color: rgba(255, 255, 255, 0.055) !important;
-    background-image: none !important;
+body:has(#lg_table_main) #t_all {
     color: #e9edf3 !important;
-    -webkit-text-fill-color: #e9edf3 !important;
-    box-shadow: none !important;
-    outline: none !important;
-    text-shadow: none !important;
-    filter: none !important;
 }
 
-/* keep normal alternating-row appearance */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:nth-child(even):not(:hover) > td {
-    background: rgba(255, 255, 255, 0.075) !important;
-    background-color: rgba(255, 255, 255, 0.075) !important;
+body:has(#lg_table_main) #t_all #hr_t {
+    border-color: rgba(176, 161, 210, 0.18) !important;
 }
 
-/* kill highlight applied to elements inside the active row */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td *,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) .entry_name {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    color: inherit !important;
+body:has(#lg_table_main) #t_all #t_title {
+    color: #f4f7fb !important;
     -webkit-text-fill-color: currentColor !important;
-    box-shadow: none !important;
-    outline: none !important;
-    text-shadow: none !important;
-    filter: none !important;
+    font-size: 20px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+    margin-bottom: 10px !important;
 }
 
-/* n01 sometimes uses pseudo-elements for clickable/current rows */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover)::before,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover)::after,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td::before,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td::after {
-    background: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    opacity: 0 !important;
+/* Visual label replacement only: source text/DOM and accordion are intact.
+   Unicode escapes spell: Baraze o Ekstraklase (with Polish diacritics). */
+body:has(#lg_table_main) #t_all #t_title > .text {
+    font-size: 0 !important;
 }
 
-/* =========================================================
-   RANK ONLY — EKSTRAKLASA
-   ========================================================= */
-
-/* 1st — GOLD */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    1 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td:last-child {
-    background: var(--n01-gold-bg) !important;
-    background-color: var(--n01-gold-bg) !important;
-    background-image: none !important;
-    color: var(--n01-gold-text) !important;
-    font-weight: 700 !important;
-}
-
-/* 2nd — SILVER */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    2 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td:last-child {
-    background: var(--n01-silver-bg) !important;
-    background-color: var(--n01-silver-bg) !important;
-    background-image: none !important;
-    color: var(--n01-silver-text) !important;
-    font-weight: 700 !important;
-}
-
-/* 3rd — BRONZE */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    3 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td:last-child {
-    background: var(--n01-bronze-bg) !important;
-    background-color: var(--n01-bronze-bg) !important;
-    background-image: none !important;
-    color: var(--n01-bronze-text) !important;
-    font-weight: 700 !important;
-}
-
-/* Bottom 3 — MUTED RED */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
-    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
-) > td:last-child {
-    background: var(--n01-red-bg) !important;
-    background-color: var(--n01-red-bg) !important;
-    background-image: none !important;
-    color: var(--n01-red-text) !important;
-}
-
-/* Ensure content inside colored Rank cells follows Rank text color */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    1 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td:last-child *,
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    2 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td:last-child *,
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    3 of tr.lg_player[subtitle="Ekstraklasa"]
-) > td:last-child *,
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
-    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
-) > td:last-child * {
-    color: inherit !important;
-}
-
-/* =========================================================
-   RANK ONLY — 1. LIGA GROUPS, TOP 2
-   Grupa 1 + Grupa 2
-   NOT BOLD
-   Only real rows with non-empty tpid count toward TOP 2.
-   ========================================================= */
-
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
-    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
-) > td:last-child,
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
-    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
-) > td:last-child {
-    background: var(--n01-green-bg) !important;
-    background-color: var(--n01-green-bg) !important;
-    background-image: none !important;
-    color: var(--n01-green-text) !important;
-    font-weight: 400 !important;
-}
-
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
-    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
-) > td:last-child *,
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
-    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
-) > td:last-child * {
-    color: inherit !important;
-    font-weight: 400 !important;
-}
-
-/* =========================================================
-   ONE AND ONLY ROW HOVER
-   MUST BE LAST.
-   No green/gold/silver/bronze/red hover exceptions.
-   Every row becomes the same dark row, exactly by design.
-   ========================================================= */
-
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_view_button:hover > td {
-    background: var(--n01-hover-bg) !important;
-    background-color: var(--n01-hover-bg) !important;
-    background-image: none !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    filter: none !important;
-    opacity: 1 !important;
-}
-
-/* Make ALL visible text inside the hovered row readable */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td *,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_view_button:hover > td * {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    text-shadow: none !important;
-    filter: none !important;
-    opacity: 1 !important;
-}
-
-/* Kill any n01 white hover overlays on cells */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td::before,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td::after {
-    content: none !important;
-    background: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    opacity: 0 !important;
-}
-
-/* =========================================================
-   ACTIVE ROW — SUBTLE DISTINCTION
-   Only while NOT hovered. Rank cell remains controlled
-   separately by the standings colors below.
-   ========================================================= */
-
-/* Slight cool glass tint for the active/playable row */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td:not(:last-child) {
-    background: rgba(92, 119, 165, 0.13) !important;
-    background-color: rgba(92, 119, 165, 0.13) !important;
-    background-image: none !important;
-    color: #edf2fa !important;
-    -webkit-text-fill-color: #edf2fa !important;
-    box-shadow:
-        inset 0 1px 0 rgba(160, 188, 235, 0.07),
-        inset 0 -1px 0 rgba(160, 188, 235, 0.05) !important;
-}
-
-/* Small accent only at the left edge of the active row */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td.lg_name:first-child {
-    box-shadow:
-        inset 3px 0 0 rgba(135, 171, 235, 0.62),
-        inset 0 1px 0 rgba(160, 188, 235, 0.07),
-        inset 0 -1px 0 rgba(160, 188, 235, 0.05) !important;
-}
-
-/* Keep text inside active row readable without touching Rank */
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:not(:hover) > td:not(:last-child) * {
-    color: inherit !important;
+body:has(#lg_table_main) #t_all #t_title > .text::after {
+    content: "Bara\00017ce o Ekstraklas\000119";
+    font-size: 20px !important;
+    font-weight: 750 !important;
+    line-height: 1.25 !important;
+    color: #f4f7fb !important;
     -webkit-text-fill-color: currentColor !important;
 }
 
-/* =========================================================
-   COLORED RANK TEXT — READABILITY FIX
-   Explicit text fill prevents logged-in/current-row styles
-   from turning Rank text white/invisible.
-   ========================================================= */
-
-/* EKSTRAKLASA 1 — GOLD */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    1 of tr.lg_player[subtitle="Ekstraklasa"]
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-gold-bg) !important;
-    background-color: var(--n01-gold-bg) !important;
-    background-image: none !important;
-    color: var(--n01-gold-text) !important;
-    -webkit-text-fill-color: var(--n01-gold-text) !important;
+body:has(#lg_table_main) #t_all #t_title .accordion {
+    border-color: #b7a6d6 !important;
 }
 
-/* EKSTRAKLASA 2 — SILVER */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    2 of tr.lg_player[subtitle="Ekstraklasa"]
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-silver-bg) !important;
-    background-color: var(--n01-silver-bg) !important;
-    background-image: none !important;
-    color: var(--n01-silver-text) !important;
-    -webkit-text-fill-color: var(--n01-silver-text) !important;
+/* Nested bracket tables are layout scaffolding, not white panels. */
+body:has(#lg_table_main) #t_all table.t_block,
+body:has(#lg_table_main) #t_all table.t_table_head,
+body:has(#lg_table_main) #t_all table.t_block > tbody,
+body:has(#lg_table_main) #t_all table.t_block > tbody > tr,
+body:has(#lg_table_main) #t_all table.t_block > tbody > tr > td {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
-/* EKSTRAKLASA 3 — BRONZE */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    3 of tr.lg_player[subtitle="Ekstraklasa"]
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-bronze-bg) !important;
-    background-color: var(--n01-bronze-bg) !important;
-    background-image: none !important;
-    color: var(--n01-bronze-text) !important;
-    -webkit-text-fill-color: var(--n01-bronze-text) !important;
+body:has(#lg_table_main) #t_all .t_table_head_container {
+    background: transparent !important;
 }
 
-/* EKSTRAKLASA BOTTOM 3 — MUTED RED */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
-    -n+3 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-red-bg) !important;
-    background-color: var(--n01-red-bg) !important;
-    background-image: none !important;
-    color: #6d3035 !important;
-    -webkit-text-fill-color: #6d3035 !important;
+/* Round headings, including Semi-final and Final. */
+body:has(#lg_table_main) #t_all table.t_table_head > tbody,
+body:has(#lg_table_main) #t_all table.t_table_head > tbody > tr {
+    background: transparent !important;
 }
 
-/* 1. LIGA GROUPS TOP 2 — GREEN, NOT BOLD */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
-    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
-):not(:hover) > td.lg_rank:last-child,
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
-    -n+2 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-green-bg) !important;
-    background-color: var(--n01-green-bg) !important;
-    background-image: none !important;
-    color: #1f5a30 !important;
-    -webkit-text-fill-color: #1f5a30 !important;
-    font-weight: 400 !important;
-}
-
-/* If n01 ever inserts a child element into Rank, inherit the same color */
-body:has(tr.lg_player)
-td.lg_rank:last-child > * {
-    color: inherit !important;
+body:has(#lg_table_main) #t_all .t_r_title {
+    background: rgba(31, 40, 57, 0.94) !important;
+    color: #e9edf7 !important;
     -webkit-text-fill-color: currentColor !important;
+    border-color: rgba(183, 166, 214, 0.20) !important;
+    box-shadow: inset 0 -2px 0 rgba(183, 166, 214, 0.26) !important;
+    text-shadow: none !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
 }
 
-
-/* =========================================================
-   PLAYOFF PLACES — MUTED YELLOW
-   Ekstraklasa: 8th
-   1. Liga groups: 3rd
-   Rank cell only.
-   ========================================================= */
-
-/* EKSTRAKLASA — 8th place */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    8 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-yellow-bg) !important;
-    background-color: var(--n01-yellow-bg) !important;
-    background-image: none !important;
-    color: var(--n01-yellow-text) !important;
-    -webkit-text-fill-color: var(--n01-yellow-text) !important;
-    font-weight: 400 !important;
+/* Glass match cards. No fixed heights or widths. */
+body:has(#lg_table_main) #t_all .t_item_container {
+    background: rgba(25, 33, 47, 0.92) !important;
+    border: 1px solid rgba(183, 166, 214, 0.24) !important;
+    border-radius: 9px !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.035) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    overflow: hidden !important;
 }
 
-/* 1. LIGA — GROUP 1, 3rd place */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
-    3 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
-):not(:hover) > td.lg_rank:last-child,
-/* 1. LIGA — GROUP 2, 3rd place */
-body:has(tr.lg_player)
-tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
-    3 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
-):not(:hover) > td.lg_rank:last-child {
-    background: var(--n01-yellow-bg) !important;
-    background-color: var(--n01-yellow-bg) !important;
-    background-image: none !important;
-    color: var(--n01-yellow-text) !important;
-    -webkit-text-fill-color: var(--n01-yellow-text) !important;
-    font-weight: 400 !important;
-}
-
-/* =========================================================
-   FINAL HOVER REASSERTION
-   Every row, including active lg_match_button, behaves exactly
-   the same on hover. Keep this LAST.
-   ========================================================= */
-
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_view_button:hover > td,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:hover > td {
-    background: var(--n01-hover-bg) !important;
-    background-color: var(--n01-hover-bg) !important;
-    background-image: none !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
+body:has(#lg_table_main) #t_all .t_item_container > .t_item {
+    background: rgba(255, 255, 255, 0.035) !important;
+    color: #eef2fa !important;
+    -webkit-text-fill-color: currentColor !important;
+    border-color: rgba(183, 166, 214, 0.15) !important;
     box-shadow: none !important;
     text-shadow: none !important;
     filter: none !important;
     opacity: 1 !important;
+    transition: background-color 120ms ease !important;
 }
 
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player:hover > td *,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_view_button:hover > td *,
-body:has(tr.lg_player)
-table:has(tr.lg_player)
-tr.lg_player.lg_match_button:hover > td * {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
+body:has(#lg_table_main) #t_all .t_item_container > .t_item + .t_item {
+    border-top: 1px solid rgba(183, 166, 214, 0.15) !important;
+}
+
+body:has(#lg_table_main) #t_all .t_item .t_name,
+body:has(#lg_table_main) #t_all .t_item .entry_name,
+body:has(#lg_table_main) #t_all .t_item .t_no {
+    background: transparent !important;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    border-color: rgba(183, 166, 214, 0.15) !important;
+    box-shadow: none !important;
     text-shadow: none !important;
-    filter: none !important;
     opacity: 1 !important;
 }
 
-/* =========================================================
-   HIDE ONLY TRULY EMPTY LEAGUE PLACEHOLDER ROWS
-   Keeps real players even when their stats/rank are blank.
-   A row is hidden only when:
-   - the name cell has tpid=""
-   - AND .entry_name is empty
-   ========================================================= */
-
-body:has(tr.lg_player)
-#lg_table_main
-table.lg_table
-tbody.lg_body
-tr.lg_player:has(> td.lg_name[tpid=""] > span.entry_name:empty) {
-    display: none !important;
+/* Future entrants remain visible - not almost-white on white. */
+body:has(#lg_table_main) #t_all .t_item_container > .t_item.t_placeholder {
+    color: #c4cde0 !important;
+    -webkit-text-fill-color: currentColor !important;
+    opacity: 1 !important;
 }
 
+body:has(#lg_table_main) #t_all .t_item .t_result {
+    background: rgba(8, 13, 22, 0.20) !important;
+    color: #f1f4fb !important;
+    -webkit-text-fill-color: currentColor !important;
+    border-color: rgba(183, 166, 214, 0.18) !important;
+    box-shadow: none !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+}
+
+body:has(#lg_table_main) #t_all .t_item .t_avg,
+body:has(#lg_table_main) #t_all .t_memo {
+    color: #a6b3c9 !important;
+    -webkit-text-fill-color: currentColor !important;
+    background: transparent !important;
+}
+
+body:has(#lg_table_main) #t_all .t_item_container:hover > .t_item {
+    background: #2c374c !important;
+    color: #f4f6fc !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+/* Recolor existing connector borders, without changing their geometry. */
+body:has(#lg_table_main) #t_all .t_line .t_l1,
+body:has(#lg_table_main) #t_all .t_line .t_l2,
+body:has(#lg_table_main) #t_all .t_line .t_l3,
+body:has(#lg_table_main) #t_all .t_line .t_l4,
+body:has(#lg_table_main) #t_all .t_line .t_r1,
+body:has(#lg_table_main) #t_all .t_line .t_r2,
+body:has(#lg_table_main) #t_all .t_line .t_r3,
+body:has(#lg_table_main) #t_all .t_line .t_r4 {
+    border-color: rgba(173, 183, 208, 0.55) !important;
+    background: transparent !important;
+}
+
+/* Hide a truly unused pair visually, preserving bracket alignment.
+   Keep any card with a name, assigned player, placeholder label or score. */
+body:has(#lg_table_main) #t_all .t_item_container:has(> .t_item):not(:has(.entry_name:not(:empty))):not(:has(.t_name[tpid]:not([tpid=""]))):not(:has(.t_item[placeholder]:not([placeholder=""]))):not(:has(.t_result:not(:empty))) {
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Hide the connector of a wholly empty feeder branch as well.
+   Visibility, not display, preserves the table/rowspan geometry. */
+body:has(#lg_table_main) #t_all td.t_left:has(.t_item_container):not(:has(.entry_name:not(:empty))):not(:has(.t_name[tpid]:not([tpid=""]))):not(:has(.t_item[placeholder]:not([placeholder=""]))):not(:has(.t_result:not(:empty))) + td.t_line,
+body:has(#lg_table_main) #t_all td.t_right:has(.t_item_container):not(:has(.entry_name:not(:empty))):not(:has(.t_name[tpid]:not([tpid=""]))):not(:has(.t_item[placeholder]:not([placeholder=""]))):not(:has(.t_result:not(:empty))) + td.t_line {
+    visibility: hidden !important;
+}
 
 /* =========================================================
-   HIDE GOOGLE ADS — MAIN PAGE ONLY
+   ADS - KEEP THE EXISTING MAIN-PAGE-ONLY HIDING BEHAVIOR
    ========================================================= */
 
-body:has(tr.lg_player) ins.adsbygoogle,
-body:has(tr.lg_player) .adsbygoogle {
+body:has(#lg_table_main) .adsbygoogle {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -637,4 +459,11 @@ body:has(tr.lg_player) .adsbygoogle {
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #lg_table_main table.lg_table > tbody.lg_body > tr.lg_player > td,
+    body:has(#lg_table_main) #t_all .t_item_container > .t_item {
+        transition: none !important;
+    }
 }
