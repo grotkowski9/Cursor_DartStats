@@ -26,11 +26,11 @@
     --n01-bronze-bg: #9f765a;
     --n01-bronze-text: #322219;
 
-    --n01-green-bg: #d7eadb;
-    --n01-green-text: #245d34;
+    --n01-green-bg: #c9e7cf;
+    --n01-green-text: #1f5a30;
 
-    --n01-red-bg: #e6c8cb;
-    --n01-red-text: #7a2931;
+    --n01-red-bg: #d9c8ca;
+    --n01-red-text: #6d3035;
 
     --n01-hover-bg: #263142;
 }
@@ -494,8 +494,8 @@ tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
     background: var(--n01-red-bg) !important;
     background-color: var(--n01-red-bg) !important;
     background-image: none !important;
-    color: #69242b !important;
-    -webkit-text-fill-color: #69242b !important;
+    color: #6d3035 !important;
+    -webkit-text-fill-color: #6d3035 !important;
 }
 
 /* 1. LIGA GROUPS TOP 2 — GREEN, NOT BOLD */
@@ -510,8 +510,8 @@ tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-child(
     background: var(--n01-green-bg) !important;
     background-color: var(--n01-green-bg) !important;
     background-image: none !important;
-    color: #174c29 !important;
-    -webkit-text-fill-color: #174c29 !important;
+    color: #1f5a30 !important;
+    -webkit-text-fill-color: #1f5a30 !important;
     font-weight: 400 !important;
 }
 
