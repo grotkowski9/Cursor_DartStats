@@ -3,7 +3,7 @@
  * Full replacement stylesheet for the tournament main page.
  *
  * Ekstraklasa: 1/2/3 muted gold/silver/bronze; bottom 3 muted red;
- *              8th place lavender (playoff).
+ *              one place directly above bottom 3 = lavender playoff.
  * 1. Liga - Grupa 1 and 1. Liga - Grupa 2:
  *              first 2 green; 3rd place lavender (playoff).
  *
@@ -216,9 +216,9 @@ body:has(#lg_table_main)::before {
     --n01-rank-weight: 400;
 }
 
-/* Playoff places - lavender, distinct from the gold medal */
-#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-child(
-    8 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
+/* Playoff places - lavender. Ekstraklasa = exactly one place above bottom 3. */
+#lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="Ekstraklasa"]:nth-last-child(
+    4 of tr.lg_player[subtitle="Ekstraklasa"]:has(> td.lg_name[tpid]:not([tpid=""]))
 ),
 #lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-child(
     3 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
@@ -419,7 +419,7 @@ body:has(#lg_table_main) #t_all .t_item_container:hover > .t_item {
     -webkit-text-fill-color: currentColor !important;
 }
 
-/* Recolor existing connector borders, without changing their geometry. */
+/* Bracket connectors: keep n01 geometry, make every existing line clearly white. */
 body:has(#lg_table_main) #t_all .t_line .t_l1,
 body:has(#lg_table_main) #t_all .t_line .t_l2,
 body:has(#lg_table_main) #t_all .t_line .t_l3,
@@ -428,8 +428,18 @@ body:has(#lg_table_main) #t_all .t_line .t_r1,
 body:has(#lg_table_main) #t_all .t_line .t_r2,
 body:has(#lg_table_main) #t_all .t_line .t_r3,
 body:has(#lg_table_main) #t_all .t_line .t_r4 {
-    border-color: rgba(173, 183, 208, 0.55) !important;
-    background: transparent !important;
+    border-color: rgba(255, 255, 255, 0.96) !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+/* Some n01 bracket themes inherit connector color from their wrapper/cells. */
+body:has(#lg_table_main) #t_all td.t_line,
+body:has(#lg_table_main) #t_all td.t_line .t_l,
+body:has(#lg_table_main) #t_all td.t_line .t_c {
+    border-color: rgba(255, 255, 255, 0.96) !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
 }
 
 /* Hide a truly unused pair visually, preserving bracket alignment.
