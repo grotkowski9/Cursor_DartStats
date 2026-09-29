@@ -1,0 +1,29 @@
+/*
+ * n01darts — STS HEADER ONLY
+ * Changes only the top header bar.
+ */
+
+#header,
+#header_back {
+    background:
+        linear-gradient(
+            99deg,
+            #ee9c3c 0%,
+            #ee9c3c 45.5%,
+            #255ac1 54.5%,
+            #255ac1 100%
+        ) !important;
+}
+
+/* Keep the existing n01 header content/buttons unchanged;
+   only remove inner green backgrounds so the STS split is visible. */
+#header_table,
+#header_table > tbody,
+#header_table > tbody > tr,
+#header_table > tbody > tr > td,
+#td_header_title,
+.td_button {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
