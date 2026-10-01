@@ -217,10 +217,10 @@ body:has(#lg_table_main)::before {
 
 /* Last 4 players in each first-league group - relegation */
 #lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 1"]:nth-last-child(
-    -n+4 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
+    -n+5 of tr.lg_player[subtitle="1. Liga - Grupa 1"]:has(> td.lg_name[tpid]:not([tpid=""]))
 ),
 #lg_table_main table.lg_table > tbody.lg_body > tr.lg_player[subtitle="1. Liga - Grupa 2"]:nth-last-child(
-    -n+4 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
+    -n+5 of tr.lg_player[subtitle="1. Liga - Grupa 2"]:has(> td.lg_name[tpid]:not([tpid=""]))
 ) {
     --n01-rank-bg: var(--n01-red-bg);
     --n01-rank-text: var(--n01-red-text);
