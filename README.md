@@ -75,15 +75,17 @@ Tylko 501. Identity 0/1/N. Duplikaty pytaj. Kod EN, UI PL. 2.0.x płatności ⏸
 7. [KPI](#kpi)
 8. [Detekcja gracza i duplikaty](#detekcja-gracza-i-duplikaty)
 9. [Auth, onboarding, profil](#auth-onboarding-profil)
-10. [Tagi meczów i filtr profilu](#tagi-meczów-i-filtr-profilu)
-11. [Mapa plików](#mapa-plików)
-12. [Uruchomienie i testy](#uruchomienie-i-testy)
-13. [Bezpieczeństwo](#bezpieczeństwo)
-14. [Design](#design)
-15. [Konwencje](#konwencje)
-16. [Roadmapa skrócona](#roadmapa-skrócona)
-17. [ADR](#adr)
-18. [Dziennik wersji](#dziennik-wersji)
+10. [Login gate — instrukcja (on/off, hasło)](#login-gate--instrukcja-onoff-hasło)
+11. [Dart vs BET — ten sam Supabase](#dart-vs-bet--ten-sam-supabase)
+12. [Tagi meczów i filtr profilu](#tagi-meczów-i-filtr-profilu)
+13. [Mapa plików](#mapa-plików)
+14. [Uruchomienie i testy](#uruchomienie-i-testy)
+15. [Bezpieczeństwo](#bezpieczeństwo)
+16. [Design](#design)
+17. [Konwencje](#konwencje)
+18. [Roadmapa skrócona](#roadmapa-skrócona)
+19. [ADR](#adr)
+20. [Dziennik wersji](#dziennik-wersji)
 
 ---
 
@@ -325,11 +327,111 @@ Scenariusze unit: `tests/player-detect.test.ts`, `tests/sources-identity.test.ts
 - `needsOnboarding` = nick + real name (**nie** wymaga N01 nicków).
 - Soft CTA About: brak city/brand/weight/hand/favorite.
 - Gate ingest: 403 `needs_onboarding`.
-- Login gate: flaga SQL `login_gate_enabled` + `LOGIN_GATE_PASSWORD`. Cookie ~30 dni.
+- Login gate: flaga SQL `login_gate_enabled` + `LOGIN_GATE_PASSWORD`. Cookie ~30 dni. Szczegóły: [Login gate — instrukcja](#login-gate--instrukcja-onoff-hasło).
 - Usuwanie meczu: triple-check, bez undo. Edycja: PATCH (swap/rename opponent) — **nie przepisuj legs/visits**.
 - Karty meczu: Rzut / Share / Edytuj / Usuń + **tagi** (patrz niżej).
+- **Nazwy na kartach:** `normalizeName` **nie** zamienia CAPS/pseudonimów na „Koklusz”. Zostawia `KOKLUSZ`, `Błaszczu`, `GROTKOWSKI Piotr`. Title-case tylko gdy słowo jest całe z małych liter.
 
 Google + iPhone LAN: Site URL w Supabase na `http://<IP-Maca>:3000` na czas testu; `allowedDevOrigins` w `next.config.ts`.
+
+---
+
+## Login gate — instrukcja (on/off, hasło)
+
+To jest **hasło na wejście do `/login`** (odblokowanie przycisku Google), **nie** hasło konta gracza.
+
+Zescreenuj i trzymaj:
+
+### 1) Włączyć / wyłączyć bramę (bez redeploy)
+
+Supabase Dashboard → projekt **`nwrhnmnaiqclpxcjfgcq`** → **SQL Editor**:
+
+```sql
+-- WŁĄCZ (formularz hasła zamiast Google)
+UPDATE public.app_settings
+SET value = 'true', updated_at = now()
+WHERE key = 'login_gate_enabled';
+
+-- WYŁĄCZ (Google od razu)
+UPDATE public.app_settings
+SET value = 'false', updated_at = now()
+WHERE key = 'login_gate_enabled';
+
+-- Stan
+SELECT key, value, updated_at FROM public.app_settings WHERE key = 'login_gate_enabled';
+```
+
+Albo Table Editor → `app_settings` → wiersz `login_gate_enabled` → `true` / `false`.
+
+Fail-open: jak DB nie odpowie, brama jest **wyłączona**.
+
+### 2) Ustawić / zmienić hasło odblokowania
+
+Hasło **nie jest w bazie**. Jest w env Vercel:
+
+1. Vercel → projekt DartStats → **Settings → Environment Variables**
+2. `LOGIN_GATE_PASSWORD` = nowe hasło (Production + Preview)
+3. **Redeploy** (zmiana env wymaga nowego deployu)
+4. Lokalnie: `.env.local` ta sama zmienna (nie commituj)
+
+Po zmianie hasła **stare cookie odblokowania pada** (podpis HMAC z hasłem) — user musi wpisać nowe.
+
+### 3) Co widzi gość
+
+| Stan | `/login` |
+| --- | --- |
+| Gate OFF | od razu Google |
+| Gate ON, brak cookie | pole hasła + „Odblokuj logowanie” + tekst o `kontakt@sylveoncompany.pl` |
+| Gate ON, złe hasło | błąd, nadal brama |
+| Gate ON, dobre hasło | cookie `sdp_login_gate` ~**30 dni**, potem Google |
+| Już zalogowany na **dart.** (sesja Supabase) | middleware z `/login` **od razu na `/profile`** — brama się nie pokaże |
+| Brak hasła admina | **nie** dojdzie do Google; landing `/` i `/demo` działają |
+
+---
+
+## Dart vs BET — ten sam Supabase
+
+Ten sam projekt **`nwrhnmnaiqclpxcjfgcq`**, te same `auth.users`.
+
+| | Dart (`dart.sylveoncompany.pl`) | BET (`bet.sylveoncompany.pl`) |
+| --- | --- | --- |
+| Auth | Google (ten sam user id) | ten sam Google |
+| Wiersz produktu | `public.customers` | `bet.profiles` **FK → `public.customers`** |
+| Sesja cookie | host `dart.…` | host `bet.…` — **osobne** (logowanie na jednym nie loguje automatycznie na drugim) |
+| Kod | to repo | inne repo; **nie ruszaj `bet.*`** |
+
+Stan (2026-10-10): ~21 profili BET, wszystkie z `public.customers` + `auth_user_id`. Część ma nick w `customers` (Dart onboarding zrobiony), większość BET-only jeszcze **bez** nicka Dart.
+
+### A) Gracz BET, **nie** używał Darta
+
+1. Dni później wchodzi na `dart.sylveoncompany.pl`. Cookie BET **nie** działa. Jest gościem.
+2. **Bez hasła gate:** widzi landing/demo. `/login` = tylko formularz hasła. Google **schowany**. `/profile` → redirect na `/login`.
+3. **Z hasłem gate:** odblokowuje → Google (to samo konto co na BET).
+4. Callback: `ensureCustomerForUser` znajduje istniejący `public.customers` (BET go stworzył przy rejestracji). **Nie** tworzy drugiego konta.
+5. `needsOnboarding` = brak `customers.nickname` albo imię/nazwisko to placeholder `Gracz`/`Dart`:
+   - typowo BET-owiec **idzie na `/onboarding`** (Krok 1: nick + imię/nazwisko) — to **nie** kasuje `bet.profiles`.
+   - potem `/onboarding/about` (można pominąć).
+6. Profil Dart pusty (0 meczów), dopóki nie zaimportuje. Mecze BET **nie** wpadają na Dart.
+
+### B) Gracz BET, **już** ma konto Dart (nick uzupełniony)
+
+1. Gate + Google (albo już sesja na dart).
+2. Ten sam `customers` wiersz. Onboarding **pomijany** (jest nick + prawdziwe imię).
+3. Jeśli `about_completed_at` puste → `/onboarding/about` raz.
+4. Widzi swoje zaimportowane mecze Dart. BET bez zmian.
+
+### C) Gracz **tylko Dart**, pierwszy raz na BET
+
+1. Ma `public.customers`. **Nie** ma `bet.profiles`, dopóki BET sam go nie utworzy przy pierwszym logowaniu.
+2. Google na `bet.` = ten sam `auth.users` id.
+3. Co BET zrobi (nowy `bet.profiles` vs błąd) zależy od **kodu BET**, nie Darta. Dart nic nie tworzy w `bet.*`.
+4. Po stronie Darta zero zmian.
+
+### D) „Jestem zalogowany i wchodzę na Dart”
+
+- Zalogowany **na dart.** w tej przeglądarce: tak — `/login` skacze na profil, gate niewidoczny.
+- Zalogowany **tylko na bet.**: na darcie jesteś wylogowany. Trzeba Google jeszcze raz (Google często bez hasła, bo sesja Google żyje).
+- Inna przeglądarka / incognito: zawsze od zera (+ gate jeśli ON).
 
 ---
 
@@ -347,7 +449,7 @@ Google + iPhone LAN: Site URL w Supabase na `http://<IP-Maca>:3000` na czas test
 | Katalog | unikalne tagi ze **wszystkich** meczów usera (`uniqueCatalogTags`) |
 | Import | `saveMatch` / overwrite **nie wysyła** `tags` — istniejące zostają |
 | API | `PATCH /api/matches/:id` body `{ tags: string[] }` (bez `playerIndex` / `playerNames`) |
-| Demo | picker wyłączony (`persistTags=false`); droplisty filtrów widać |
+| Demo | pre-seed: **Mecz towarzyski** (demo003/007/010), **Liga** (demo002/006). Picker działa **w pamięci** (nie zapisuje). Droplisty include/exclude jak na żywym profilu. |
 
 ### UI
 
@@ -363,7 +465,20 @@ Google + iPhone LAN: Site URL w Supabase na `http://<IP-Maca>:3000` na czas test
 
 `filterByRange` → `filterByTags` → te same funkcje co zawsze: KPI, wykres formy, top podejścia/checkouty, H2H, aktywność dni/godzin, histogram checkoutów, **lista meczów**, streak (gdy filtr/zakres ≠ all → etykieta „W zakresie”, nie Lifetime).
 
-Kod: `lib/match-tags.ts`, `app/profile/profile-match-tags.tsx`, `app/profile/profile-tag-filters.tsx`, `app/profile/profile-client.tsx`. Testy: `tests/match-tags.test.ts`.
+Kod: `lib/match-tags.ts`, `lib/demo-snapshot.ts` (`DEMO_MATCH_TAGS`), `app/profile/profile-match-tags.tsx`, `app/profile/profile-tag-filters.tsx`, `app/profile/profile-client.tsx`. Testy: `tests/match-tags.test.ts`.
+
+### Demo vs żywy profil — różnice
+
+| | Demo `/demo/profile` | Żywy `/profile` |
+| --- | --- | --- |
+| Dane | statyczny JSON + daty „teraz”; tagi z `DEMO_MATCH_TAGS` | Supabase user |
+| Import | atrapa, CTA na `/login` | prawdziwy ingest |
+| Edycja / usuwanie meczu | nie | tak |
+| Tagi | widać + można kliknąć lokalnie (odświeżenie kasuje nowe) | `PATCH` do DB |
+| Filtry dat + tagów | **tak, ten sam kod** | tak |
+| Wyloguj / onboarding | nie | tak |
+| Tytuły meczów | zawsze „Turniej Przykładowy” | prawdziwe |
+| Share | `/demo/m/{token}` | `/m/{token}` |
 
 ---
 
@@ -545,4 +660,6 @@ v3.0.0 (2026-10-10):
 - N01 `mid` → `tmid` (`match/list`).
 - Public copy/SEO wspomina N01 i PRD.
 - Tagi per mecz (`matches.tags`) + filtr uwzględnij/wyklucz na całym profilu. Migracja na prod.
+- Demo: te same filtry; pre-seed „Mecz towarzyski” / „Liga”.
+- `normalizeName` zostawia CAPS/nicks (KOKLUSZ, Błaszczu).
 - Nadal tylko 501; BET nietknięty.

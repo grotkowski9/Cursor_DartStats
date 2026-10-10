@@ -97,16 +97,12 @@ export function ProfileClient({
     void loadProfile();
   }, [loadProfile, demoMode, demoSnapshot, initialMatches]);
 
-  const rangeData = liveDemoSnapshot?.byRange[range];
   const tagFilterOn = Boolean(includeTag || excludeTag);
 
-  const filtered = useMemo(() => {
-    const dated =
-      liveDemoSnapshot && !tagFilterOn
-        ? (rangeData?.matches ?? [])
-        : filterByRange(matches, range);
-    return filterByTags(dated, { includeTag, excludeTag });
-  }, [liveDemoSnapshot, tagFilterOn, rangeData, matches, range, includeTag, excludeTag]);
+  const filtered = useMemo(
+    () => filterByTags(filterByRange(matches, range), { includeTag, excludeTag }),
+    [matches, range, includeTag, excludeTag],
+  );
 
   const catalog = useMemo(() => uniqueCatalogTags(matches), [matches]);
 
@@ -121,61 +117,20 @@ export function ProfileClient({
 
   /** One pass of computeMatchStats per filtered match — cards reuse this. */
   const matchStatsByToken = useMemo(() => {
-    if (liveDemoSnapshot && !tagFilterOn) return liveDemoSnapshot.matchStatsByToken;
     const map: Record<string, MatchStats> = {};
     for (const m of filtered) {
       map[m.shareToken] = computeMatchStats(m);
     }
     return map;
-  }, [liveDemoSnapshot, tagFilterOn, filtered]);
+  }, [filtered]);
 
-  const playerStats = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn
-        ? rangeData!.playerStats
-        : computePlayerStats(filtered),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
-  const topThrows = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn
-        ? rangeData!.topThrows
-        : computeTopThrows(filtered, 10),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
-  const topCheckouts = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn
-        ? rangeData!.topCheckouts
-        : computeTopCheckouts(filtered, 10),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
-  const formSeries = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn
-        ? rangeData!.formSeries
-        : computeFormSeries(filtered),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
-  const dayStats = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn ? rangeData!.dayStats : computeDayStats(filtered),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
-  const hourStats = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn
-        ? rangeData!.hourStats
-        : computeHourStats(filtered),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
-  const checkoutBuckets = useMemo(
-    () =>
-      liveDemoSnapshot && !tagFilterOn
-        ? rangeData!.checkoutBuckets
-        : computeCheckoutDistribution(filtered),
-    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
-  );
+  const playerStats = useMemo(() => computePlayerStats(filtered), [filtered]);
+  const topThrows = useMemo(() => computeTopThrows(filtered, 10), [filtered]);
+  const topCheckouts = useMemo(() => computeTopCheckouts(filtered, 10), [filtered]);
+  const formSeries = useMemo(() => computeFormSeries(filtered), [filtered]);
+  const dayStats = useMemo(() => computeDayStats(filtered), [filtered]);
+  const hourStats = useMemo(() => computeHourStats(filtered), [filtered]);
+  const checkoutBuckets = useMemo(() => computeCheckoutDistribution(filtered), [filtered]);
 
   const filteredStreak = useMemo(
     () => (showInsights ? computeMaxWinStreak(filtered) : null),
@@ -318,6 +273,7 @@ export function ProfileClient({
                       onUpdated={handleMatchUpdated}
                       tagCatalog={catalog}
                       persistTags={allowDelete}
+                      canTag={allowDelete || demoMode}
                     />
                   ))}
                 </div>
@@ -348,6 +304,7 @@ export function ProfileClient({
                       onUpdated={handleMatchUpdated}
                       tagCatalog={catalog}
                       persistTags={allowDelete}
+                      canTag={allowDelete || demoMode}
                     />
                   ))}
                 </div>
@@ -398,11 +355,7 @@ export function ProfileClient({
 
       {/* Head-to-head */}
       {!loading && filtered.length > 0 && (
-        <ProfileHeadToHead
-          matches={liveDemoSnapshot && !tagFilterOn ? undefined : filtered}
-          opponents={liveDemoSnapshot && !tagFilterOn ? rangeData?.opponents : undefined}
-          h2hByOpponent={liveDemoSnapshot && !tagFilterOn ? rangeData?.h2hByOpponent : undefined}
-        />
+        <ProfileHeadToHead matches={filtered} />
       )}
 
       {!loading && filtered.length > 0 && (

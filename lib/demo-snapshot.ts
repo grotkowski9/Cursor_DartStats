@@ -26,6 +26,21 @@ import {
 
 const DEMO_RANGES: TimeRange[] = ["30d", "90d", "180d", "365d", "all"];
 
+/** Pre-seeded tags so /demo/profile shows include/exclude. Session-only on demo. */
+export const DEMO_MATCH_TAGS: Record<string, string[]> = {
+  demo002: ["Liga"],
+  demo003: ["Mecz towarzyski"],
+  demo006: ["Liga"],
+  demo007: ["Mecz towarzyski"],
+  demo010: ["Mecz towarzyski"],
+};
+
+function withDemoTags(match: N01Match): N01Match {
+  const tags = DEMO_MATCH_TAGS[match.shareToken];
+  if (!tags?.length) return { ...match, tags: match.tags ?? [] };
+  return { ...match, tags: [...tags] };
+}
+
 export type DemoH2HStats = {
   stats: PlayerStats;
   oppStats: PlayerStats;
@@ -114,7 +129,7 @@ export function refreshDemoSnapshotDates(
   snapshot: DemoProfileSnapshot,
   now = new Date(),
 ): DemoProfileSnapshot {
-  const matches = applyDemoDates(snapshot.matches, now);
+  const matches = applyDemoDates(snapshot.matches, now).map(withDemoTags);
   const byToken = new Map(matches.map((m) => [m.shareToken, m]));
 
   const byRange = {} as Record<TimeRange, DemoRangeSnapshot>;

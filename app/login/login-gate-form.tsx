@@ -91,6 +91,17 @@ export function LoginGateForm() {
           {pending ? "Sprawdzam…" : "Odblokuj logowanie"}
         </button>
       </div>
+      <p className="text-center text-sm leading-relaxed text-muted-foreground">
+        Nie masz hasła dostępu, a chcesz utworzyć konto? Pisz śmiało na{" "}
+        <a
+          href="mailto:kontakt@sylveoncompany.pl"
+          className="text-primary underline-offset-2 hover:underline"
+        >
+          kontakt@sylveoncompany.pl
+        </a>
+        <br />
+        GAME ON! 🎯
+      </p>
     </form>
   );
 }

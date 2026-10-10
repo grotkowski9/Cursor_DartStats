@@ -27,6 +27,8 @@ type Props = {
   onUpdated?: (match: N01Match) => void;
   tagCatalog?: string[];
   persistTags?: boolean;
+  /** Tag picker. Demo can tag in-memory without persisting. */
+  canTag?: boolean;
 };
 
 export function ProfileMatchCard({
@@ -41,7 +43,9 @@ export function ProfileMatchCard({
   onUpdated,
   tagCatalog = [],
   persistTags = false,
+  canTag,
 }: Props) {
+  const tagging = canTag ?? canEdit;
   const stats = useMemo(
     () => initialMatchStats ?? computeMatchStats(match),
     [initialMatchStats, match],
@@ -145,7 +149,7 @@ export function ProfileMatchCard({
         <ProfileMatchTags
           match={match}
           catalog={tagCatalog}
-          canEdit={canEdit}
+          canEdit={tagging}
           persist={persistTags}
           onUpdated={(updated) => onUpdated?.(updated)}
         />

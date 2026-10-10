@@ -55,6 +55,15 @@ describe("stats", () => {
     expect(normalizeName("Piotr Grotkowski (Katowice)")).not.toMatch(/Katowice/);
   });
 
+  it("normalizeName keeps nicknames and ALL-CAPS tokens", () => {
+    expect(normalizeName("KOKLUSZ")).toBe("KOKLUSZ");
+    expect(normalizeName("Błaszczu")).toBe("Błaszczu");
+    expect(normalizeName("BŁASZCZU / Katowice")).toBe("BŁASZCZU");
+    expect(normalizeName("Groteł")).toBe("Groteł");
+    expect(normalizeName("GROTKOWSKI Piotr")).toBe("GROTKOWSKI Piotr");
+    expect(normalizeName("jan kowalski")).toBe("Jan Kowalski");
+  });
+
   it("dartWord Polish pluralization", () => {
     expect(dartWord(1)).toBe("lotka");
     expect(dartWord(2)).toBe("lotki");

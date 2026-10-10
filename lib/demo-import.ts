@@ -84,6 +84,7 @@ export function anonymizeDemoMatch(match: N01Match, index: number): N01Match {
     players,
     playerIndex: meIdx,
     shareToken,
+    tags: match.tags ?? [],
   };
 }
 

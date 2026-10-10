@@ -333,7 +333,8 @@ function stripDiacritics(s: string): string {
  * 1. Strip "/" variant suffix (N01 sometimes uses "Name/Alt")
  * 2. Remove parenthesized content "(Katowice)"
  * 3. Remove standalone Polish city name words
- * 4. Title-case each word (unless short pseudonym with mixed case)
+ * 4. Keep mixed-case and ALL-CAPS tokens as-is (nicks: KOKLUSZ, Błaszczu).
+ *    Title-case only all-lowercase words (typical first/last names from dumps).
  * 5. Format: keep original order (Nazwisko Imię or Imię Nazwisko as given)
  */
 export function normalizeName(raw: string): string {
@@ -347,14 +348,11 @@ export function normalizeName(raw: string): string {
   });
   if (words.length === 0) return raw.split("/")[0].trim(); // fallback
 
-  // Title-case each word individually, unless it's a short pseudonym with mixed case
   const normalized = words.map((w) => {
     const hasUpper = /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
-    const hasLower = /[a-ząćęłńóśźż]/.test(w);
-    // If word is short (≤7 chars) and has mixed case, assume pseudonym
-    if (w.length <= 7 && hasUpper && hasLower) return w;
-    // Otherwise title-case it
-    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    // Pseudonym / N01 ALL-CAPS last name — do not smash to "Koklusz"
+    if (hasUpper) return w;
+    return w.charAt(0).toUpperCase() + w.slice(1);
   });
 
   return normalized.join(" ");
