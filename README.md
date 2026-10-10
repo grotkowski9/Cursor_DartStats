@@ -158,6 +158,7 @@ Migracje aplikujemy w **SQL Editor** albo MCP `apply_migration` na **nasz** proj
 | `20260809154500_reject_non_501_matches.sql` | tylko 501 |
 | `20260809214500_app_settings_login_gate.sql` | login gate |
 | `20261010170000_match_source.sql` | **`source` n01/prd** — **na prod** |
+| `20261010193000_match_tags.sql` | **`matches.tags text[]`** — tagi per mecz |
 
 ---
 
@@ -190,6 +191,7 @@ matches (
   snapshot_path text NOT NULL,
   html_snapshot_path text,
   share_token text UNIQUE,             -- nowe: 16 hex SHA256(customerId:tmid); legacy 8 znaków
+  tags text[] NOT NULL DEFAULT '{}',   -- etykiety usera (max 8); import ich nie nadpisuje
   created_at, updated_at,
   UNIQUE(customer_id, n01_tmid)
 )
@@ -322,7 +324,8 @@ Scenariusze unit: `tests/player-detect.test.ts`, `tests/sources-identity.test.ts
 - Gate ingest: 403 `needs_onboarding`.
 - Login gate: flaga SQL `login_gate_enabled` + `LOGIN_GATE_PASSWORD`. Cookie ~30 dni.
 - Usuwanie meczu: triple-check, bez undo. Edycja: PATCH (swap/rename opponent) — **nie przepisuj legs/visits**.
-- Karty meczu: Rzut / Share / Edytuj / Usuń.
+- Karty meczu: Rzut / Share / Edytuj / Usuń + **tagi** (lista istniejących albo nowy).
+- Filtr statystyk: zakres dat **oraz** „uwzględnij tylko mecze z tagiem” / „wyklucz mecze z tagiem”. Działa na liczby, wykres, listy, H2H, aktywność, listę meczów. Import overwrite **nie** czyści tagów.
 
 Google + iPhone LAN: Site URL w Supabase na `http://<IP-Maca>:3000` na czas testu; `allowedDevOrigins` w `next.config.ts`.
 
@@ -346,7 +349,8 @@ lib/sources/commit.ts              ← zapis batch
 lib/sources/ingest-auth.ts         ← auth helper ingest
 lib/n01-parser.ts                  ← match_view + share token + save shape
 lib/n01-url.ts                     ← stary whitelist pojedynczego URL
-lib/matches.ts                     ← save/get/delete/update, source
+lib/matches.ts                     ← save/get/delete/update, source, tags
+lib/match-tags.ts                  ← sanitize + include/exclude
 lib/customer.ts                    ← onboarding + autoDetectPatterns
 lib/auth.ts                        ← ensureCustomerForUser
 lib/stats.ts                       ← KPI
@@ -361,6 +365,8 @@ app/api/ingest/commit/route.ts
 app/api/profile/bootstrap/route.ts
 app/profile/profile-add-match.tsx
 app/profile/profile-client.tsx
+app/profile/profile-match-tags.tsx
+app/profile/profile-tag-filters.tsx
 app/m/[shareToken]/                ← share view + access log
 app/demo/                          ← public demo
 supabase/migrations/
@@ -371,6 +377,7 @@ tests/sources-preview-dedupe.test.ts
 tests/prd-parser.test.ts
 tests/prd-config.test.ts
 tests/n01-parser.test.ts
+tests/match-tags.test.ts
 tests/e2e/smoke.spec.ts            ← m.in. ingest 401
 ```
 

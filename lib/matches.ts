@@ -12,6 +12,7 @@ import {
   type N01Visit,
 } from "@/lib/n01-parser";
 import { detectPlayerIndex } from "@/lib/player-detect";
+import { sanitizeMatchTags } from "@/lib/match-tags";
 import { computeMatchStats } from "@/lib/stats";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import type { Tables, TablesInsert, Json } from "@/types/database";
@@ -101,6 +102,7 @@ export function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow
     playerIndex,
     shareToken: match.share_token,
     source: match.source === "prd" ? "prd" : "n01",
+    tags: Array.isArray(match.tags) ? match.tags : [],
   };
 }
 
@@ -629,4 +631,40 @@ export async function updateMatchEdit(
   if (updErr) throw new Error(`updateMatchEdit: ${updErr.message}`);
 
   return { ok: true, match: updated };
+}
+
+export type UpdateMatchTagsResult =
+  | { ok: true; match: N01Match }
+  | { ok: false; reason: "not_found" | "forbidden" | "invalid_id" | "invalid_tags" };
+
+/** Replace tags on one match. Import overwrite does not touch this column. */
+export async function updateMatchTags(
+  matchId: string,
+  customerId: string,
+  rawTags: unknown,
+): Promise<UpdateMatchTagsResult> {
+  if (!MATCH_ID_RE.test(matchId)) return { ok: false, reason: "invalid_id" };
+  const tags = sanitizeMatchTags(rawTags);
+  if (!tags) return { ok: false, reason: "invalid_tags" };
+
+  const supabase = getSupabaseAdmin();
+  const { data: row, error: loadErr } = await supabase
+    .from("matches")
+    .select("match_id, customer_id")
+    .eq("match_id", matchId)
+    .maybeSingle();
+  if (loadErr) throw new Error(`updateMatchTags load: ${loadErr.message}`);
+  if (!row) return { ok: false, reason: "not_found" };
+  if (row.customer_id !== customerId) return { ok: false, reason: "forbidden" };
+
+  const { error: updErr } = await supabase
+    .from("matches")
+    .update({ tags, updated_at: new Date().toISOString() })
+    .eq("match_id", matchId)
+    .eq("customer_id", customerId);
+  if (updErr) throw new Error(`updateMatchTags: ${updErr.message}`);
+
+  const match = await loadMatchById(matchId);
+  if (!match) return { ok: false, reason: "not_found" };
+  return { ok: true, match };
 }

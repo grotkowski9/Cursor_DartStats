@@ -63,6 +63,7 @@ function matchesToRows(matches: N01Match[]): {
       html_snapshot_path: m.htmlSnapshotPath,
       share_token: m.shareToken,
       source: m.source === "prd" ? "prd" : "n01",
+      tags: m.tags ?? [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     });

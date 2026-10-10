@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { PlayerStats, TimeRange } from "@/lib/stats";
 
 const RANGE_LABELS: Record<TimeRange, string> = {
@@ -17,9 +18,19 @@ type Props = {
   loading: boolean;
   /** Top win streak — rendered in compact stats grid when > 0 */
   maxWinStreak?: number | null;
+  tagFilters?: ReactNode;
+  streakIsLifetime?: boolean;
 };
 
-export function ProfileStatsBlock({ stats, range, onRange, loading, maxWinStreak }: Props) {
+export function ProfileStatsBlock({
+  stats,
+  range,
+  onRange,
+  loading,
+  maxWinStreak,
+  tagFilters,
+  streakIsLifetime = true,
+}: Props) {
   return (
     <section>
       <div className="glass-tile p-5">
@@ -32,21 +43,24 @@ export function ProfileStatsBlock({ stats, range, onRange, loading, maxWinStreak
           </span>
         </div>
 
-        <div className="mb-4 flex flex-wrap gap-1.5">
-          {(Object.keys(RANGE_LABELS) as TimeRange[]).map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => onRange(r)}
-              className={`rounded-lg border px-3 py-1.5 text-[11px] font-medium transition-colors ${
-                range === r
-                  ? "border-accent-from/60 bg-accent-from/15 text-foreground"
-                  : "border-white/10 bg-white/[0.03] text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {RANGE_LABELS[r]}
-            </button>
-          ))}
+        <div className="mb-4 flex flex-col gap-2">
+          <div className="flex flex-wrap gap-1.5">
+            {(Object.keys(RANGE_LABELS) as TimeRange[]).map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => onRange(r)}
+                className={`rounded-lg border px-3 py-1.5 text-[11px] font-medium transition-colors ${
+                  range === r
+                    ? "border-accent-from/60 bg-accent-from/15 text-foreground"
+                    : "border-white/10 bg-white/[0.03] text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {RANGE_LABELS[r]}
+              </button>
+            ))}
+          </div>
+          {tagFilters}
         </div>
 
         {loading ? (
@@ -110,7 +124,7 @@ export function ProfileStatsBlock({ stats, range, onRange, loading, maxWinStreak
                 <Stat
                   label="Best winning streak"
                   value={String(maxWinStreak)}
-                  sub="Lifetime"
+                  sub={streakIsLifetime ? "Lifetime" : "W zakresie"}
                   compact
                   tourId="insight-streak"
                 />

@@ -8,6 +8,7 @@ import { computeMatchStats, matchMeLabel, normalizeName, type MatchStats } from 
 import { getMatchShareUrl } from "@/lib/share-url";
 import { MatchDeleteDialog } from "./match-delete-dialog";
 import { MatchEditDialog } from "./match-edit-dialog";
+import { ProfileMatchTags } from "./profile-match-tags";
 import { MATCH_ACTION_DIALOG_MODE } from "@/lib/match-action-dialog-mode";
 
 type Props = {
@@ -24,6 +25,8 @@ type Props = {
   /** Show edit action (live profile only — not demo) */
   canEdit?: boolean;
   onUpdated?: (match: N01Match) => void;
+  tagCatalog?: string[];
+  persistTags?: boolean;
 };
 
 export function ProfileMatchCard({
@@ -36,6 +39,8 @@ export function ProfileMatchCard({
   onDeleted,
   canEdit = false,
   onUpdated,
+  tagCatalog = [],
+  persistTags = false,
 }: Props) {
   const stats = useMemo(
     () => initialMatchStats ?? computeMatchStats(match),
@@ -135,6 +140,16 @@ export function ProfileMatchCard({
           )}
         </div>
       </button>
+
+      <div className="px-4 pb-2">
+        <ProfileMatchTags
+          match={match}
+          catalog={tagCatalog}
+          canEdit={canEdit}
+          persist={persistTags}
+          onUpdated={(updated) => onUpdated?.(updated)}
+        />
+      </div>
 
       {/* Expanded KPI grid — hidden while inline edit/delete wizard is open */}
       {expanded && !hideKpiForInline && (

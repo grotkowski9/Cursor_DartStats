@@ -6,6 +6,7 @@ To **Sylveon Dart Profile** (`Cursor_DartStats`). **Źródło prawdy: `README.md
 
 - Wersja **`3.0.0`** na `main`. Backup: branch `backup/v3.0.0`, tag `v3.0.0`.
 - Import: **N01** (mecz `tmid` / live `mid` / turniej / liga) + **Polski Ranking Darta** (turniej).
+- Tagi per mecz: `matches.tags text[]`. Profil: uwzględnij / wyklucz po tagu. Import nie nadpisuje tagów.
 - Jedna tabela `public.matches`. Kolumna `source` (`n01` | `prd`). Zewnętrzne ID zawsze w `n01_tmid` (prawdziwy tmid albo `prd:<uuid>`). UNIQUE `(customer_id, n01_tmid)`.
 - Prod DB: Supabase **`nwrhnmnaiqclpxcjfgcq`** (eu-west-1). Migracja `20261010170000_match_source.sql` **jest na produkcji** (`matches.source`, `ingest_snapshots.source`).
 - Ten projekt **współdzieli** Postgres z BET. **Nie ruszaj `bet.*`.** Żadnych DROP/ALTER poza `public` z naszej migracji.

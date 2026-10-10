@@ -16,6 +16,8 @@ import {
   type MatchStats,
   type TimeRange,
 } from "@/lib/stats";
+import { computeMaxWinStreak } from "@/lib/insights";
+import { filterByTags, uniqueCatalogTags } from "@/lib/match-tags";
 import { refreshDemoSnapshotDates, type DemoProfileSnapshot } from "@/lib/demo-snapshot";
 import { ProfileAddMatch } from "./profile-add-match";
 import ProfileActivity from "./profile-activity";
@@ -25,6 +27,7 @@ import { ProfileFormChart } from "./profile-form-chart";
 import { ProfileHeadToHead } from "./profile-head-to-head";
 import { ProfileMatchCard } from "./profile-match-card";
 import { ProfileStatsBlock } from "./profile-stats-block";
+import { ProfileTagFilters } from "./profile-tag-filters";
 import { ProfileTopLists } from "./profile-top-lists";
 
 const INITIAL_SHOW = 5;
@@ -59,6 +62,8 @@ export function ProfileClient({
   );
   const [loading, setLoading] = useState(!demoMode && !demoSnapshot && !initialMatches);
   const [range, setRange] = useState<TimeRange>("all");
+  const [includeTag, setIncludeTag] = useState<string | null>(null);
+  const [excludeTag, setExcludeTag] = useState<string | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
   const [maxWinStreak, setMaxWinStreak] = useState<number | null>(
@@ -93,53 +98,90 @@ export function ProfileClient({
   }, [loadProfile, demoMode, demoSnapshot, initialMatches]);
 
   const rangeData = liveDemoSnapshot?.byRange[range];
+  const tagFilterOn = Boolean(includeTag || excludeTag);
 
-  const filtered = useMemo(
-    () => (liveDemoSnapshot ? (rangeData?.matches ?? []) : filterByRange(matches, range)),
-    [liveDemoSnapshot, rangeData, matches, range],
-  );
+  const filtered = useMemo(() => {
+    const dated =
+      liveDemoSnapshot && !tagFilterOn
+        ? (rangeData?.matches ?? [])
+        : filterByRange(matches, range);
+    return filterByTags(dated, { includeTag, excludeTag });
+  }, [liveDemoSnapshot, tagFilterOn, rangeData, matches, range, includeTag, excludeTag]);
+
+  const catalog = useMemo(() => uniqueCatalogTags(matches), [matches]);
+
+  useEffect(() => {
+    if (includeTag && !catalog.some((t) => t.toLowerCase() === includeTag.toLowerCase())) {
+      setIncludeTag(null);
+    }
+    if (excludeTag && !catalog.some((t) => t.toLowerCase() === excludeTag.toLowerCase())) {
+      setExcludeTag(null);
+    }
+  }, [catalog, includeTag, excludeTag]);
 
   /** One pass of computeMatchStats per filtered match — cards reuse this. */
   const matchStatsByToken = useMemo(() => {
-    if (liveDemoSnapshot) return liveDemoSnapshot.matchStatsByToken;
+    if (liveDemoSnapshot && !tagFilterOn) return liveDemoSnapshot.matchStatsByToken;
     const map: Record<string, MatchStats> = {};
     for (const m of filtered) {
       map[m.shareToken] = computeMatchStats(m);
     }
     return map;
-  }, [liveDemoSnapshot, filtered]);
+  }, [liveDemoSnapshot, tagFilterOn, filtered]);
 
   const playerStats = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.playerStats : computePlayerStats(filtered)),
-    [liveDemoSnapshot, rangeData, filtered],
+    () =>
+      liveDemoSnapshot && !tagFilterOn
+        ? rangeData!.playerStats
+        : computePlayerStats(filtered),
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
   const topThrows = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.topThrows : computeTopThrows(filtered, 10)),
-    [liveDemoSnapshot, rangeData, filtered],
+    () =>
+      liveDemoSnapshot && !tagFilterOn
+        ? rangeData!.topThrows
+        : computeTopThrows(filtered, 10),
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
   const topCheckouts = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.topCheckouts : computeTopCheckouts(filtered, 10)),
-    [liveDemoSnapshot, rangeData, filtered],
+    () =>
+      liveDemoSnapshot && !tagFilterOn
+        ? rangeData!.topCheckouts
+        : computeTopCheckouts(filtered, 10),
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
   const formSeries = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.formSeries : computeFormSeries(filtered)),
-    [liveDemoSnapshot, rangeData, filtered],
+    () =>
+      liveDemoSnapshot && !tagFilterOn
+        ? rangeData!.formSeries
+        : computeFormSeries(filtered),
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
   const dayStats = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.dayStats : computeDayStats(filtered)),
-    [liveDemoSnapshot, rangeData, filtered],
+    () =>
+      liveDemoSnapshot && !tagFilterOn ? rangeData!.dayStats : computeDayStats(filtered),
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
   const hourStats = useMemo(
-    () => (liveDemoSnapshot ? rangeData!.hourStats : computeHourStats(filtered)),
-    [liveDemoSnapshot, rangeData, filtered],
+    () =>
+      liveDemoSnapshot && !tagFilterOn
+        ? rangeData!.hourStats
+        : computeHourStats(filtered),
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
   const checkoutBuckets = useMemo(
     () =>
-      liveDemoSnapshot
+      liveDemoSnapshot && !tagFilterOn
         ? rangeData!.checkoutBuckets
         : computeCheckoutDistribution(filtered),
-    [liveDemoSnapshot, rangeData, filtered],
+    [liveDemoSnapshot, tagFilterOn, rangeData, filtered],
   );
+
+  const filteredStreak = useMemo(
+    () => (showInsights ? computeMaxWinStreak(filtered) : null),
+    [showInsights, filtered],
+  );
+  const streakIsLifetime = range === "all" && !tagFilterOn;
 
   const sortedMatches = useMemo(
     () => filtered.slice().sort((a, b) => b.startTime - a.startTime),
@@ -158,6 +200,18 @@ export function ProfileClient({
 
   function handleRange(next: TimeRange) {
     setRange(next);
+    setShowMore(false);
+    setPage(0);
+  }
+
+  function handleIncludeTag(tag: string | null) {
+    setIncludeTag(tag);
+    setShowMore(false);
+    setPage(0);
+  }
+
+  function handleExcludeTag(tag: string | null) {
+    setExcludeTag(tag);
     setShowMore(false);
     setPage(0);
   }
@@ -202,7 +256,17 @@ export function ProfileClient({
           range={range}
           onRange={handleRange}
           loading={loading}
-          maxWinStreak={showInsights ? maxWinStreak : null}
+          maxWinStreak={showInsights ? (streakIsLifetime ? maxWinStreak : filteredStreak) : null}
+          streakIsLifetime={streakIsLifetime}
+          tagFilters={
+            <ProfileTagFilters
+              catalog={catalog}
+              includeTag={includeTag}
+              excludeTag={excludeTag}
+              onInclude={handleIncludeTag}
+              onExclude={handleExcludeTag}
+            />
+          }
         />
       </div>
 
@@ -229,7 +293,11 @@ export function ProfileClient({
             </div>
             <h3 className="font-medium">Brak meczów w tym zakresie</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              {demoMode ? "Brak meczów w tym zakresie czasu." : "Dodaj pierwszy link z N01 albo PRD powyżej."}
+              {demoMode
+                ? "Brak meczów w tym zakresie czasu."
+                : tagFilterOn
+                  ? "Żaden mecz nie pasuje do wybranego tagu."
+                  : "Dodaj pierwszy link z N01 albo PRD powyżej."}
             </p>
           </div>
         ) : (
@@ -248,6 +316,8 @@ export function ProfileClient({
                       onDeleted={() => handleMatchDeleted(m)}
                       canEdit={allowDelete}
                       onUpdated={handleMatchUpdated}
+                      tagCatalog={catalog}
+                      persistTags={allowDelete}
                     />
                   ))}
                 </div>
@@ -276,6 +346,8 @@ export function ProfileClient({
                       onDeleted={() => handleMatchDeleted(m)}
                       canEdit={allowDelete}
                       onUpdated={handleMatchUpdated}
+                      tagCatalog={catalog}
+                      persistTags={allowDelete}
                     />
                   ))}
                 </div>
@@ -327,9 +399,9 @@ export function ProfileClient({
       {/* Head-to-head */}
       {!loading && filtered.length > 0 && (
         <ProfileHeadToHead
-          matches={demoSnapshot ? undefined : filtered}
-          opponents={rangeData?.opponents}
-          h2hByOpponent={rangeData?.h2hByOpponent}
+          matches={liveDemoSnapshot && !tagFilterOn ? undefined : filtered}
+          opponents={liveDemoSnapshot && !tagFilterOn ? rangeData?.opponents : undefined}
+          h2hByOpponent={liveDemoSnapshot && !tagFilterOn ? rangeData?.h2hByOpponent : undefined}
         />
       )}
 

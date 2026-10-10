@@ -184,6 +184,7 @@ export type Database = {
           source: string
           start_score: number
           start_time: string
+          tags: string[]
           title: string
           update_time: string | null
           updated_at: string
@@ -209,6 +210,7 @@ export type Database = {
           source?: string
           start_score?: number
           start_time: string
+          tags?: string[]
           title: string
           update_time?: string | null
           updated_at?: string
@@ -234,6 +236,7 @@ export type Database = {
           source?: string
           start_score?: number
           start_time?: string
+          tags?: string[]
           title?: string
           update_time?: string | null
           updated_at?: string

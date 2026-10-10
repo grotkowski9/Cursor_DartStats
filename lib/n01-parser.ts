@@ -48,6 +48,8 @@ export type N01Match = {
   rawPayload?: unknown;
   /** Origin of the payload. Default n01 when omitted (legacy rows). */
   source?: "n01" | "prd";
+  /** User labels on this match. Empty when omitted (legacy / parse). */
+  tags?: string[];
 };
 
 export function extractTmidFromUrl(url: string): { tmid: string; ttype: "league" | "tournament" } {

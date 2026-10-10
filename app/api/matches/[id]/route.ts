@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAuthCustomerApi } from "@/lib/auth";
 import { toClientMatch } from "@/lib/match-client";
-import { deleteMatch, updateMatchEdit } from "@/lib/matches";
+import { deleteMatch, updateMatchEdit, updateMatchTags } from "@/lib/matches";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,27 @@ export async function PATCH(request: Request, ctx: Ctx) {
   const raw = body as {
     playerIndex?: unknown;
     playerNames?: Partial<Record<"0" | "1", unknown>>;
+    tags?: unknown;
   };
+
+  if (raw.tags !== undefined && raw.playerIndex === undefined && raw.playerNames === undefined) {
+    try {
+      const result = await updateMatchTags(id, auth.customer.customerId, raw.tags);
+      if (!result.ok) {
+        if (result.reason === "invalid_id" || result.reason === "invalid_tags") {
+          return NextResponse.json({ error: "Nieprawidłowe tagi" }, { status: 400 });
+        }
+        if (result.reason === "forbidden") {
+          return NextResponse.json({ error: "Brak dostępu" }, { status: 403 });
+        }
+        return NextResponse.json({ error: "Mecz nie istnieje" }, { status: 404 });
+      }
+      return NextResponse.json({ match: toClientMatch(result.match) });
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Błąd zapisu tagów";
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
+  }
 
   const patch: {
     playerIndex?: 0 | 1;
