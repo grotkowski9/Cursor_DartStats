@@ -9,6 +9,7 @@ import {
 import type { CustomerProfile } from "@/lib/customer";
 import { formatCustomerDisplayName } from "@/lib/customer";
 import { customerPatterns, personMatchesPatterns, resolveCandidates } from "@/lib/sources/identity";
+import { prdAuthFailed, resetPrdConfigCache, resolvePrdConfig } from "@/lib/sources/prd-config";
 import type {
   GroupIdentity,
   ParticipantCandidate,
@@ -92,18 +93,12 @@ export type PrdTournament = {
   city?: string | null;
 };
 
-function prdConfig() {
-  const url = (
-    process.env.PRD_SUPABASE_URL ?? "https://tszuyyibbyjyznwdpnpe.supabase.co"
-  ).replace(/\/$/, "");
-  const key =
-    process.env.PRD_SUPABASE_PUBLISHABLE_KEY ??
-    "sb_publishable_eQ2Zk9-K_vbSkTrlxDUYdQ_re4MP4mx";
-  return { url, key };
-}
-
-async function prdGet<T>(path: string, params: Record<string, string>): Promise<T> {
-  const { url, key } = prdConfig();
+async function prdGetOnce<T>(
+  path: string,
+  params: Record<string, string>,
+  url: string,
+  key: string,
+): Promise<{ ok: true; data: T } | { ok: false; status: number; body: string }> {
   const target = new URL(`${url}/rest/v1/${path}`);
   for (const [k, v] of Object.entries(params)) target.searchParams.set(k, v);
   const res = await fetch(target, {
@@ -115,9 +110,31 @@ async function prdGet<T>(path: string, params: Record<string, string>): Promise<
   });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(`PRD ${path} ${res.status}${body ? `: ${body.slice(0, 180)}` : ""}`);
+    return { ok: false, status: res.status, body };
   }
-  return (await res.json()) as T;
+  return { ok: true, data: (await res.json()) as T };
+}
+
+async function prdGet<T>(path: string, params: Record<string, string>): Promise<T> {
+  const first = await resolvePrdConfig();
+  const attempt = await prdGetOnce<T>(path, params, first.url, first.key);
+  if (attempt.ok) return attempt.data;
+
+  if (prdAuthFailed(attempt.status)) {
+    resetPrdConfigCache();
+    const again = await resolvePrdConfig({ forceDiscover: true });
+    if (again.url !== first.url || again.key !== first.key) {
+      const retry = await prdGetOnce<T>(path, params, again.url, again.key);
+      if (retry.ok) return retry.data;
+      throw new Error(
+        `PRD ${path} ${retry.status}${retry.body ? `: ${retry.body.slice(0, 180)}` : ""}`,
+      );
+    }
+  }
+
+  throw new Error(
+    `PRD ${path} ${attempt.status}${attempt.body ? `: ${attempt.body.slice(0, 180)}` : ""}`,
+  );
 }
 
 const PROFILE_EMBED =
