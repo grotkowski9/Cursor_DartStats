@@ -46,6 +46,8 @@ export type N01Match = {
   playerIndex: 0 | 1 | null;
   shareToken: string;
   rawPayload?: unknown;
+  /** Origin of the payload. Default n01 when omitted (legacy rows). */
+  source?: "n01" | "prd";
 };
 
 export function extractTmidFromUrl(url: string): { tmid: string; ttype: "league" | "tournament" } {

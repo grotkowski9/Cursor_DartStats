@@ -109,6 +109,7 @@ export type Database = {
           payload_hash: string
           snapshot_id: string
           snapshot_path: string
+          source: string
         }
         Insert: {
           customer_id: string
@@ -119,6 +120,7 @@ export type Database = {
           payload_hash: string
           snapshot_id?: string
           snapshot_path: string
+          source?: string
         }
         Update: {
           customer_id?: string
@@ -129,6 +131,7 @@ export type Database = {
           payload_hash?: string
           snapshot_id?: string
           snapshot_path?: string
+          source?: string
         }
         Relationships: []
       }
@@ -178,6 +181,7 @@ export type Database = {
           raw_payload: Json | null
           share_token: string
           snapshot_path: string
+          source: string
           start_score: number
           start_time: string
           title: string
@@ -202,6 +206,7 @@ export type Database = {
           raw_payload?: Json | null
           share_token: string
           snapshot_path: string
+          source?: string
           start_score?: number
           start_time: string
           title: string
@@ -226,6 +231,7 @@ export type Database = {
           raw_payload?: Json | null
           share_token?: string
           snapshot_path?: string
+          source?: string
           start_score?: number
           start_time?: string
           title?: string

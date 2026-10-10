@@ -100,6 +100,7 @@ export function rowsToN01Match(match: MatchRow, legs: LegRow[], visits: VisitRow
     htmlSnapshotPath: match.html_snapshot_path,
     playerIndex,
     shareToken: match.share_token,
+    source: match.source === "prd" ? "prd" : "n01",
   };
 }
 
@@ -257,6 +258,7 @@ export async function saveMatch(
         snapshot_path: m.snapshotPath,
         html_snapshot_path: m.htmlSnapshotPath,
         share_token: m.shareToken,
+        source: m.source ?? "n01",
       },
       { onConflict: "customer_id,n01_tmid" },
     )
@@ -316,6 +318,7 @@ export async function saveMatch(
     payload_hash: payloadHash,
     snapshot_path: m.snapshotPath,
     html_snapshot_path: m.htmlSnapshotPath,
+    source: m.source ?? "n01",
   });
 
   return { matchId: matchRow.match_id };

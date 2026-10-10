@@ -22,7 +22,7 @@ const STEPS: Step[] = [
   {
     id: "add",
     title: "Dodaj mecz",
-    body: "Wklej link z n01darts.com — rozpoznamy Cię po wzorcach z onboardingu.",
+    body: "Wklej link meczu, turnieju lub ligi N01 albo turniej z Polskiego Rankingu Darta — rozpoznamy Cię po wzorcach z onboardingu.",
     selector: '[data-tour="add-match"]',
   },
   {

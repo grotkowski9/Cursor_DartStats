@@ -76,11 +76,12 @@ export function PrivacyPolicyContent() {
           w swoim profilu oraz z jakich obsługiwanych przez Serwis źródeł danych korzysta.
         </p>
         <p className={p}>
-          Jednym z akceptowalnych źródeł danych meczowych jest serwis n01darts.com. Sylveon Company /
-          Sylveon Dart Profile nie jest powiązany z n01darts.com, nie reprezentuje tego serwisu i nie
-          odpowiada za zasady przetwarzania danych obowiązujące u tego podmiotu. Import danych z
-          takiego źródła inicjuje użytkownik; wszystkie dane meczowe trafiające do profilu są podawane
-          lub wybierane przez użytkownika.
+          Akceptowalnymi źródłami danych meczowych są serwis n01darts.com oraz turnieje publikowane
+          w serwisie polskirankingdarta.pl (Polski Ranking Darta). Sylveon Company / Sylveon Dart
+          Profile nie jest powiązany z tymi serwisami, nie reprezentuje ich i nie odpowiada za zasady
+          przetwarzania danych obowiązujące u tych podmiotów. Import danych z takiego źródła inicjuje
+          użytkownik; wszystkie dane meczowe trafiające do profilu są podawane lub wybierane przez
+          użytkownika i archiwizowane w Sylveon Dart Profile niezależnie od dalszej dostępności źródła.
         </p>
       </section>
 
@@ -543,7 +544,8 @@ export function PrivacyPolicyContent() {
         <h2 className={h2}>18. Linki do zewnętrznych serwisów</h2>
         <p className={p}>
           Serwisy Administratora mogą zawierać odnośniki do serwisów należących do podmiotów trzecich,
-          w tym do źródeł danych meczowych takich jak n01darts.com. Administrator nie odpowiada za
+          w tym do źródeł danych meczowych takich jak n01darts.com oraz polskirankingdarta.pl.
+          Administrator nie odpowiada za
           zasady przetwarzania danych obowiązujące w zewnętrznych serwisach. Po przejściu do
           zewnętrznego serwisu użytkownik powinien zapoznać się z jego zasadami ochrony prywatności.
         </p>

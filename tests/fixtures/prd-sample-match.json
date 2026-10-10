@@ -1,0 +1,44 @@
+{
+  "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  "player1": "9f60529d-e088-4629-aff9-c6e4e006c149",
+  "player2": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+  "score1": 3,
+  "score2": 0,
+  "winner": "9f60529d-e088-4629-aff9-c6e4e006c149",
+  "status": "finished",
+  "created_at": "2026-10-10T12:00:00.000Z",
+  "starting_points": 501,
+  "p1": { "id": "9f60529d-e088-4629-aff9-c6e4e006c149", "first_name": "Piotr", "last_name": "Grotkowski", "nickname": "Groteł" },
+  "p2": { "id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", "first_name": "Dawid", "last_name": "Kaszuba", "nickname": "Dejw" },
+  "match_data": {
+    "score1": 3,
+    "score2": 0,
+    "liveStats": {
+      "p1": { "average": 40.18, "totalPoints": 1460, "dartsThrown": 109 },
+      "p2": { "average": 38.0, "totalPoints": 900, "dartsThrown": 71 }
+    },
+    "legs": [
+      {
+        "winner": "p1",
+        "startingPlayer": 1,
+        "players": {
+          "p1": {
+            "throws": [
+              { "score": 60, "darts": 3, "remaining": 441, "checkout": false, "bust": false },
+              { "score": 141, "darts": 3, "remaining": 300, "checkout": false, "bust": false },
+              { "score": 100, "darts": 3, "remaining": 200, "checkout": false, "bust": false },
+              { "score": 100, "darts": 3, "remaining": 100, "checkout": false, "bust": false },
+              { "score": 60, "darts": 3, "remaining": 40, "checkout": false, "bust": false },
+              { "score": 40, "darts": 2, "remaining": 0, "checkout": true, "bust": false }
+            ]
+          },
+          "p2": {
+            "throws": [
+              { "score": 26, "darts": 3, "remaining": 475, "checkout": false, "bust": false }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

@@ -38,7 +38,7 @@ Docelowo pod `dart.sylveoncompany.pl`.
 
 Kompletna historia zawodnika z lokalnych turniejów darta:
 
-- Mecze pobierane z N01 i archiwizowane na stałe (JSON + HTML backup)
+- Mecze pobierane z N01 (mecz / turniej / liga) albo z turnieju Polski Ranking Darta i archiwizowane na stałe (JSON + HTML backup)
 - Własny widok throw-by-throw, niezależny od n01darts.com
 - Pełne statystyki, wykresy formy, analityka
 
@@ -109,7 +109,8 @@ customers (
 matches (
   match_id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   customer_id     uuid REFERENCES customers,
-  n01_tmid        text NOT NULL,                 -- identyfikator N01
+  n01_tmid        text NOT NULL,                 -- N01 tmid albo prd:<uuid>
+  source          text NOT NULL DEFAULT 'n01',   -- 'n01' | 'prd'
   match_type      text NOT NULL,                 -- 'league' | 'tournament'
   title           text NOT NULL,
   opponent_name   text,                          -- znormalizowane nazwisko przeciwnika
@@ -121,7 +122,7 @@ matches (
   player_average  numeric,
   player_first9   numeric,
   player_checkout_pct numeric,
-  raw_payload     jsonb,                         -- cały JSON z N01 (źródło prawdy)
+  raw_payload     jsonb,                         -- surowy JSON źródła (N01 albo PRD)
   snapshot_path   text NOT NULL,                 -- ścieżka w Storage
   html_snapshot_path text,
   share_token     text UNIQUE,                   -- nowe: 16 hex; legacy: 8 znaków
@@ -129,6 +130,9 @@ matches (
   updated_at      timestamptz DEFAULT now(),
   UNIQUE(customer_id, n01_tmid)
 )
+
+-- Źródło (dodane 2026-10): n01 | prd. n01_tmid zostaje zewnętrznym ID
+-- (prawdziwy tmid N01 albo prd:<uuid>). Nie ruszamy bet.*.
 
 -- Legi
 legs (
@@ -177,6 +181,7 @@ ingest_snapshots (
   payload_hash    text NOT NULL,
   snapshot_path   text NOT NULL,
   html_snapshot_path text,
+  source          text NOT NULL DEFAULT 'n01',   -- 'n01' | 'prd'
   ingested_at     timestamptz DEFAULT now()
 )
 
@@ -1979,6 +1984,7 @@ npm run dev -- --hostname 0.0.0.0
 
 | Wersja     | Data       | Co zrobiono                                                                                                                                                                                                                                                                                                         |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **import** | 2026-10-10 | **PRD + N01 turniej/liga.** `matches.source` (`n01`\|`prd`), `n01_tmid` = tmid albo `prd:<uuid>`. Preview/commit: mieszane URL-e, incremental skip, picker przy 0/2+ zawodnikach. Backup JSON + visits jak N01. |
 | **v2.0.1** | 2026-08-09 | **Release na `main`.** Login gate: `/login` za hasłem gdy `app_settings.login_gate_enabled=true`. Toggle Supabase bez redeploy. `LOGIN_GATE_PASSWORD` w Vercel. Cookie unlock **30 dni**. UI: `AccentGlowCta` + neon paski LR (landing + Google), BrandLogoMark isolate. Branch `backup/v2.0.1`, tag `v2.0.1`. Rollback: `backup/v2.0-firstPROD`. |
 | **v2.0-firstPROD** | 2026-08-09 | **Landing polish na `main` + backup.** Meta/JSON-LD profil-first. Hero + product-card demo (Sylveon). Separator accent + łuna. 3 kroki: lewy pasek Sylveon, hover glow jak CTA. Footer `n01darts.pl` → `/`. README sync. |
 | **v2.0-firstPROD** | 2026-08-09 | **Pierwszy PROD na `main`.** Mecze tylko 501 (ingest + migracja CHECK). Stopka: SEO 2×2 + disclaimer N01/Nakka + domeny. Landing: CTA glow + `BrandLogoMark` (także 404/500). `package.json` 2.0.0. Branch `backup/v2.0-firstPROD`, tag `v2.0-firstPROD`. |

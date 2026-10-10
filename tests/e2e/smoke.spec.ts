@@ -48,6 +48,20 @@ test("ingest without auth returns 401", async ({ request }) => {
   expect(res.status()).toBe(401);
 });
 
+test("ingest preview without auth returns 401", async ({ request }) => {
+  const res = await request.post("/api/ingest/preview", {
+    data: { urls: ["https://n01darts.com/n01/tournament/comp.php?id=t_x"] },
+  });
+  expect(res.status()).toBe(401);
+});
+
+test("ingest commit without auth returns 401", async ({ request }) => {
+  const res = await request.post("/api/ingest/commit", {
+    data: { items: [] },
+  });
+  expect(res.status()).toBe(401);
+});
+
 test("profile bootstrap without auth returns 401", async ({ request }) => {
   const res = await request.get("/api/profile/bootstrap");
   expect(res.status()).toBe(401);
