@@ -1,0 +1,44 @@
+# Agent — czytaj to pierwsze
+
+To **Sylveon Dart Profile** (`Cursor_DartStats`). **Źródło prawdy: `README.md`.** Ten plik to skrót, żebyś nie zgadywał.
+
+## Stan (2026-10-10)
+
+- Wersja **`3.0.0`** na `main`. Backup: branch `backup/v3.0.0`, tag `v3.0.0`.
+- Import: **N01** (mecz `tmid` / live `mid` / turniej / liga) + **Polski Ranking Darta** (turniej).
+- Jedna tabela `public.matches`. Kolumna `source` (`n01` | `prd`). Zewnętrzne ID zawsze w `n01_tmid` (prawdziwy tmid albo `prd:<uuid>`). UNIQUE `(customer_id, n01_tmid)`.
+- Prod DB: Supabase **`nwrhnmnaiqclpxcjfgcq`** (eu-west-1). Migracja `20261010170000_match_source.sql` **jest na produkcji** (`matches.source`, `ingest_snapshots.source`).
+- Ten projekt **współdzieli** Postgres z BET. **Nie ruszaj `bet.*`.** Żadnych DROP/ALTER poza `public` z naszej migracji.
+
+## Zanim cokolwiek zaimplementujesz
+
+1. Przeczytaj README (handoff + import + twarde zasady).
+2. Nie zmieniaj planu w `.cursor/plans` jeśli user kazał go nie ruszać.
+3. Pytaj o zakres backlogu **zanim** budujesz 2.0.x / admin / usuwanie konta.
+4. Kod EN, UI PL. Zero halucynacji w KPI (brak danych → ukryj kafelek).
+5. Tylko **501**. Inny `startScore` / `starting_points` → błąd, nie zapis.
+
+## Szybki start
+
+```bash
+cp .env.example .env.local   # klucze z naszego Supabase, nie z PRD
+npm install
+npm run dev
+npm test && npm run typecheck
+```
+
+## Import — gdzie kod
+
+`lib/sources/*` → `POST /api/ingest/preview` (+ `/resolve`) → `POST /api/ingest/commit`  
+UI: `app/profile/profile-add-match.tsx`  
+Stary pojedynczy URL: `POST /api/ingest` nadal działa dla N01 `tmid`.
+
+## Twarde nie
+
+- Nie edytuj schematu `bet.*`, nie dodawaj FK z BET do naszych tabel poza istniejącym `public.customers`.
+- Nie zapisuj `service_role` w kliencie. Publishable PRD to **ich** klucz z SPA — nie nasz secret.
+- Nie commituj `.env.local` ani `.dev/*.json` (PII).
+- Nie zakładaj playerIndex. Identity: 0 / 1 / N kandydatów → picker.
+- Nie ciche nadpisanie duplikatu.
+
+Szczegóły, URL-e, env, RLS, pliki, rollback: **README.md**.
