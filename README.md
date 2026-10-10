@@ -6,14 +6,15 @@
 
 ---
 
-## Agent — start tutaj (v3.0.0)
+## Agent — start tutaj (v3.1.0)
 
-**Data sync:** 2026-10-10. **`package.json` version `3.0.0`.**
+**Data sync:** 2026-10-10. **`package.json` version `3.1.0`.**
 
 | | |
 | --- | --- |
 | Produkcja git | `main` |
-| Backup tego wydania | branch `backup/v3.0.0` + tag `v3.0.0` |
+| Backup tego wydania | branch `backup/v3.1.0` + tag `v3.1.0` |
+| Rollback v3.0 | `backup/v3.0.0` / tag `v3.0.0` |
 | Rollback przed importem PRD | `backup/v2.0.1` / tag `v2.0.1`; firstPROD: `backup/v2.0-firstPROD` |
 | Repo | `grotkowski9/Cursor_DartStats` |
 | Owner produktowy | Piotr „Groteł” Grotkowski |
@@ -45,13 +46,14 @@
 10. **Nie commituj** `.env.local`, `.dev/*.json` (PII), planów usera jeśli kazał nie ruszać.
 11. **Premium / PayNow (linia 2.0.x) — ⏸️.** Milestone v3 ≠ freemium.
 12. **Backlog rosnąco po ID.** Nie zgaduj kolejności; potwierdź zakres.
+13. **Nie wydawaj na `main` bez wyraźnego polecenia usera.** PR i gałąź — tak. Merge/push `main` + tag backup — tylko gdy user napisze.
 
 ### Prompt na nowy czat (wklej)
 
 ```
 Projekt: Sylveon Dart Profile (Cursor_DartStats). README + AGENTS.md = źródło prawdy.
 
-Stan: v3.0.0 na main. Backup backup/v3.0.0 + tag v3.0.0.
+Stan: v3.1.0 na main. Backup backup/v3.1.0 + tag v3.1.0. Nie merguj na main bez polecenia.
 DB: Supabase nwrhnmnaiqclpxcjfgcq. Nie ruszaj bet.*.
 matches.source (n01|prd) + n01_tmid (tmid albo prd:<uuid>) UNIQUE(customer_id, n01_tmid). Migracja source jest na prod.
 matches.tags text[] (max 8) — tag per mecz. Profil: uwzględnij tylko / wyklucz mecze z tagiem. Import overwrite nie czyści tagów. Migracja tags na prod.
@@ -602,7 +604,7 @@ Paleta W2, inspiracja [sylveoncompany.pl](https://sylveoncompany.pl):
 
 ## Roadmapa skrócona
 
-Zrobione (nie implementuj drugi raz): 0.x MVP, 1.0 release, auth 1.1, profil About, delete/edit meczu, 1.2 UX, 1.3 testy+perf, 1.4 polish, **v2.0-firstPROD**, **v2.0.1 login gate**, **v3.0.0 import N01/PRD + mid + tagi per mecz**.
+Zrobione (nie implementuj drugi raz): 0.x MVP, 1.0 release, auth 1.1, profil About, delete/edit meczu, 1.2 UX, 1.3 testy+perf, 1.4 polish, **v2.0-firstPROD**, **v2.0.1 login gate**, **v3.0.0 import N01/PRD + mid**, **v3.1.0 tagi + onboarding BET + fav**.
 
 Otwarte (rosnąco po ID — **pytaj przed startem**):
 
@@ -649,7 +651,17 @@ Otwarte (rosnąco po ID — **pytaj przed startem**):
 | `v1.4.0` | favicon, landing, OAuth docs |
 | `v2.0-firstPROD` | pierwszy prod |
 | `v2.0.1` | login gate |
-| **`v3.0.0` / `backup/v3.0.0`** | **PRD + N01 competition + mid + tagi; `matches.source`; copy; rediscovery PRD** |
+| **`v3.0.0` / `backup/v3.0.0`** | PRD + N01 competition + mid; `matches.source`; copy; rediscovery PRD |
+| **`v3.1.0` / `backup/v3.1.0`** | **tagi, demo filtry, nicki CAPS, onboarding BET, fav Ratajski/Białecki** |
+
+v3.1.0 (2026-10-10):
+
+- Tagi per mecz + include/exclude na całym profilu. Migracja `matches.tags` na prod.
+- Demo: te same droplisty, pre-seed „Mecz towarzyski” / „Liga”; tagi klienta **nie** wyciekają na demo.
+- `normalizeName` zostawia CAPS/nicks (KOKLUSZ, Błaszczu).
+- BET ≠ ukończony Dart: brak `about_completed_at` → pełny onboarding (Krok 1 + 2).
+- Fav: Ratajski, Białecki, reszta; `<select>` jak marka/waga. „ulubieńcem”. Checkbox porównań: odpłatne wyłączenie wkrótce.
+- Copy na bramie logowania (`kontakt@sylveoncompany.pl`). **Nie merguj na `main` bez polecenia.**
 
 v3.0.0 (2026-10-10):
 
@@ -658,7 +670,5 @@ v3.0.0 (2026-10-10):
 - PRD turnieje; rediscovery kluczy z ich SPA.
 - N01 `mid` → `tmid` (`match/list`).
 - Public copy/SEO wspomina N01 i PRD.
-- Tagi per mecz (`matches.tags`) + filtr uwzględnij/wyklucz na całym profilu. Migracja na prod.
-- Demo: te same filtry; pre-seed „Mecz towarzyski” / „Liga”.
-- `normalizeName` zostawia CAPS/nicks (KOKLUSZ, Błaszczu).
+- Tagi per mecz i demo filtry weszły w **v3.1.0**.
 - Nadal tylko 501; BET nietknięty.
