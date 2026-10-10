@@ -7,9 +7,11 @@ import {
   fetchN01FinishedMatches,
   fetchN01LeagueTdids,
   fetchN01LeagueTitle,
+  fetchN01MatchByMid,
   fetchN01MatchSummary,
   fetchN01TournamentTitle,
   matchesForParticipant,
+  n01ViewUrl,
   pickN01Identity,
   previewMatchesFromN01,
   previewSingleN01Match,
@@ -143,6 +145,41 @@ async function previewDetected(
     const existing = await existingShareTokens(customerId, [detected.tmid]);
     return {
       groups: [previewSingleN01Match({ tmid: detected.tmid, url: detected.url, summary, customer, existing })],
+    };
+  }
+
+  if (detected.kind === "n01_mid") {
+    const summary = await fetchN01MatchByMid(detected.mid).catch(() => null);
+    const tmid = String(summary?.tmid ?? "").trim();
+    if (!tmid) {
+      return {
+        groups: [],
+        lineError: {
+          url: detected.url,
+          message: "N01 nie rozpoznało tego linku live (mid). Spróbuj linku z tmid albo strony turnieju.",
+        },
+      };
+    }
+    if (summary && summary.endMatch !== 1) {
+      return {
+        groups: [],
+        lineError: {
+          url: detected.url,
+          message: "Ten mecz N01 jeszcze się nie skończył — importujemy tylko zakończone.",
+        },
+      };
+    }
+    const existing = await existingShareTokens(customerId, [tmid]);
+    return {
+      groups: [
+        previewSingleN01Match({
+          tmid,
+          url: n01ViewUrl(tmid),
+          summary,
+          customer,
+          existing,
+        }),
+      ],
     };
   }
 
@@ -376,7 +413,7 @@ export async function expandGroupWithParticipant(opts: {
       matches: applyExistingToMatches(preview, existing),
     };
   }
-  if (detected.kind === "n01_match") {
+  if (detected.kind === "n01_match" || detected.kind === "n01_mid") {
     const slot = opts.participantId === "slot-1" ? 1 : 0;
     return {
       ...opts.group,

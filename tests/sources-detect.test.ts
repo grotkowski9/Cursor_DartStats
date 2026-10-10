@@ -2,6 +2,21 @@ import { describe, expect, it } from "vitest";
 import { detectSourceUrl, splitInputUrls } from "@/lib/sources/detect-url";
 
 describe("detectSourceUrl", () => {
+  it("detects N01 live history mid", () => {
+    const r = detectSourceUrl(
+      "https://n01darts.com/n01/live/history/stats.html?mid=9f7AyPX9_1769192146967",
+    );
+    expect(r.kind).toBe("n01_mid");
+    if (r.kind === "n01_mid") expect(r.mid).toBe("9f7AyPX9_1769192146967");
+  });
+
+  it("prefers tmid over mid", () => {
+    const r = detectSourceUrl(
+      "https://n01darts.com/n01/tournament/n01_view.html?tmid=t_abc&mid=xyz",
+    );
+    expect(r.kind).toBe("n01_match");
+  });
+
   it("detects N01 match tmid", () => {
     const r = detectSourceUrl(
       "https://n01darts.com/n01/league/n01_view.html?tmid=t_84WD_6808_rr_1_ODeb_WvbB",

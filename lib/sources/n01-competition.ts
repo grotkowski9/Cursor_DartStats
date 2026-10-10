@@ -106,6 +106,17 @@ export async function fetchN01MatchSummary(tmid: string): Promise<N01MatchListIt
   return data.list?.[0] ?? null;
 }
 
+export async function fetchN01MatchByMid(mid: string): Promise<N01MatchListItem | null> {
+  const data = await n01Get<N01ListResponse<N01MatchListItem>>("match/list", {
+    mid,
+    count: "1",
+  });
+  if (data.result !== 0) return null;
+  const row = data.list?.[0];
+  if (!row || String(row.mid ?? "") !== mid) return null;
+  return row;
+}
+
 export function uniqueN01Players(matches: N01MatchListItem[]): ParticipantCandidate[] {
   const map = new Map<string, ParticipantCandidate>();
   for (const m of matches) {

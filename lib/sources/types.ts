@@ -2,6 +2,7 @@ export type MatchSource = "n01" | "prd";
 
 export type DetectedUrlKind =
   | "n01_match"
+  | "n01_mid"
   | "n01_tournament"
   | "n01_league"
   | "prd_tournament"
@@ -9,6 +10,7 @@ export type DetectedUrlKind =
 
 export type DetectedUrl =
   | { kind: "n01_match"; url: string; tmid: string }
+  | { kind: "n01_mid"; url: string; mid: string }
   | { kind: "n01_tournament"; url: string; tdid: string }
   | { kind: "n01_league"; url: string; lgid: string }
   | { kind: "prd_tournament"; url: string; slug: string }

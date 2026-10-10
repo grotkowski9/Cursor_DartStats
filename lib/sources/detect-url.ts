@@ -29,6 +29,9 @@ export function detectSourceUrl(raw: string): DetectedUrl {
     const tmid = parsed.searchParams.get("tmid")?.trim();
     if (tmid) return { kind: "n01_match", url: trimmed, tmid };
 
+    const mid = parsed.searchParams.get("mid")?.trim();
+    if (mid) return { kind: "n01_mid", url: trimmed, mid };
+
     const path = parsed.pathname.toLowerCase();
     if (path.includes("/tournament/comp.php") || path.includes("/tournament/comp")) {
       const tdid = parsed.searchParams.get("id")?.trim();
@@ -78,10 +81,10 @@ export function splitInputUrls(raw: string): string[] {
 }
 
 export const IMPORT_HINT_N01 =
-  "Wklej link meczu (tmid), turnieju (comp.php?id=…) albo ligi N01.";
+  "Wklej link meczu (tmid albo live/history?mid=), turnieju (comp.php?id=…) albo ligi N01.";
 
 export const IMPORT_HINT_PRD =
   "Wklej link turnieju z polskirankingdarta.pl (strona turnieju, nie ranking).";
 
 export const IMPORT_HINT_MIXED =
-  "Wklej linki — mecz N01, turniej/liga N01 albo turniej PRD. Jeden URL w linii.";
+  "Wklej linki — mecz N01 (tmid lub live mid), turniej/liga N01 albo turniej PRD. Jeden URL w linii.";
