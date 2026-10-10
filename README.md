@@ -26,6 +26,7 @@
 - Profil: `GET /api/profile/bootstrap` (bulk mecze + insights). Lista = karty, nie kompakt W/L.
 - Demo publiczne `/demo/*` — **nigdy** dane Piotra; snapshot + `DEMO_CUSTOMER_ID`.
 - **Import v3:** N01 mecz / turniej / liga / **live-or-history `mid`**, oraz turniej **Polski Ranking Darta**.
+- **Tagi per mecz** (`matches.tags text[]`) + filtr profilu include/exclude. Migracja `20261010193000_match_tags.sql` **jest na produkcji**.
 - Prod Postgres: projekt Supabase **`nwrhnmnaiqclpxcjfgcq`** (`https://nwrhnmnaiqclpxcjfgcq.supabase.co`, region `eu-west-1`).
 - Kolumny **`public.matches.source`** i **`public.ingest_snapshots.source`** (`text NOT NULL DEFAULT 'n01'`, check `n01|prd`) **są na żywej bazie** (sprawdzone 2026-10-10). Historyczne mecze: `source = n01` (ok. 276 wierszy w momencie audytu).
 - Ten sam Postgres ma schemat **`bet`** (inny produkt). **Nie ruszaj `bet.*`.** Jedyny most: FK z BET do `public.customers` jeśli już istnieje — nie dodawaj nowych.
@@ -53,6 +54,7 @@ Projekt: Sylveon Dart Profile (Cursor_DartStats). README + AGENTS.md = źródło
 Stan: v3.0.0 na main. Backup backup/v3.0.0 + tag v3.0.0.
 DB: Supabase nwrhnmnaiqclpxcjfgcq. Nie ruszaj bet.*.
 matches.source (n01|prd) + n01_tmid (tmid albo prd:<uuid>) UNIQUE(customer_id, n01_tmid). Migracja source jest na prod.
+matches.tags text[] (max 8) — tag per mecz. Profil: uwzględnij tylko / wyklucz mecze z tagiem. Import overwrite nie czyści tagów. Migracja tags na prod.
 
 Import: lib/sources/* → POST /api/ingest/preview (+ /resolve) → POST /api/ingest/commit.
 N01: tmid, mid (match/list?mid= → tmid; skip niedokończone), turniej tdid, liga lgid.
@@ -73,14 +75,15 @@ Tylko 501. Identity 0/1/N. Duplikaty pytaj. Kod EN, UI PL. 2.0.x płatności ⏸
 7. [KPI](#kpi)
 8. [Detekcja gracza i duplikaty](#detekcja-gracza-i-duplikaty)
 9. [Auth, onboarding, profil](#auth-onboarding-profil)
-10. [Mapa plików](#mapa-plików)
-11. [Uruchomienie i testy](#uruchomienie-i-testy)
-12. [Bezpieczeństwo](#bezpieczeństwo)
-13. [Design](#design)
-14. [Konwencje](#konwencje)
-15. [Roadmapa skrócona](#roadmapa-skrócona)
-16. [ADR](#adr)
-17. [Dziennik wersji](#dziennik-wersji)
+10. [Tagi meczów i filtr profilu](#tagi-meczów-i-filtr-profilu)
+11. [Mapa plików](#mapa-plików)
+12. [Uruchomienie i testy](#uruchomienie-i-testy)
+13. [Bezpieczeństwo](#bezpieczeństwo)
+14. [Design](#design)
+15. [Konwencje](#konwencje)
+16. [Roadmapa skrócona](#roadmapa-skrócona)
+17. [ADR](#adr)
+18. [Dziennik wersji](#dziennik-wersji)
 
 ---
 
@@ -324,10 +327,43 @@ Scenariusze unit: `tests/player-detect.test.ts`, `tests/sources-identity.test.ts
 - Gate ingest: 403 `needs_onboarding`.
 - Login gate: flaga SQL `login_gate_enabled` + `LOGIN_GATE_PASSWORD`. Cookie ~30 dni.
 - Usuwanie meczu: triple-check, bez undo. Edycja: PATCH (swap/rename opponent) — **nie przepisuj legs/visits**.
-- Karty meczu: Rzut / Share / Edytuj / Usuń + **tagi** (lista istniejących albo nowy).
-- Filtr statystyk: zakres dat **oraz** „uwzględnij tylko mecze z tagiem” / „wyklucz mecze z tagiem”. Działa na liczby, wykres, listy, H2H, aktywność, listę meczów. Import overwrite **nie** czyści tagów.
+- Karty meczu: Rzut / Share / Edytuj / Usuń + **tagi** (patrz niżej).
 
 Google + iPhone LAN: Site URL w Supabase na `http://<IP-Maca>:3000` na czas testu; `allowedDevOrigins` w `next.config.ts`.
+
+---
+
+## Tagi meczów i filtr profilu
+
+**Po co:** user oznacza pojedyncze mecze (np. „Gliwice”, „liga”) i na statystykach zostawia albo wycina cały ten zbiór. To **nie** jest filtr po tytule turnieju — tag jest ręczny, per mecz.
+
+### Kontrakt
+
+| | |
+| --- | --- |
+| Kolumna | `public.matches.tags text[] NOT NULL DEFAULT '{}'` |
+| Limit | max **8** tagów na mecz; nazwa **1–32** znaki po trim |
+| Dedup | case-insensitive (`Gliwice` = `gliwice`) — zostaje pierwsze casing |
+| Katalog | unikalne tagi ze **wszystkich** meczów usera (`uniqueCatalogTags`) |
+| Import | `saveMatch` / overwrite **nie wysyła** `tags` — istniejące zostają |
+| API | `PATCH /api/matches/:id` body `{ tags: string[] }` (bez `playerIndex` / `playerNames`) |
+| Demo | picker wyłączony (`persistTags=false`); droplisty filtrów widać |
+
+### UI
+
+1. Na karcie meczu (pod wynikiem, poza przyciskiem expand): chipy + **Tag**.
+2. Picker: lista już utworzonych (których ten mecz jeszcze nie ma) **albo** pole „Dodaj nowy”.
+3. Przy zakresie dat dwa `<select>`:
+   - **Uwzględnij tylko mecze z tagiem** — default „Wszystkie mecze”.
+   - **Wyklucz mecze z tagiem** — default „Żadne”.
+4. Oba naraz: najpierw include, potem exclude. Ten sam tag w obu → pusta lista (OK).
+5. Brak tagu / „Wszystkie” + „Żadne” = pełny profil.
+
+### Co liczy się od nowa po filtrze
+
+`filterByRange` → `filterByTags` → te same funkcje co zawsze: KPI, wykres formy, top podejścia/checkouty, H2H, aktywność dni/godzin, histogram checkoutów, **lista meczów**, streak (gdy filtr/zakres ≠ all → etykieta „W zakresie”, nie Lifetime).
+
+Kod: `lib/match-tags.ts`, `app/profile/profile-match-tags.tsx`, `app/profile/profile-tag-filters.tsx`, `app/profile/profile-client.tsx`. Testy: `tests/match-tags.test.ts`.
 
 ---
 
@@ -452,7 +488,7 @@ Paleta W2, inspiracja [sylveoncompany.pl](https://sylveoncompany.pl):
 
 ## Roadmapa skrócona
 
-Zrobione (nie implementuj drugi raz): 0.x MVP, 1.0 release, auth 1.1, profil About, delete/edit meczu, 1.2 UX, 1.3 testy+perf, 1.4 polish, **v2.0-firstPROD**, **v2.0.1 login gate**, **v3.0.0 import N01 turniej/liga + PRD + mid**.
+Zrobione (nie implementuj drugi raz): 0.x MVP, 1.0 release, auth 1.1, profil About, delete/edit meczu, 1.2 UX, 1.3 testy+perf, 1.4 polish, **v2.0-firstPROD**, **v2.0.1 login gate**, **v3.0.0 import N01/PRD + mid + tagi per mecz**.
 
 Otwarte (rosnąco po ID — **pytaj przed startem**):
 
@@ -484,6 +520,7 @@ Otwarte (rosnąco po ID — **pytaj przed startem**):
 11. Brak `display_name` w DB.
 12. **v3:** additive `source`, reuse `n01_tmid`, nie tykać `bet.*`.
 13. Tylko 501 w produkcie.
+14. Tagi per mecz (`matches.tags`); filtr include/exclude; import nie nadpisuje tagów.
 
 ---
 
@@ -498,7 +535,7 @@ Otwarte (rosnąco po ID — **pytaj przed startem**):
 | `v1.4.0` | favicon, landing, OAuth docs |
 | `v2.0-firstPROD` | pierwszy prod |
 | `v2.0.1` | login gate |
-| **`v3.0.0` / `backup/v3.0.0`** | **PRD + N01 competition + mid; `matches.source`; copy; rediscovery PRD** |
+| **`v3.0.0` / `backup/v3.0.0`** | **PRD + N01 competition + mid + tagi; `matches.source`; copy; rediscovery PRD** |
 
 v3.0.0 (2026-10-10):
 
@@ -507,4 +544,5 @@ v3.0.0 (2026-10-10):
 - PRD turnieje; rediscovery kluczy z ich SPA.
 - N01 `mid` → `tmid` (`match/list`).
 - Public copy/SEO wspomina N01 i PRD.
+- Tagi per mecz (`matches.tags`) + filtr uwzględnij/wyklucz na całym profilu. Migracja na prod.
 - Nadal tylko 501; BET nietknięty.
