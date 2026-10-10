@@ -3,7 +3,7 @@ import { toClientMatch } from "@/lib/match-client";
 import { rateLimit } from "@/lib/rate-limit";
 import { safeInternalPath } from "@/lib/safe-path";
 import { isPlaceholderName, formNameFields } from "@/lib/identity-suggest";
-import { needsOnboarding } from "@/lib/customer";
+import { needsDartRegistration, needsOnboarding } from "@/lib/customer";
 import type { N01Match } from "@/lib/n01-parser";
 import type { CustomerProfile } from "@/lib/customer";
 
@@ -128,5 +128,15 @@ describe("identity / onboarding gates", () => {
       ),
     ).toBe(true);
     expect(needsOnboarding(baseCustomer())).toBe(false);
+  });
+
+  it("BET nick without Dart about still needs full Dart registration", () => {
+    const betOnly = baseCustomer({
+      nickname: "BETNick",
+      aboutCompletedAt: null,
+    });
+    expect(needsOnboarding(betOnly)).toBe(false);
+    expect(needsDartRegistration(betOnly)).toBe(true);
+    expect(needsDartRegistration(baseCustomer({ aboutCompletedAt: "2026-01-01" }))).toBe(false);
   });
 });

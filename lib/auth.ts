@@ -5,7 +5,8 @@ import {
   createCustomerForUser,
   getCustomerByAuthUserId,
   linkAuthUserToCustomer,
-  needsAboutOnboarding,
+  dartRegistrationPath,
+  needsDartRegistration,
   needsOnboarding,
   type CustomerProfile,
 } from "@/lib/customer";
@@ -100,9 +101,9 @@ export async function requireAuthCustomer(opts?: {
   if (
     !opts?.allowIncompleteOnboarding &&
     !opts?.allowIncompleteAbout &&
-    needsAboutOnboarding(customer)
+    needsDartRegistration(customer)
   ) {
-    redirect("/onboarding/about");
+    redirect(dartRegistrationPath(customer) ?? "/onboarding");
   }
   return { user, customer };
 }

@@ -1,302 +1,308 @@
 [
   {
+    "id": "ratajski",
+    "name": "Krzysztof Ratajski",
+    "tier": "rising_pl",
+    "popularityRank": 1
+  },
+  {
+    "id": "bialecki",
+    "name": "Sebastian Białecki",
+    "tier": "rising_pl",
+    "popularityRank": 2
+  },
+  {
     "id": "littler",
     "name": "Luke Littler",
     "tier": "current",
-    "popularityRank": 1
+    "popularityRank": 3
   },
   {
     "id": "humphries",
     "name": "Luke Humphries",
     "tier": "current",
-    "popularityRank": 2
+    "popularityRank": 4
   },
   {
     "id": "van-gerwen",
     "name": "Michael van Gerwen",
     "tier": "current",
-    "popularityRank": 3
+    "popularityRank": 5
   },
   {
     "id": "price",
     "name": "Gerwyn Price",
     "tier": "current",
-    "popularityRank": 4
-  },
-  {
-    "id": "ratajski",
-    "name": "Krzysztof Ratajski",
-    "tier": "rising_pl",
-    "popularityRank": 5
+    "popularityRank": 6
   },
   {
     "id": "cross",
     "name": "Rob Cross",
     "tier": "current",
-    "popularityRank": 6
+    "popularityRank": 7
   },
   {
     "id": "aspinall",
     "name": "Nathan Aspinall",
     "tier": "current",
-    "popularityRank": 7
+    "popularityRank": 8
   },
   {
     "id": "m-smith",
     "name": "Michael Smith",
     "tier": "current",
-    "popularityRank": 8
+    "popularityRank": 9
   },
   {
     "id": "wright",
     "name": "Peter Wright",
     "tier": "current",
-    "popularityRank": 9
+    "popularityRank": 10
   },
   {
     "id": "chisnall",
     "name": "Dave Chisnall",
     "tier": "current",
-    "popularityRank": 10
+    "popularityRank": 11
   },
   {
     "id": "clayton",
     "name": "Jonny Clayton",
     "tier": "current",
-    "popularityRank": 11
+    "popularityRank": 12
   },
   {
     "id": "bunting",
     "name": "Stephen Bunting",
     "tier": "current",
-    "popularityRank": 12
+    "popularityRank": 13
   },
   {
     "id": "rock",
     "name": "Josh Rock",
     "tier": "current",
-    "popularityRank": 13
+    "popularityRank": 14
   },
   {
     "id": "dobey",
     "name": "Chris Dobey",
     "tier": "current",
-    "popularityRank": 14
+    "popularityRank": 15
   },
   {
     "id": "heta",
     "name": "Damon Heta",
     "tier": "current",
-    "popularityRank": 15
+    "popularityRank": 16
   },
   {
     "id": "noppert",
     "name": "Danny Noppert",
     "tier": "current",
-    "popularityRank": 16
+    "popularityRank": 17
   },
   {
     "id": "van-den-bergh",
     "name": "Dimitri Van den Bergh",
     "tier": "current",
-    "popularityRank": 17
+    "popularityRank": 18
   },
   {
     "id": "g-anderson",
     "name": "Gary Anderson",
     "tier": "current",
-    "popularityRank": 18
+    "popularityRank": 19
   },
   {
     "id": "wade",
     "name": "James Wade",
     "tier": "current",
-    "popularityRank": 19
+    "popularityRank": 20
   },
   {
     "id": "searle",
     "name": "Ryan Searle",
     "tier": "current",
-    "popularityRank": 20
+    "popularityRank": 21
   },
   {
     "id": "r-smith",
     "name": "Ross Smith",
     "tier": "current",
-    "popularityRank": 21
+    "popularityRank": 22
   },
   {
     "id": "van-veen",
     "name": "Gian van Veen",
     "tier": "current",
-    "popularityRank": 22
+    "popularityRank": 23
   },
   {
     "id": "schindler",
     "name": "Martin Schindler",
     "tier": "current",
-    "popularityRank": 23
+    "popularityRank": 24
   },
   {
     "id": "de-decker",
     "name": "Mike De Decker",
     "tier": "current",
-    "popularityRank": 24
+    "popularityRank": 25
   },
   {
     "id": "cullen",
     "name": "Joe Cullen",
     "tier": "current",
-    "popularityRank": 25
+    "popularityRank": 26
   },
   {
     "id": "van-duijvenbode",
     "name": "Dirk van Duijvenbode",
     "tier": "current",
-    "popularityRank": 26
+    "popularityRank": 27
   },
   {
     "id": "gurney",
     "name": "Daryl Gurney",
     "tier": "current",
-    "popularityRank": 27
+    "popularityRank": 28
   },
   {
     "id": "menzies",
     "name": "Cameron Menzies",
     "tier": "current",
-    "popularityRank": 28
+    "popularityRank": 29
   },
   {
     "id": "joyce",
     "name": "Ryan Joyce",
     "tier": "current",
-    "popularityRank": 29
+    "popularityRank": 30
   },
   {
     "id": "edhouse",
     "name": "Ritchie Edhouse",
     "tier": "current",
-    "popularityRank": 30
+    "popularityRank": 31
   },
   {
     "id": "clemens",
     "name": "Gabriel Clemens",
     "tier": "current",
-    "popularityRank": 31
+    "popularityRank": 32
   },
   {
     "id": "suljovic",
     "name": "Mensur Suljovic",
     "tier": "current",
-    "popularityRank": 32
+    "popularityRank": 33
   },
   {
     "id": "huybrechts",
     "name": "Kim Huybrechts",
     "tier": "current",
-    "popularityRank": 33
+    "popularityRank": 34
   },
   {
     "id": "van-barneveld",
     "name": "Raymond van Barneveld",
     "tier": "icon",
-    "popularityRank": 34
+    "popularityRank": 35
   },
   {
     "id": "taylor",
     "name": "Phil Taylor",
     "tier": "icon",
-    "popularityRank": 35
+    "popularityRank": 36
   },
   {
     "id": "a-lewis",
     "name": "Adrian Lewis",
     "tier": "icon",
-    "popularityRank": 36
+    "popularityRank": 37
   },
   {
     "id": "whitlock",
     "name": "Simon Whitlock",
     "tier": "icon",
-    "popularityRank": 37
+    "popularityRank": 38
   },
   {
     "id": "lukeman",
     "name": "Martin Lukeman",
     "tier": "icon",
-    "popularityRank": 38
+    "popularityRank": 39
   },
   {
     "id": "rydz",
     "name": "Callan Rydz",
     "tier": "icon",
-    "popularityRank": 39
+    "popularityRank": 40
   },
   {
     "id": "s-williams",
     "name": "Scott Williams",
     "tier": "icon",
-    "popularityRank": 40
+    "popularityRank": 41
   },
   {
     "id": "evans",
     "name": "Ricky Evans",
     "tier": "icon",
-    "popularityRank": 41
+    "popularityRank": 42
   },
   {
     "id": "beaton",
     "name": "Steve Beaton",
     "tier": "icon",
-    "popularityRank": 42
+    "popularityRank": 43
   },
   {
     "id": "king",
     "name": "Mervyn King",
     "tier": "icon",
-    "popularityRank": 43
+    "popularityRank": 44
   },
   {
     "id": "part",
     "name": "John Part",
     "tier": "icon",
-    "popularityRank": 44
+    "popularityRank": 45
   },
   {
     "id": "priestley",
     "name": "Dennis Priestley",
     "tier": "icon",
-    "popularityRank": 45
+    "popularityRank": 46
   },
   {
     "id": "durrant",
     "name": "Glen Durrant",
     "tier": "icon",
-    "popularityRank": 46
+    "popularityRank": 47
   },
   {
     "id": "thornton",
     "name": "Robert Thornton",
     "tier": "icon",
-    "popularityRank": 47
+    "popularityRank": 48
   },
   {
     "id": "webster",
     "name": "Darren Webster",
     "tier": "icon",
-    "popularityRank": 48
+    "popularityRank": 49
   },
   {
     "id": "pipe",
     "name": "Justin Pipe",
     "tier": "icon",
-    "popularityRank": 49
+    "popularityRank": 50
   },
   {
     "id": "nijman",
     "name": "Wessel Nijman",
     "tier": "icon",
-    "popularityRank": 50
+    "popularityRank": 51
   }
 ]

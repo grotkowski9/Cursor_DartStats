@@ -54,6 +54,7 @@ export function ProfileMatchCard({
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [tagMenuOpen, setTagMenuOpen] = useState(false);
 
   const date = new Date(match.startTime * 1000).toLocaleString("pl-PL", {
     dateStyle: "short",
@@ -79,7 +80,11 @@ export function ProfileMatchCard({
     MATCH_ACTION_DIALOG_MODE === "inline" && actionOpen;
 
   return (
-    <article className="glass-tile overflow-hidden">
+    <article
+      className={`glass-tile ${
+        tagMenuOpen ? "relative z-50 overflow-visible" : "overflow-hidden"
+      }`}
+    >
       {/* Compact header — always visible, click to expand */}
       <button
         type="button"
@@ -152,6 +157,7 @@ export function ProfileMatchCard({
           canEdit={tagging}
           persist={persistTags}
           onUpdated={(updated) => onUpdated?.(updated)}
+          onOpenChange={setTagMenuOpen}
         />
       </div>
 

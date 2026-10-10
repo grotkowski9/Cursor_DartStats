@@ -325,6 +325,7 @@ Scenariusze unit: `tests/player-detect.test.ts`, `tests/sources-identity.test.ts
 - Public login: `/login` **Google-only**. Dev email: `/logintest` (noindex).
 - Flow: `/login` → `/api/auth/google` → Google → `/auth/callback` → `/profile` albo `/onboarding`.
 - `needsOnboarding` = nick + real name (**nie** wymaga N01 nicków).
+- `needsDartRegistration` = identity **lub** brak `about_completed_at`. BET nie zwalnia z tego — nowy na Dart zawsze Krok 1 + Krok 2.
 - Soft CTA About: brak city/brand/weight/hand/favorite.
 - Gate ingest: 403 `needs_onboarding`.
 - Login gate: flaga SQL `login_gate_enabled` + `LOGIN_GATE_PASSWORD`. Cookie ~30 dni. Szczegóły: [Login gate — instrukcja](#login-gate--instrukcja-onoff-hasło).
@@ -400,7 +401,7 @@ Ten sam projekt **`nwrhnmnaiqclpxcjfgcq`**, te same `auth.users`.
 | Sesja cookie | host `dart.…` | host `bet.…` — **osobne** (logowanie na jednym nie loguje automatycznie na drugim) |
 | Kod | to repo | inne repo; **nie ruszaj `bet.*`** |
 
-Stan (2026-10-10): ~21 profili BET, wszystkie z `public.customers` + `auth_user_id`. Część ma nick w `customers` (Dart onboarding zrobiony), większość BET-only jeszcze **bez** nicka Dart.
+Stan (2026-10-10): ~21 profili BET, wszystkie z `public.customers` + `auth_user_id`. **Konto BET ≠ ukończona rejestracja Darta.** Marker Darta: `about_completed_at`. Kto go nie ma, dostaje pełny onboarding Darta (Krok 1 nick + Krok 2 lotki/fav), nawet gdy BET już wstawił nick.
 
 ### A) Gracz BET, **nie** używał Darta
 
@@ -408,9 +409,7 @@ Stan (2026-10-10): ~21 profili BET, wszystkie z `public.customers` + `auth_user_
 2. **Bez hasła gate:** widzi landing/demo. `/login` = tylko formularz hasła. Google **schowany**. `/profile` → redirect na `/login`.
 3. **Z hasłem gate:** odblokowuje → Google (to samo konto co na BET).
 4. Callback: `ensureCustomerForUser` znajduje istniejący `public.customers` (BET go stworzył przy rejestracji). **Nie** tworzy drugiego konta.
-5. `needsOnboarding` = brak `customers.nickname` albo imię/nazwisko to placeholder `Gracz`/`Dart`:
-   - typowo BET-owiec **idzie na `/onboarding`** (Krok 1: nick + imię/nazwisko) — to **nie** kasuje `bet.profiles`.
-   - potem `/onboarding/about` (można pominąć).
+5. `needsDartRegistration` (brak `about_completed_at` albo brak nicka Darta) → **zawsze `/onboarding` (Krok 1)**, potem Krok 2 O Tobie. Nick z BET nie omija formularza Darta. `bet.profiles` nietknięte.
 6. Profil Dart pusty (0 meczów), dopóki nie zaimportuje. Mecze BET **nie** wpadają na Dart.
 
 ### B) Gracz BET, **już** ma konto Dart (nick uzupełniony)
@@ -446,7 +445,7 @@ Stan (2026-10-10): ~21 profili BET, wszystkie z `public.customers` + `auth_user_
 | Kolumna | `public.matches.tags text[] NOT NULL DEFAULT '{}'` |
 | Limit | max **8** tagów na mecz; nazwa **1–32** znaki po trim |
 | Dedup | case-insensitive (`Gliwice` = `gliwice`) — zostaje pierwsze casing |
-| Katalog | unikalne tagi ze **wszystkich** meczów usera (`uniqueCatalogTags`) |
+| Katalog | unikalne tagi **tylko z meczów tego profilu** (`uniqueCatalogTags(matches)`). Demo = snapshot. Żywy user = jego wiersze. **Tag klienta nigdy nie trafia na `/demo`.** |
 | Import | `saveMatch` / overwrite **nie wysyła** `tags` — istniejące zostają |
 | API | `PATCH /api/matches/:id` body `{ tags: string[] }` (bez `playerIndex` / `playerNames`) |
 | Demo | pre-seed: **Mecz towarzyski** (demo003/007/010), **Liga** (demo002/006). Picker działa **w pamięci** (nie zapisuje). Droplisty include/exclude jak na żywym profilu. |

@@ -39,7 +39,6 @@ export function AboutForm({
   const router = useRouter();
   const [values, setValues] = useState(initial);
   const [cityQuery, setCityQuery] = useState(initial.city);
-  const [playerQuery, setPlayerQuery] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedOk, setSavedOk] = useState(false);
@@ -49,14 +48,6 @@ export function AboutForm({
     if (q.length < 3) return [];
     return CITIES.filter((c) => c.toLocaleLowerCase("pl").includes(q)).slice(0, 12);
   }, [cityQuery]);
-
-  const playerList = useMemo(() => {
-    const q = playerQuery.trim().toLocaleLowerCase("pl");
-    if (!q) return PLAYERS;
-    return PLAYERS.filter((p) => p.name.toLocaleLowerCase("pl").includes(q));
-  }, [playerQuery]);
-
-  const selectedPlayer = PLAYERS.find((p) => p.id === values.favoritePlayerId);
 
   function patchValue<K extends keyof AboutFormValues>(key: K, value: AboutFormValues[K]) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -291,62 +282,27 @@ export function AboutForm({
           </span>
         </fieldset>
 
-        <div className="block space-y-1.5">
+        <label className="block space-y-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Ulubiony zawodnik
           </span>
-          {!values.favoritePlayerId ? (
-            <>
-              <input
-                value={playerQuery}
-                onChange={(e) => setPlayerQuery(e.target.value)}
-                placeholder="Szukaj albo przewiń listę…"
-                autoComplete="off"
-                className={inputClass}
-              />
-              <ul className="max-h-56 overflow-y-auto overscroll-contain rounded-xl border border-white/10 bg-black/40">
-                {playerList.map((p) => (
-                  <li key={p.id}>
-                    <button
-                      type="button"
-                      className="w-full px-3 py-2 text-left text-sm hover:bg-white/5"
-                      onClick={() => {
-                        patchValue("favoritePlayerId", p.id);
-                        setPlayerQuery("");
-                      }}
-                    >
-                      {p.name}
-                    </button>
-                  </li>
-                ))}
-                {playerList.length === 0 ? (
-                  <li className="px-3 py-2 text-sm text-muted-foreground">Brak wyników</li>
-                ) : null}
-              </ul>
-            </>
-          ) : (
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] text-muted-foreground">
-                Wybrano:{" "}
-                <span className="text-foreground/90">{selectedPlayer?.name ?? values.favoritePlayerId}</span>
-              </span>
-              <button
-                type="button"
-                className="text-[11px] text-primary hover:underline"
-                onClick={() => {
-                  patchValue("favoritePlayerId", "");
-                  setPlayerQuery("");
-                }}
-              >
-                Zmień
-              </button>
-            </div>
-          )}
+          <select
+            value={values.favoritePlayerId}
+            onChange={(e) => patchValue("favoritePlayerId", e.target.value)}
+            className={inputClass}
+          >
+            <option value="">— wybierz —</option>
+            {PLAYERS.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
           <span className="block text-[11px] text-muted-foreground">
             Już wkrótce porównania popularności i formy. Zobaczysz, jak wypadasz wśród graczy z tym
-            samym ulubioncem.
+            samym ulubieńcem.
           </span>
-        </div>
+        </label>
 
         <label className="flex cursor-not-allowed items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3 opacity-90">
           <input type="checkbox" checked readOnly disabled className="mt-0.5" />
@@ -354,7 +310,7 @@ export function AboutForm({
             Twoje statystyki biorą udział w porównaniach z innymi graczami.{" "}
             <span className="block text-[11px] leading-relaxed">
               Spokojnie — nie udostępniamy Twoich prywatnych danych. Jedynie analityka
-              społecznościowa.
+              społecznościowa. Możesz odpłatnie wyłączyć tę opcję po rejestracji (wkrótce).
             </span>
           </span>
         </label>

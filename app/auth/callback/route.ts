@@ -7,7 +7,7 @@ import {
   resolvePostAuthOrigin,
 } from "@/lib/auth-redirect-server";
 import { ensureCustomerForUser } from "@/lib/auth";
-import { needsAboutOnboarding, needsOnboarding } from "@/lib/customer";
+import { dartRegistrationPath } from "@/lib/customer";
 
 export const dynamic = "force-dynamic";
 
@@ -63,8 +63,7 @@ export async function GET(request: NextRequest) {
   if (user) {
     try {
       const customer = await ensureCustomerForUser(user);
-      if (needsOnboarding(customer)) dest = "/onboarding";
-      else if (needsAboutOnboarding(customer)) dest = "/onboarding/about";
+      dest = dartRegistrationPath(customer) ?? dest;
     } catch {
       // non-fatal — still redirect to profile
     }

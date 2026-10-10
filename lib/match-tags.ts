@@ -30,6 +30,7 @@ export function matchTags(match: N01Match): string[] {
   return Array.isArray(match.tags) ? match.tags : [];
 }
 
+/** Catalog from THIS profile's matches only — never mixes demo snapshot with live user tags. */
 export function uniqueCatalogTags(matches: N01Match[]): string[] {
   const seen = new Set<string>();
   const out: string[] = [];

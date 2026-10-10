@@ -11,11 +11,26 @@ type Props = {
   canEdit: boolean;
   persist: boolean;
   onUpdated: (match: N01Match) => void;
+  onOpenChange?: (open: boolean) => void;
 };
 
-export function ProfileMatchTags({ match, catalog, canEdit, persist, onUpdated }: Props) {
+export function ProfileMatchTags({
+  match,
+  catalog,
+  canEdit,
+  persist,
+  onUpdated,
+  onOpenChange,
+}: Props) {
   const tags = matchTags(match);
-  const [open, setOpen] = useState(false);
+  const [open, setOpenState] = useState(false);
+  function setOpen(next: boolean | ((prev: boolean) => boolean)) {
+    setOpenState((prev) => {
+      const value = typeof next === "function" ? next(prev) : next;
+      onOpenChange?.(value);
+      return value;
+    });
+  }
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -122,7 +137,7 @@ export function ProfileMatchTags({ match, catalog, canEdit, persist, onUpdated }
       </div>
 
       {open && (
-        <div className="absolute left-0 z-30 mt-1 w-56 rounded-xl border border-white/10 bg-[#141a2e] p-2 shadow-2xl">
+        <div className="absolute left-0 z-50 mt-1 w-56 rounded-xl border border-white/10 bg-[#141a2e] p-2 shadow-2xl">
           <p className="mb-1 px-1 text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
             Lista tagów lub nowy
           </p>

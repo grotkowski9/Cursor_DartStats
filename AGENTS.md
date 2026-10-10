@@ -9,6 +9,7 @@ To **Sylveon Dart Profile** (`Cursor_DartStats`). **Źródło prawdy: `README.md
 - Tagi per mecz: `matches.tags text[]` (max 8). Profil: uwzględnij tylko / wyklucz mecze z tagiem. Import overwrite **nie** czyści tagów. Migracja `20261010193000_match_tags.sql` **jest na produkcji**. Demo: tagi „Mecz towarzyski” / „Liga” + te same droplisty.
 - Login gate: `app_settings.login_gate_enabled` + env `LOGIN_GATE_PASSWORD` (Vercel). Szczegóły w README.
 - Dart i BET dzielą `auth.users` + `public.customers`; sesje cookie są **per subdomain**. Nie ruszaj `bet.*`.
+- BET ≠ ukończony Dart. Brak `about_completed_at` → pełny onboarding Darta (`/onboarding` Krok 1, potem O Tobie). **Nie wydawaj na `main` bez wyraźnego polecenia usera.**
 - Jedna tabela `public.matches`. Kolumna `source` (`n01` | `prd`). Zewnętrzne ID zawsze w `n01_tmid` (prawdziwy tmid albo `prd:<uuid>`). UNIQUE `(customer_id, n01_tmid)`.
 - Prod DB: Supabase **`nwrhnmnaiqclpxcjfgcq`** (eu-west-1). Migracje `match_source` i `match_tags` **są na produkcji**.
 - Ten projekt **współdzieli** Postgres z BET. **Nie ruszaj `bet.*`.** Żadnych DROP/ALTER poza `public` z naszej migracji.

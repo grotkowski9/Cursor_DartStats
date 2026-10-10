@@ -62,8 +62,7 @@ export function LoginPasswordForm({
             needsOnboarding?: boolean;
             needsAboutOnboarding?: boolean;
           };
-          if (data.needsOnboarding) dest = "/onboarding";
-          else if (data.needsAboutOnboarding) dest = "/onboarding/about";
+          if (data.needsOnboarding || data.needsAboutOnboarding) dest = "/onboarding";
         }
       } catch {
         // non-fatal

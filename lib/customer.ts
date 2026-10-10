@@ -238,6 +238,10 @@ export async function updateCustomerProfile(
 /**
  * Profil tożsamości niekompletny (1.1.9): brak nicka albo placeholdery zamiast imienia/nazwiska.
  * Nazwisko + nick zawsze idą do auto-detect; Pseudonimy N01 są opcjonalnym uzupełnieniem.
+ *
+ * Konto BET (`bet.profiles` + ten sam `auth.users`) **nie** oznacza ukończonej
+ * rejestracji Darta. BET może utworzyć `public.customers` przy logowaniu — bez
+ * Kroku 1/2 Darta (`about_completed_at`).
  */
 export function needsOnboarding(customer: CustomerProfile): boolean {
   if (!customer.nickname?.trim()) return true;
@@ -247,6 +251,20 @@ export function needsOnboarding(customer: CustomerProfile): boolean {
 /** Krok 2 „O Tobie” jeszcze nie zaliczony (ani zapis, ani Pomiń). */
 export function needsAboutOnboarding(customer: CustomerProfile): boolean {
   return !needsOnboarding(customer) && !customer.aboutCompletedAt;
+}
+
+/**
+ * Pełna rejestracja Darta niedokończona — Krok 1 (nick) i/lub Krok 2 (lotki, fav, …).
+ * BET-owiec bez `about_completed_at` zawsze tu wpada, nawet gdy ma nick z BET.
+ */
+export function needsDartRegistration(customer: CustomerProfile): boolean {
+  return needsOnboarding(customer) || !customer.aboutCompletedAt;
+}
+
+/** Unfinished Dart signup always starts at Krok 1 (identity), then About. BET nick does not skip this. */
+export function dartRegistrationPath(customer: CustomerProfile): "/onboarding" | null {
+  if (!needsDartRegistration(customer)) return null;
+  return "/onboarding";
 }
 
 /** Soft CTA na profilu — brakuje choć jednego pola opcjonalnego „O Tobie” (bez modelu lotek i pseudonimów N01). */
