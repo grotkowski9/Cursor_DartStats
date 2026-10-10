@@ -229,7 +229,7 @@ export function ProfileClient({
             </div>
             <h3 className="font-medium">Brak meczów w tym zakresie</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              {demoMode ? "Brak meczów w tym zakresie czasu." : "Dodaj pierwszy link z N01 powyżej."}
+              {demoMode ? "Brak meczów w tym zakresie czasu." : "Dodaj pierwszy link z N01 albo PRD powyżej."}
             </p>
           </div>
         ) : (

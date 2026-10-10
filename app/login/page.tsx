@@ -70,8 +70,8 @@ export default async function LoginPage({ searchParams }: Props) {
           ) : (
             <>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Zaloguj się przez Google, zaimportuj mecze z N01 i śledź formę na prywatnym
-                profilu. Chcesz najpierw zobaczyć jak to wygląda?{" "}
+                Zaloguj się przez Google, zaimportuj mecze z N01 albo z Polskiego Rankingu Darta
+                i śledź formę na prywatnym profilu. Chcesz najpierw zobaczyć jak to wygląda?{" "}
                 <Link href="/demo/profile" className="text-primary hover:underline">
                   Otwórz profil demo
                 </Link>

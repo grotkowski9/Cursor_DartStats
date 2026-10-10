@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
-  description: "Uzupełnij profil gracza — nicki do auto-wykrywania w meczach N01.",
+  description: "Uzupełnij profil gracza — nicki do auto-wykrywania w meczach N01 i PRD.",
   robots: { index: false, follow: false },
 };
 
@@ -29,7 +29,7 @@ export default async function OnboardingPage() {
     <OnboardingShell
       stepLabel="Krok 1"
       title="Ustaw swój profil"
-      subtitle="Uzupełnij imię, nazwisko i wzorce z N01. Bez tego nie zaimportujemy Twoich meczów."
+      subtitle="Uzupełnij imię, nazwisko i wzorce z turniejów. Bez tego nie rozpoznamy Cię w meczach N01 i PRD."
     >
       <nav className="-mt-2">
         <Link

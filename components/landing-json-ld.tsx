@@ -1,4 +1,4 @@
-import { getSiteUrl, SITE_NAME, SYLVEON_URL } from "@/lib/site-config";
+import { getSiteUrl, SITE_META_DESCRIPTION, SITE_NAME, SYLVEON_URL } from "@/lib/site-config";
 
 export function LandingJsonLd() {
   const url = getSiteUrl();
@@ -10,8 +10,7 @@ export function LandingJsonLd() {
     url,
     applicationCategory: "SportsApplication",
     operatingSystem: "Web",
-    description:
-      "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
+    description: SITE_META_DESCRIPTION,
     offers: {
       "@type": "Offer",
       price: "0",

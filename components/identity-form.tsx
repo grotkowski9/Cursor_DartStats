@@ -153,7 +153,7 @@ export function IdentityForm({
 
       <label className="block space-y-1.5">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Jak Cię najczęściej zapisują w meczach N01?
+          Jak Cię najczęściej zapisują w meczach N01 i PRD?
         </span>
         <textarea
           value={knownNicknames}
@@ -166,7 +166,7 @@ export function IdentityForm({
           className="w-full resize-y rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm placeholder:text-muted-foreground/50 focus:border-accent-from focus:outline-none"
         />
         <span className="block text-[11px] leading-relaxed text-muted-foreground">
-          Wypisz po przecinku wszystkie nazwy, pod jakimi zwykle jesteś zapisywany w meczach N01.
+          Wypisz po przecinku wszystkie nazwy, pod jakimi zwykle jesteś zapisywany w meczach N01 i PRD.
           Potrzebujemy tego do automatycznego przypisania wyników do Twojego konta. Spokojnie —
           jak nie będziemy pewni przy imporcie, dopytamy.
         </span>
@@ -176,7 +176,7 @@ export function IdentityForm({
         <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 px-3 py-3">
           <p className="text-[11px] leading-relaxed text-muted-foreground">
             Zostawiłeś puste pole pod dodatkowe pseudonimy pomocne w automatycznym rozpoznawaniu
-            zawodnika. Czy na pewno w meczach N01 nie zapisują Cię inaczej niż z nazwiska i/lub
+            zawodnika. Czy na pewno w meczach N01 i PRD nie zapisują Cię inaczej niż z nazwiska i/lub
             pseudonimu głównego?
           </p>
         </div>

@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
-  description: "Prywatny profil zawodnika — import meczów z N01 i statystyki. Nieindeksowany.",
+  description: "Prywatny profil zawodnika — import meczów z N01 i PRD oraz statystyki. Nieindeksowany.",
   robots: { index: false, follow: false },
   openGraph: {
     title: SITE_OG_TITLE,

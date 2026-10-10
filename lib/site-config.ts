@@ -26,6 +26,20 @@ export const SITE_BRAND = "Sylveon";
 
 export const DEFAULT_OG_IMAGE = "/og-dart-profile.png";
 
+/** Meta / OG / JSON-LD — jeden opis na landing i layout. */
+export const SITE_META_DESCRIPTION =
+  "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01 i Polskiego Rankingu Darta. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.";
+
+export const SITE_KEYWORDS = [
+  "dart statystyki",
+  "n01 import",
+  "polski ranking darta",
+  "prd dart",
+  "profil gracza darta",
+  "turniej darta analityka",
+  "wykres formy darta",
+] as const;
+
 /** Footer SEO copy — crawlable prose; users rarely read this. */
 export const SITE_FOOTER_SEO = [
   {
@@ -34,9 +48,9 @@ export const SITE_FOOTER_SEO = [
       "Sylveon Dart Profile pokazuje najważniejsze statystyki darta z meczów 501: średnią 3 lotek, skuteczność checkoutów, najwyższy checkout oraz liczbę wyników 100+, 140+ i 180. Możesz analizować scoring, skuteczność końcówek i regularność gry na podstawie całej historii swoich spotkań, a nie pojedynczego wyniku. Profil pozwala sprawdzić, jak zmienia się Twoja średnia w darcie, jak często rzucasz wysokie wyniki oraz które checkouty zamykasz najskuteczniej. Dzięki temu w jednym miejscu widzisz zarówno statystyki punktowe, jak i efektywność kończenia legów, co ułatwia ocenę aktualnej formy i postępów w grze.",
   },
   {
-    title: "Import z N01, historia meczów i H2H",
+    title: "Import z N01 i PRD, historia meczów i H2H",
     body:
-      "Importuj swoje mecze z n01darts.com i buduj jeden profil gracza darta online. Sylveon Dart Profile zbiera statystyki z lig, turniejów i pojedynczych spotkań, tworzy historię meczów oraz pokazuje head-to-head z każdym przeciwnikiem. H2H jest szczególnie przydatne, gdy wielokrotnie spotykasz tego samego rywala — nawet na różnych turniejach i w różnych miastach. System rozpoznaje tego samego zawodnika i łączy wszystkie wspólne mecze w jedną historię, dzięki czemu możesz sprawdzić, jak radzisz sobie z konkretnym przeciwnikiem w dłuższej perspektywie. Wszystkie wyniki i statystyki darta możesz przeglądać w jednym miejscu i udostępniać za pomocą jednego linku.",
+      "Importuj mecze z n01darts.com (mecz, turniej albo liga) oraz z turniejów Polski Ranking Darta (polskirankingdarta.pl) i buduj jeden profil gracza darta online. Sylveon Dart Profile zbiera statystyki ze spotkań, tworzy historię meczów oraz pokazuje head-to-head z każdym przeciwnikiem. H2H jest szczególnie przydatne, gdy wielokrotnie spotykasz tego samego rywala — nawet na różnych turniejach i w różnych miastach. System rozpoznaje tego samego zawodnika i łączy wszystkie wspólne mecze w jedną historię, dzięki czemu możesz sprawdzić, jak radzisz sobie z konkretnym przeciwnikiem w dłuższej perspektywie. Wszystkie wyniki i statystyki darta możesz przeglądać w jednym miejscu i udostępniać za pomocą jednego linku.",
   },
   {
     title: "Forma i postępy w darcie",
@@ -45,9 +59,9 @@ export const SITE_FOOTER_SEO = [
   },
 ] as const;
 
-/** Footer disclaimer — independent analytics tool, not N01 / Nakka. */
+/** Footer disclaimer — independent analytics tool, not N01 / Nakka / PRD. */
 export const SITE_AFFILIATION_DISCLAIMER =
-  "Sylveon Dart Profile (n01darts.pl lub dart.sylveoncompany.pl) to serwis do statystyk i w żaden sposób nie jesteśmy powiązani z operatorem platformy n01darts.com / Nakka. Użytkownicy dobrowolnie importują mecze z n01darts.com i korzystają z nich jako źródła danych. Serwis buduje profil gracza darta: pokazuje średnie, historię formy, najlepsze rzuty i wyniki w czytelnych wykresach, dzięki czemu zawodnicy nie muszą już prowadzić własnego Excela z wynikami ani ręcznie przepisywać danych meczowych.";
+  "Sylveon Dart Profile (n01darts.pl lub dart.sylveoncompany.pl) to serwis do statystyk i w żaden sposób nie jesteśmy powiązani z operatorem platformy n01darts.com / Nakka ani z serwisem polskirankingdarta.pl (Polski Ranking Darta). Użytkownicy dobrowolnie importują mecze z tych źródeł. Serwis buduje profil gracza darta: pokazuje średnie, historię formy, najlepsze rzuty i wyniki w czytelnych wykresach, dzięki czemu zawodnicy nie muszą już prowadzić własnego Excela z wynikami ani ręcznie przepisywać danych meczowych.";
 
 export const SITE_FOOTER_LEGAL = {
   title: "Informacja prawna",

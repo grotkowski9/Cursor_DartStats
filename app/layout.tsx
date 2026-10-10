@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
+import { getSiteUrl, SITE_META_DESCRIPTION, SITE_NAME } from "@/lib/site-config";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -14,8 +14,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: siteDocumentTitle(),
-  description:
-    "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
+  description: SITE_META_DESCRIPTION,
   icons: {
     icon: [
       { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
@@ -26,8 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: SITE_OG_TITLE,
-    description:
-      "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
+    description: SITE_META_DESCRIPTION,
     type: "website",
     locale: "pl_PL",
     siteName: SITE_NAME,

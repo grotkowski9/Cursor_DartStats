@@ -11,29 +11,21 @@ import { BrandLogoMark } from "@/components/brand-logo-mark";
 import { AccentGlowCta } from "@/components/accent-glow-cta";
 import { SiteFooter } from "@/components/site-footer";
 import { siteDocumentTitle, SITE_OG_TITLE } from "@/lib/page-metadata";
-import { getSiteUrl, SITE_BRAND, SITE_NAME_SHORT } from "@/lib/site-config";
+import { getSiteUrl, SITE_BRAND, SITE_KEYWORDS, SITE_META_DESCRIPTION, SITE_NAME_SHORT } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: siteDocumentTitle(),
-  description:
-    "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
+  description: SITE_META_DESCRIPTION,
   robots: { index: true, follow: true },
   alternates: { canonical: getSiteUrl() },
   openGraph: {
     title: SITE_OG_TITLE,
-    description:
-      "Twój profil gracza darta: średnie, checkouty i H2H z meczów N01. Chcesz wiedzieć o której godzinie masz najlepszą formę? Wiele statystyk pod ręką. Bez excela.",
+    description: SITE_META_DESCRIPTION,
     url: getSiteUrl(),
     type: "website",
     locale: "pl_PL",
   },
-  keywords: [
-    "dart statystyki",
-    "n01 import",
-    "profil gracza darta",
-    "turniej darta analityka",
-    "wykres formy darta",
-  ],
+  keywords: [...SITE_KEYWORDS],
 };
 
 
@@ -41,7 +33,7 @@ const FEATURES = [
   {
     icon: Link2,
     title: "Koniec z Excelem",
-    text: "Żadnego ręcznego przepisywania danych po meczach i skomplikowanych formuł. Wklejasz link, a legi, lotki i checkouty lądują w profilu. Dane masz od teraz w jednym miejscu. Na swoim koncie.",
+    text: "Żadnego ręcznego przepisywania danych po meczach i skomplikowanych formuł. Wklejasz link z N01 albo z Polskiego Rankingu Darta, a legi, lotki i checkouty lądują w profilu. Dane masz od teraz w jednym miejscu. Na swoim koncie.",
   },
   {
     icon: BarChart3,
@@ -91,8 +83,8 @@ export default function HomePage() {
                 </span>
                 <br />
                 <span className="text-base">
-                  Zobacz jak grasz naprawdę. Wrzucaj swoje mecze z n01, a resztą zajmiemy
-                  się my.
+                  Zobacz jak grasz naprawdę. Wrzucaj mecze z N01 i z Polskiego Rankingu
+                  Darta, a resztą zajmiemy się my.
                   <br />
                   Średnie, checkouty, forma, H2H i wiele wykresów. Różne turnieje - jeden
                   profil gracza.
@@ -149,7 +141,7 @@ export default function HomePage() {
             <h2 className="text-sm font-semibold uppercase tracking-widest text-primary/80">
               Co dostajesz
             </h2>
-            <p className="mt-2 text-2xl font-bold">Od linku N01 do profilu gracza</p>
+            <p className="mt-2 text-2xl font-bold">Od linku N01 albo PRD do profilu gracza</p>
             <div className="mt-6 flex flex-col gap-4">
               {FEATURES.map(({ icon: Icon, title, text }) => (
                 <article

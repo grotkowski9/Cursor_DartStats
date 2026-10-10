@@ -133,7 +133,7 @@ export function MatchEditDialog({ match, myDisplayName, onClose, onSaved }: Prop
               archiwum.
             </p>
             <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-foreground">
-              <p className="font-semibold">{match.title || "Mecz N01"}</p>
+              <p className="font-semibold">{match.title || "Mecz"}</p>
               <p className="mt-1 text-muted-foreground">
                 {myLabel} vs {normalizeName(match.players[currentMe === 0 ? 1 : 0]?.name ?? "")}
               </p>

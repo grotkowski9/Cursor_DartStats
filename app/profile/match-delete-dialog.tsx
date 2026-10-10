@@ -89,7 +89,7 @@ export function MatchDeleteDialog({ match, myDisplayName, onClose, onDeleted }: 
 
         {step === 2 && (
           <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs">
-            <p className="font-semibold text-foreground">{match.title || "Mecz N01"}</p>
+            <p className="font-semibold text-foreground">{match.title || "Mecz"}</p>
             <dl className="mt-2 space-y-1.5 text-muted-foreground">
               <div className="flex justify-between gap-3">
                 <dt>Data</dt>

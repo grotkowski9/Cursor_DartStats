@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { SITE_BRAND, SITE_NAME, SITE_NAME_SHORT } from "@/lib/site-config";
 
-export const alt = `${SITE_NAME} — statystyki darta z N01`;
+export const alt = `${SITE_NAME} — statystyki darta z N01 i PRD`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -38,7 +38,7 @@ export default function OgImage() {
               color: "#93b4ff",
             }}
           >
-            Statystyki darta · import N01
+            Statystyki darta · import N01 i PRD
           </div>
 
           <div
@@ -108,7 +108,7 @@ export default function OgImage() {
                 </div>
               </div>
               <div style={{ display: "flex", fontSize: 22, color: "rgba(255,255,255,0.65)" }}>
-                Import N01 · forma · H2H · checkout
+                Import N01 · PRD · forma · H2H
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function OgImage() {
             {[
               { n: "10", label: "MECZÓW DEMO" },
               { n: "501", label: "START" },
-              { n: "N01", label: "IMPORT" },
+              { n: "N01+PRD", label: "IMPORT" },
             ].map((s) => (
               <div
                 key={s.label}

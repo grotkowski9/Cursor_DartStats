@@ -17,7 +17,7 @@ const STEPS: Step[] = [
   {
     id: "welcome",
     title: "Witaj w profilu",
-    body: "Tu zbierasz mecze z N01 i widzisz swoje KPI. Krótki przegląd — możesz pominąć w każdej chwili.",
+    body: "Tu zbierasz mecze z N01 i z Polskiego Rankingu Darta i widzisz swoje KPI. Krótki przegląd — możesz pominąć w każdej chwili.",
   },
   {
     id: "add",
