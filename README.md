@@ -16,6 +16,7 @@
 | Backup tego wydania | branch `backup/v3.1.0` + tag `v3.1.0` |
 | Rollback v3.0 | `backup/v3.0.0` / tag `v3.0.0` |
 | Rollback przed importem PRD | `backup/v2.0.1` / tag `v2.0.1`; firstPROD: `backup/v2.0-firstPROD` |
+| Jak wrócić do backupa | [Przywracanie backupa — instrukcja](#przywracanie-backupa--instrukcja-zescreenuj) |
 | Repo | `grotkowski9/Cursor_DartStats` |
 | Owner produktowy | Piotr „Groteł” Grotkowski |
 | Język | **Kod EN, UI PL** |
@@ -78,16 +79,17 @@ Tylko 501. Identity 0/1/N. Duplikaty pytaj. Kod EN, UI PL. 2.0.x płatności ⏸
 8. [Detekcja gracza i duplikaty](#detekcja-gracza-i-duplikaty)
 9. [Auth, onboarding, profil](#auth-onboarding-profil)
 10. [Login gate — instrukcja (on/off, hasło)](#login-gate--instrukcja-onoff-hasło)
-11. [Dart vs BET — ten sam Supabase](#dart-vs-bet--ten-sam-supabase)
-12. [Tagi meczów i filtr profilu](#tagi-meczów-i-filtr-profilu)
-13. [Mapa plików](#mapa-plików)
-14. [Uruchomienie i testy](#uruchomienie-i-testy)
-15. [Bezpieczeństwo](#bezpieczeństwo)
-16. [Design](#design)
-17. [Konwencje](#konwencje)
-18. [Roadmapa skrócona](#roadmapa-skrócona)
-19. [ADR](#adr)
-20. [Dziennik wersji](#dziennik-wersji)
+11. [Przywracanie backupa — instrukcja](#przywracanie-backupa--instrukcja-zescreenuj)
+12. [Dart vs BET — ten sam Supabase](#dart-vs-bet--ten-sam-supabase)
+13. [Tagi meczów i filtr profilu](#tagi-meczów-i-filtr-profilu)
+14. [Mapa plików](#mapa-plików)
+15. [Uruchomienie i testy](#uruchomienie-i-testy)
+16. [Bezpieczeństwo](#bezpieczeństwo)
+17. [Design](#design)
+18. [Konwencje](#konwencje)
+19. [Roadmapa skrócona](#roadmapa-skrócona)
+20. [ADR](#adr)
+21. [Dziennik wersji](#dziennik-wersji)
 
 ---
 
@@ -389,6 +391,70 @@ Po zmianie hasła **stare cookie odblokowania pada** (podpis HMAC z hasłem) —
 | Gate ON, dobre hasło | cookie `sdp_login_gate` ~**30 dni**, potem Google |
 | Już zalogowany na **dart.** (sesja Supabase) | middleware z `/login` **od razu na `/profile`** — brama się nie pokaże |
 | Brak hasła admina | **nie** dojdzie do Google; landing `/` i `/demo` działają |
+
+---
+
+## Przywracanie backupa — instrukcja (zescreenuj)
+
+Zescreenuj i trzymaj. Backup = **kopia KODU strony** z danego dnia. **Nie** kopia meczów, tagów ani kont. Bazy nie cofamy. **`bet.*` nie ruszamy.**
+
+### 1) Wybierz wersję
+
+| Chcę wrócić do | Branch (kopia) | Tag (etykieta) |
+| --- | --- | --- |
+| Teraz (tagi, onboarding BET, fav) | `backup/v3.1.0` | `v3.1.0` |
+| Przed tagami (import N01 + PRD) | `backup/v3.0.0` | `v3.0.0` |
+| Przed importem PRD | `backup/v2.0.1` | `v2.0.1` |
+| Pierwszy prod | `backup/v2.0-firstPROD` | `v2.0-firstPROD` |
+
+Gdzie to kliknąć bez terminala: GitHub → `grotkowski9/Cursor_DartStats` → przycisk branch (napis `main`) → wpisz `backup/` albo zakładka **Tags**.
+
+Poniżej wklejasz **wybraną** nazwę zamiast `v3.0.0`.
+
+### 2) Tylko zobaczyć / odpalić u siebie (produkcja nienaruszona)
+
+W folderze projektu:
+
+```bash
+git fetch origin
+git checkout backup/v3.0.0
+npm install
+npm run dev
+```
+
+Strona: `http://localhost:3000`. Żeby wrócić do teraźniejszości: `git checkout main`.
+
+### 3) Przywrócić żywą stronę (`dart.sylveoncompany.pl`)
+
+Rób **tylko** gdy produkcja jest zepsuta.
+
+**A — najłatwiej (Vercel, bez Gita)**
+
+1. [vercel.com](https://vercel.com) → projekt DartStats
+2. **Deployments**
+3. Znajdź deploy z dnia, kiedy było OK (commit tagu, np. `v3.0.0`)
+4. `⋯` → **Instant Rollback**
+5. Status **Ready** → sprawdź `dart.sylveoncompany.pl`
+
+**B — kod na GitHubie też ma wrócić**
+
+Napisz do agenta: `wróć main do v3.0.0`. Albo sam (ostre — nadpisuje `main`):
+
+```bash
+git fetch origin
+git checkout main
+git reset --hard v3.0.0
+git push --force origin main
+```
+
+Vercel zbuduje sam. **Nie rób `push --force`, jeśli nie chcesz ruszać produkcji.**
+
+### 4) Czego NIE robić
+
+- Nie kasuj kolumn w Supabase (`source`, `tags`) — stary kod ich nie wymaga, baza może zostać nowsza.
+- Nie ruszaj schematu `bet.*`.
+- Nie szukaj dumpa bazy — nie mamy (backlog 1.3.3+). Cofnięcie kodu **nie** kasuje meczów.
+- Po rollbacku v3.1 → v3.0 tagi w DB zostają, UI ich nie pokaże.
 
 ---
 
