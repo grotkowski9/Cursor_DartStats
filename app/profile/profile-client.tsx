@@ -355,7 +355,11 @@ export function ProfileClient({
 
       {/* Head-to-head */}
       {!loading && filtered.length > 0 && (
-        <ProfileHeadToHead matches={filtered} />
+        <ProfileHeadToHead
+          matches={filtered}
+          matchPathPrefix={matchPathPrefix}
+          matchStatsByToken={matchStatsByToken}
+        />
       )}
 
       {!loading && filtered.length > 0 && (

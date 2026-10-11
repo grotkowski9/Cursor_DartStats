@@ -37,8 +37,8 @@ describe("prdMatchToN01", () => {
     expect(real).toHaveLength(6);
     expect(real[5].isCheckout).toBe(true);
     expect(real[5].actualScore).toBe(40);
-    expect(m.title).toContain("Zagłębia");
-    expect(m.title).toContain("Kaszuba");
+    expect(m.title).toBe("Mistrzostwa Zagłębia Dąbrowskiego");
+    expect(m.title).not.toMatch(/vs/i);
   });
 
   it("uses slot 1 when player is p2", () => {

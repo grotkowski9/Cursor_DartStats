@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AlertTriangle, Loader2, Plus } from "lucide-react";
-import { detectSourceUrl, IMPORT_HINT_MIXED, IMPORT_HINT_N01, IMPORT_HINT_PRD } from "@/lib/sources/detect-url";
+import { detectSourceUrl, IMPORT_HINT_MIXED } from "@/lib/sources/detect-url";
 import type { CommitItem } from "@/lib/sources/commit";
 import type {
   ParticipantCandidate,
@@ -11,8 +11,6 @@ import type {
   PreviewLineError,
   PreviewMatch,
 } from "@/lib/sources/types";
-
-type SourceHint = "mixed" | "n01" | "prd";
 
 type Props = {
   onMatchesChanged: () => void;
@@ -23,21 +21,7 @@ type Props = {
 const DEMO_CTA =
   "Załóż konto i zacznij śledzić swoje statystyki. Dodasz swoje mecze, a my pokażemy Ci jak grasz.";
 
-function hintFor(source: SourceHint): string {
-  if (source === "n01") return IMPORT_HINT_N01;
-  if (source === "prd") return IMPORT_HINT_PRD;
-  return IMPORT_HINT_MIXED;
-}
-
-function placeholderFor(source: SourceHint): string {
-  if (source === "prd") {
-    return "https://polskirankingdarta.pl/turnieje/…";
-  }
-  if (source === "n01") {
-    return "https://n01darts.com/n01/tournament/comp.php?id=…";
-  }
-  return "https://n01darts.com/…\nhttps://polskirankingdarta.pl/turnieje/…";
-}
+const IMPORT_PLACEHOLDER = "https://n01darts.com/…\nhttps://polskirankingdarta.pl/turnieje/…";
 
 function formatWhen(ts: number | null): string {
   if (!ts) return "";
@@ -60,7 +44,6 @@ export function ProfileAddMatch({
   loginHref = "/login",
 }: Props) {
   const [addOpen, setAddOpen] = useState(false);
-  const [sourceHint, setSourceHint] = useState<SourceHint>("mixed");
   const [bulk, setBulk] = useState(false);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -302,41 +285,17 @@ export function ProfileAddMatch({
 
         {addOpen && (
           <div className="mt-4 space-y-4">
-            <div className="flex flex-wrap gap-1.5">
-              {(
-                [
-                  ["mixed", "Dowolne"],
-                  ["n01", "N01"],
-                  ["prd", "PRD"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setSourceHint(id)}
-                  className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold ${
-                    sourceHint === id
-                      ? "bg-accent-from/20 text-foreground ring-1 ring-accent-from/50"
-                      : "bg-white/5 text-muted-foreground hover:bg-white/10"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
+            <div className="flex flex-wrap justify-end gap-1.5">
               <button
                 type="button"
                 onClick={() => setBulk((b) => !b)}
-                className={`ml-auto rounded-lg px-2.5 py-1 text-[11px] font-semibold ${
-                  bulk
-                    ? "bg-white/10 text-foreground"
-                    : "bg-white/5 text-muted-foreground hover:bg-white/10"
-                }`}
+                className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground hover:bg-white/10 hover:text-foreground"
               >
-                {bulk ? "Wiele linków" : "Jeden link"}
+                {bulk ? "Wróć do importu pojedynczego" : "Import hurtowy"}
               </button>
             </div>
 
-            <p className="text-[11px] text-muted-foreground">{hintFor(sourceHint)}</p>
+            <p className="text-[11px] text-muted-foreground">{IMPORT_HINT_MIXED}</p>
 
             {bulk ? (
               <textarea
@@ -344,7 +303,7 @@ export function ProfileAddMatch({
                 onChange={(e) => setText(e.target.value)}
                 rows={6}
                 disabled={busy}
-                placeholder={placeholderFor("mixed")}
+                placeholder={IMPORT_PLACEHOLDER}
                 className="w-full resize-y rounded-xl border border-white/10 bg-black/30 px-4 py-3 font-mono text-[11px] text-foreground placeholder:text-muted-foreground/40 focus:border-accent-from focus:outline-none"
               />
             ) : (
@@ -352,7 +311,7 @@ export function ProfileAddMatch({
                 type="url"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder={placeholderFor(sourceHint)}
+                placeholder="https://n01darts.com/… albo https://polskirankingdarta.pl/turnieje/…"
                 disabled={busy}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-accent-from focus:outline-none"
               />

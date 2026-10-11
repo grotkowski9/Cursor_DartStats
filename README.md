@@ -265,6 +265,12 @@ app_settings (key, value)  -- m.in. login_gate_enabled
 
 `lib/sources/commit.ts` → N01: `ingestAndSave`; PRD: fetch + `parseAndBackupPrd` + `saveMatch`. Dedup w batchu po `source:externalId`.
 
+### UI importu (Dodaj mecze)
+
+- **Bez** chipów Dowolne / N01 / PRD — pole zawsze przyjmuje oba źródła.
+- Domyślnie jedno pole URL. Przycisk **Import hurtowy** otwiera textarea (jeden URL na linię). Z powrotem: **Wróć do importu pojedynczego**.
+- Ten sam formularz na `/demo/profile` (CTA zamiast zapisu).
+
 ---
 
 ## Parser N01
@@ -335,6 +341,8 @@ Scenariusze unit: `tests/player-detect.test.ts`, `tests/sources-identity.test.ts
 - Login gate: flaga SQL `login_gate_enabled` + `LOGIN_GATE_PASSWORD`. Cookie ~30 dni. Szczegóły: [Login gate — instrukcja](#login-gate--instrukcja-onoff-hasło).
 - Usuwanie meczu: triple-check, bez undo. Edycja: PATCH (swap/rename opponent) — **nie przepisuj legs/visits**.
 - Karty meczu: Rzut / Share / Edytuj / Usuń + **tagi** (patrz niżej).
+- **H2H:** po wyborze przeciwnika agregaty (Win / Win rate / Loss + Avg, First 9, …) **bez** wiersza „Mecze” (liczbę widać w selektorze). Pod statami lista spotkań: data, tytuł turnieju, średnie, kto wygrał, **Przejdź do szczegółów** → ten sam `/m/{shareToken}` (demo: `/demo/m/`).
+- **Nagłówek rzut-po-rzucie:** data + nazwa turnieju. PRD **bez** „vs przeciwnik” (`displayMatchTitle` zdejmuje stary suffix ` · vs …` na już zapisanych meczach). Przeciwnicy zostają w kartach niżej.
 - **Nazwy na kartach:** `normalizeName` **nie** zamienia CAPS/pseudonimów na „Koklusz”. Zostawia `KOKLUSZ`, `Błaszczu`, `GROTKOWSKI Piotr`. Title-case tylko gdy słowo jest całe z małych liter.
 
 Google + iPhone LAN: Site URL w Supabase na `http://<IP-Maca>:3000` na czas testu; `allowedDevOrigins` w `next.config.ts`.

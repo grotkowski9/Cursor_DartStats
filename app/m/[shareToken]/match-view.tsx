@@ -7,6 +7,7 @@ import type { N01Match, N01Visit } from "@/lib/n01-parser";
 import type { MatchStats } from "@/lib/stats";
 import { computeMatchStats, dartWord, normalizeName, type LegStats } from "@/lib/stats";
 import { getMatchShareUrl } from "@/lib/share-url";
+import { displayMatchTitle } from "@/lib/match-title";
 
 type Props = {
   match: N01Match;
@@ -58,7 +59,7 @@ export function MatchView({
 
       <header className="flex flex-col gap-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/80">{date}</p>
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{match.title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{displayMatchTitle(match.title)}</h1>
         <button
           type="button"
           onClick={() => void copyShareLink()}

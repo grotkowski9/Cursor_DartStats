@@ -334,8 +334,7 @@ export function prdMatchToN01(
       ? Date.parse(opts.tournament.date)
       : Date.now();
 
-  const opp = playerIndex === 0 ? players[1].name : players[0].name;
-  const title = `${opts.tournament.name.trim()} · vs ${opp}`;
+  const title = opts.tournament.name.trim();
 
   return {
     tmid: prdExternalId(raw.id),
