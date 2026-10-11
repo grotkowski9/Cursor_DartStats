@@ -2,9 +2,9 @@
 
 To **Sylveon Dart Profile** (`Cursor_DartStats`). **Źródło prawdy: `README.md`.** Ten plik to skrót, żebyś nie zgadywał.
 
-## Stan (2026-10-10)
+## Stan (2026-10-11)
 
-- Wersja **`3.1.0`** na `main`. Backup: branch `backup/v3.1.0`, tag `v3.1.0`. Rollback: `backup/v3.0.0`. Jak wrócić: README **Przywracanie backupa**.
+- Wersja **`3.2.0`** na `main`. Backup: branch `backup/v3.2.0`, tag `v3.2.0`. Rollback: `backup/v3.1.0`. Jak wrócić: README **Przywracanie backupa**.
 - **Nie wydawaj na `main` bez wyraźnego polecenia usera.**
 - Import: **N01** (mecz `tmid` / live `mid` / turniej / liga) + **Polski Ranking Darta** (turniej).
 - Tagi per mecz: `matches.tags text[]` (max 8). Profil: uwzględnij tylko / wyklucz mecze z tagiem. Import overwrite **nie** czyści tagów. Migracja `20261010193000_match_tags.sql` **jest na produkcji**. Demo: tagi „Mecz towarzyski” / „Liga” + te same droplisty.

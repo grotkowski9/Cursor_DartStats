@@ -6,14 +6,15 @@
 
 ---
 
-## Agent — start tutaj (v3.1.0)
+## Agent — start tutaj (v3.2.0)
 
-**Data sync:** 2026-10-10. **`package.json` version `3.1.0`.**
+**Data sync:** 2026-10-11. **`package.json` version `3.2.0`.**
 
 | | |
 | --- | --- |
 | Produkcja git | `main` |
-| Backup tego wydania | branch `backup/v3.1.0` + tag `v3.1.0` |
+| Backup tego wydania | branch `backup/v3.2.0` + tag `v3.2.0` |
+| Rollback v3.1 | `backup/v3.1.0` / tag `v3.1.0` |
 | Rollback v3.0 | `backup/v3.0.0` / tag `v3.0.0` |
 | Rollback przed importem PRD | `backup/v2.0.1` / tag `v2.0.1`; firstPROD: `backup/v2.0-firstPROD` |
 | Jak wrócić do backupa | [Przywracanie backupa — instrukcja](#przywracanie-backupa--instrukcja-zescreenuj) |
@@ -54,7 +55,7 @@
 ```
 Projekt: Sylveon Dart Profile (Cursor_DartStats). README + AGENTS.md = źródło prawdy.
 
-Stan: v3.1.0 na main. Backup backup/v3.1.0 + tag v3.1.0. Nie merguj na main bez polecenia.
+Stan: v3.2.0 na main. Backup backup/v3.2.0 + tag v3.2.0. Nie merguj na main bez polecenia.
 DB: Supabase nwrhnmnaiqclpxcjfgcq. Nie ruszaj bet.*.
 matches.source (n01|prd) + n01_tmid (tmid albo prd:<uuid>) UNIQUE(customer_id, n01_tmid). Migracja source jest na prod.
 matches.tags text[] (max 8) — tag per mecz. Profil: uwzględnij tylko / wyklucz mecze z tagiem. Import overwrite nie czyści tagów. Migracja tags na prod.
@@ -410,7 +411,8 @@ Zescreenuj i trzymaj. Backup = **kopia KODU strony** z danego dnia. **Nie** kopi
 
 | Chcę wrócić do | Branch (kopia) | Tag (etykieta) |
 | --- | --- | --- |
-| Teraz (tagi, onboarding BET, fav) | `backup/v3.1.0` | `v3.1.0` |
+| Teraz (H2H spotkania, import hurtowy, PRD header) | `backup/v3.2.0` | `v3.2.0` |
+| v3.1 (tagi, onboarding BET, fav) | `backup/v3.1.0` | `v3.1.0` |
 | Przed tagami (import N01 + PRD) | `backup/v3.0.0` | `v3.0.0` |
 | Przed importem PRD | `backup/v2.0.1` | `v2.0.1` |
 | Pierwszy prod | `backup/v2.0-firstPROD` | `v2.0-firstPROD` |
@@ -678,7 +680,7 @@ Paleta W2, inspiracja [sylveoncompany.pl](https://sylveoncompany.pl):
 
 ## Roadmapa skrócona
 
-Zrobione (nie implementuj drugi raz): 0.x MVP, 1.0 release, auth 1.1, profil About, delete/edit meczu, 1.2 UX, 1.3 testy+perf, 1.4 polish, **v2.0-firstPROD**, **v2.0.1 login gate**, **v3.0.0 import N01/PRD + mid**, **v3.1.0 tagi + onboarding BET + fav**.
+Zrobione (nie implementuj drugi raz): 0.x MVP, 1.0 release, auth 1.1, profil About, delete/edit meczu, 1.2 UX, 1.3 testy+perf, 1.4 polish, **v2.0-firstPROD**, **v2.0.1 login gate**, **v3.0.0 import N01/PRD + mid**, **v3.1.0 tagi + onboarding BET + fav**, **v3.2.0 H2H spotkania + import hurtowy**.
 
 Otwarte (rosnąco po ID — **pytaj przed startem**):
 
@@ -726,7 +728,15 @@ Otwarte (rosnąco po ID — **pytaj przed startem**):
 | `v2.0-firstPROD` | pierwszy prod |
 | `v2.0.1` | login gate |
 | **`v3.0.0` / `backup/v3.0.0`** | PRD + N01 competition + mid; `matches.source`; copy; rediscovery PRD |
-| **`v3.1.0` / `backup/v3.1.0`** | **tagi, demo filtry, nicki CAPS, onboarding BET, fav Ratajski/Białecki** |
+| **`v3.1.0` / `backup/v3.1.0`** | tagi, demo filtry, nicki CAPS, onboarding BET, fav Ratajski/Białecki |
+| **`v3.2.0` / `backup/v3.2.0`** | **H2H lista spotkań, import hurtowy, nagłówek PRD bez vs** |
+
+v3.2.0 (2026-10-11):
+
+- H2H: pod agregatami wiersze spotkań (data, turniej, avg, zwycięzca) + **Przejdź do szczegółów** na `/m/{token}` (demo `/demo/m/`). Bez wiersza „Mecze”.
+- Dodaj mecze: bez chipów Dowolne/N01/PRD. **Import hurtowy** / **Wróć do importu pojedynczego**.
+- Nagłówek rzut-po-rzucie PRD = nazwa turnieju + data (`displayMatchTitle` zdejmuje stary ` · vs …`).
+- Instrukcja restore backupa w README (zescreenuj).
 
 v3.1.0 (2026-10-10):
 
