@@ -8,6 +8,7 @@ To **Sylveon Dart Profile** (`Cursor_DartStats`). **Źródło prawdy: `README.md
 - **Nie wydawaj na `main` bez wyraźnego polecenia usera.**
 - Import: **N01** (mecz `tmid` / live `mid` / turniej / liga) + **Polski Ranking Darta** (turniej).
 - Tagi per mecz: `matches.tags text[]` (max 8). Profil: uwzględnij tylko / wyklucz mecze z tagiem. Import overwrite **nie** czyści tagów. Migracja `20261010193000_match_tags.sql` **jest na produkcji**. Demo: tagi „Mecz towarzyski” / „Liga” + te same droplisty.
+- H2H: agregaty + lista spotkań z linkiem do `/m/{token}` (demo `/demo/m/`). Import: **Import hurtowy** / pojedynczy, bez chipów N01/PRD. Nagłówek PRD = turniej + data.
 - Login gate: `app_settings.login_gate_enabled` + env `LOGIN_GATE_PASSWORD` (Vercel). Szczegóły w README.
 - Dart i BET dzielą `auth.users` + `public.customers`; sesje cookie są **per subdomain**. Nie ruszaj `bet.*`.
 - BET ≠ ukończony Dart. Brak `about_completed_at` → pełny onboarding Darta (`/onboarding` Krok 1, potem O Tobie). **Nie wydawaj na `main` bez wyraźnego polecenia usera.**
